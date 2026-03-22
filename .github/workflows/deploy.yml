@@ -35,15 +35,13 @@ jobs:
             git remote add origin https://github.com/maxmunhozp-blip/ecossistema-max.git
             git fetch origin main
             git checkout -f origin/main -- skills/
-            # Garante skills com subpastas via download direto
-            REPO="https://raw.githubusercontent.com/maxmunhozp-blip/ecossistema-max/main"
-            SKILLS_API="https://api.github.com/repos/maxmunhozp-blip/ecossistema-max/contents/skills"
-            curl -s "$SKILLS_API" | grep '"name"' | sed 's/.*"name": "\(.*\)".*/\1/' | while read skill; do
-              mkdir -p "skills/$skill"
-              url="$REPO/skills/$skill/SKILL.md"
-              wget -q -O "skills/$skill/SKILL.md" "$url" 2>/dev/null || true
-            done
-            echo "Skills atualizadas: $(ls skills/ | wc -l)"
+            # Download direto do skill-pagina-vendas
+            mkdir -p skills/skill-pagina-vendas
+            wget -q -O skills/skill-pagina-vendas/SKILL.md \
+              "https://raw.githubusercontent.com/maxmunhozp-blip/ecossistema-max/main/skills/skill-pagina-vendas/SKILL.md" \
+              && echo "skill-pagina-vendas: OK" || echo "skill-pagina-vendas: FALHOU"
+            ls -la skills/skill-pagina-vendas/ 2>/dev/null || echo "diretorio nao existe"
+            echo "Skills total: $(ls skills/ | wc -l)"
 
   deploy-hostinger:
     name: Deploy → Hostinger
