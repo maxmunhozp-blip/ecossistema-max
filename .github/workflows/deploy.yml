@@ -42,14 +42,13 @@ jobs:
               && echo "skill-pagina-vendas: OK" || echo "skill-pagina-vendas: FALHOU"
             ls -la skills/skill-pagina-vendas/ 2>/dev/null || echo "diretorio nao existe"
             echo "Skills total: $(ls skills/ | wc -l)"
-            # Inspeciona nginx ecosistema-max-app-1
-            echo "=== volumes nginx ==="
-            docker inspect ecosistema-max-app-1 --format '{{range .Mounts}}{{.Type}} | {{.Source}} -> {{.Destination}}{{println}}{{end}}'
-            echo "=== lista skills dentro do container ==="
-            docker exec ecosistema-max-app-1 ls /usr/share/nginx/html/skills/ 2>/dev/null | head -5 || echo "path padrao nao funciona"
-            # Tenta encontrar onde o nginx serve arquivos
-            docker exec ecosistema-max-app-1 cat /etc/nginx/nginx.conf 2>/dev/null | grep root | head -3 || true
-            docker exec ecosistema-max-app-1 find / -name "SKILL.md" 2>/dev/null | head -3 || true
+            # Verifica se container vê skill-pagina-vendas
+            echo "=== dentro do container ==="
+            docker exec ecosistema-max-app-1 ls -la /usr/share/nginx/html/skills/skill-pagina-vendas/ 2>/dev/null || echo "PASTA NAO VISIVEL NO CONTAINER"
+            # Copia arquivo diretamente para dentro do container como fallback
+            docker cp /opt/ecosistema-max/skills/skill-pagina-vendas/SKILL.md \
+              ecosistema-max-app-1:/usr/share/nginx/html/skills/skill-pagina-vendas/SKILL.md 2>/dev/null \
+              && echo "cp OK" || echo "cp falhou"
 
   deploy-hostinger:
     name: Deploy → Hostinger
