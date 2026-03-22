@@ -11,38 +11,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Prepara estrutura de skills (só SKILL.md)
-        run: |
-          mkdir -p skills-flat
-          for dir in skills/*/; do
-            id=$(basename "$dir")
-            if [ -f "$dir/SKILL.md" ]; then
-              mkdir -p "skills-flat/$id"
-              cp "$dir/SKILL.md" "skills-flat/$id/SKILL.md"
-            fi
-          done
-
-      - name: Sync para VPS
+      - name: Sync arquivos HTML e assets para VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: 76.13.172.151
           username: root
           password: ${{ secrets.VPS_PASSWORD }}
-          source: "*.html,skills-flat/,criativos/,CLAUDE.md"
+          source: "*.html,criativos/,CLAUDE.md"
           target: /opt/ecosistema-max/
           rm: false
 
-      - name: Renomeia pasta skills-flat → skills no VPS
+      - name: Atualiza skills no VPS via GitHub
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 76.13.172.151
           username: root
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            if [ -d /opt/ecosistema-max/skills-flat ]; then
-              rsync -a /opt/ecosistema-max/skills-flat/ /opt/ecosistema-max/skills/
-              rm -rf /opt/ecosistema-max/skills-flat
+            cd /opt/ecosistema-max
+            # Garante que é um git repo, inicializa se não for
+            if [ ! -d .git ]; then
+              git init
+              git remote add origin https://github.com/maxmunhozp-blip/ecossistema-max.git
+              git fetch origin main
+              git checkout -f origin/main -- skills/
+            else
+              git fetch origin main
+              git checkout -f origin/main -- skills/
             fi
+            echo "Skills atualizadas:"
+            ls skills/ | wc -l
 
   deploy-hostinger:
     name: Deploy → Hostinger
