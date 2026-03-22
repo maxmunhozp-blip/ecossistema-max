@@ -42,18 +42,18 @@ jobs:
               && echo "skill-pagina-vendas: OK" || echo "skill-pagina-vendas: FALHOU"
             ls -la skills/skill-pagina-vendas/ 2>/dev/null || echo "diretorio nao existe"
             echo "Skills total: $(ls skills/ | wc -l)"
-            # Diagnóstico: onde o nginx serve os arquivos?
-            nginx_container=$(docker ps --format "{{.Names}}" | grep -i nginx | head -1)
-            echo "nginx container: $nginx_container"
-            if [ -n "$nginx_container" ]; then
-              echo "volumes:"
-              docker inspect "$nginx_container" --format '{{range .Mounts}}{{.Type}} {{.Source}} -> {{.Destination}}{{println}}{{end}}'
-              echo "teste arquivo dentro do container:"
-              docker exec "$nginx_container" ls /usr/share/nginx/html/skills/skill-pagina-vendas/ 2>/dev/null || \
-              docker exec "$nginx_container" ls /var/www/html/skills/skill-pagina-vendas/ 2>/dev/null || \
-              docker exec "$nginx_container" ls /opt/ecosistema-max/skills/skill-pagina-vendas/ 2>/dev/null || \
-              echo "nao encontrado nos paths padrao"
-            fi
+            # Identifica container nginx
+            echo "=== containers ativos ==="
+            docker ps --format "{{.Names}} {{.Image}} {{.Ports}}" | grep -E "80|nginx|html"
+            nginx_container=$(docker ps --format "{{.Names}}" | head -5)
+            for c in $nginx_container; do
+              ports=$(docker port "$c" 2>/dev/null | grep ":80")
+              if [ -n "$ports" ]; then
+                echo "container porta 80: $c"
+                docker inspect "$c" --format '{{range .Mounts}}{{.Type}} {{.Source}} -> {{.Destination}}{{println}}{{end}}'
+                break
+              fi
+            done
 
   deploy-hostinger:
     name: Deploy → Hostinger
