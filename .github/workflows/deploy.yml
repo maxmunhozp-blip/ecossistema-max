@@ -35,16 +35,6 @@ jobs:
             git remote add origin https://github.com/maxmunhozp-blip/ecossistema-max.git
             git fetch origin main
             git checkout -f origin/main -- skills/
-            # Download direto do skill-pagina-vendas
-            mkdir -p skills/skill-pagina-vendas
-            wget -q -O skills/skill-pagina-vendas/SKILL.md \
-              "https://raw.githubusercontent.com/maxmunhozp-blip/ecossistema-max/main/skills/skill-pagina-vendas/SKILL.md" \
-              && echo "skill-pagina-vendas: OK" || echo "skill-pagina-vendas: FALHOU"
-            ls -la skills/skill-pagina-vendas/ 2>/dev/null || echo "diretorio nao existe"
-            echo "Skills total: $(ls skills/ | wc -l)"
-            # Lê nginx.conf para entender o problema
-            echo "=== nginx.conf ==="
-            cat /opt/ecosistema-max/nginx.conf
 
   deploy-hostinger:
     name: Deploy → Hostinger
