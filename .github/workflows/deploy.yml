@@ -42,11 +42,18 @@ jobs:
               && echo "skill-pagina-vendas: OK" || echo "skill-pagina-vendas: FALHOU"
             ls -la skills/skill-pagina-vendas/ 2>/dev/null || echo "diretorio nao existe"
             echo "Skills total: $(ls skills/ | wc -l)"
-            # Recarrega nginx para garantir novos arquivos
-            docker restart $(docker ps --filter "name=nginx" --format "{{.Names}}" | head -1) 2>/dev/null || \
-            docker restart $(docker ps --filter "expose=80" --format "{{.Names}}" | head -1) 2>/dev/null || \
-            nginx -s reload 2>/dev/null || true
-            echo "nginx recarregado"
+            # Diagnóstico: onde o nginx serve os arquivos?
+            nginx_container=$(docker ps --format "{{.Names}}" | grep -i nginx | head -1)
+            echo "nginx container: $nginx_container"
+            if [ -n "$nginx_container" ]; then
+              echo "volumes:"
+              docker inspect "$nginx_container" --format '{{range .Mounts}}{{.Type}} {{.Source}} -> {{.Destination}}{{println}}{{end}}'
+              echo "teste arquivo dentro do container:"
+              docker exec "$nginx_container" ls /usr/share/nginx/html/skills/skill-pagina-vendas/ 2>/dev/null || \
+              docker exec "$nginx_container" ls /var/www/html/skills/skill-pagina-vendas/ 2>/dev/null || \
+              docker exec "$nginx_container" ls /opt/ecosistema-max/skills/skill-pagina-vendas/ 2>/dev/null || \
+              echo "nao encontrado nos paths padrao"
+            fi
 
   deploy-hostinger:
     name: Deploy → Hostinger
