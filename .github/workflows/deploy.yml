@@ -42,6 +42,11 @@ jobs:
               && echo "skill-pagina-vendas: OK" || echo "skill-pagina-vendas: FALHOU"
             ls -la skills/skill-pagina-vendas/ 2>/dev/null || echo "diretorio nao existe"
             echo "Skills total: $(ls skills/ | wc -l)"
+            # Recarrega nginx para garantir novos arquivos
+            docker restart $(docker ps --filter "name=nginx" --format "{{.Names}}" | head -1) 2>/dev/null || \
+            docker restart $(docker ps --filter "expose=80" --format "{{.Names}}" | head -1) 2>/dev/null || \
+            nginx -s reload 2>/dev/null || true
+            echo "nginx recarregado"
 
   deploy-hostinger:
     name: Deploy → Hostinger
