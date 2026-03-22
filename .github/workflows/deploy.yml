@@ -42,18 +42,14 @@ jobs:
               && echo "skill-pagina-vendas: OK" || echo "skill-pagina-vendas: FALHOU"
             ls -la skills/skill-pagina-vendas/ 2>/dev/null || echo "diretorio nao existe"
             echo "Skills total: $(ls skills/ | wc -l)"
-            # Identifica container nginx
-            echo "=== containers ativos ==="
-            docker ps --format "{{.Names}} {{.Image}} {{.Ports}}" | grep -E "80|nginx|html"
-            nginx_container=$(docker ps --format "{{.Names}}" | head -5)
-            for c in $nginx_container; do
-              ports=$(docker port "$c" 2>/dev/null | grep ":80")
-              if [ -n "$ports" ]; then
-                echo "container porta 80: $c"
-                docker inspect "$c" --format '{{range .Mounts}}{{.Type}} {{.Source}} -> {{.Destination}}{{println}}{{end}}'
-                break
-              fi
-            done
+            # Inspeciona nginx ecosistema-max-app-1
+            echo "=== volumes nginx ==="
+            docker inspect ecosistema-max-app-1 --format '{{range .Mounts}}{{.Type}} | {{.Source}} -> {{.Destination}}{{println}}{{end}}'
+            echo "=== lista skills dentro do container ==="
+            docker exec ecosistema-max-app-1 ls /usr/share/nginx/html/skills/ 2>/dev/null | head -5 || echo "path padrao nao funciona"
+            # Tenta encontrar onde o nginx serve arquivos
+            docker exec ecosistema-max-app-1 cat /etc/nginx/nginx.conf 2>/dev/null | grep root | head -3 || true
+            docker exec ecosistema-max-app-1 find / -name "SKILL.md" 2>/dev/null | head -3 || true
 
   deploy-hostinger:
     name: Deploy → Hostinger
