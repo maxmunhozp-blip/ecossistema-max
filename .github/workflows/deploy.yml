@@ -60,8 +60,14 @@ jobs:
             ICON="❌"
             TEXT="Deploy falhou"
           fi
-          MSG="${ICON} *${TEXT}*%0A%0A📦 \`${COMMIT_MSG}\`%0A👤 ${AUTHOR}%0A🕐 $(date -u '+%H:%M UTC')"
-          curl -s "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=${MSG}&parse_mode=Markdown" > /dev/null
+          MSG="${ICON} ${TEXT}
+
+📦 ${COMMIT_MSG}
+👤 ${AUTHOR}
+🕐 $(date -u '+%H:%M UTC')"
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg chat_id "${{ secrets.TELEGRAM_CHAT_ID }}" --arg text "$MSG" '{chat_id: $chat_id, text: $text}')"
 
   deploy-hostinger:
     name: Deploy → Hostinger
