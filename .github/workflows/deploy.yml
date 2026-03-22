@@ -43,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Upload via FTP
+      - name: Upload via FTP (tracktor.com.br/ecossistema)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -52,6 +52,21 @@ jobs:
           port: 21
           local-dir: ./
           server-dir: ecossistema/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .github/**
+
+      - name: Upload via FTP (ecossistema.tracktor.com.br)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          local-dir: ./
+          server-dir: domains/tracktor.com.br/public_html/ecossistema/
           exclude: |
             **/.git*
             **/.git*/**
