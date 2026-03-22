@@ -198,12 +198,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
       <!-- Terminal area -->
       <div class="term-area" style="flex:1;min-height:0">
         <div class="offline" id="offline">
-          <div class="offline-icon">
-            <i data-lucide="terminal" style="width:26px;height:26px;stroke:#cb7600;fill:none"></i>
+          <div class="offline-icon" id="offline-icon">
+            <i data-lucide="terminal" style="width:26px;height:26px;stroke:#cb7600;fill:none" id="offline-lucide-icon"></i>
           </div>
-          <h3>Terminal desconectado</h3>
-          <p>Clique para conectar ao VPS.<br>Claude Code + contexto completo.</p>
-          <button class="btn-connect" onclick="conectar()">
+          <h3 id="offline-title">Terminal desconectado</h3>
+          <p id="offline-msg">Clique para conectar ao VPS.<br>Claude Code + contexto completo.</p>
+          <button class="btn-connect" id="btn-connect" onclick="conectar()">
             <i data-lucide="plug" style="width:14px;height:14px;stroke:#fff;fill:none"></i>
             Conectar
           </button>
@@ -387,16 +387,41 @@ function startOverlayDetection(frame) {
 }
 
 // ── Conectar ────────────────────────────────────────────────────────────────
+function mostrarVpsOffline() {
+  const frame   = document.getElementById('frame');
+  const offline = document.getElementById('offline');
+  frame.src = '';
+  frame.style.display = 'none';
+  offline.style.display = 'flex';
+  setStatus('off');
+  document.getElementById('offline-lucide-icon').setAttribute('data-lucide', 'wifi-off');
+  document.getElementById('offline-title').textContent = 'VPS temporariamente offline';
+  document.getElementById('offline-msg').innerHTML = 'O terminal está indisponível no momento.<br><br>O site, skills e todos os arquivos continuam<br>funcionando normalmente pela Hostinger.<br><br>Tente novamente em alguns minutos.';
+  document.getElementById('btn-connect').innerHTML = '<i data-lucide="refresh-cw" style="width:14px;height:14px;stroke:#fff;fill:none"></i> Tentar novamente';
+  lucide.createIcons();
+}
+
 function conectar() {
   const frame   = document.getElementById('frame');
   const offline = document.getElementById('offline');
-  setStatus('wait');
 
+  // Reset para estado de conexão inicial
+  document.getElementById('offline-lucide-icon').setAttribute('data-lucide', 'terminal');
+  document.getElementById('offline-title').textContent = 'Terminal desconectado';
+  document.getElementById('offline-msg').innerHTML = 'Clique para conectar ao VPS.<br>Claude Code + contexto completo.';
+  document.getElementById('btn-connect').innerHTML = '<i data-lucide="plug" style="width:14px;height:14px;stroke:#fff;fill:none"></i> Conectar';
+  lucide.createIcons();
+
+  setStatus('wait');
   frame.src = 'https://terminal.tracktor.com.br/term/';
   frame.style.display = 'block';
   offline.style.display = 'none';
 
+  // Se não carregar em 14s, VPS está offline
+  const offlineTimer = setTimeout(mostrarVpsOffline, 14000);
+
   frame.onload = () => {
+    clearTimeout(offlineTimer);
     setStatus('on');
 
     // Focus keyboard
