@@ -776,6 +776,11 @@ O que ja foi construido e esta funcionando:
 - Terminal mockup (computer screen) com fundo creme/amigavel e fonte legivel
 - Overlay "Estou trabalhando pra voce.." com animacao do logo Claude quando processando
 - CLAUDE.md disponivel em /root/CLAUDE.md e /opt/ecosistema-max/CLAUDE.md
+- GitHub repo: github.com/maxmunhozp-blip/ecossistema-max
+- Auto-deploy ativo: push no GitHub -> VPS (SCP) + Hostinger (webhook) automaticamente
+- Site espelhado em ecossistema.tracktor.com.br (VPS) e tracktor.com.br/ecossistema (Hostinger)
+- Backup diario configurado no VPS (cron 3am, retencao 7 dias, /opt/backups/)
+- 32 skills instaladas e ativas no Claude Code
 
 **Proximo passo estrategico:** Focar na aquisicao dos primeiros pagantes para TractorPRO e Orbitta Messenger. Meta: R$20.000/mes de MRR.
 
