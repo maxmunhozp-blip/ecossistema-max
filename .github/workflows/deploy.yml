@@ -35,6 +35,12 @@ jobs:
             git remote add origin https://github.com/maxmunhozp-blip/ecossistema-max.git
             git fetch origin main
             git checkout -f origin/main -- skills/
+            # Sincroniza SKILL.md de cada skill para /opt/skill-data/ (usado pela API)
+            mkdir -p /opt/skill-data
+            for dir in /opt/ecosistema-max/skills/skill-*/; do
+              id=$(basename "$dir")
+              [ -f "$dir/SKILL.md" ] && cp "$dir/SKILL.md" "/opt/skill-data/${id}.md"
+            done
 
   deploy-hostinger:
     name: Deploy → Hostinger
