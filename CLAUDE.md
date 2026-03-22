@@ -788,5 +788,52 @@ O que ja foi construido e esta funcionando:
 
 ---
 
+---
+
+## INFRAESTRUTURA — URLS E PAGINAS
+
+### URLs do Ecossistema
+- **Site principal:** https://ecossistema.tracktor.com.br
+- **Espelho Hostinger:** https://tracktor.com.br/ecossistema/
+- **Terminal web:** https://ecossistema.tracktor.com.br/terminal.html
+- **Skills:** https://ecossistema.tracktor.com.br/skills.html
+- **Criativos:** https://ecossistema.tracktor.com.br/criativos.html
+- **Persona:** https://ecossistema.tracktor.com.br/persona.html
+- **Resultado:** https://ecossistema.tracktor.com.br/resultado.html
+- **Sexy Canvas:** https://ecossistema.tracktor.com.br/sexy-canvas.html
+- **XQuads:** https://ecossistema.tracktor.com.br/xquads.html
+
+### Landing Pages criadas
+- **Meu Fluxo (teste skill-pagina-vendas):** https://ecossistema.tracktor.com.br/lp-meu-fluxo.html
+
+### APIs na VPS
+- **Skills status:** https://terminal.tracktor.com.br/api/skills/status
+- **Install skill:** POST https://terminal.tracktor.com.br/api/skills/{id}/install
+- **Uninstall skill:** DELETE https://terminal.tracktor.com.br/api/skills/{id}/uninstall
+- **Skill manager:** /opt/skill-manager/server.js (porta 4000)
+
+### Infraestrutura
+- **VPS:** 76.13.172.151 (Ubuntu 24.04, root)
+- **Repo GitHub:** https://github.com/maxmunhozp-blip/ecossistema-max
+- **Repo local na VPS:** /opt/ecossistema-max-repo
+- **Arquivos do site:** /opt/ecosistema-max/ (servido pelo nginx container)
+- **Skills data:** /opt/skill-data/{id}.md
+- **Bot Telegram:** /opt/telegram-bot/ (systemd: telegram-bot.service)
+- **Hostinger FTP:** 147.93.39.38 — u892604263.tracktor.com.br
+
+### Deploy
+- Push no GitHub → GitHub Actions → VPS (SCP+SSH git) + Hostinger (2x FTP)
+- Targets Hostinger: ecossistema/ e domains/tracktor.com.br/public_html/ecossistema/
+
+---
+
+## MEMORIA VIVA DO BOT
+
+> Este arquivo /opt/telegram-bot/bot-memory.md e lido pelo bot Telegram e pode ser atualizado
+> pelo Claude Code no terminal web ou pelo proprio bot via comando /note.
+> Use para registrar decisoes, links, contextos e lembretes que o bot deve saber.
+
+---
+
 *Documento criado por Max Munhoz com Claude Code. Atualizado em: marco 2026.*
 *Este arquivo deve ser mantido atualizado a cada nova decisao estrategica relevante.*
