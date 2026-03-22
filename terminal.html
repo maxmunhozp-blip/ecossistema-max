@@ -274,7 +274,7 @@ function setupAuth() {
   // Open a hidden WebSocket session to ttyd and run the setup command
   try {
     const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = proto + '//' + location.host + '/term/ws';
+    const wsUrl = proto + '//terminal.tracktor.com.br/term/ws';
     const ws = new WebSocket(wsUrl);
     let cmdSent = false;
 
@@ -392,7 +392,7 @@ function conectar() {
   const offline = document.getElementById('offline');
   setStatus('wait');
 
-  frame.src = '/term/';
+  frame.src = 'https://terminal.tracktor.com.br/term/';
   frame.style.display = 'block';
   offline.style.display = 'none';
 
