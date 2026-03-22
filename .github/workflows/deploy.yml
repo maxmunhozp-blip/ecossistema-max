@@ -36,7 +36,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           local-dir: ./
-          server-dir: public_html/ecossistema/
+          server-dir: ecossistema/
           exclude: |
             **/.git*
             **/.git*/**
