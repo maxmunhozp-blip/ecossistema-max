@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xquads — Squads de Agentes IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--surface:#111118;--surface-alt:#18181f;--surface-hover:#1e1e28;
+  --border:#222230;--border-strong:#2e2e40;
+  --orange:#ea8049;--orange-dim:rgba(234,128,73,.12);--orange-mid:rgba(234,128,73,.25);
+  --green:#3ba856;--green-dim:rgba(59,168,86,.12);
+  --purple:#8b5cf6;--purple-dim:rgba(139,92,246,.12);
+  --yellow:#fbbf24;--yellow-dim:rgba(251,191,36,.12);
+  --text-dark:#f1f5f9;--text:#cbd5e1;--text-muted:#64748b;--text-dim:#374151;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 2px 8px rgba(0,0,0,.3);
+  --shadow-lg:0 4px 24px rgba(0,0,0,.5);
+  --nav-h:56px;
+  --radius:10px;--radius-lg:14px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(10,10,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:20px}
+.nav-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--text-dark);text-decoration:none}
+.logo-icon{width:28px;height:28px;background:linear-gradient(135deg,#ea8049,#d4622a);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;gap:2px;margin-left:8px}
+.nav-links a{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:.15s}
+.nav-links a:hover{color:var(--text-dark);background:var(--surface-alt)}
+.nav-links a.active{color:var(--orange);background:var(--orange-dim)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+
+/* INNER NAV (xquads tabs) */
+.inner-nav{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:var(--nav-h);z-index:90}
+.inner-tabs{display:flex;padding:0 24px;max-width:1200px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.inner-tabs::-webkit-scrollbar{display:none}
+.itab{padding:13px 16px;font-size:13px;font-weight:500;color:var(--text-muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif}
+.itab:hover{color:var(--text-dark)}
+.itab.active{color:var(--orange);border-bottom-color:var(--orange)}
+
+/* HERO */
+.hero{padding:48px 24px 36px;background:linear-gradient(180deg,rgba(234,128,73,.06) 0%,transparent 100%);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(234,128,73,.08) 0%,transparent 65%);pointer-events:none}
+.hero-inner{max-width:1200px;margin:0 auto;position:relative}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--orange-dim);border:1px solid var(--orange-mid);color:var(--orange);font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;margin-bottom:18px}
+.hero h1{font-size:42px;font-weight:900;color:var(--text-dark);letter-spacing:-1px;margin-bottom:8px}
+.hero h1 span{color:var(--orange)}
+.hero-sub{font-size:16px;color:var(--text-muted);margin-bottom:28px}
+.metrics{display:flex;gap:20px;flex-wrap:wrap}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;display:flex;align-items:center;gap:12px;min-width:140px}
+.metric-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.metric-num{font-size:22px;font-weight:800;color:var(--text-dark)}
+.metric-label{font-size:11px;color:var(--text-muted);font-weight:500}
+
+/* CONTENT */
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.section{display:none}.section.active{display:block}
+
+/* ENABLED BAR */
+.enabled-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.enabled-bar-label{font-size:13px;font-weight:600;color:var(--text-dark)}
+.enabled-tags{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.enabled-tag{display:inline-flex;align-items:center;gap:5px;background:var(--orange-dim);border:1px solid var(--orange-mid);color:var(--orange);font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+.enabled-empty{font-size:12px;color:var(--text-muted);font-style:italic}
+.enabled-count{margin-left:auto;font-size:12px;color:var(--text-muted);white-space:nowrap}
+
+/* SQUAD GRID */
+.squad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.squad-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;transition:.2s}
+.squad-card:hover{border-color:var(--border-strong);box-shadow:var(--shadow-lg)}
+.squad-card.enabled{border-color:rgba(234,128,73,.4);box-shadow:0 0 0 1px rgba(234,128,73,.1),var(--shadow)}
+.squad-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.squad-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:var(--surface-alt)}
+.squad-info{flex:1;min-width:0}
+.squad-name{font-size:14px;font-weight:700;color:var(--text-dark);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.squad-version{font-size:11px;color:var(--text-muted)}
+/* TOGGLE */
+.toggle-wrap{flex-shrink:0;display:flex;align-items:center;gap:8px}
+.toggle-label{font-size:11px;font-weight:600;color:var(--text-muted);transition:.2s}
+.squad-card.enabled .toggle-label{color:var(--orange)}
+.switch{position:relative;display:inline-block;width:42px;height:22px;flex-shrink:0;cursor:pointer}
+.switch input{opacity:0;width:0;height:0}
+.switch-track{position:absolute;inset:0;background:var(--surface-alt);border:1px solid var(--border-strong);border-radius:22px;transition:.2s}
+.switch input:checked ~ .switch-track{background:var(--orange);border-color:var(--orange)}
+.switch-thumb{position:absolute;top:3px;left:3px;width:14px;height:14px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.switch input:checked ~ .switch-thumb{transform:translateX(20px)}
+/* rest of card */
+.squad-desc{font-size:12px;color:var(--text-muted);line-height:1.55;margin-bottom:12px}
+.squad-stats{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.squad-stat{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);background:var(--surface-alt);padding:3px 8px;border-radius:20px}
+.squad-tags{display:flex;gap:4px;flex-wrap:wrap}
+.squad-tag{font-size:10px;color:var(--text-dim);background:var(--surface-alt);border:1px solid var(--border);padding:2px 6px;border-radius:8px}
+/* INSTALL PANEL */
+.install-panel{display:none;margin-top:12px;padding:12px 14px;background:rgba(234,128,73,.06);border:1px solid rgba(234,128,73,.2);border-radius:8px}
+.squad-card.enabled .install-panel{display:block}
+.install-panel-label{font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.install-panel-btn{display:inline-flex;align-items:center;gap:5px;background:var(--orange);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s;margin-top:2px}
+.install-panel-btn:hover{background:#d4622a}
+.install-panel-note{font-size:11px;color:var(--text-muted);margin-top:6px}
+/* INSTALL ALL BTN */
+.install-all-bar{display:none;position:fixed;bottom:24px;right:24px;z-index:200}
+.install-all-bar.show{display:block}
+.install-all-btn{display:flex;align-items:center;gap:8px;background:var(--orange);color:#fff;border:none;border-radius:12px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 4px 20px rgba(234,128,73,.4);transition:.15s}
+.install-all-btn:hover{background:#d4622a;transform:translateY(-2px)}
+
+/* DOWNLOADS */
+.downloads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:16px}
+.dl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px}
+.dl-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.dl-icon{width:44px;height:44px;border-radius:10px;background:var(--orange-dim);border:1px solid var(--orange-mid);display:flex;align-items:center;justify-content:center;color:var(--orange)}
+.dl-name{font-size:16px;font-weight:700;color:var(--text-dark)}
+.dl-sub{font-size:12px;color:var(--text-muted)}
+.dl-desc{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:16px}
+.dl-includes{margin-bottom:16px}
+.dl-includes-title{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.dl-includes-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.dl-include-item{font-size:12px;color:var(--text);padding:5px 8px;background:var(--surface-alt);border-radius:6px;display:flex;align-items:center;gap:5px}
+.dl-include-item::before{content:'✓';color:var(--green);font-weight:700;font-size:10px}
+.dl-steps{margin-bottom:16px}
+.dl-steps-title{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.dl-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}
+.dl-step-num{width:20px;height:20px;background:var(--orange-dim);border:1px solid var(--orange-mid);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:1px}
+.dl-step-text{font-size:12px;color:var(--text-muted);line-height:1.5}
+.dl-step-code{font-family:monospace;font-size:12px;color:#a78bfa;background:var(--bg);border:1px solid var(--border);padding:4px 8px;border-radius:5px;display:block;margin-top:3px}
+.dl-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:6px;background:var(--orange);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.15s;font-family:'Inter',sans-serif}
+.btn-primary:hover{background:#d4622a;transform:translateY(-1px)}
+.btn-secondary{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--text);border:1px solid var(--border-strong);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:.15s;font-family:'Inter',sans-serif}
+.btn-secondary:hover{border-color:var(--orange);color:var(--orange)}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:28px}
+.about-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px}
+.about-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.about-title{font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:6px}
+.about-desc{font-size:13px;color:var(--text-muted);line-height:1.6}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;transition:.3s;opacity:0;pointer-events:none;z-index:1000;display:flex;align-items:center;gap:8px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.orange{background:var(--orange)}
+.toast.gray{background:#374151}
+
+.section-title{font-size:18px;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.section-sub{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    Ecossistema Max
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Hub</a>
+    <a href="persona.html">Persona</a>
+    <a href="criativos.html">Criativos</a>
+    <a href="skills.html">Skills</a>
+    <a href="resultado.html">Resultado</a>
+    <a href="sexy-canvas.html">Sexy Canvas</a>
+    <a href="sexy-canvas-tractorpro.html">TractorPRO</a>
+    <a href="xquads.html" class="active">Xquads</a>
+    <a href="terminal.html">Terminal</a>
+  </div>
+</nav>
+
+<!-- INNER NAV -->
+<div class="inner-nav">
+  <div class="inner-tabs">
+    <button class="itab active" onclick="showTab('squads', this)">
+      <i data-lucide="shield" style="width:14px;height:14px"></i> Squads
+    </button>
+    <button class="itab" onclick="showTab('downloads', this)">
+      <i data-lucide="download" style="width:14px;height:14px"></i> Downloads
+    </button>
+    <button class="itab" onclick="showTab('sobre', this)">
+      <i data-lucide="info" style="width:14px;height:14px"></i> Sobre
+    </button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><i data-lucide="sparkles" style="width:12px;height:12px"></i> Squads de Agentes IA Especializados</div>
+    <h1>X<span>quads</span></h1>
+    <p class="hero-sub">As maiores mentes trabalhando para você</p>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-icon" style="background:rgba(234,128,73,.15)"><i data-lucide="shield" style="width:18px;height:18px;color:#ea8049"></i></div>
+        <div><div class="metric-num" id="count-squads">11</div><div class="metric-label">Squads</div></div>
+      </div>
+      <div class="metric">
+        <div class="metric-icon" style="background:rgba(59,168,86,.15)"><i data-lucide="users" style="width:18px;height:18px;color:#3ba856"></i></div>
+        <div><div class="metric-num">136</div><div class="metric-label">Agentes</div></div>
+      </div>
+      <div class="metric">
+        <div class="metric-icon" style="background:var(--purple-dim)"><i data-lucide="git-branch" style="width:18px;height:18px;color:#8b5cf6"></i></div>
+        <div><div class="metric-num">21</div><div class="metric-label">Workflows</div></div>
+      </div>
+      <div class="metric">
+        <div class="metric-icon" style="background:var(--yellow-dim)"><i data-lucide="list-checks" style="width:18px;height:18px;color:#fbbf24"></i></div>
+        <div><div class="metric-num">94</div><div class="metric-label">Tasks</div></div>
+      </div>
+      <div class="metric">
+        <div class="metric-icon" style="background:var(--orange-dim)"><i data-lucide="toggle-right" style="width:18px;height:18px;color:#ea8049"></i></div>
+        <div><div class="metric-num" id="count-enabled">0</div><div class="metric-label">Habilitados</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- SQUADS -->
+  <div id="tab-squads" class="section active">
+    <div class="enabled-bar">
+      <span class="enabled-bar-label"><i data-lucide="check-circle" style="width:14px;height:14px;color:#ea8049;display:inline;vertical-align:middle;margin-right:4px"></i> Squads habilitados no ecossistema:</span>
+      <div class="enabled-tags" id="enabled-tags"><span class="enabled-empty">Nenhum squad habilitado ainda</span></div>
+      <span class="enabled-count" id="enabled-count">0 / 11</span>
+    </div>
+
+    <div class="squad-grid" id="squad-grid"></div>
+  </div>
+
+  <div class="install-all-bar" id="install-all-bar">
+    <button class="install-all-btn" onclick="installAll()">
+      <i data-lucide="download" style="width:16px;height:16px"></i>
+      Instalar habilitados no ecossistema
+    </button>
+  </div>
+
+  <!-- DOWNLOADS -->
+  <div id="tab-downloads" class="section">
+    <div class="section-title">Downloads</div>
+    <div class="section-sub">Pacotes prontos para instalar no seu ambiente de desenvolvimento</div>
+    <div class="downloads-grid">
+
+      <div class="dl-card">
+        <div class="dl-header">
+          <div class="dl-icon"><i data-lucide="package" style="width:22px;height:22px"></i></div>
+          <div>
+            <div class="dl-name">Pacote Xquads</div>
+            <div class="dl-sub">Todos os squads · Agentes · Workflows · Tasks</div>
+          </div>
+        </div>
+        <p class="dl-desc">Todos os 12 squads com agentes, workflows, tasks e configurações prontos para uso. Advisory Board, Brand, Copy, Cybersecurity, Data, Design, Hormozi, Movement, Storytelling, Traffic Masters, C-Level e Claude Code Mastery.</p>
+        <div class="dl-includes">
+          <div class="dl-includes-title">Incluído no pacote</div>
+          <div class="dl-includes-grid">
+            <div class="dl-include-item">96+ Agentes</div>
+            <div class="dl-include-item">Personas completas</div>
+            <div class="dl-include-item">Workflows</div>
+            <div class="dl-include-item">Fluxos automatizados</div>
+            <div class="dl-include-item">Tasks</div>
+            <div class="dl-include-item">Configs</div>
+          </div>
+        </div>
+        <div class="dl-steps">
+          <div class="dl-steps-title">Como instalar</div>
+          <div class="dl-step"><div class="dl-step-num">1</div><div class="dl-step-text">Baixar o arquivo ZIP</div></div>
+          <div class="dl-step"><div class="dl-step-num">2</div><div class="dl-step-text">Extrair para uma pasta</div></div>
+          <div class="dl-step"><div class="dl-step-num">3</div><div class="dl-step-text">Copiar pasta <code style="font-size:11px;background:var(--bg);padding:2px 5px;border-radius:4px;color:#a78bfa">squads/</code> para o projeto aios-core</div></div>
+          <div class="dl-step"><div class="dl-step-num">4</div><div class="dl-step-text">Agentes, workflows e tasks ficam disponíveis</div></div>
+        </div>
+        <div class="dl-buttons">
+          <a href="https://github.com/SynkraAI/aios-core" target="_blank" class="btn-primary"><i data-lucide="download" style="width:14px;height:14px"></i> Baixar Xquads (ZIP)</a>
+          <a href="https://github.com/SynkraAI/aios-core" target="_blank" class="btn-secondary"><i data-lucide="github" style="width:14px;height:14px"></i> Ver no GitHub</a>
+        </div>
+      </div>
+
+      <div class="dl-card">
+        <div class="dl-header">
+          <div class="dl-icon" style="background:var(--purple-dim);border-color:rgba(139,92,246,.25)"><i data-lucide="cpu" style="width:22px;height:22px;color:#8b5cf6"></i></div>
+          <div>
+            <div class="dl-name">Synkra AIOS Core</div>
+            <div class="dl-sub">Framework completo · CLI · Orquestração</div>
+          </div>
+        </div>
+        <p class="dl-desc">Repositório completo do framework AIOS. Inclui o core do sistema, CLI, orquestração de agentes, sistema de squads, templates e toda a infraestrutura para desenvolvimento orientado por IA.</p>
+        <div class="dl-includes">
+          <div class="dl-includes-title">Pré-requisitos</div>
+          <div class="dl-includes-grid">
+            <div class="dl-include-item">Node.js 18+</div>
+            <div class="dl-include-item">Git</div>
+            <div class="dl-include-item">Claude Code CLI</div>
+            <div class="dl-include-item">npm</div>
+          </div>
+        </div>
+        <div class="dl-steps">
+          <div class="dl-steps-title">Instalação</div>
+          <div class="dl-step"><div class="dl-step-num">1</div><div class="dl-step-text"><code class="dl-step-code">git clone https://github.com/SynkraAI/aios-core.git</code></div></div>
+          <div class="dl-step"><div class="dl-step-num">2</div><div class="dl-step-text"><code class="dl-step-code">cd aios-core && npm install</code></div></div>
+          <div class="dl-step"><div class="dl-step-num">3</div><div class="dl-step-text"><code class="dl-step-code">npx aios-core install</code></div></div>
+        </div>
+        <div class="dl-buttons">
+          <a href="https://github.com/SynkraAI/aios-core" target="_blank" class="btn-secondary" style="border-color:rgba(139,92,246,.4);color:#8b5cf6"><i data-lucide="github" style="width:14px;height:14px"></i> Acessar Repositório no GitHub</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SOBRE -->
+  <div id="tab-sobre" class="section">
+    <div class="section-title">O que é o Xquads?</div>
+    <div class="section-sub">Sistema de agentes IA organizados em squads temáticos especializados</div>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="about-icon" style="background:var(--orange-dim);border:1px solid var(--orange-mid)"><i data-lucide="brain" style="width:20px;height:20px;color:#ea8049"></i></div>
+        <div class="about-title">Agentes Especializados</div>
+        <p class="about-desc">Personas de IA com conhecimento especializado baseadas nas maiores mentes do mundo — Hormozi, Gary Halbert, Eugene Schwartz, David Ogilvy, Ray Dalio, Charlie Munger e mais.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon" style="background:var(--purple-dim);border:1px solid rgba(139,92,246,.25)"><i data-lucide="target" style="width:20px;height:20px;color:#8b5cf6"></i></div>
+        <div class="about-title">Workflows Inteligentes</div>
+        <p class="about-desc">Sequências lógicas que conectam agentes para executar tarefas complexas de forma orquestrada. 21 workflows prontos para as situações mais comuns.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon" style="background:var(--yellow-dim);border:1px solid rgba(251,191,36,.25)"><i data-lucide="zap" style="width:20px;height:20px;color:#fbbf24"></i></div>
+        <div class="about-title">Tasks Executáveis</div>
+        <p class="about-desc">Ações concretas com inputs e outputs bem definidos. 94 tasks prontas que você pode executar individualmente ou encadear em workflows.</p>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:20px">
+      <div style="font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:8px">Por que criamos isso?</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7">A IA genérica responde tudo, mas não domina nada. O Xquads funciona diferente: cada agente é um consultor virtual com frameworks reais, mental models específicos e anos de conhecimento destilado. Você não pergunta pra um chatbot — você consulta um especialista.</p>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px">
+      <div style="font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:8px">Créditos</div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:4px">Desenvolvido por <strong style="color:var(--orange)">Synkra</strong> — <a href="https://www.sowsales.com.br/xquads" target="_blank" style="color:var(--orange);text-decoration:none">sowsales.com.br/xquads</a></p>
+      <p style="font-size:12px;color:var(--text-muted)">Framework AIOS Core · Plataforma SOW Sales · by Rafael Brandão</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── SKILL.md templates por squad ────────────────────────────────────────
+const SKILL_TEMPLATES = {
+  'advisory-board': `---
+name: xquads-advisory-board
+description: Board de 11 conselheiros estratégicos — Ray Dalio, Charlie Munger, Naval Ravikant, Peter Thiel, Reid Hoffman, Simon Sinek, Brené Brown. Use para decisões estratégicas, investimento, liderança, mental models.
+triggers:
+  - advisory board
+  - conselho estratégico
+  - ray dalio
+  - charlie munger
+  - naval ravikant
+  - mental models
+  - decisão estratégica
+  - board de conselheiros
+---
+# Advisory Board — Xquads
+Board de 11 conselheiros virtuais especializados. Cada agente encarna o framework mental de um dos maiores pensadores do mundo.
+## Conselheiros disponíveis
+- Ray Dalio — Princípios, mercados, tomada de decisão
+- Charlie Munger — Mental models, thinking frameworks
+- Naval Ravikant — Leverage, wealth, clear thinking
+- Peter Thiel — Zero to One, contrarian strategy
+- Reid Hoffman — Network effects, scale, blitzscaling
+- Simon Sinek — Why, leadership, infinite game
+- Brené Brown — Vulnerability, courage, leadership
+- + 4 conselheiros adicionais
+## Como usar
+Peça "advisory board" + sua situação/decisão e os conselheiros vão analisar sob seus respectivos frameworks.`,
+
+  'brand-squad': `---
+name: xquads-brand-squad
+description: Squad definitivo de estratégia de marca com 15 agentes — 10 pensadores lendários de branding + 4 especialistas + 1 orquestrador. Posicionamento, identidade, narrativa, brand strategy.
+triggers:
+  - brand squad
+  - estratégia de marca
+  - branding
+  - posicionamento de marca
+  - identidade visual
+  - brand strategy
+  - narrativa de marca
+---
+# Brand Squad — Xquads
+15 agentes especializados em estratégia de marca, posicionamento e identidade.
+## Especialistas
+- 10 lendários do branding (Al Ries, Jack Trout, Marty Neumeier e outros)
+- 4 especialistas funcionais (identidade, narrativa, posicionamento, arquitetura)
+- 1 orquestrador de brand strategy
+## Como usar
+Peça "brand squad" + seu desafio de marca para ativar o squad completo.`,
+
+  'c-level': `---
+name: xquads-c-level
+description: C-suite virtual de 6 executivos — CEO, COO, CMO, CTO, CIO, CAIO. Estratégia, operações, marketing, tecnologia e IA integrados.
+triggers:
+  - c-level
+  - c-suite
+  - ceo virtual
+  - visão executiva
+  - board executivo
+  - estratégia c-level
+---
+# C-Level Squad — Xquads
+6 executivos virtuais para visão estratégica completa do negócio.
+## Executivos
+- CEO (Vision Chief) — Visão, cultura, direção estratégica
+- COO — Operações, processos, execução
+- CMO — Marketing, growth, posicionamento
+- CTO — Tecnologia, produto, infraestrutura
+- CIO — Informação, dados, inteligência
+- CAIO — IA strategy, automação, futuro
+## Como usar
+Peça "c-level" + sua situação para receber análise de todos os ângulos executivos.`,
+
+  'copy-squad': `---
+name: xquads-copy-squad
+description: Squad de elite com 23 agentes de copywriting — Gary Halbert, Eugene Schwartz, David Ogilvy, John Caples, Joe Sugarman, Dan Kennedy e mais 17 mestres. Direct response, sales letters, email, hooks, VSL.
+triggers:
+  - copy squad
+  - copywriting
+  - direct response
+  - sales letter
+  - gary halbert
+  - ogilvy
+  - eugene schwartz
+  - copy de vendas
+  - hook copy
+  - email copy
+---
+# Copy Squad — Xquads
+23 agentes encarnando os maiores copywriters da história.
+## Mestres do copy
+- Gary Halbert — Street-smart copy, humanity
+- Eugene Schwartz — Mass desire, breakthroughs
+- David Ogilvy — Research-based, brand voice
+- John Caples — Headlines, tested copy
+- Joe Sugarman — Triggers, catalog copy
+- Dan Kennedy — Direct response, NO BS
+- + 17 outros mestres lendários
+## Como usar
+Peça "copy squad" + seu produto/oferta para receber copy de múltiplos ângulos.`,
+
+  'cybersecurity': `---
+name: xquads-cybersecurity
+description: Squad de 15 agentes de cibersegurança com framework ético — pentest, red team, blue team, AppSec, incident response, recon. Para educação e defesa.
+triggers:
+  - cybersecurity squad
+  - pentest
+  - red team
+  - blue team
+  - segurança digital
+  - appsec
+  - incident response
+---
+# Cybersecurity Squad — Xquads
+15 agentes especializados em cibersegurança ofensiva e defensiva (framework ético).
+## Especialidades
+- Red Team — Pentest, exploitation, recon
+- Blue Team — Defense, monitoring, response
+- AppSec — Vulnerabilidades de aplicação
+- Incident Response — Gestão de incidentes
+## Como usar
+Peça "cybersecurity squad" + seu cenário para análise de segurança.`,
+
+  'data-squad': `---
+name: xquads-data-squad
+description: Squad de 7 estrategistas data-driven — Avinash Kaushik (analytics), Peter Fader (CLV), Sean Ellis (growth), David Spinks (community), Nick Mehta (customer success).
+triggers:
+  - data squad
+  - analytics strategy
+  - growth hacking
+  - customer success
+  - clv
+  - data driven
+  - métricas
+---
+# Data Squad — Xquads
+7 especialistas em estratégia baseada em dados.
+## Especialistas
+- Avinash Kaushik — Web analytics, attribution
+- Peter Fader — CLV, customer centricity
+- Sean Ellis — Growth hacking, PMF
+- David Spinks — Community growth
+- Nick Mehta — Customer success
+## Como usar
+Peça "data squad" + sua métrica/desafio de crescimento.`,
+
+  'design-squad': `---
+name: xquads-design-squad
+description: Squad de design operations com 8 agentes — Brad Frost (atomic design), Dan Mall (design systems), Dave Malouf (design ops) + 4 especialistas + 1 orquestrador.
+triggers:
+  - design squad
+  - design system
+  - design ops
+  - atomic design
+  - ux design
+  - ui design
+  - design operations
+---
+# Design Squad — Xquads
+8 agentes especializados em design systems e operações de design.
+## Especialistas
+- Brad Frost — Atomic Design, Pattern Lab
+- Dan Mall — Design systems, processo
+- Dave Malouf — Design operations
+- + 4 especialistas em UX/UI
+## Como usar
+Peça "design squad" + seu desafio de design/produto.`,
+
+  'hormozi-squad': `---
+name: xquads-hormozi-squad
+description: Squad de 16 agentes implementando os frameworks de Alex Hormozi — $100M Offers, $100M Leads, pricing, sales scripts, content hooks, launch, retention, scaling.
+triggers:
+  - hormozi squad
+  - hormozi
+  - 100m offers
+  - 100m leads
+  - grand slam offer
+  - oferta irresistível
+  - hormozi framework
+  - pricing hormozi
+---
+# Hormozi Squad — Xquads
+16 agentes aplicando os frameworks de Alex Hormozi ao seu negócio.
+## Módulos
+- Offers — Grand Slam Offer, value stack, pricing
+- Leads — Lead magnets, acquisition
+- Sales — Scripts, objeções, fechamento
+- Content — Hooks, formatos, distribuição
+- Launch — Sequência, anticipation
+- Retention — LTV, churn reduction
+- Scaling — SOPs, leverage, sistemas
+## Como usar
+Peça "hormozi" + seu desafio de negócio (ex: "hormozi cria uma oferta para meu produto").`,
+
+  'movement-squad': `---
+name: xquads-movement-squad
+description: Squad de 7 agentes para construção de movimentos — fenomenologia, identidade coletiva, manifestos, ciclos de crescimento, medição de impacto social.
+triggers:
+  - movement squad
+  - construir movimento
+  - manifesto
+  - identidade coletiva
+  - movimento social
+  - community building
+---
+# Movement Squad — Xquads
+7 agentes especializados em construção de movimentos e comunidades.
+## Especialidades
+- Fenomenologia do movimento
+- Identidade e narrativa coletiva
+- Manifestos e declarações
+- Ciclos de crescimento orgânico
+- Medição de impacto
+## Como usar
+Peça "movement squad" + sua causa/produto/marca para construir um movimento.`,
+
+  'storytelling-squad': `---
+name: xquads-storytelling-squad
+description: Squad de 12 mestres do storytelling — Joseph Campbell (mitologia), Robert McKee (screenplay), Pixar, TED, business storytelling, narrativa pessoal, improviso, pitching.
+triggers:
+  - storytelling squad
+  - storytelling
+  - narrativa
+  - contar história
+  - joseph campbell
+  - herói jornada
+  - pitch story
+  - business story
+---
+# Storytelling Squad — Xquads
+12 mestres do storytelling para construir narrativas poderosas.
+## Mestres
+- Joseph Campbell — Jornada do herói, mitologia
+- Robert McKee — Story structure, screenplay
+- Pixar — Emotional storytelling
+- TED framework — Apresentações impactantes
+- + 8 especialistas em narrativa
+## Como usar
+Peça "storytelling squad" + sua história/marca/produto para construir narrativa.`,
+
+  'traffic-masters': `---
+name: xquads-traffic-masters
+description: Squad de 16 agentes especialistas em tráfego pago — Facebook Ads, YouTube Ads, Google Ads, media buying, creative analysis, scaling, tracking, ROAS optimization.
+triggers:
+  - traffic masters
+  - tráfego pago
+  - facebook ads
+  - google ads
+  - youtube ads
+  - media buying
+  - escalar campanha
+  - creative analysis
+  - roas
+---
+# Traffic Masters — Xquads
+16 especialistas em tráfego pago e mídia digital.
+## Especialidades
+- Facebook/Meta Ads — Creative, audiences, scaling
+- YouTube Ads — VSL, skippable, awareness
+- Google Ads — Search, shopping, performance max
+- Media Buying — Planejamento, negociação
+- Creative Analysis — Hook rates, thumbstop
+- Tracking — Pixel, conversions API, attribution
+- Scaling — Horizontal, vertical, duplicação
+## Como usar
+Peça "traffic masters" + seu desafio de tráfego.`
+};
+
+// ─── Squad data ───────────────────────────────────────────────────────────
+const SQUADS = [
+  {id:'advisory-board', name:'Advisory Board', version:'v1.0.0', icon:'🧠', agents:11, tasks:7, workflows:2,
+   desc:'Board de 11 conselheiros estratégicos — Ray Dalio, Charlie Munger, Naval Ravikant, Peter Thiel, Reid Hoffman, Simon Sinek, Brené Brown e mais.',
+   tags:['strategy','investment','leadership','mental-models','frameworks'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/advisory-board.zip -o advisory-board.zip'},
+  {id:'brand-squad', name:'Brand Squad', version:'v1.0.0', icon:'🎯', agents:15, tasks:9, workflows:2,
+   desc:'Squad definitivo de estratégia de marca — 10 pensadores lendários de branding clonados como agentes de IA, mais 4 especialistas e 1 orquestrador.',
+   tags:['branding','brand-strategy','positioning','identity','narrative'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/brand-squad.zip -o brand-squad.zip'},
+  {id:'c-level', name:'C-Level Squad', version:'v1.0.0', icon:'👔', agents:6, tasks:7, workflows:2,
+   desc:'C-suite virtual de 6 executivos — CEO (Vision Chief), COO, CMO, CTO, CIO, CAIO. Estratégia, operações, marketing, tecnologia e AI.',
+   tags:['c-suite','strategy','operations','marketing','technology'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/c-level.zip -o c-level.zip'},
+  {id:'copy-squad', name:'Copy Squad', version:'v1.0.0', icon:'✍️', agents:23, tasks:13, workflows:2,
+   desc:'Squad de elite com 23 agentes de copywriting — 22 copywriters lendários (Halbert, Schwartz, Ogilvy, Sugarman...) + 1 orquestrador.',
+   tags:['copywriting','direct-response','sales-letter','email','hooks'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/copy-squad.zip -o copy-squad.zip'},
+  {id:'cybersecurity', name:'Cybersecurity Squad', version:'v1.0.0', icon:'🛡️', agents:15, tasks:9, workflows:2,
+   desc:'Squad de 15 agentes de cibersegurança. Pentest, red team, blue team, AppSec, incident response, recon, exploitation — com framework ético.',
+   tags:['pentesting','red-team','blue-team','appsec','incident-response'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/cybersecurity.zip -o cybersecurity.zip'},
+  {id:'data-squad', name:'Data Squad', version:'v1.0.0', icon:'📊', agents:7, tasks:7, workflows:2,
+   desc:'Squad de 7 estrategistas data-driven — analytics (Kaushik), CLV (Fader), growth (Ellis), community (Spinks), customer success (Mehta).',
+   tags:['analytics','growth','customer-success','community','data'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/data-squad.zip -o data-squad.zip'},
+  {id:'design-squad', name:'Design Squad', version:'v1.0.0', icon:'🎨', agents:8, tasks:8, workflows:2,
+   desc:'Squad de design operations — 3 experts (Brad Frost, Dan Mall, Dave Malouf) + 4 especialistas + 1 orquestrador.',
+   tags:['design-systems','ux','ui','atomic-design','operations'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/design-squad.zip -o design-squad.zip'},
+  {id:'hormozi-squad', name:'Hormozi Squad', version:'v1.0.0', icon:'💰', agents:16, tasks:10, workflows:2,
+   desc:'Squad de 16 agentes implementando os frameworks de Alex Hormozi. Offers, leads, pricing, sales, content, hooks, launch, retention, scaling.',
+   tags:['hormozi','offers','leads','pricing','sales'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/hormozi-squad.zip -o hormozi-squad.zip'},
+  {id:'movement-squad', name:'Movement Squad', version:'v1.0.0', icon:'⚡', agents:7, tasks:7, workflows:1,
+   desc:'Squad de 7 agentes para construção de movimentos. Fenomenologia, identidade, manifestos, ciclos de crescimento, medição de impacto.',
+   tags:['movement','community','social-impact','identity','manifesto'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/movement-squad.zip -o movement-squad.zip'},
+  {id:'storytelling-squad', name:'Storytelling Squad', version:'v1.0.0', icon:'📖', agents:12, tasks:8, workflows:2,
+   desc:'Squad de 12 mestres do storytelling. Mitologia, screenwriting, narrativa pessoal, business storytelling, improviso, pitching, movimentos sociais.',
+   tags:['storytelling','narrative','screenplay','presentation','pitching'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/storytelling-squad.zip -o storytelling-squad.zip'},
+  {id:'traffic-masters', name:'Traffic Masters', version:'v1.0.0', icon:'🚀', agents:16, tasks:9, workflows:2,
+   desc:'Squad de 16 agentes especialistas em tráfego pago. Facebook, YouTube, Google Ads, media buying, creative analysis, scaling, tracking.',
+   tags:['traffic','ads','facebook','google','scaling'],
+   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/traffic-masters.zip -o traffic-masters.zip'},
+];
+
+// ─── State ────────────────────────────────────────────────────────────────
+const STATE_KEY = 'xquads_enabled';
+function loadState(){try{return JSON.parse(localStorage.getItem(STATE_KEY))||{};}catch{return{};}}
+function saveState(s){localStorage.setItem(STATE_KEY, JSON.stringify(s));}
+
+// ─── Render squads ────────────────────────────────────────────────────────
+function renderSquads(){
+  const state = loadState();
+  const grid = document.getElementById('squad-grid');
+  grid.innerHTML = '';
+  SQUADS.forEach(s => {
+    const on = !!state[s.id];
+    const tags = s.tags.map(t=>`<span class="squad-tag">${t}</span>`).join('');
+    grid.innerHTML += `
+      <div class="squad-card ${on?'enabled':''}" id="card-${s.id}">
+        <div class="squad-header">
+          <div class="squad-icon">${s.icon}</div>
+          <div class="squad-info">
+            <div class="squad-name">${s.name}</div>
+            <div class="squad-version">${s.version} · ${s.agents} agentes</div>
+          </div>
+          <div class="toggle-wrap">
+            <span class="toggle-label">${on?'Ativo':'Inativo'}</span>
+            <label class="switch">
+              <input type="checkbox" ${on?'checked':''} onchange="toggleSquad('${s.id}', this.checked, '${s.name}')">
+              <div class="switch-track"></div>
+              <div class="switch-thumb"></div>
+            </label>
+          </div>
+        </div>
+        <p class="squad-desc">${s.desc}</p>
+        <div class="squad-stats">
+          <span class="squad-stat"><i data-lucide="list-checks" style="width:11px;height:11px;color:#fbbf24"></i>${s.tasks} tasks</span>
+          <span class="squad-stat"><i data-lucide="git-branch" style="width:11px;height:11px;color:#8b5cf6"></i>${s.workflows} workflows</span>
+        </div>
+        <div class="squad-tags">${tags}</div>
+        <div class="install-panel">
+          <div class="install-panel-label"><i data-lucide="check-circle-2" style="width:12px;height:12px"></i> Squad habilitado</div>
+          <button class="install-panel-btn" onclick="installOne('${s.id}')">
+            <i data-lucide="download" style="width:12px;height:12px"></i> Instalar no ecossistema
+          </button>
+          <div class="install-panel-note">Gera um script .sh — rode no terminal para instalar a skill</div>
+        </div>
+      </div>`;
+  });
+  if(window.lucide) lucide.createIcons();
+  updateEnabledBar(state);
+}
+
+function toggleSquad(id, enabled, name){
+  const state = loadState();
+  if(enabled) state[id]=true; else delete state[id];
+  saveState(state);
+  const card = document.getElementById(`card-${id}`);
+  if(card){
+    card.classList.toggle('enabled', enabled);
+    const lbl = card.querySelector('.toggle-label');
+    if(lbl) lbl.textContent = enabled ? 'Ativo' : 'Inativo';
+  }
+  showToast(enabled ? `✓ ${name} habilitado` : `${name} desabilitado`, enabled?'orange':'gray');
+  updateEnabledBar(state);
+  if(window.lucide) lucide.createIcons();
+}
+
+function updateEnabledBar(state){
+  const keys = Object.keys(state);
+  const tagsEl = document.getElementById('enabled-tags');
+  const countEl = document.getElementById('enabled-count');
+  const metricEl = document.getElementById('count-enabled');
+  const bar = document.getElementById('install-all-bar');
+  if(!keys.length){
+    tagsEl.innerHTML='<span class="enabled-empty">Nenhum squad habilitado ainda — use os toggles abaixo</span>';
+    if(bar) bar.classList.remove('show');
+  } else {
+    tagsEl.innerHTML = keys.map(k=>{
+      const sq = SQUADS.find(s=>s.id===k);
+      return sq?`<span class="enabled-tag">${sq.icon} ${sq.name}</span>`:'';
+    }).join('');
+    if(bar) bar.classList.add('show');
+  }
+  countEl.textContent = `${keys.length} / ${SQUADS.length}`;
+  if(metricEl) metricEl.textContent = keys.length;
+}
+
+// ─── Gerar script de instalação ───────────────────────────────────────────
+function buildScript(ids){
+  const base = `${navigator.platform.includes('Mac')||true ? `${process?.env?.HOME||'~'}` : '~'}`;
+  let sh = `#!/bin/bash\n# Xquads — Instalar squads no ecossistema Claude Code\n# Gerado em: ${new Date().toLocaleString('pt-BR')}\n\nBASE="$HOME/.claude/plugins/cache/local"\necho "🚀 Instalando ${ids.length} squad(s) Xquads..."\n\n`;
+  ids.forEach(id => {
+    const content = SKILL_TEMPLATES[id];
+    if(!content) return;
+    const slug = `xquads-${id}`;
+    sh += `# ${id}\n`;
+    sh += `mkdir -p "$BASE/${slug}/1.0.0/skills/${slug}"\n`;
+    sh += `cat > "$BASE/${slug}/1.0.0/skills/${slug}/SKILL.md" << 'SKILLEOF'\n`;
+    sh += content + '\n';
+    sh += `SKILLEOF\n`;
+    sh += `echo "  ✓ ${id} instalado"\n\n`;
+  });
+  sh += `echo ""\necho "✅ Instalação concluída! Reinicie o Claude Code para ativar os squads."\n`;
+  return sh;
+}
+
+function installOne(id){
+  const sq = SQUADS.find(s=>s.id===id);
+  if(!sq) return;
+  const script = buildScript([id]);
+  download(`install-xquads-${id}.sh`, script);
+  showToast(`Script gerado — rode no terminal para instalar ${sq.name}`, 'orange');
+}
+
+function installAll(){
+  const state = loadState();
+  const ids = Object.keys(state);
+  if(!ids.length) return;
+  const script = buildScript(ids);
+  download(`install-xquads-todos.sh`, script);
+  showToast(`Script gerado para ${ids.length} squad(s) — rode no terminal`, 'orange');
+}
+
+function download(filename, content){
+  const blob = new Blob([content], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+
+// ─── Tabs ─────────────────────────────────────────────────────────────────
+function showTab(id, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.itab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(`tab-${id}`).classList.add('active');
+  btn.classList.add('active');
+  if(window.lucide) lucide.createIcons();
+}
+
+// ─── Toast ────────────────────────────────────────────────────────────────
+function showToast(msg, type='orange'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────
+renderSquads();
+lucide.createIcons();
+</script>
+</body>
+</html>

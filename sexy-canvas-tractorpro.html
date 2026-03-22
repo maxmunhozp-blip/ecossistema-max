@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sexy Canvas — TractorPRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d1a;--surface:#13132a;--surface-alt:#1a1a33;--surface-hover:#20203d;
+  --border:#2a2a4a;--border-strong:#3a3a60;
+  --accent:#8b5cf6;--accent-2:#3b82f6;--accent-dim:rgba(139,92,246,.12);--accent-mid:rgba(139,92,246,.25);
+  --text-dark:#f1f5f9;--text:#cbd5e1;--text-muted:#7c8db5;--text-dim:#4a5a80;
+  --shadow:0 1px 3px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.2);
+  --shadow-lg:0 4px 24px rgba(0,0,0,.4);
+  --nav-h:56px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+
+.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(13,13,26,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:24px}
+.nav-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--text-dark);text-decoration:none}
+.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;gap:2px;margin-left:8px}
+.nav-links a{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:.15s}
+.nav-links a:hover{color:var(--text-dark);background:var(--surface-alt)}
+.nav-links a.active{color:var(--accent);background:var(--accent-dim)}
+
+.hero{background:linear-gradient(135deg,#13132a 0%,#0f1535 50%,#130f2e 100%);border-bottom:1px solid var(--border);padding:36px 24px 28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-40px;width:360px;height:360px;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-60px;left:5%;width:280px;height:280px;background:radial-gradient(circle,rgba(59,130,246,.1) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:960px;margin:0 auto}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--accent-dim);color:var(--accent);font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;margin-bottom:14px;border:1px solid var(--accent-mid)}
+.hero h1{font-size:28px;font-weight:800;color:var(--text-dark);margin-bottom:6px;letter-spacing:-.5px}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
+.hero-meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted)}
+.hero-meta-item strong{color:var(--text-dark)}
+
+.tabs-wrap{background:rgba(13,13,26,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:var(--nav-h);z-index:90}
+.tabs{display:flex;padding:0 24px;overflow-x:auto;scrollbar-width:none;max-width:1100px;margin:0 auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:13px 14px;font-size:13px;font-weight:500;color:var(--text-muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:5px}
+.tab:hover{color:var(--text-dark)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+.content{max-width:1100px;margin:0 auto;padding:28px 24px}
+.section{display:none}.section.active{display:block}
+
+/* CANVAS PERSONA */
+.canvas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:32px}
+.canvas-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
+.canvas-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.canvas-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.canvas-title{font-size:13px;font-weight:700;color:var(--text-dark)}
+.canvas-items{list-style:none;display:flex;flex-direction:column;gap:5px}
+.canvas-items li{font-size:12px;color:var(--text);padding:4px 8px;background:var(--surface-alt);border-radius:6px;line-height:1.4}
+.canvas-phrase{font-size:13px;font-style:italic;color:var(--accent);background:var(--accent-dim);border:1px solid var(--accent-mid);padding:8px 12px;border-radius:8px;margin-top:8px}
+
+/* COPIES */
+.copies-section{margin-bottom:36px}
+.copies-trigger-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+.cth-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.cth-name{font-size:17px;font-weight:800;color:var(--text-dark)}
+.cth-meta{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
+.copies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.copy-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;transition:.15s}
+.copy-card:hover{box-shadow:0 0 0 1px rgba(139,92,246,.25),var(--shadow-lg);border-color:var(--accent)}
+.copy-card-header{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.copy-hook{font-size:15px;font-weight:700;color:var(--text-dark);line-height:1.4;margin-bottom:10px}
+.copy-body{font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;margin-bottom:10px}
+.copy-cta-box{background:var(--accent);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:10px;display:inline-block}
+.copy-visual{font-size:11px;color:var(--text-muted);background:var(--surface-alt);padding:6px 10px;border-radius:6px;margin-bottom:12px}
+.copy-footer{display:flex;justify-content:flex-end}
+.btn-copy{padding:7px 14px;background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-muted);transition:.15s;display:flex;align-items:center;gap:5px;font-family:'Inter',sans-serif}
+.btn-copy:hover{background:var(--accent-dim);border-color:var(--accent-mid);color:var(--accent)}
+
+/* COMBOS */
+.combos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.combo-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
+.combo-name{font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:6px}
+.combo-tags{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.combo-copies{display:flex;flex-direction:column;gap:8px}
+.combo-copy-item{background:var(--surface-alt);border-radius:8px;padding:10px 12px;cursor:pointer;transition:.15s;font-size:13px;color:var(--text);line-height:1.4}
+.combo-copy-item:hover{background:var(--accent-dim);color:var(--accent)}
+
+/* RANKING */
+.ranking-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.ranking-table th{background:var(--surface-alt);padding:11px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.ranking-table td{padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}
+.ranking-table tr:last-child td{border-bottom:none}
+.rank-badge{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.rb-1{background:#f59e0b}.rb-2{background:#6366f1}.rb-3{background:#7c3aed}.rb-4{background:#10b981}.rb-5{background:#6b7280}
+
+/* TAGS */
+.tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid transparent}
+.tag-ganancia{background:#fefce8;color:#854d0e;border-color:#fef08a}
+.tag-luxuria{background:#fdf2f8;color:#9d174d;border-color:#fbcfe8}
+.tag-inveja{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
+.tag-ira{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+.tag-crianca{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
+.tag-gula{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+.tag-preguica{background:#f0fdf9;color:#065f46;border-color:#a7f3d0}
+.tag-vaidade{background:#f5f3ff;color:#5b21b6;border-color:#ddd6fe}
+.tag-combo{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tag-frio{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.tag-morno{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.tag-quente{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+.tag-sutil{background:#f0fdf4;color:#15803d;border-color:#bbf7d0}
+.tag-moderada{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.tag-agressiva{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+
+.section-title{font-size:18px;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.section-sub{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+.divider{height:1px;background:var(--border);margin:28px 0}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;transition:.3s;opacity:0;pointer-events:none;z-index:1000;display:flex;align-items:center;gap:6px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.tele-btn{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;border:none;border-radius:30px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(124,58,237,.35);transition:.2s;font-family:'Inter',sans-serif;z-index:200}
+.tele-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,58,237,.45)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    Ecossistema Max
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Hub</a>
+    <a href="persona.html">Persona</a>
+    <a href="criativos.html">Criativos</a>
+    <a href="skills.html">Skills</a>
+    <a href="resultado.html">Resultado</a>
+    <a href="sexy-canvas.html">Sexy Canvas</a>
+    <a href="sexy-canvas-tractorpro.html" class="active">TractorPRO</a>
+    <a href="xquads.html">Xquads</a>
+    <a href="terminal.html">Terminal</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><i data-lucide="flame" style="width:12px;height:12px"></i> Sexy Canvas Gerado</div>
+    <h1>TractorPRO — <em>Canvas Completo</em></h1>
+    <p style="font-size:14px;color:var(--text-muted);margin-top:6px">8 gatilhos × 3 variações = 24 copies prontas para teste + 4 combos + ranking de prioridade</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><i data-lucide="user" style="width:13px;height:13px"></i> Persona: <strong>Rafael Mendes — Gestor de Tráfego</strong></div>
+      <div class="hero-meta-item"><i data-lucide="monitor" style="width:13px;height:13px"></i> Plataforma: <strong>Meta Ads</strong></div>
+      <div class="hero-meta-item"><i data-lucide="thermometer" style="width:13px;height:13px"></i> Temperatura: <strong>Frio → Morno</strong></div>
+      <div class="hero-meta-item"><i data-lucide="link" style="width:13px;height:13px"></i> Destino: <strong>tractorpro.com.br</strong></div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('canvas')"><i data-lucide="layout-grid" style="width:13px;height:13px"></i> Canvas Persona</button>
+    <button class="tab" onclick="showTab('copies')"><i data-lucide="copy" style="width:13px;height:13px"></i> 24 Copies</button>
+    <button class="tab" onclick="showTab('combos')"><i data-lucide="zap" style="width:13px;height:13px"></i> Combos</button>
+    <button class="tab" onclick="showTab('ranking')"><i data-lucide="bar-chart-2" style="width:13px;height:13px"></i> Ranking</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- CANVAS PERSONA -->
+<div id="tab-canvas" class="section active">
+  <div class="section-title">Canvas da Persona</div>
+  <div class="section-sub">Rafael Mendes mapeado nos 8 gatilhos do Sexy Canvas</div>
+  <div class="canvas-grid">
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fefce8">💰</div>
+        <span class="canvas-title">Ganância</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Quer acumular: faturamento de R$15k-20k/mês sem mais horas</li>
+        <li>Vantagem: cobrar R$3k-5k/cliente sem medo de perder</li>
+        <li>Retorno esperado: TractorPRO pagando em 1 cliente a mais</li>
+      </ul>
+      <div class="canvas-phrase">"Como posso faturar mais sem aumentar uma hora sequer de trabalho?"</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fdf2f8">💎</div>
+        <span class="canvas-title">Lúxuria</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Desejo: acordar e ver relatórios prontos sem ter feito nada</li>
+        <li>Experiência irresistível: cliente renova sem precisar ligar</li>
+        <li>O que faz os olhos brilharem: nunca mais abrir o gerenciador</li>
+      </ul>
+      <div class="canvas-phrase">"Imagina acordar e o relatório já tá no e-mail do cliente..."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#f0fdf4">👀</div>
+        <span class="canvas-title">Inveja</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Inveja de: gestores que têm 20+ clientes com operação leve</li>
+        <li>Vê outros conquistando: liberdade geográfica de verdade</li>
+        <li>Quer que pensem: "ele tem processo, ele é profissional"</li>
+      </ul>
+      <div class="canvas-phrase">"Aquele gestor do grupo tem 30 clientes. Como ele faz?"</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fef2f2">🔥</div>
+        <span class="canvas-title">Ira</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Furiosa com: o Gerenciador de Anúncios do Meta (terror diário)</li>
+        <li>Injustiça: "você cobra muito pra ficar no computador"</li>
+        <li>Raiva de: clientes que comparam com agência mais barata</li>
+      </ul>
+      <div class="canvas-phrase">"Odeio ter que entrar no gerenciador. Todo santo dia."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#eef2ff">⭐</div>
+        <span class="canvas-title">Criança Interior</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Sonho antigo: liberdade que o marketing digital prometeu</li>
+        <li>Simplicidade perdida: época que o negócio era leve e empolgante</li>
+        <li>Alegria genuína: trabalhar menos e ter mais resultado</li>
+      </ul>
+      <div class="canvas-phrase">"Lembra quando você entrou nessa área cheio de empolgação?"</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fff7ed">🍀</div>
+        <span class="canvas-title">Gula</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Nunca tem o suficiente: tempo, clientes bons, reconhecimento</li>
+        <li>Consumiria sem parar: processos que automatizam a operação</li>
+        <li>Abundância que busca: clientes, dashboards, relatórios, escala</li>
+      </ul>
+      <div class="canvas-phrase">"Quero relatório automático + dashboard + organização + mais clientes."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#f0fdf9">⚡</div>
+        <span class="canvas-title">Preguiça</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Pagaria pra não ter que fazer: relatórios manuais, entrar no gerenciador</li>
+        <li>Processo que odeia: compilar dados de vários clientes por semana</li>
+        <li>Atalho perfeito: tudo automático, só checar o resultado</li>
+      </ul>
+      <div class="canvas-phrase">"Eu fiz o trabalho difícil. Você só aplica."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#f5f3ff">👑</div>
+        <span class="canvas-title">Vaidade</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Quer ser visto como: profissional com processo e estrutura</li>
+        <li>Status que busca: referência no nicho, não mais "freelancer"</li>
+        <li>Alimenta o ego: cliente elogiar o dashboard sem ele pedir</li>
+      </ul>
+      <div class="canvas-phrase">"Quero que o cliente pense: esse cara é diferente dos outros."</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 24 COPIES -->
+<div id="tab-copies" class="section">
+  <div class="section-title">24 Copies por Gatilho</div>
+  <div class="section-sub">3 variações por gatilho · Meta Ads · Tráfego Frio → Morno</div>
+
+  <!-- GANÂNCIA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fefce8">💰</div>
+      <div>
+        <div class="cth-name">Ganância</div>
+        <div class="cth-meta"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-frio">Frio</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-moderada">Moderada</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="ganancia-a">
+        <div class="copy-card-header"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Gestor de tráfego que fatura R$7k-9k/mês: onde tá o dinheiro que você tá deixando na mesa?</div>
+        <div class="copy-body">A maioria dos gestores perde de 30% a 50% do faturamento potencial não por falta de habilidade — mas por falta de processo.
+
+Enquanto você passa horas no gerenciador compilando relatório manual, o cliente do lado tá renovando sem precisar de call.
+
+O TractorPRO foi feito por gestor de tráfego pra gestor de tráfego. Automatiza o que toma tempo e deixa você focar no que gera resultado.</div>
+        <div class="copy-cta-box">→ Teste grátis 14 dias · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: gestor olhando pra planilha vs. gestor recebendo notificação de renovação. Texto: "R$7k → R$15k. Mesmos clientes. Mesmo tempo."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ganancia-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ganancia-b">
+        <div class="copy-card-header"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">De R$9k pra R$18k por mês sem pegar um cliente novo.</div>
+        <div class="copy-body">Parece impossível? Não é.
+
+O problema não é o número de clientes. É quanto tempo você desperdiça por cliente.
+
+Com o TractorPRO, cada cliente rende mais porque o processo tá automatizado: relatório automático, dashboard que o cliente vê sozinho, e você focado em estratégia — não em operação.
+
+Resultado: você atende mais, entrega mais, cobra mais. Sem trabalhar mais.</div>
+        <div class="copy-cta-box">→ Começa a faturar mais · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: gráfico simples mostrando curva de faturamento subindo. Texto sobre a imagem: "Mesmo tempo de trabalho. Resultado dobrado."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ganancia-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ganancia-c">
+        <div class="copy-card-header"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Esse único ajuste fez gestores de tráfego dobrarem o faturamento sem pegar um cliente a mais.</div>
+        <div class="copy-body">Não é curso. Não é mentoria. Não é "estratégia secreta".
+
+É processo.
+
+Gestores que usam o TractorPRO param de trabalhar por cliente e começam a trabalhar por resultado. Relatório automático. Dashboard em tempo real. Operação que roda sem precisar de você todo minuto.
+
+Quando o cliente vê valor sem precisar ser convencido, ele renova. E você cobra mais.</div>
+        <div class="copy-cta-box">→ Garante meu retorno · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: print de dashboard com dados de cliente + notificação de renovação. Texto: "Ele renovou sozinho. Sem call. Sem negociação."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ganancia-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- LÚXURIA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fdf2f8">💎</div>
+      <div>
+        <div class="cth-name">Lúxuria</div>
+        <div class="cth-meta"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-morno">Morno</span><span class="tag tag-moderada">Moderada</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="luxuria-a">
+        <div class="copy-card-header"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Imagina acordar, pegar o café e o relatório do cliente já tá enviado.</div>
+        <div class="copy-body">Sem você tocar em nada.
+
+Sem abrir o gerenciador. Sem compilar dado. Sem montar planilha.
+
+O TractorPRO faz isso por você. Automatiza o relatório, organiza as campanhas e deixa o cliente informado — enquanto você aproveita a manhã do jeito que você quiser.
+
+Isso não é luxo. É o mínimo que você merece depois de anos de operação manual.</div>
+        <div class="copy-cta-box">→ Quero essa rotina · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: pessoa tomando café na janela, luz da manhã. Notificação: "Relatório enviado automaticamente." Texto: "Bom dia, Rafael. O TractorPRO já trabalhou por você."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('luxuria-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="luxuria-b">
+        <div class="copy-card-header"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Depois que você experimenta uma operação que roda sozinha, não dá pra voltar atrás.</div>
+        <div class="copy-body">É viciante.
+
+Abrir o app e ver que o relatório foi pro cliente. Ver que a campanha foi otimizada. Ver que o cliente mandou "muito bom!" sem você ter feito nada além de pensar em estratégia.
+
+Gestores que usam o TractorPRO não conseguem imaginar como trabalhavam antes.
+
+E o melhor: você pode experimentar tudo isso de graça por 14 dias.</div>
+        <div class="copy-cta-box">→ Eu mereço isso · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: tela do TractorPRO com dashboard de clientes. Texto sobreposto: "Operação automática. Clientes felizes. Você descansado."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('luxuria-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="luxuria-c">
+        <div class="copy-card-header"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Nunca mais abre o Gerenciador de Anúncios do Meta com aquela sensação de dread.</div>
+        <div class="copy-body">Você sabe o que é. Aquela angústia antes de clicar. A lentidão. A interface que parece feita pra te confundir.
+
+O TractorPRO centraliza tudo que importa num painel simples. Você vê o que precisa ver sem precisar mergulhar no gerenciador toda hora.
+
+A sensação quando você percebe que não precisou entrar no gerenciador essa semana?
+
+Não tem preço.</div>
+        <div class="copy-cta-box">→ Experimentar agora · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: print de interface limpa do TractorPRO vs. screenshot caótico do gerenciador. Texto: "Você escolhe onde vive."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('luxuria-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- INVEJA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#f0fdf4">👀</div>
+      <div>
+        <div class="cth-name">Inveja</div>
+        <div class="cth-meta"><span class="tag tag-inveja">Inveja</span><span class="tag tag-morno">Morno</span><span class="tag tag-moderada">Moderada</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="inveja-a">
+        <div class="copy-card-header"><span class="tag tag-inveja">Inveja</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Aquele gestor do grupo que tem 25 clientes ativos. Você já perguntou como ele faz?</div>
+        <div class="copy-body">Não é que ele é mais talentoso que você.
+
+É que a operação dele é diferente. Enquanto você monta relatório manualmente, ele recebe o relatório pronto. Enquanto você explica resultado por call, o dashboard do cliente fala por ele.
+
+Com processo certo, você não precisa trabalhar mais. Só trabalhar melhor.
+
+O TractorPRO é o processo que esses gestores usam.</div>
+        <div class="copy-cta-box">→ Eu também quero · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: print de grupo de gestores (WhatsApp/Telegram) com alguém compartilhando resultado. Texto: "Eles não são diferentes de você. Só têm processo."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('inveja-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="inveja-b">
+        <div class="copy-card-header"><span class="tag tag-inveja">Inveja</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Seu cliente vai perguntar: "esse dashboard você montou do zero?" Você vai responder: "tem 5 minutos que configurei."</div>
+        <div class="copy-body">Quando o cliente vê um painel profissional com dados em tempo real, ele para de questionar o preço.
+
+Ele para de pedir desconto.
+
+Ele começa a indicar.
+
+O TractorPRO entrega ao seu cliente a experiência visual que agências grandes cobram fortunas pra oferecer. E você implementa em minutos.</div>
+        <div class="copy-cta-box">→ Quero minha vez · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: dashboard do TractorPRO com logo do cliente. Texto: "O que o cliente vê quando abre o relatório dele."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('inveja-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="inveja-c">
+        <div class="copy-card-header"><span class="tag tag-inveja">Inveja</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Enquanto você ainda compila relatório no Excel, outros gestores já automatizaram isso há meses.</div>
+        <div class="copy-body">Não é crítica. É realidade.
+
+A diferença entre quem fatura R$8k e quem fatura R$20k no mesmo nicho raramente é habilidade com tráfego.
+
+É processo. É ferramenta. É como você entrega valor pro cliente sem gastar mais horas.
+
+O TractorPRO tá fechando essa diferença. Você pode entrar agora ou ver os outros chegarem primeiro.</div>
+        <div class="copy-cta-box">→ Não vou ficar pra trás · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: linha do tempo simples. "Outros gestores → TractorPRO → você?" Texto: "Alguém vai pegar esses clientes. Vai ser você?"</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('inveja-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- IRA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fef2f2">🔥</div>
+      <div>
+        <div class="cth-name">Ira</div>
+        <div class="cth-meta"><span class="tag tag-ira">Ira</span><span class="tag tag-morno">Morno</span><span class="tag tag-quente">Quente</span><span class="tag tag-moderada">Moderada</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="ira-a">
+        <div class="copy-card-header"><span class="tag tag-ira">Ira</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">O Gerenciador de Anúncios do Meta foi feito pra confundir. O TractorPRO foi feito pra resolver.</div>
+        <div class="copy-body">Você não odeia o trabalho. Você odeia a ferramenta.
+
+A interface que muda sem avisar. O dado que desaparece. O relatório que você precisa montar do zero toda semana.
+
+O TractorPRO centraliza o que importa e tira você do gerenciador. Feito por gestor que também odiava aquilo — e decidiu construir o que ele gostaria que existisse.</div>
+        <div class="copy-cta-box">→ Nunca mais · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: X vermelho sobre ícone do gerenciador do Meta. Texto: "Você não precisa viver dentro do gerenciador pra ser um bom gestor."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ira-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ira-b">
+        <div class="copy-card-header"><span class="tag tag-ira">Ira</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Cansou de cliente que paga R$1.500 mas te trata como funcionário?</div>
+        <div class="copy-body">O problema não é o cliente. É como você está se posicionando.
+
+Quando você apresenta resultado com profissionalismo — dashboard estruturado, relatório automático, comunicação que diz "eu tenho processo" — o cliente para de questionar.
+
+O TractorPRO te dá a estrutura que faz o cliente te enxergar como parceiro estratégico, não como executor.
+
+Você cobra mais. Atende melhor. Com menos desgaste.</div>
+        <div class="copy-cta-box">→ Chega! Vou mudar · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: conversa de WhatsApp fictícia com cliente mandando "pode me cobrar mais, o trabalho vale". Texto: "Quando o cliente vê valor, ele pede pra você cobrar mais."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ira-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ira-c">
+        <div class="copy-card-header"><span class="tag tag-ira">Ira</span><span class="tag tag-agressiva">Agressiva</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Para de aceitar migalha. Você trabalha mais que o dobro do que cobra.</div>
+        <div class="copy-body">Você sabe que é verdade.
+
+Horas de estratégia + relatório manual + call de apresentação + suporte no WhatsApp. Tudo por R$1.500/mês.
+
+A operação tá cara pra você. O problema é que o cliente não vê o esforço — ele vê só o número.
+
+O TractorPRO resolve: automatiza o que toma seu tempo e faz o cliente ver o resultado de forma clara. Resultado visível = cobrança justa.
+
+Use essa raiva pra mudar agora.</div>
+        <div class="copy-cta-box">→ Quero a verdade · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: calculadora mostrando horas × valor = prejuízo. Texto: "O problema não é quanto você cobra. É quanto você gasta pra entregar."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ira-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CRIANÇA INTERIOR -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#eef2ff">⭐</div>
+      <div>
+        <div class="cth-name">Criança Interior</div>
+        <div class="cth-meta"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-frio">Frio</span><span class="tag tag-sutil">Sutil</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="crianca-a">
+        <div class="copy-card-header"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Lembra por que você entrou no marketing digital? Provavelmente não era pra passar horas no gerenciador do Meta.</div>
+        <div class="copy-body">Era liberdade. Era crescimento. Era trabalhar do jeito que faz sentido pra você.
+
+Em algum momento, a operação tomou conta e o propósito foi ficando de lado.
+
+O TractorPRO não vai resolver tudo. Mas vai devolver tempo. E com tempo, você reconecta com o que te motivou a começar.
+
+Teste grátis por 14 dias. Sem compromisso.</div>
+        <div class="copy-cta-box">→ Quero leveza · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: pessoa olhando pro horizonte, sensação de liberdade. Texto discreto: "Marketing digital prometeu liberdade. O TractorPRO ajuda a encontrar de volta."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('crianca-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="crianca-b">
+        <div class="copy-card-header"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Vamos simplificar tudo? Sem planilha, sem gerenciador, sem noite perdida compilando dado.</div>
+        <div class="copy-body">Gestão de tráfego não precisa ser complicado.
+
+Precisa ser eficiente.
+
+O TractorPRO foi construído pra tirar a complexidade da operação e deixar o que realmente importa: estratégia, criatividade, resultado pro cliente.
+
+E se o trabalho ficasse gostoso de novo?</div>
+        <div class="copy-cta-box">→ Vou simplificar · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: interface limpa e minimalista do TractorPRO. Texto: "Gestão de tráfego não precisa ser isso tudo. Pode ser simples."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('crianca-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="crianca-c">
+        <div class="copy-card-header"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Aquele brilho no olho que você tinha quando pegou seu primeiro cliente. Dá pra ter de novo.</div>
+        <div class="copy-body">Quando a operação trava, a empolgação vai junto.
+
+Você começa a trabalhar no modo sobrevivência: apagar incêndio, responder WhatsApp, montar relatório, repetir.
+
+O TractorPRO remove a fricção da operação. Com menos tempo gasto em tarefas manuais, você tem espaço pra estratégia — e é na estratégia que o brilho volta.</div>
+        <div class="copy-cta-box">→ Bora! · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: foto estilo "antes e depois" — cara exausto vs. cara empolgado com resultado. Texto: "A diferença? Processo. O TractorPRO é o processo."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('crianca-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- GULA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fff7ed">🍀</div>
+      <div>
+        <div class="cth-name">Gula</div>
+        <div class="cth-meta"><span class="tag tag-gula">Gula</span><span class="tag tag-morno">Morno</span><span class="tag tag-moderada">Moderada</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="gula-a">
+        <div class="copy-card-header"><span class="tag tag-gula">Gula</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Não é só relatório automático. É relatório + dashboard do cliente + organização por conta + visão de todas as campanhas + alertas em tempo real.</div>
+        <div class="copy-body">Tudo isso num só lugar. Sem precisar de 5 ferramentas diferentes.
+
+O TractorPRO centraliza a operação inteira de gestão de tráfego: do acompanhamento das campanhas ao relatório que vai pro cliente — sem você precisar tocar em nada.
+
+E ainda tem o trial de 14 dias pra você testar tudo sem pagar nada.</div>
+        <div class="copy-cta-box">→ Quero tudo isso · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: grid mostrando os módulos do TractorPRO (relatório, dashboard, alertas, organização). Texto: "Tudo que você precisava. Num lugar só."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('gula-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="gula-b">
+        <div class="copy-card-header"><span class="tag tag-gula">Gula</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">14 dias de TractorPRO grátis: relatório automático, dashboard do cliente, organização de campanhas — tudo sem limite.</div>
+        <div class="copy-body">Você tem 14 dias pra usar tudo.
+
+Sem cartão de crédito. Sem limitação de funcionalidade. Sem "versão trial" que não serve pra nada.
+
+É o produto completo, por 14 dias, pra você ver com seus próprios olhos o que gestores que usam o TractorPRO enxergam todo dia.
+
+E cada recurso que você testar vai fazer menos sentido voltar pra operação manual.</div>
+        <div class="copy-cta-box">→ Me dá acesso · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: timer contando 14 dias com lista de tudo incluso no trial. Texto: "14 dias. Produto completo. Sem pegadinha."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('gula-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="gula-c">
+        <div class="copy-card-header"><span class="tag tag-gula">Gula</span><span class="tag tag-agressiva">Agressiva</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">O pacote completo: de campanha a renovação de cliente — sem fazer nada manualmente.</div>
+        <div class="copy-body">Campanhas monitoradas automaticamente. Relatórios no e-mail do cliente sem você tocar. Dashboard que o cliente acessa quando quiser. Alertas quando algo precisa de atenção.
+
+De A a Z. Sem lacuna.
+
+O TractorPRO é a operação que você montaria se tivesse uma equipe inteira. Só que você não precisa de equipe.</div>
+        <div class="copy-cta-box">→ Quero o pacote completo · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: linha do tempo do ciclo completo (campanha → relatório → renovação) com ícone de automatização em cada etapa. Texto: "Tudo automático. Do início ao fim."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('gula-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PREGUIÇA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#f0fdf9">⚡</div>
+      <div>
+        <div class="cth-name">Preguiça</div>
+        <div class="cth-meta"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-frio">Frio</span><span class="tag tag-morno">Morno</span><span class="tag tag-sutil">Sutil</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="preguica-a">
+        <div class="copy-card-header"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">O relatório foi pro cliente sozinho enquanto eu dormia.</div>
+        <div class="copy-body">Sem eu fazer nada.
+
+Essa é a frase que gestores de tráfego que usam o TractorPRO mandam pro grupo quando descobre o recurso de relatório automático.
+
+Você configura uma vez. Depois o TractorPRO envia pro cliente no horário que você escolher, com os dados que você escolher, formatado do jeito certo.
+
+Cliente informado. Você descansado.</div>
+        <div class="copy-cta-box">→ Quero o atalho · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: notificação "Relatório enviado automaticamente às 08:00" com pessoa dormindo ao fundo. Simples, limpo, impactante.</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('preguica-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="preguica-b">
+        <div class="copy-card-header"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Eu fiz o trabalho difícil. Você só aplica.</div>
+        <div class="copy-body">Passei meses como gestor de tráfego odiando o gerenciador do Meta e compilando relatório toda semana.
+
+Então construí o TractorPRO.
+
+O processo já tá feito. A automação já tá pronta. Você só conecta suas contas e começa a usar. Sem curva de aprendizado absurda. Sem precisar ser técnico.
+
+Pronto pra usar. Em minutos.</div>
+        <div class="copy-cta-box">→ Me mostra como · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: print do onboarding do TractorPRO com poucos passos simples. Texto: "Configuração em minutos. Operação pra sempre."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('preguica-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="preguica-c">
+        <div class="copy-card-header"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Quantas horas por semana você passa fazendo coisas que o TractorPRO poderia fazer por você?</div>
+        <div class="copy-body">Relatório: 2-3h.
+Compilar métricas: 1-2h.
+Montar apresentação pro cliente: 1h.
+Responder "como tá a campanha?" no WhatsApp: acumulado, mais 1h.
+
+São 5-7h por semana em operação manual que a ferramenta resolve.
+
+5h × 4 semanas = 20h por mês de volta pra você.
+
+O que você faz com 20h extras?</div>
+        <div class="copy-cta-box">→ Quero o pronto · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: cálculo visual simples mostrando as horas recuperadas. Texto: "20h por mês. Pra estratégia. Pra novos clientes. Pra você."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('preguica-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- VAIDADE -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#f5f3ff">👑</div>
+      <div>
+        <div class="cth-name">Vaidade</div>
+        <div class="cth-meta"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-morno">Morno</span><span class="tag tag-moderada">Moderada</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="vaidade-a">
+        <div class="copy-card-header"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Pra quem não aceita mais ser tratado como "o cara que impulsiona post".</div>
+        <div class="copy-body">Você é estrategista. Você é especialista.
+
+Mas quando a operação é bagunçada e o relatório é uma planilha, o cliente não enxerga isso.
+
+O TractorPRO te posiciona diferente: dashboard profissional, relatório automatizado, comunicação estruturada. O cliente para de te enxergar como executor e começa a te enxergar como referência.
+
+E referência cobra o que merece.</div>
+        <div class="copy-cta-box">→ Quero ser referência · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: dashboard com logo do cliente, visual limpo e profissional. Texto: "Quando o cliente vê isso, ele para de questionar o preço."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('vaidade-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="vaidade-b">
+        <div class="copy-card-header"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">O que separa o gestor de tráfego que cobra R$1.500 do que cobra R$5.000 pelo mesmo resultado?</div>
+        <div class="copy-body">Não é habilidade.
+
+É posicionamento. É entrega. É como o cliente percebe o valor do trabalho.
+
+Gestores que usam o TractorPRO entregam a mesma gestão de tráfego — mas com dashboards profissionais, relatórios automáticos e processos estruturados que fazem o cliente sentir que está com uma agência de alto nível.
+
+Você não precisa mudar o que faz. Precisa mudar como apresenta.</div>
+        <div class="copy-cta-box">→ Elevar meu nível · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: dois cards lado a lado — "Gestor sem processo" vs "Gestor com TractorPRO". Visual, preço e percepção diferentes. Texto: "Mesma habilidade. Percepção diferente."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('vaidade-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="vaidade-c">
+        <div class="copy-card-header"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Não é todo gestor de tráfego que tem acesso a isso. E é por isso que os resultados são diferentes.</div>
+        <div class="copy-body">O TractorPRO não é pra quem quer continuar no automático.
+
+É pra quem já entendeu que processo é o diferencial. Que ferramenta certa multiplica resultado. Que gestores que estão no top do mercado não chegaram lá só com habilidade.
+
+Se você leva a carreira a sério, o próximo passo é óbvio.</div>
+        <div class="copy-cta-box">→ Entrar pro seleto grupo · tractorpro.com.br</div>
+        <div class="copy-visual">📸 Visual: comunidade/grupo de gestores com TractorPRO. Texto: "Gestores que levam a sério usam ferramenta que leva a sério."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('vaidade-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMBOS -->
+<div id="tab-combos" class="section">
+  <div class="section-title">Combos de Alto Impacto — TractorPRO</div>
+  <div class="section-sub">Copies que combinam 2 gatilhos para máxima conversão</div>
+  <div class="combos-grid">
+
+    <div class="combo-card">
+      <div class="combo-name">Resultado Fácil</div>
+      <div class="combo-tags"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-ganancia">Ganância</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Persona sobrecarregada que quer faturar mais sem trabalhar mais</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Fature R$15k/mês sem aumentar uma hora de trabalho. O TractorPRO faz a operação. Você faz a estratégia. → tractorpro.com.br</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Você não precisa de mais clientes. Precisa de menos operação manual por cliente. TractorPRO resolve isso em 14 dias de teste grátis.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Eu configurei uma vez. Agora o relatório vai sozinho. Os clientes renovam. O faturamento subiu. O TractorPRO fez o trabalho difícil.</div>
+      </div>
+    </div>
+
+    <div class="combo-card">
+      <div class="combo-name">Vingança Profissional</div>
+      <div class="combo-tags"><span class="tag tag-ira">Ira</span><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Gestor subestimado que quer provar o valor do trabalho</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Você cobra R$1.500 e o cliente te trata como executor. Com o TractorPRO, você entrega como agência e cobra como especialista. Mostre pra quem duvidou.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Chega de ser tratado como "o cara do impulsionamento". O TractorPRO te posiciona como estrategista — com dashboard, relatório automático e processo de referência.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">O sistema foi feito pra você não saber quanto vale. O TractorPRO foi feito pra provar que você vale muito mais. → tractorpro.com.br</div>
+      </div>
+    </div>
+
+    <div class="combo-card">
+      <div class="combo-name">Rainha do Nicho</div>
+      <div class="combo-tags"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-inveja">Inveja</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Gestor competitivo que quer se destacar dos demais</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Enquanto outros gestores compilam relatório no Excel, você vai entregar dashboard profissional automático. Todo mundo vai perguntar: como você faz isso?</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Aquele gestor do grupo que tem 25 clientes com operação leve? Ele usa processo. O TractorPRO é o processo. Agora é sua vez de ser esse gestor.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Não é todo mundo que tem acesso a isso. É por isso que quem usa o TractorPRO entrega diferente e cobra diferente. Você quer estar nesse grupo?</div>
+      </div>
+    </div>
+
+    <div class="combo-card">
+      <div class="combo-name">Simples e Feliz</div>
+      <div class="combo-tags"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-preguica">Preguiça</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Gestor esgotado que quer voltar a ter prazer no trabalho</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Lembra quando gestão de tráfego era empolgante? Antes do gerenciador do Meta, dos relatórios manuais, do WhatsApp do cliente às 22h. O TractorPRO simplifica de volta.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Vamos tirar o peso das costas? Sem planilha, sem gerenciador, sem noite perdida. O TractorPRO faz a operação. Você fica com a parte boa do trabalho.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">E se o trabalho ficasse gostoso de novo? Sem operação manual, sem apagar incêndio. Só estratégia, resultado e cliente satisfeito. Teste grátis 14 dias.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RANKING -->
+<div id="tab-ranking" class="section">
+  <div class="section-title">Ranking de Prioridade para Teste</div>
+  <div class="section-sub">Gatilhos ordenados por potencial de conversão para a persona Rafael Mendes · Meta Ads Frio/Morno</div>
+  <table class="ranking-table">
+    <thead>
+      <tr>
+        <th>Prioridade</th>
+        <th>Gatilho / Combo</th>
+        <th>Motivo</th>
+        <th>Orçamento</th>
+        <th>Temperatura</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="rank-badge rb-1">1</span></td>
+        <td><span class="tag tag-preguica">Preguiça</span> + "O relatório foi sozinho"</td>
+        <td>Dor diária número 1 da persona. Hook concreto, resultado imediato, emocional forte.</td>
+        <td>30%</td>
+        <td><span class="tag tag-frio">Frio</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-2">2</span></td>
+        <td><span class="tag tag-ira">Ira</span> + Gerenciador Meta</td>
+        <td>Terror diário da persona. Copy que nomeia o inimigo certo (sistema, não pessoa) tem alto engajamento.</td>
+        <td>25%</td>
+        <td><span class="tag tag-morno">Morno</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-3">3</span></td>
+        <td><span class="tag tag-combo">Combo</span> Resultado Fácil (Preguiça + Ganância)</td>
+        <td>Combina o maior gatilho emocional (preguiça/dor) com o racional (faturar mais). Alta conversão em morno.</td>
+        <td>20%</td>
+        <td><span class="tag tag-morno">Morno</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-4">4</span></td>
+        <td><span class="tag tag-ganancia">Ganância</span> + "De R$9k pra R$18k"</td>
+        <td>Persona tem ambição financeira clara. Copy com número específico gera curiosidade e clique.</td>
+        <td>15%</td>
+        <td><span class="tag tag-morno">Morno</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-5">5</span></td>
+        <td><span class="tag tag-vaidade">Vaidade</span> + "R$1.500 vs R$5.000"</td>
+        <td>Posicionamento e auto-imagem são fortes nessa persona. Funciona bem como remarketing.</td>
+        <td>10%</td>
+        <td><span class="tag tag-quente">Quente</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:20px;padding:16px 20px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.25);border-radius:12px">
+    <div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:6px">⚠️ Notas de Compliance — TractorPRO</div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:6px">
+      <li style="font-size:13px;color:#fcd34d">• Ganância: não prometer "faturar R$18k garantido" — use "gestores que usam relatam..." ou "potencial de"</li>
+      <li style="font-size:13px;color:#fcd34d">• Ira: a raiva é direcionada ao SISTEMA (Meta, gerenciador) — nunca ao cliente ou ao mercado em geral</li>
+      <li style="font-size:13px;color:#fcd34d">• Vaidade: "exclusivo" está no tom certo — não usa linguagem de exclusão explícita</li>
+      <li style="font-size:13px;color:#fcd34d">• Preguiça: "o relatório foi sozinho enquanto eu dormia" é literal e verdadeiro — sem problema de compliance</li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<div class="toast" id="toast"><i data-lucide="check" style="width:14px;height:14px"></i> Copiado!</div>
+<button class="tele-btn" onclick="copyAll()"><i data-lucide="radio" style="width:14px;height:14px"></i> Copiar Tudo (Teleprompter)</button>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(`tab-${id}`).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(window.lucide) lucide.createIcons();
+}
+
+function showToast(){
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+function copyText(el){
+  navigator.clipboard.writeText(el.textContent.trim()).then(()=>showToast());
+}
+
+function copyCard(id){
+  const card=document.querySelector(`[data-copy="${id}"]`);
+  if(!card) return;
+  const hook=card.querySelector('.copy-hook')?.textContent.trim()||'';
+  const body=card.querySelector('.copy-body')?.textContent.trim()||'';
+  const cta=card.querySelector('.copy-cta-box')?.textContent.trim()||'';
+  navigator.clipboard.writeText(`${hook}\n\n${body}\n\n${cta}`).then(()=>showToast());
+}
+
+function copyAll(){
+  const cards=document.querySelectorAll('.copy-card');
+  let all='SEXY CANVAS — TRACTORPRO\n';
+  all+='Persona: Rafael Mendes — Gestor de Tráfego\n';
+  all+='================================\n\n';
+  cards.forEach((card,i)=>{
+    const gatilho=card.querySelector('.copy-card-header .tag')?.textContent||'';
+    const hook=card.querySelector('.copy-hook')?.textContent.trim()||'';
+    const body=card.querySelector('.copy-body')?.textContent.trim()||'';
+    const cta=card.querySelector('.copy-cta-box')?.textContent.trim()||'';
+    all+=`--- COPY ${i+1} [${gatilho}] ---\n`;
+    all+=`HOOK: ${hook}\n\n`;
+    all+=`${body}\n\n`;
+    all+=`CTA: ${cta}\n\n`;
+  });
+  navigator.clipboard.writeText(all).then(()=>{
+    const t=document.getElementById('toast');
+    t.querySelector('span')||null;
+    document.getElementById('toast').innerHTML='<i data-lucide="check" style="width:14px;height:14px"></i> 24 copies copiadas!';
+    showToast();
+  });
+}
+
+lucide.createIcons();
+</script>
+</body>
+</html>

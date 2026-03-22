@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Ecossistema Max — Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f7f7f9;--surface:#fff;--surface-alt:#f2f2f4;--surface-hover:#ebebed;
+  --border:#e4e4e7;--border-strong:#d1d1d6;
+  --accent:#7c3aed;--accent-dim:#f3f0ff;--accent-mid:#ede9fe;
+  /* kept for semantic use in status badges only */
+  --purple:#7c3aed;--purple-dim:#f3f0ff;
+  --blue:#2563eb;--blue-dim:#dbeafe;
+  --green:#059669;--green-dim:#dcfce7;--green-neon:#00d4a0;
+  --red:#ef4444;--red-dim:#fef2f2;
+  --amber:#f59e0b;--amber-dim:#fffbeb;
+  --text-dark:#111827;--text:#374151;--text-muted:#6b7280;--text-dim:#9ca3af;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
+  --shadow-lg:0 4px 20px rgba(0,0,0,.08);
+  --nav-h:56px;--radius:10px;--radius-lg:14px;
+  /* compat aliases */
+  --dark:var(--text-dark);--muted:var(--text-muted);--dim:var(--text-dim);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.a1{animation:up .5s ease forwards}
+.a2{animation:up .5s .08s ease forwards;opacity:0}
+.a3{animation:up .5s .16s ease forwards;opacity:0}
+.a4{animation:up .5s .24s ease forwards;opacity:0}
+.a5{animation:up .5s .32s ease forwards;opacity:0}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:20px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;flex-shrink:0}
+.logo-text{font-size:14px;color:var(--text-dark);font-weight:600}
+.logo-text strong{font-weight:900}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nl{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:all .15s}
+.nl:hover{background:var(--surface-alt);color:var(--text-dark)}
+.nl.active{background:var(--purple-dim);color:var(--purple)}
+
+main{max-width:860px;margin:0 auto;padding:60px 24px 80px}
+.hero{text-align:center;margin-bottom:56px}
+.hero h1{font-size:38px;font-weight:900;color:var(--text-dark);line-height:1.15;letter-spacing:-.5px;margin-bottom:12px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{font-size:16px;color:var(--text-muted);line-height:1.7;max-width:460px;margin:0 auto}
+.label{font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.label::after{content:'';flex:1;height:1px;background:var(--border)}
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:48px}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:22px 18px;text-decoration:none;color:inherit;transition:all .2s;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
+.card:hover{border-color:var(--purple);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.card.accent{background:var(--accent-dim);border-color:var(--accent-mid)}
+.card.accent:hover{border-color:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.card-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text-dim)}
+.card-icon i,.card-icon svg{width:18px;height:18px;stroke:currentColor;flex-shrink:0}
+.card-title{font-size:14px;font-weight:700;color:var(--text-dark)}
+.card.accent .card-title{color:var(--accent)}
+.card.accent .card-desc{color:var(--text-muted)}
+.card.accent .card-arrow{color:var(--accent)}
+.card-desc{font-size:12px;color:var(--text-muted);line-height:1.5}
+.card-arrow{font-size:12px;color:var(--text-dim);margin-top:auto}
+.skills-list{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:48px;box-shadow:var(--shadow)}
+.skill-row{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);transition:background .15s}
+.skill-row:last-child{border-bottom:none}
+.skill-row:hover{background:var(--surface-alt)}
+.skill-dot{display:none}
+.skill-row-name{font-size:14px;font-weight:600;color:var(--text-dark);flex:1}
+.skill-row-desc{font-size:12px;color:var(--text-muted);flex:2}
+.skill-kw{font-size:11px;color:var(--purple);background:var(--purple-dim);padding:3px 8px;border-radius:4px;white-space:nowrap;cursor:pointer;transition:all .15s;border:none;font-family:monospace}
+.skill-kw:hover{background:var(--purple);color:#fff}
+.sites{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:48px}
+.site-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px 20px;text-decoration:none;color:inherit;display:flex;align-items:center;gap:14px;transition:all .2s;box-shadow:var(--shadow)}
+.site-card:hover{border-color:var(--blue);box-shadow:var(--shadow-lg);transform:translateY(-1px)}
+.site-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--surface-alt);color:var(--text-dim)}
+.site-icon i,.site-icon svg{width:16px;height:16px;stroke:currentColor;flex-shrink:0}
+.site-name{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:2px}
+.site-url{font-size:11px;color:var(--blue)}
+
+/* GUIDE STEPS */
+.guide-box{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow)}
+.guide-header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.group-label{padding:8px 20px 4px;font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;background:var(--surface-alt);border-bottom:1px solid var(--border)}
+.step-wrap{border-bottom:1px solid var(--border)}
+.step-wrap:last-child{border-bottom:none}
+.step-row{display:flex;align-items:center;gap:0;cursor:pointer;transition:background .15s}
+.step-row:hover{background:var(--surface-alt)}
+.step-check{width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-right:1px solid var(--border);cursor:pointer;transition:background .15s}
+.step-check:hover{background:var(--green-dim)}
+.check-box{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;transition:all .2s;pointer-events:none}
+.done .check-box{background:var(--green);border-color:var(--green)}
+.done .step-title{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(5,150,105,.4)}
+.done .step-row{background:rgba(5,150,105,.04)}
+.step-body{flex:1;padding:14px 16px;min-width:0}
+.step-num{font-size:10px;font-weight:700;color:var(--text-dim);margin-bottom:2px}
+.step-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.4}
+.step-expand-btn{width:40px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;color:var(--text-dim);transition:transform .2s}
+.step-wrap.open .step-expand-btn{transform:rotate(180deg)}
+.step-tutorial{display:none;padding:0 20px 20px 52px;border-top:1px solid var(--border);background:var(--surface-alt)}
+.step-wrap.open .step-tutorial{display:block}
+.tut-section{margin-top:16px}
+.tut-title{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.tut-text{font-size:13px;color:var(--text);line-height:1.8}
+.tut-step{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start}
+.tut-num{width:20px;height:20px;border-radius:50%;background:var(--purple-dim);color:var(--purple);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.cmd{display:flex;align-items:center;justify-content:space-between;background:var(--text-dark);border-radius:8px;padding:10px 14px;margin:8px 0;font-family:monospace;font-size:12px;color:#4ade80;gap:10px}
+.cmd-copy{background:none;border:1px solid #334155;color:#64748b;font-size:10px;padding:3px 8px;border-radius:4px;cursor:pointer;flex-shrink:0;transition:all .15s;font-family:'Inter',sans-serif}
+.cmd-copy:hover{border-color:var(--green-neon);color:var(--green-neon)}
+.cmd-copy.ok{border-color:#4ade80;color:#4ade80}
+.tut-info{background:var(--blue-dim);border-radius:8px;padding:10px 14px;font-size:12px;color:#1d4ed8;line-height:1.6;margin-top:8px}
+.tut-warn{background:var(--amber-dim);border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e;line-height:1.6;margin-top:8px}
+.tut-link{color:var(--blue);font-weight:600;text-decoration:none}
+.tut-link:hover{text-decoration:underline}
+.done-btn{margin-top:14px;padding:8px 18px;background:var(--green);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.done-btn:hover{background:#047857}
+.undone-btn{margin-top:14px;padding:8px 18px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+
+footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-size:12px;color:var(--text-dim);margin-top:40px}
+footer a{color:var(--purple);text-decoration:none;font-weight:600}
+footer a:hover{text-decoration:underline}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text-dark);color:var(--green-neon);padding:9px 18px;border-radius:30px;font-size:12px;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:99;border:1px solid rgba(0,212,160,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:640px){
+  main{padding:40px 16px 60px}
+  .hero h1{font-size:26px}
+  .cards{grid-template-columns:1fr 1fr}
+  .sites{grid-template-columns:1fr}
+  .skill-row-desc{display:none}
+  .step-tutorial{padding-left:20px}
+  .nav-links .nl{padding:6px 10px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="logo">
+    <div class="logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    <span class="logo-text">Ecossistema<strong>Max</strong></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nl active" data-page="hub">Hub</a>
+    <a href="persona.html" class="nl" data-page="persona">Persona</a>
+    <a href="criativos.html" class="nl" data-page="criativos">Criativos</a>
+    <a href="skills.html" class="nl" data-page="skills">Skills</a>
+    <a href="resultado.html" class="nl" data-page="resultado">Resultado</a>
+    <a href="sexy-canvas.html" class="nl" data-page="sexy-canvas">Sexy Canvas</a>
+    <a href="sexy-canvas-tractorpro.html" class="nl" data-page="tractorpro">TractorPRO</a>
+    <a href="xquads.html" class="nl" data-page="xquads">Xquads</a>
+    <a href="terminal.html" class="nl" data-page="terminal">Terminal</a>
+  </div>
+</nav>
+
+<main>
+
+  <div class="hero a1">
+    <h1>Sua central de <em>IA</em>.<br>Do processo ao resultado.</h1>
+    <p>Skills instaladas, persona gerada, criativos aprovados — tudo num lugar só.</p>
+  </div>
+
+  <div class="label a2">Módulos</div>
+  <div class="cards a2">
+    <a class="card accent" href="persona.html">
+      <div class="card-icon"><i data-lucide="brain"></i></div>
+      <div class="card-title">Persona</div>
+      <div class="card-desc">Rafael Mendes · 30 dimensões · ICP · Mapa de empatia</div>
+      <div class="card-arrow">Abrir →</div>
+    </a>
+    <a class="card" href="criativos.html">
+      <div class="card-icon"><i data-lucide="layout-grid"></i></div>
+      <div class="card-title">Criativos</div>
+      <div class="card-desc">9 peças Feed · Gestão de aprovação · Download em JPG</div>
+      <div class="card-arrow">Abrir →</div>
+    </a>
+    <a class="card" href="skills.html">
+      <div class="card-icon"><i data-lucide="layers"></i></div>
+      <div class="card-title">Skills</div>
+      <div class="card-desc">22+ skills instaladas · Catálogo completo · Instalar em 1 clique</div>
+      <div class="card-arrow">Abrir →</div>
+    </a>
+    <a class="card" href="sexy-canvas.html">
+      <div class="card-icon"><i data-lucide="flame"></i></div>
+      <div class="card-title">Sexy Canvas</div>
+      <div class="card-desc">8 gatilhos · 80 hooks · Combos · Copy Engine TractorPRO</div>
+      <div class="card-arrow">Abrir →</div>
+    </a>
+    <a class="card" href="#guia" onclick="document.getElementById('guia').scrollIntoView({behavior:'smooth'});return false">
+      <div class="card-icon"><i data-lucide="book-open"></i></div>
+      <div class="card-title">Guia</div>
+      <div class="card-desc">17 passos · Do zero ao Claude Code configurado</div>
+      <div class="card-arrow">Ver abaixo ↓</div>
+    </a>
+  </div>
+
+  <div class="label a3">Skills principais — clique para copiar a palavra-chave</div>
+  <div class="skills-list a3">
+    <div class="skill-row">
+      <div class="skill-dot" style="background:var(--green-neon)"></div>
+      <div class="skill-row-name">skill-ecosistema-max</div>
+      <div class="skill-row-desc">Persona TractorPRO · 300+ insights · ICP · Copy pronta</div>
+      <button class="skill-kw" onclick="copy('ecosistema max')">ecosistema max</button>
+    </div>
+    <div class="skill-row">
+      <div class="skill-dot" style="background:var(--purple)"></div>
+      <div class="skill-row-name">skill-persona-profunda</div>
+      <div class="skill-row-desc">Gerar nova persona · 30 dimensões · Buyer Persona · ICP</div>
+      <button class="skill-kw" onclick="copy('persona profunda')">persona profunda</button>
+    </div>
+    <div class="skill-row">
+      <div class="skill-dot" style="background:var(--blue)"></div>
+      <div class="skill-row-name">skill-claude-md-builder</div>
+      <div class="skill-row-desc">Cria o manual permanente da IA · 8 perguntas estratégicas</div>
+      <button class="skill-kw" onclick="copy('criar claude.md')">criar claude.md</button>
+    </div>
+    <div class="skill-row">
+      <div class="skill-dot" style="background:#60a5fa"></div>
+      <div class="skill-row-name">skill-carrossel</div>
+      <div class="skill-row-desc">Roteiro de carrossel Instagram · 10 slides · Copy baseada na persona</div>
+      <button class="skill-kw" onclick="copy('cria um carrossel sobre')">cria um carrossel</button>
+    </div>
+    <div class="skill-row">
+      <div class="skill-dot" style="background:#8b5cf6"></div>
+      <div class="skill-row-name">skill-landing-page</div>
+      <div class="skill-row-desc">Copy completa de landing page · 12 blocos · Headlines A/B</div>
+      <button class="skill-kw" onclick="copy('cria landing page para')">cria landing page</button>
+    </div>
+    <div class="skill-row">
+      <div class="skill-dot" style="background:var(--green)"></div>
+      <div class="skill-row-name">skill-apresentacao</div>
+      <div class="skill-row-desc">Pitch deck · Proposta comercial · Slide a slide com copy</div>
+      <button class="skill-kw" onclick="copy('cria apresentação para')">cria apresentação</button>
+    </div>
+  </div>
+
+  <div class="label a4">Módulos do ecossistema</div>
+  <div class="sites a4">
+    <a class="site-card" href="persona.html">
+      <div class="site-icon"><i data-lucide="brain"></i></div>
+      <div><div class="site-name">Persona Rafael Mendes</div><div class="site-url">30 dimensões · ICP · Mapa de empatia</div></div>
+      <i data-lucide="arrow-up-right" style="margin-left:auto;width:14px;height:14px;stroke:var(--text-dim);flex-shrink:0"></i>
+    </a>
+    <a class="site-card" href="criativos.html">
+      <div class="site-icon"><i data-lucide="layout-grid"></i></div>
+      <div><div class="site-name">Dashboard de Criativos</div><div class="site-url">Peças Feed · Aprovação · Download JPG</div></div>
+      <i data-lucide="arrow-up-right" style="margin-left:auto;width:14px;height:14px;stroke:var(--text-dim);flex-shrink:0"></i>
+    </a>
+    <a class="site-card" href="skills.html">
+      <div class="site-icon"><i data-lucide="layers"></i></div>
+      <div><div class="site-name">Catálogo de Skills</div><div class="site-url">22+ skills · Instalar em 1 clique</div></div>
+      <i data-lucide="arrow-up-right" style="margin-left:auto;width:14px;height:14px;stroke:var(--text-dim);flex-shrink:0"></i>
+    </a>
+    <a class="site-card" href="sexy-canvas.html">
+      <div class="site-icon"><i data-lucide="flame"></i></div>
+      <div><div class="site-name">Sexy Canvas</div><div class="site-url">8 gatilhos · 80 hooks · Copy Engine</div></div>
+      <i data-lucide="arrow-up-right" style="margin-left:auto;width:14px;height:14px;stroke:var(--text-dim);flex-shrink:0"></i>
+    </a>
+    <a class="site-card" href="sexy-canvas-tractorpro.html">
+      <div class="site-icon"><i data-lucide="zap"></i></div>
+      <div><div class="site-name">Sexy Canvas TractorPRO</div><div class="site-url">24 copies · Rafael Mendes · Teleprompter</div></div>
+      <i data-lucide="arrow-up-right" style="margin-left:auto;width:14px;height:14px;stroke:var(--text-dim);flex-shrink:0"></i>
+    </a>
+    <a class="site-card" href="xquads.html">
+      <div class="site-icon"><i data-lucide="users"></i></div>
+      <div><div class="site-name">Xquads</div><div class="site-url">11 squads · Habilitar agentes · Instalar skills</div></div>
+      <i data-lucide="arrow-up-right" style="margin-left:auto;width:14px;height:14px;stroke:var(--text-dim);flex-shrink:0"></i>
+    </a>
+    <a class="site-card" href="resultado.html">
+      <div class="site-icon"><i data-lucide="bar-chart-2"></i></div>
+      <div><div class="site-name">Resultado</div><div class="site-url">Métricas · Relatórios · Performance</div></div>
+      <i data-lucide="arrow-up-right" style="margin-left:auto;width:14px;height:14px;stroke:var(--text-dim);flex-shrink:0"></i>
+    </a>
+    <a class="site-card" href="terminal.html">
+      <div class="site-icon"><i data-lucide="terminal"></i></div>
+      <div><div class="site-name">Terminal VPS</div><div class="site-url">Acesso SSH direto pelo browser</div></div>
+      <i data-lucide="arrow-up-right" style="margin-left:auto;width:14px;height:14px;stroke:var(--text-dim);flex-shrink:0"></i>
+    </a>
+  </div>
+
+  <!-- GUIA -->
+  <div id="guia" class="a5">
+    <div class="label">Guia de instalação — 17 passos com tutorial</div>
+    <div class="guide-box">
+      <div class="guide-header">
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:2px">Do zero ao Claude Code funcionando</div>
+          <div style="font-size:12px;color:var(--text-muted)">Clique no passo para ver o tutorial detalhado · Checkbox para marcar como feito</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:12px;color:var(--text-muted)"><span id="done-count">0</span>/17</div>
+          <div style="width:90px;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+            <div id="progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--purple),var(--green-neon));border-radius:3px;transition:width .4s"></div>
+          </div>
+        </div>
+      </div>
+      <div id="steps-container"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <a href="persona.html">Persona</a> · <a href="criativos.html">Criativos</a> · <a href="skills.html">Skills</a>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+document.querySelectorAll('.nl').forEach(a=>{
+  if(location.pathname.endsWith(a.dataset.page+'.html')||
+    (a.dataset.page==='hub'&&(location.pathname.endsWith('/')||location.pathname.endsWith('index.html'))))
+    a.classList.add('active');
+});
+
+const STEPS = [
+  {
+    g: 'Instalação',
+    steps: [
+      {
+        id:'s1', title:'Instalar Node.js',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">O que é e por que precisa</div>
+            <div class="tut-text">Node.js é o ambiente que roda o Claude Code no seu computador. Sem ele, o Claude Code não instala.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Passo a passo</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Acesse <a class="tut-link" href="https://nodejs.org" target="_blank">nodejs.org</a> e clique no botão verde <strong>"LTS"</strong> (versão recomendada)</div></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>Baixe o instalador para Mac (.pkg) ou Windows (.msi)</div></div>
+            <div class="tut-step"><div class="tut-num">3</div><div>Abra o arquivo baixado e siga o instalador (Next → Next → Install)</div></div>
+            <div class="tut-step"><div class="tut-num">4</div><div>Abra o Terminal (Mac) ou Prompt de Comando (Windows) e verifique:</div></div>
+            <div class="cmd"><span>node -v</span><button class="cmd-copy" onclick="cpCmd(this,'node -v')">Copiar</button></div>
+            <div class="cmd"><span>npm -v</span><button class="cmd-copy" onclick="cpCmd(this,'npm -v')">Copiar</button></div>
+            <div class="tut-info">✅ Se aparecer um número como v20.x.x — está instalado corretamente.</div>
+            <div class="tut-warn">⚠️ No Mac: se der erro de permissão, instale via Homebrew: <strong>brew install node</strong></div>
+          </div>`
+      },
+      {
+        id:'s2', title:'Instalar o Claude Code',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">O que é</div>
+            <div class="tut-text">Claude Code é o assistente de IA da Anthropic que roda direto no seu terminal. É aqui que você digita as palavras-chave para ativar as skills.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Comando de instalação</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Abra o Terminal e cole este comando:</div></div>
+            <div class="cmd"><span>npm install -g @anthropic-ai/claude-code</span><button class="cmd-copy" onclick="cpCmd(this,'npm install -g @anthropic-ai/claude-code')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>Aguarde a instalação (pode demorar 1-2 minutos)</div></div>
+            <div class="tut-step"><div class="tut-num">3</div><div>Verifique se instalou:</div></div>
+            <div class="cmd"><span>claude --version</span><button class="cmd-copy" onclick="cpCmd(this,'claude --version')">Copiar</button></div>
+            <div class="tut-info">✅ Se aparecer um número de versão, está pronto.</div>
+            <div class="tut-warn">⚠️ Mac com erro de permissão: adicione <strong>sudo</strong> na frente: sudo npm install -g @anthropic-ai/claude-code</div>
+          </div>`
+      },
+      {
+        id:'s3', title:'Criar conta e gerar API Key na Anthropic',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">O que é a API Key</div>
+            <div class="tut-text">É a "senha" que conecta o Claude Code à sua conta na Anthropic. Cada mensagem que você envia consome créditos da sua conta.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Passo a passo</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Acesse <a class="tut-link" href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></div></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>Clique em <strong>"Sign Up"</strong> e crie sua conta com email</div></div>
+            <div class="tut-step"><div class="tut-num">3</div><div>No menu lateral, clique em <strong>"API Keys"</strong></div></div>
+            <div class="tut-step"><div class="tut-num">4</div><div>Clique em <strong>"Create Key"</strong>, dê um nome (ex: "meu-mac") e confirme</div></div>
+            <div class="tut-step"><div class="tut-num">5</div><div>Copie a chave — começa com <strong>sk-ant-...</strong> — salve em lugar seguro, ela só aparece uma vez</div></div>
+            <div class="tut-warn">⚠️ Nunca compartilhe a API Key. Trate como senha de banco.</div>
+            <div class="tut-info">💳 Você precisa adicionar crédito na conta (mínimo $5). Vai em "Billing" → "Add credits".</div>
+          </div>`
+      },
+      {
+        id:'s4', title:'Configurar a API Key no terminal',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">Como configurar</div>
+            <div class="tut-text">Você precisa dizer ao seu computador onde encontrar a chave. Existem duas formas: temporária (só para a sessão atual) ou permanente.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Forma permanente (recomendada — Mac/Linux)</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Abra o Terminal e cole (substituindo pela sua chave real):</div></div>
+            <div class="cmd"><span>echo 'export ANTHROPIC_API_KEY="sk-ant-SUA-CHAVE"' >> ~/.zshrc</span><button class="cmd-copy" onclick="cpCmd(this,'echo \'export ANTHROPIC_API_KEY=\"sk-ant-SUA-CHAVE\"\' >> ~/.zshrc')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>Aplique a configuração:</div></div>
+            <div class="cmd"><span>source ~/.zshrc</span><button class="cmd-copy" onclick="cpCmd(this,'source ~/.zshrc')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">3</div><div>Verifique se funcionou:</div></div>
+            <div class="cmd"><span>echo $ANTHROPIC_API_KEY</span><button class="cmd-copy" onclick="cpCmd(this,'echo $ANTHROPIC_API_KEY')">Copiar</button></div>
+            <div class="tut-info">✅ Deve aparecer sua chave no terminal. A partir de agora ela fica salva automaticamente.</div>
+            <div class="tut-warn">⚠️ Windows: use as Variáveis de Ambiente do sistema (Painel de Controle → Sistema → Variáveis de Ambiente)</div>
+          </div>`
+      },
+    ]
+  },
+  {
+    g: 'Persona',
+    steps: [
+      {
+        id:'s5', title:'Abrir o terminal na pasta do projeto',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">Por que fazer isso</div>
+            <div class="tut-text">O Claude Code trabalha na pasta onde você o abre. Arquivos como CLAUDE.md e persona serão salvos ali. Crie uma pasta para o seu projeto antes.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Passo a passo</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Crie uma pasta para o projeto (se ainda não tiver):</div></div>
+            <div class="cmd"><span>mkdir ~/meu-projeto && cd ~/meu-projeto</span><button class="cmd-copy" onclick="cpCmd(this,'mkdir ~/meu-projeto && cd ~/meu-projeto')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>Ou navegue para uma pasta existente:</div></div>
+            <div class="cmd"><span>cd ~/Documents/nome-da-pasta</span><button class="cmd-copy" onclick="cpCmd(this,'cd ~/Documents/nome-da-pasta')">Copiar</button></div>
+            <div class="tut-info">💡 Dica Mac: arraste a pasta para o Terminal e ele preenche o caminho automaticamente.</div>
+          </div>`
+      },
+      {
+        id:'s6', title:'Iniciar o Claude Code',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">Como iniciar</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Com o terminal aberto na pasta certa, digite:</div></div>
+            <div class="cmd"><span>claude</span><button class="cmd-copy" onclick="cpCmd(this,'claude')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>Na primeira vez, ele vai pedir para aceitar os termos — pressione <strong>Enter</strong></div></div>
+            <div class="tut-step"><div class="tut-num">3</div><div>Aguarde a tela de boas-vindas aparecer. Você está dentro do Claude Code!</div></div>
+            <div class="tut-info">✅ Você verá um prompt como: <strong>&gt;</strong> — é aí que você digita os comandos e palavras-chave das skills.</div>
+            <div class="tut-warn">Para sair do Claude Code a qualquer momento, pressione <strong>Ctrl+C</strong> ou digite <strong>/exit</strong></div>
+          </div>`
+      },
+      {
+        id:'s7', title:'Ativar a skill Persona Profunda',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">Como ativar</div>
+            <div class="tut-text">Com o Claude Code aberto, simplesmente digite a palavra-chave. O Claude vai reconhecer automaticamente e iniciar o fluxo da skill.</div>
+            <div class="cmd"><span>persona profunda</span><button class="cmd-copy" onclick="cpCmd(this,'persona profunda')">Copiar</button></div>
+            <div class="tut-info">✅ O Claude vai responder confirmando que carregou a skill e fazer a primeira pergunta (Passo 0).</div>
+            <div class="tut-warn">⚠️ Se a skill não for reconhecida, verifique se ela está instalada em <strong>~/.claude/plugins/cache/local/</strong></div>
+          </div>`
+      },
+      {
+        id:'s8', title:'Responder o Passo 0 — contexto do negócio',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">O que é o Passo 0</div>
+            <div class="tut-text">Antes de gerar a persona, o Claude precisa entender seu negócio. Ele vai perguntar sobre seu produto, cliente e contexto. Quanto mais você contar, melhor a persona.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">O que responder</div>
+            <div class="tut-step"><div class="tut-num">1</div><div><strong>Nome do produto/serviço</strong> — ex: TractorPRO</div></div>
+            <div class="tut-step"><div class="tut-num">2</div><div><strong>O que resolve</strong> — a dor principal que você resolve</div></div>
+            <div class="tut-step"><div class="tut-num">3</div><div><strong>Quem compra</strong> — profissão, idade, contexto de quem é seu cliente</div></div>
+            <div class="tut-step"><div class="tut-num">4</div><div><strong>Preço</strong> — quanto custa e qual o modelo (assinatura, avulso, etc)</div></div>
+            <div class="tut-step"><div class="tut-num">5</div><div><strong>Contexto extra</strong> — qualquer coisa relevante sobre o mercado ou situação</div></div>
+            <div class="tut-info">💡 Pode escrever em formato livre — como se estivesse explicando para um amigo. O Claude organiza tudo.</div>
+          </div>`
+      },
+      {
+        id:'s9', title:'Aguardar a geração dos 5 blocos e 30 dimensões',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">O que acontece durante a geração</div>
+            <div class="tut-text">O Claude vai gerar 5 blocos psicológicos com 6 dimensões cada (= 30 dimensões × 10 elementos = 300 insights). Isso pode levar de 5 a 15 minutos dependendo da profundidade.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Os 5 blocos gerados</div>
+            <div class="tut-step"><div class="tut-num">A</div><div><strong>Sombras e Medos</strong> — medos conscientes, ocultos, feridas emocionais</div></div>
+            <div class="tut-step"><div class="tut-num">B</div><div><strong>Desejos e Necessidades</strong> — o que quer de verdade, desejos inconfessáveis</div></div>
+            <div class="tut-step"><div class="tut-num">C</div><div><strong>Mecanismos e Padrões</strong> — comportamentos, ciclos viciosos, gatilhos</div></div>
+            <div class="tut-step"><div class="tut-num">D</div><div><strong>Identidade e Crenças</strong> — como se vê, o que acredita, narrativas internas</div></div>
+            <div class="tut-step"><div class="tut-num">E</div><div><strong>Existência e Contexto</strong> — rotina, ambiente, relações, aspirações de vida</div></div>
+            <div class="tut-info">✅ Não interrompa o Claude durante a geração. Deixe terminar cada bloco antes de responder.</div>
+          </div>`
+      },
+      {
+        id:'s10', title:'Confirmar Buyer Persona, ICP, Mapa de Empatia e Anti-Persona',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">O que vem depois das 30 dimensões</div>
+            <div class="tut-text">Após os 5 blocos, o Claude gera os complementos estratégicos. Você pode pedir cada um separadamente ou todos de uma vez.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Como pedir cada parte</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Buyer Persona completa (demografico + psicográfico + jornada):</div></div>
+            <div class="cmd"><span>gera a buyer persona completa</span><button class="cmd-copy" onclick="cpCmd(this,'gera a buyer persona completa')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>ICP com 3 perfis e lead scoring:</div></div>
+            <div class="cmd"><span>gera o ICP com os 3 perfis</span><button class="cmd-copy" onclick="cpCmd(this,'gera o ICP com os 3 perfis')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">3</div><div>Mapa de Empatia (pensa, sente, vê, ouve, faz):</div></div>
+            <div class="cmd"><span>gera o mapa de empatia</span><button class="cmd-copy" onclick="cpCmd(this,'gera o mapa de empatia')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">4</div><div>Anti-Persona (quem NÃO é seu cliente):</div></div>
+            <div class="cmd"><span>gera as anti-personas</span><button class="cmd-copy" onclick="cpCmd(this,'gera as anti-personas')">Copiar</button></div>
+          </div>`
+      },
+    ]
+  },
+  {
+    g: 'Skills',
+    steps: [
+      {
+        id:'s11', title:'Criar a pasta da skill',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">Estrutura obrigatória de pasta</div>
+            <div class="tut-text">Toda skill precisa seguir exatamente esta estrutura de diretórios para o Claude Code reconhecer:</div>
+            <div class="cmd"><span style="color:#94a3b8">~/.claude/plugins/cache/local/<br>&nbsp;&nbsp;skill-meu-negocio/<br>&nbsp;&nbsp;&nbsp;&nbsp;1.0.0/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;skills/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;meu-negocio/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SKILL.md</span></div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Comando para criar a pasta</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Substitua <strong>meu-negocio</strong> pelo nome da sua skill e rode:</div></div>
+            <div class="cmd"><span>mkdir -p ~/.claude/plugins/cache/local/skill-meu-negocio/1.0.0/skills/meu-negocio</span><button class="cmd-copy" onclick="cpCmd(this,'mkdir -p ~/.claude/plugins/cache/local/skill-meu-negocio/1.0.0/skills/meu-negocio')">Copiar</button></div>
+            <div class="tut-info">✅ O comando cria todas as pastas de uma vez — mesmo se não existirem.</div>
+          </div>`
+      },
+      {
+        id:'s12', title:'Criar o arquivo SKILL.md',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">O que é o SKILL.md</div>
+            <div class="tut-text">É o arquivo que o Claude lê para entender o que a skill faz. Tem duas partes: o frontmatter (cabeçalho) e o conteúdo.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Estrutura do arquivo</div>
+            <div class="cmd"><span style="color:#94a3b8">---<br>name: skill-meu-negocio<br>description: Descreva aqui O QUE a skill faz e QUANDO<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deve ser ativada. Inclua as palavras-chave<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;que o usuário vai digitar.<br>---<br><br># Conteúdo da Skill<br><br>Coloque aqui as instruções, persona, templates<br>ou qualquer informação que o Claude deve usar.</span></div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Peça ao Claude Code para criar a skill por você:</div></div>
+            <div class="cmd"><span>crie uma skill chamada skill-meu-negocio com a persona que geramos</span><button class="cmd-copy" onclick="cpCmd(this,'crie uma skill chamada skill-meu-negocio com a persona que geramos')">Copiar</button></div>
+            <div class="tut-info">💡 O Claude cria o arquivo automaticamente com toda a persona já preenchida.</div>
+          </div>`
+      },
+      {
+        id:'s13', title:'Reiniciar o Claude Code para carregar a skill',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">Por que reiniciar</div>
+            <div class="tut-text">O Claude Code carrega as skills quando inicia. Após criar ou modificar uma skill, é necessário reiniciar para que ela seja reconhecida.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Como reiniciar</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Saia do Claude Code:</div></div>
+            <div class="cmd"><span>Ctrl + C</span><button class="cmd-copy" onclick="cpCmd(this,'Ctrl+C')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>Inicie novamente na mesma pasta:</div></div>
+            <div class="cmd"><span>claude</span><button class="cmd-copy" onclick="cpCmd(this,'claude')">Copiar</button></div>
+            <div class="tut-info">✅ Pronto — a nova sessão já carregou todas as skills instaladas.</div>
+          </div>`
+      },
+      {
+        id:'s14', title:'Testar a skill digitando a palavra-chave',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">Como testar</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Com o Claude Code aberto, digite a palavra-chave da skill (a que você definiu no description do SKILL.md)</div></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>O Claude deve responder já com o contexto da skill carregado</div></div>
+            <div class="tut-step"><div class="tut-num">3</div><div>Teste com as skills já instaladas:</div></div>
+            <div class="cmd"><span>ecosistema max</span><button class="cmd-copy" onclick="cpCmd(this,'ecosistema max')">Copiar</button></div>
+            <div class="tut-info">✅ Se o Claude responder com informações da persona Rafael Mendes — a skill está funcionando.</div>
+            <div class="tut-warn">⚠️ Se não funcionar: verifique se a pasta tem o nome exato <strong>SKILL.md</strong> (maiúsculas) e se o frontmatter tem as aspas corretas.</div>
+          </div>`
+      },
+    ]
+  },
+  {
+    g: 'Publicar com Surge',
+    steps: [
+      {
+        id:'s15', title:'Instalar o Surge',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">O que é o Surge</div>
+            <div class="tut-text">Surge é um serviço gratuito para publicar sites estáticos (HTML, CSS, JS) com um comando só. Ideal para dashboards como este.</div>
+          </div>
+          <div class="tut-section">
+            <div class="tut-title">Instalação</div>
+            <div class="cmd"><span>npm install -g surge</span><button class="cmd-copy" onclick="cpCmd(this,'npm install -g surge')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Verifique a instalação:</div></div>
+            <div class="cmd"><span>surge --version</span><button class="cmd-copy" onclick="cpCmd(this,'surge --version')">Copiar</button></div>
+            <div class="tut-info">✅ Se aparecer um número de versão — pronto para usar.</div>
+          </div>`
+      },
+      {
+        id:'s16', title:'Fazer login no Surge',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">Criar conta e logar</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>No terminal, rode:</div></div>
+            <div class="cmd"><span>surge login</span><button class="cmd-copy" onclick="cpCmd(this,'surge login')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>Digite seu email — se não tiver conta, ele cria automaticamente</div></div>
+            <div class="tut-step"><div class="tut-num">3</div><div>Digite uma senha e confirme</div></div>
+            <div class="tut-info">✅ Conta gratuita permite subdomínios ilimitados no surge.sh</div>
+          </div>`
+      },
+      {
+        id:'s17', title:'Publicar o site',
+        tutorial: `
+          <div class="tut-section">
+            <div class="tut-title">Publicar com um comando</div>
+            <div class="tut-step"><div class="tut-num">1</div><div>Dentro da pasta com os arquivos do site:</div></div>
+            <div class="cmd"><span>surge . meu-dominio.surge.sh</span><button class="cmd-copy" onclick="cpCmd(this,'surge . meu-dominio.surge.sh')">Copiar</button></div>
+            <div class="tut-step"><div class="tut-num">2</div><div>Substitua <strong>meu-dominio</strong> pelo nome que quiser (ex: ecosistema-max)</div></div>
+            <div class="tut-step"><div class="tut-num">3</div><div>Aguarde aparecer <strong>"Success!"</strong> — o site já está no ar</div></div>
+            <div class="tut-info">✅ Para atualizar o site depois, rode o mesmo comando. O surge substitui o conteúdo automaticamente.</div>
+            <div class="tut-warn">💡 Dica: salve o comando com o domínio certo num arquivo de texto para não esquecer.</div>
+          </div>`
+      },
+    ]
+  },
+];
+
+function render(){
+  const saved = JSON.parse(localStorage.getItem('eco_guide')||'{}');
+  const container = document.getElementById('steps-container');
+  let num = 0;
+  let html = '';
+  STEPS.forEach(group => {
+    html += `<div class="group-label">${group.g}</div>`;
+    group.steps.forEach(s => {
+      num++;
+      const done = saved[s.id];
+      html += `<div class="step-wrap${done?' done':''}" id="wrap-${s.id}">
+        <div class="step-row">
+          <div class="step-check" onclick="tog('${s.id}',event)" title="Marcar como feito">
+            <div class="check-box">${done?'✓':''}</div>
+          </div>
+          <div class="step-body" onclick="expand('${s.id}')">
+            <div class="step-num">Passo ${num}</div>
+            <div class="step-title">${s.title}</div>
+          </div>
+          <div class="step-expand-btn" onclick="expand('${s.id}')">▼</div>
+        </div>
+        <div class="step-tutorial">
+          ${s.tutorial}
+          <button class="${done?'undone-btn':'done-btn'}" onclick="tog('${s.id}',event)">${done?'Desmarcar como feito':'✓ Marcar como feito'}</button>
+        </div>
+      </div>`;
+    });
+  });
+  container.innerHTML = html;
+  updateBar(saved);
+}
+
+function expand(id){
+  const wrap = document.getElementById('wrap-'+id);
+  const isOpen = wrap.classList.contains('open');
+  document.querySelectorAll('.step-wrap.open').forEach(w => w.classList.remove('open'));
+  if(!isOpen) wrap.classList.add('open');
+}
+
+function tog(id, e){
+  if(e) e.stopPropagation();
+  const saved = JSON.parse(localStorage.getItem('eco_guide')||'{}');
+  saved[id] = !saved[id];
+  localStorage.setItem('eco_guide', JSON.stringify(saved));
+  render();
+  const wrap = document.getElementById('wrap-'+id);
+  if(wrap) wrap.classList.add('open');
+}
+
+function updateBar(saved){
+  const done = Object.values(saved).filter(Boolean).length;
+  document.getElementById('done-count').textContent = done;
+  document.getElementById('progress-bar').style.width = (done/17*100)+'%';
+}
+
+function cpCmd(btn, text){
+  navigator.clipboard.writeText(text);
+  const orig = btn.textContent;
+  btn.textContent = '✓';
+  btn.classList.add('ok');
+  setTimeout(()=>{ btn.textContent=orig; btn.classList.remove('ok'); }, 1500);
+}
+
+function copy(text){
+  navigator.clipboard.writeText(text);
+  const t = document.getElementById('toast');
+  t.textContent = '✓ "'+text+'" copiado!';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2000);
+}
+
+render();
+lucide.createIcons();
+</script>
+</body>
+</html>

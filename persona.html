@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TractorPRO — Persona Profunda: Rafael Mendes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --purple:#7c3aed;--purple-dark:#4c1d95;--purple-mid:#6d28d9;
+  --blue-dark:#0f172a;--slate:#1e293b;--slate2:#334155;--slate3:#475569;
+  --green:#22c55e;--amber:#f59e0b;--red:#ef4444;--cyan:#06b6d4;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;
+}
+body{font-family:'Inter',sans-serif;background:var(--blue-dark);color:var(--text);min-height:100vh;overflow-x:hidden}
+.app{display:flex;min-height:100vh}
+.sidebar{width:260px;background:#080d1a;border-right:1px solid #1e293b;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;overflow-y:auto}
+.main{margin-left:260px;flex:1;padding:32px;min-height:100vh}
+.sidebar-logo{padding:24px 20px 16px;border-bottom:1px solid #1e293b}
+.logo-badge{display:flex;align-items:center;gap:12px}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,#7c3aed,#4c1d95);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-text{font-size:18px;font-weight:800;letter-spacing:-0.5px;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:11px;color:var(--text3);font-weight:400;margin-top:2px}
+.sidebar-persona{padding:16px 20px;border-bottom:1px solid #1e293b}
+.persona-mini{display:flex;align-items:center;gap:12px}
+.avatar-sm{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex-shrink:0;border:2px solid rgba(124,58,237,.4)}
+.persona-info-sm p{font-size:13px;font-weight:600;color:var(--text)}
+.persona-info-sm span{font-size:11px;color:var(--text2)}
+.sidebar-nav{padding:16px 12px;flex:1}
+.nav-section{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:8px 8px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:all .2s;margin:2px 0;font-size:13px;font-weight:500;color:var(--text2)}
+.nav-item:hover{background:#1e293b;color:var(--text)}
+.nav-item.active{background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(76,29,149,.15));color:#a78bfa;border:1px solid rgba(124,58,237,.3)}
+.nav-item svg{width:16px;height:16px;flex-shrink:0}
+.nav-badge{margin-left:auto;font-size:10px;background:var(--purple);color:#fff;padding:2px 7px;border-radius:10px;font-weight:700}
+.page-header{margin-bottom:28px}
+.breadcrumb{font-size:12px;color:var(--text3);margin-bottom:8px}
+.page-title{font-size:26px;font-weight:800;letter-spacing:-0.5px;display:flex;align-items:center;gap:12px}
+.page-subtitle{font-size:14px;color:var(--text2);margin-top:4px}
+.section{display:none}
+.section.active{display:block;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--slate);border:1px solid #334155;border-radius:16px;padding:24px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-purple{background:rgba(124,58,237,.2);color:#a78bfa;border:1px solid rgba(124,58,237,.3)}
+.badge-green{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.badge-amber{background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.3)}
+.badge-red{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.badge-cyan{background:rgba(6,182,212,.15);color:#22d3ee;border:1px solid rgba(6,182,212,.3)}
+/* HERO */
+.hero-card{background:linear-gradient(135deg,#1a1040 0%,#0f172a 50%,#091428 100%);border:1px solid rgba(124,58,237,.35);border-radius:20px;padding:32px;margin-bottom:24px;position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:-80px;right:-80px;width:250px;height:250px;background:radial-gradient(circle,rgba(124,58,237,.25),transparent 70%);pointer-events:none}
+.hero-card::after{content:'';position:absolute;bottom:-60px;left:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(6,182,212,.12),transparent 70%);pointer-events:none}
+.hero-content{display:flex;align-items:center;gap:28px;position:relative;z-index:1}
+.avatar-hero{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;border:3px solid rgba(124,58,237,.5);flex-shrink:0;box-shadow:0 0 40px rgba(124,58,237,.4)}
+.hero-info h2{font-size:28px;font-weight:900;letter-spacing:-0.5px;margin-top:10px}
+.hero-info .age{font-size:14px;color:var(--text2);margin:4px 0}
+.hero-quote{background:rgba(124,58,237,.12);border-left:3px solid #7c3aed;padding:12px 16px;border-radius:0 8px 8px 0;margin-top:12px;font-size:14px;font-style:italic;color:#c4b5fd;max-width:520px;line-height:1.6}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap}
+.hero-stats{margin-left:auto;display:flex;flex-direction:column;gap:10px;flex-shrink:0}
+.stat-pill{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:12px 18px;text-align:center}
+.stat-pill strong{display:block;font-size:20px;font-weight:900}
+.stat-pill span{font-size:11px;color:var(--text3)}
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px}
+.kpi-card{background:var(--slate);border:1px solid #334155;border-radius:14px;padding:20px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s}
+.kpi-card:hover{transform:translateY(-2px);border-color:var(--purple);box-shadow:0 8px 30px rgba(124,58,237,.15)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+.kpi-card.kc-purple::before{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
+.kpi-card.kc-green::before{background:linear-gradient(90deg,#22c55e,#4ade80)}
+.kpi-card.kc-amber::before{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.kpi-card.kc-cyan::before{background:linear-gradient(90deg,#06b6d4,#22d3ee)}
+.kpi-card.kc-red::before{background:linear-gradient(90deg,#ef4444,#f87171)}
+.kpi-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.kpi-items{list-style:none}
+.kpi-items li{font-size:12px;color:var(--text2);padding:5px 0;border-bottom:1px solid #1e293b;display:flex;align-items:flex-start;gap:6px;line-height:1.4}
+.kpi-items li:last-child{border:none}
+.kpi-items li::before{content:'›';color:var(--purple);font-weight:900;flex-shrink:0;font-size:14px;line-height:1.2}
+/* DIMENSIONS */
+.dim-block{margin-bottom:32px}
+.block-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;padding:16px 20px;border-radius:12px}
+.block-num{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;flex-shrink:0}
+.block-title{font-size:15px;font-weight:700}
+.block-sub{font-size:12px;opacity:.7;margin-top:3px}
+.dim-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.dim-card{border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;border:1px solid transparent}
+.dim-card:hover{transform:translateY(-2px)}
+.dim-card-header{display:flex;align-items:center;justify-content:space-between}
+.dim-num{font-size:10px;font-weight:700;opacity:.55;text-transform:uppercase;letter-spacing:.5px}
+.chevron{transition:transform .25s;font-size:11px;opacity:.45}
+.dim-card.expanded .chevron{transform:rotate(180deg)}
+.dim-title{font-size:13px;font-weight:700;margin:8px 0 0;line-height:1.3}
+.dim-items{display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)}
+.dim-items.open{display:block}
+.dim-items ul{list-style:none}
+.dim-items li{font-size:11.5px;padding:4px 0;opacity:.85;display:flex;gap:6px;align-items:flex-start;line-height:1.4}
+.dim-items li::before{content:'•';opacity:.45;flex-shrink:0}
+.bloco-a .dim-card{background:rgba(76,29,149,.2);border-color:rgba(76,29,149,.4);color:#ddd6fe}
+.bloco-a .dim-card:hover{border-color:#7c3aed;background:rgba(76,29,149,.32)}
+.bloco-b .dim-card{background:rgba(109,40,217,.15);border-color:rgba(109,40,217,.3);color:#c4b5fd}
+.bloco-b .dim-card:hover{border-color:#8b5cf6;background:rgba(109,40,217,.27)}
+.bloco-c .dim-card{background:rgba(29,78,216,.15);border-color:rgba(29,78,216,.3);color:#bfdbfe}
+.bloco-c .dim-card:hover{border-color:#3b82f6;background:rgba(29,78,216,.28)}
+.bloco-d .dim-card{background:rgba(8,145,178,.14);border-color:rgba(8,145,178,.3);color:#a5f3fc}
+.bloco-d .dim-card:hover{border-color:#06b6d4;background:rgba(8,145,178,.26)}
+.bloco-e .dim-card{background:rgba(6,95,70,.2);border-color:rgba(6,95,70,.4);color:#a7f3d0}
+.bloco-e .dim-card:hover{border-color:#22c55e;background:rgba(6,95,70,.32)}
+/* BUYER */
+.profile-table{width:100%;border-collapse:collapse}
+.profile-table tr{border-bottom:1px solid #334155}
+.profile-table tr:last-child{border:none}
+.profile-table th{text-align:left;padding:10px 16px;font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;background:#0f172a;width:185px}
+.profile-table td{padding:10px 16px;font-size:13px;color:var(--text)}
+/* FUNNEL */
+.funnel-wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:3px}
+.funnel-step{display:flex;justify-content:center}
+.funnel-bar{display:flex;align-items:center;padding:13px 18px;border-radius:8px;transition:filter .2s;cursor:default}
+.funnel-bar:hover{filter:brightness(1.12)}
+.funnel-step:nth-child(1) .funnel-bar{width:100%;background:rgba(124,58,237,.65)}
+.funnel-step:nth-child(2) .funnel-bar{width:90%;background:rgba(99,40,217,.6)}
+.funnel-step:nth-child(3) .funnel-bar{width:80%;background:rgba(37,99,235,.6)}
+.funnel-step:nth-child(4) .funnel-bar{width:68%;background:rgba(6,182,212,.6)}
+.funnel-step:nth-child(5) .funnel-bar{width:55%;background:rgba(34,197,94,.6)}
+.funnel-step:nth-child(6) .funnel-bar{width:44%;background:rgba(245,158,11,.65)}
+.funnel-num{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-right:14px}
+.funnel-content h4{font-size:13px;font-weight:700;margin-bottom:2px}
+.funnel-content p{font-size:11.5px;opacity:.8}
+/* PAIN TABLE */
+.pain-table{width:100%;border-collapse:collapse}
+.pain-table th{text-align:left;padding:10px 16px;font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.7px;border-bottom:2px solid #334155}
+.pain-table td{padding:10px 16px;font-size:12.5px;border-bottom:1px solid #1e293b;vertical-align:middle}
+.progress-bar{height:7px;border-radius:4px;background:#334155;overflow:hidden;width:140px}
+.progress-fill{height:100%;border-radius:4px}
+/* ICP */
+.icp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.icp-card{border-radius:16px;padding:24px;border:2px solid;position:relative;overflow:hidden}
+.icp-card::before{content:'';position:absolute;top:0;right:0;width:130px;height:130px;border-radius:50%;opacity:.08;transform:translate(35px,-35px)}
+.icp-a{background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.45)}
+.icp-a::before{background:#7c3aed}
+.icp-b{background:rgba(6,182,212,.07);border-color:rgba(6,182,212,.45)}
+.icp-b::before{background:#06b6d4}
+.icp-c{background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.45)}
+.icp-c::before{background:#22c55e}
+.icp-priority{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.icp-name{font-size:22px;font-weight:900;margin-bottom:4px}
+.icp-sub{font-size:13px;color:var(--text2);margin-bottom:18px}
+.icp-traits{list-style:none;margin-bottom:18px}
+.icp-traits li{font-size:12.5px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:8px;align-items:flex-start;line-height:1.4}
+.icp-traits li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;font-size:13px}
+.icp-trigger{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:14px;font-size:12px;color:#fbbf24;line-height:1.5}
+.icp-trigger strong{display:block;margin-bottom:5px;font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#fcd34d}
+/* EMPATHY */
+.empathy-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.eq-card{border-radius:16px;padding:24px;border:1px solid}
+.eq-think{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.3)}
+.eq-see{background:rgba(6,182,212,.08);border-color:rgba(6,182,212,.3)}
+.eq-hear{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3)}
+.eq-say{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.3)}
+.eq-pain{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3)}
+.eq-gain{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.35)}
+.eq-title{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.eq-list{list-style:none}
+.eq-list li{font-size:12.5px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.07);color:var(--text2);line-height:1.4}
+.eq-list li:last-child{border:none}
+/* ANTI */
+.anti-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.anti-card{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.3);border-radius:14px;padding:20px;transition:border-color .2s}
+.anti-card:hover{border-color:rgba(239,68,68,.6)}
+.anti-num{width:34px;height:34px;background:rgba(239,68,68,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#f87171;margin-bottom:12px}
+.anti-title{font-size:13px;font-weight:700;color:#f87171;margin-bottom:8px}
+.anti-desc{font-size:12px;color:var(--text2);line-height:1.55}
+.anti-why{margin-top:10px;font-size:11px;background:rgba(239,68,68,.1);padding:8px 10px;border-radius:8px;color:#fca5a5;line-height:1.4}
+/* COPY */
+.copy-section{margin-bottom:28px}
+.copy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.copy-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;cursor:pointer;transition:all .2s;position:relative}
+.copy-card:hover{border-color:var(--purple);transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.15)}
+.copy-card.headline{border-left:4px solid #7c3aed}
+.copy-card.phrase{border-left:4px solid #f59e0b}
+.copy-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+.copy-text{font-size:16px;font-weight:600;line-height:1.5;margin-bottom:14px}
+.copy-btn{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px}
+.copy-btn:hover{color:var(--purple)}
+.copy-notification{position:fixed;bottom:24px;right:24px;background:#7c3aed;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transform:translateY(10px);transition:all .3s;z-index:1000;pointer-events:none}
+.copy-notification.show{opacity:1;transform:translateY(0)}
+.divider{height:1px;background:linear-gradient(90deg,transparent,#334155,transparent);margin:28px 0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;display:inline-block;margin-right:6px}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#080d1a}
+::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#475569}
+@media(max-width:1100px){
+  .kpi-grid{grid-template-columns:repeat(3,1fr)}
+  .dim-grid{grid-template-columns:repeat(2,1fr)}
+  .anti-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:900px){
+  .icp-grid{grid-template-columns:1fr}
+  .hero-content{flex-direction:column;align-items:flex-start}
+  .hero-stats{flex-direction:row;margin-left:0}
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-260px)}
+  .main{margin-left:0;padding:16px}
+  .kpi-grid,.copy-grid,.grid-2,.empathy-grid{grid-template-columns:1fr}
+  .dim-grid{grid-template-columns:1fr}
+  .anti-grid{grid-template-columns:1fr 1fr}
+}
+
+/* ============================================================
+   UNIFIED DESIGN SYSTEM — light theme override
+   ============================================================ */
+:root{
+  --bg-light:#f7f7f9;--surface-light:#fff;--surface-alt:#f2f2f4;
+  --border-light:#e4e4e7;--accent:#7c3aed;--accent-dim:#f3f0ff;
+  --text-dark:#111827;--text-base:#374151;--text-muted:#6b7280;--text-dim:#9ca3af;
+  --nav-h:56px;
+}
+body{background:var(--bg-light)!important;color:var(--text-base)!important}
+.sidebar{background:#fff!important;border-right:1px solid var(--border-light)!important;top:var(--nav-h)!important;height:calc(100vh - var(--nav-h))!important}
+.sidebar-logo{border-bottom:1px solid var(--border-light)!important}
+.logo-text{background:none!important;-webkit-text-fill-color:var(--accent)!important;color:var(--accent)!important}
+.logo-sub{color:var(--text-dim)!important}
+.sidebar-persona{border-bottom:1px solid var(--border-light)!important}
+.persona-info-sm p{color:var(--text-dark)!important}
+.persona-info-sm span{color:var(--text-muted)!important}
+.nav-section{color:var(--text-dim)!important}
+.nav-item{color:var(--text-muted)!important}
+.nav-item:hover{background:var(--surface-alt)!important;color:var(--text-dark)!important}
+.nav-item.active{background:var(--accent-dim)!important;color:var(--accent)!important;border-color:rgba(124,58,237,.2)!important}
+.main{margin-top:0!important;background:var(--bg-light)!important}
+.app{min-height:calc(100vh - var(--nav-h))!important;margin-top:var(--nav-h)}
+.card{background:#fff!important;border-color:var(--border-light)!important}
+.card-title{color:var(--text-dim)!important}
+.page-title{color:var(--text-dark)!important}
+.page-subtitle{color:var(--text-muted)!important}
+.breadcrumb{color:var(--text-dim)!important}
+.hero-card{background:linear-gradient(135deg,#f3f0ff,#ede9fe)!important;border:1.5px solid rgba(124,58,237,.2)!important}
+.hero-card::before,.hero-card::after{display:none}
+.hero-info h2{color:var(--text-dark)!important}
+.hero-info p{color:var(--text-muted)!important}
+.profile-table th{background:var(--surface-alt)!important;color:var(--text-muted)!important}
+.profile-table td{color:var(--text-base)!important}
+.profile-table tr{border-color:var(--border-light)!important}
+.section{border-color:var(--border-light)!important}
+.section-head{background:var(--surface-alt)!important;border-color:var(--border-light)!important}
+.section-title{color:var(--text-dark)!important}
+.section-sub{color:var(--text-muted)!important}
+.section-body{background:#fff!important}
+.dim-card{background:#fff!important;border-color:var(--border-light)!important}
+.dim-card-title{color:var(--text-muted)!important}
+.dim-tag{background:var(--surface-alt)!important;color:var(--text-base)!important;border-color:var(--border-light)!important}
+.kpi-card{background:#fff!important;border-color:var(--border-light)!important}
+.kpi-label{color:var(--text-muted)!important}
+.kpi-value{color:var(--text-dark)!important}
+.copy-card{background:#fff!important;border-color:var(--border-light)!important}
+.copy-tag{color:var(--accent)!important}
+.copy-text{color:var(--text-base)!important}
+.copy-btn{color:var(--text-muted)!important;border-color:var(--border-light)!important}
+.icp-card{background:#fff!important;border-color:var(--border-light)!important}
+.empathy-item{background:#fff!important;border-color:var(--border-light)!important}
+.anti-card{background:#fff!important;border-color:var(--border-light)!important}
+.buyer-grid .card{background:#fff!important}
+.funnel-bar{color:#fff!important}
+
+/* UNIFIED TOP NAV */
+.unified-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-light);display:flex;align-items:center;padding:0 24px;gap:20px}
+.un-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.un-logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;flex-shrink:0}
+.un-logo-text{font-size:14px;color:var(--text-dark);font-weight:600}
+.un-logo-text strong{font-weight:900}
+.un-links{display:flex;gap:4px;margin-left:auto}
+.un-link{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:all .15s}
+.un-link:hover{background:var(--surface-alt);color:var(--text-dark)}
+.un-link.active{background:var(--accent-dim);color:var(--accent)}
+</style>
+</head>
+<body>
+<nav class="unified-nav">
+  <a href="index.html" class="un-logo">
+    <div class="un-logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    <span class="un-logo-text">Ecossistema<strong>Max</strong></span>
+  </a>
+  <div class="un-links">
+    <a href="index.html" class="un-link">Hub</a>
+    <a href="persona.html" class="un-link active">Persona</a>
+    <a href="criativos.html" class="un-link">Criativos</a>
+    <a href="skills.html" class="un-link">Skills</a>
+    <a href="resultado.html" class="un-link">Resultado</a>
+    <a href="sexy-canvas.html" class="un-link">Sexy Canvas</a>
+    <a href="sexy-canvas-tractorpro.html" class="un-link">TractorPRO</a>
+    <a href="xquads.html" class="un-link">Xquads</a>
+    <a href="terminal.html" class="un-link">Terminal</a>
+  </div>
+</nav>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#a78bfa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div class="logo-text">TractorPRO</div>
+        <div class="logo-sub">Persona Intelligence</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-persona">
+    <div class="persona-mini">
+      <div class="avatar-sm">R</div>
+      <div class="persona-info-sm">
+        <p>Rafael Mendes</p>
+        <span>Gestor de Tráfego · SP</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">Dashboard</div>
+
+    <div class="nav-item active" onclick="showSection('overview',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Visão Geral
+    </div>
+
+    <div class="nav-item" onclick="showSection('dimensions',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+      30 Dimensões
+      <span class="nav-badge">30</span>
+    </div>
+
+    <div class="nav-item" onclick="showSection('buyer',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Buyer Persona
+    </div>
+
+    <div class="nav-item" onclick="showSection('icp',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17z"/></svg>
+      ICP
+    </div>
+
+    <div class="nav-item" onclick="showSection('empathy',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Mapa de Empatia
+    </div>
+
+    <div class="nav-item" onclick="showSection('anti',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      Anti-Persona
+    </div>
+
+    <div class="nav-item" onclick="showSection('copy',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Copy &amp; Headlines
+    </div>
+  </nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- ===== SECTION: VISÃO GERAL ===== -->
+<section id="overview" class="section active">
+  <div class="page-header">
+    <div class="breadcrumb">TractorPRO &rsaquo; Persona Profunda</div>
+    <div class="page-title">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Visão Geral
+    </div>
+    <div class="page-subtitle"><span class="live-dot"></span>Persona ativa &mdash; atualizado em Março 2026</div>
+  </div>
+
+  <div class="hero-card">
+    <div class="hero-content">
+      <div class="avatar-hero">R</div>
+      <div class="hero-info">
+        <div class="hero-tags">
+          <span class="badge badge-purple">Gestor de Tráfego</span>
+          <span class="badge badge-cyan">Freelancer / MEI</span>
+          <span class="badge badge-amber">São Paulo · SP</span>
+          <span class="badge badge-green">Meta Ads + Google Ads</span>
+        </div>
+        <h2>Rafael Mendes</h2>
+        <p class="age">29 anos · Masculino · Solteiro</p>
+        <div class="hero-quote">"Sei fazer meu trabalho melhor que a maioria — o problema é tudo que está em volta."</div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-pill"><strong style="color:#22c55e">R$5–15k</strong><span>Renda mensal</span></div>
+        <div class="stat-pill"><strong style="color:#a78bfa">12→40</strong><span>Clientes (meta)</span></div>
+        <div class="stat-pill"><strong style="color:#f59e0b">30</strong><span>Dimensões mapeadas</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card kc-purple">
+      <div class="kpi-label">🔥 Top 5 Dores</div>
+      <ul class="kpi-items">
+        <li>Terror do Gerenciador Meta</li>
+        <li>Horas em relatório manual</li>
+        <li>Cliente não vê valor do trabalho</li>
+        <li>Renda imprevisível mês a mês</li>
+        <li>Múltiplas plataformas separadas</li>
+      </ul>
+    </div>
+    <div class="kpi-card kc-green">
+      <div class="kpi-label">✨ Top 5 Desejos</div>
+      <ul class="kpi-items">
+        <li>Liberdade financeira real</li>
+        <li>Ser visto como referência</li>
+        <li>40 clientes sem contratar ninguém</li>
+        <li>Relatório automático sem esforço</li>
+        <li>Renda previsível todo mês</li>
+      </ul>
+    </div>
+    <div class="kpi-card kc-amber">
+      <div class="kpi-label">⚡ Top 5 Gatilhos</div>
+      <ul class="kpi-items">
+        <li>Ver outro gestor usando a ferramenta</li>
+        <li>Perder cliente por falta de processo</li>
+        <li>Trial gratuito que funciona de verdade</li>
+        <li>Novo cliente exigindo profissionalismo</li>
+        <li>R$97 que cabe no bolso do freelancer</li>
+      </ul>
+    </div>
+    <div class="kpi-card kc-cyan">
+      <div class="kpi-label">💬 Frases que Usa</div>
+      <ul class="kpi-items">
+        <li>Odeio o gerenciador do Meta</li>
+        <li>Perdi a tarde toda montando relatório</li>
+        <li>Preciso de um processo pra isso</li>
+        <li>Quero escalar sem contratar</li>
+        <li>Ferramenta que funciona de verdade</li>
+      </ul>
+    </div>
+    <div class="kpi-card kc-red">
+      <div class="kpi-label">🛑 Headlines que Param</div>
+      <ul class="kpi-items">
+        <li>Nunca mais abra o Gerenciador Meta</li>
+        <li>Campanha completa em 4 minutos</li>
+        <li>Cliente viu e renovou na hora</li>
+        <li>12 para 40 clientes sem contratar</li>
+        <li>Feito por gestor que também odiava</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION: 30 DIMENSÕES ===== -->
+<section id="dimensions" class="section">
+  <div class="page-header">
+    <div class="breadcrumb">TractorPRO &rsaquo; Persona Profunda</div>
+    <div class="page-title">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+      30 Dimensões da Persona Profunda
+    </div>
+    <div class="page-subtitle">5 blocos temáticos &mdash; clique nos cards para expandir os 10 elementos</div>
+  </div>
+
+  <!-- BLOCO A -->
+  <div class="dim-block bloco-a">
+    <div class="block-header" style="background:rgba(76,29,149,.2);border:1px solid rgba(76,29,149,.45)">
+      <div class="block-num" style="background:#4c1d95;color:#ddd6fe">A</div>
+      <div>
+        <div class="block-title" style="color:#ddd6fe">Sombras e Medos</div>
+        <div class="block-sub" style="color:#c4b5fd">Dimensões 1–6 &mdash; Feridas, Traumas e Medos Profundos</div>
+      </div>
+    </div>
+    <div class="dim-grid" id="block-a"></div>
+  </div>
+
+  <!-- BLOCO B -->
+  <div class="dim-block bloco-b">
+    <div class="block-header" style="background:rgba(109,40,217,.15);border:1px solid rgba(109,40,217,.4)">
+      <div class="block-num" style="background:#6d28d9;color:#ede9fe">B</div>
+      <div>
+        <div class="block-title" style="color:#c4b5fd">Desejos e Necessidades</div>
+        <div class="block-sub" style="color:#a78bfa">Dimensões 7–12 &mdash; Fantasias, Desejos e Buscas Infinitas</div>
+      </div>
+    </div>
+    <div class="dim-grid" id="block-b"></div>
+  </div>
+
+  <!-- BLOCO C -->
+  <div class="dim-block bloco-c">
+    <div class="block-header" style="background:rgba(29,78,216,.12);border:1px solid rgba(29,78,216,.4)">
+      <div class="block-num" style="background:#1d4ed8;color:#bfdbfe">C</div>
+      <div>
+        <div class="block-title" style="color:#bfdbfe">Mecanismos e Padrões</div>
+        <div class="block-sub" style="color:#93c5fd">Dimensões 13–18 &mdash; Comportamentos Compensatórios e Crenças</div>
+      </div>
+    </div>
+    <div class="dim-grid" id="block-c"></div>
+  </div>
+
+  <!-- BLOCO D -->
+  <div class="dim-block bloco-d">
+    <div class="block-header" style="background:rgba(8,145,178,.1);border:1px solid rgba(8,145,178,.4)">
+      <div class="block-num" style="background:#0891b2;color:#cffafe">D</div>
+      <div>
+        <div class="block-title" style="color:#a5f3fc">Identidade e Poder</div>
+        <div class="block-sub" style="color:#67e8f9">Dimensões 19–24 &mdash; Conflitos de Identidade e Dinâmicas de Poder</div>
+      </div>
+    </div>
+    <div class="dim-grid" id="block-d"></div>
+  </div>
+
+  <!-- BLOCO E -->
+  <div class="dim-block bloco-e">
+    <div class="block-header" style="background:rgba(6,95,70,.18);border:1px solid rgba(6,95,70,.45)">
+      <div class="block-num" style="background:#065f46;color:#a7f3d0">E</div>
+      <div>
+        <div class="block-title" style="color:#a7f3d0">Existência e Transcendência</div>
+        <div class="block-sub" style="color:#6ee7b7">Dimensões 25–30 &mdash; Paradoxos Fundamentais e Tensões Primordiais</div>
+      </div>
+    </div>
+    <div class="dim-grid" id="block-e"></div>
+  </div>
+</section>
+
+<!-- ===== SECTION: BUYER PERSONA ===== -->
+<section id="buyer" class="section">
+  <div class="page-header">
+    <div class="breadcrumb">TractorPRO &rsaquo; Persona Profunda</div>
+    <div class="page-title">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Buyer Persona Completa
+    </div>
+    <div class="page-subtitle">Perfil demográfico + psicográfico + jornada + mapa de dores</div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-title">Perfil Demográfico</div>
+      <table class="profile-table">
+        <tr><th>Nome</th><td>Rafael Mendes</td></tr>
+        <tr><th>Idade / Gênero</th><td>29 anos · Masculino</td></tr>
+        <tr><th>Localização</th><td>São Paulo, SP</td></tr>
+        <tr><th>Estado Civil</th><td>Solteiro ou relacionamento estável, sem filhos</td></tr>
+        <tr><th>Escolaridade</th><td>Superior inc./completo (Marketing, Publicidade, Adm)</td></tr>
+        <tr><th>Renda Mensal</th><td>R$5.000–15.000 (variável)</td></tr>
+        <tr><th>Profissão</th><td>Gestor de Tráfego Freelancer / Dono de Micro Agência</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Perfil Psicográfico</div>
+      <table class="profile-table">
+        <tr><th>Valores</th><td>Liberdade, autonomia, resultados, eficiência, aprendizado</td></tr>
+        <tr><th>Estilo de Vida</th><td>Home office/coworking, horários irregulares, 24h conectado</td></tr>
+        <tr><th>Hobbies</th><td>Tech, games, séries, finanças pessoais, academia</td></tr>
+        <tr><th>Fontes</th><td>YouTube, Instagram, grupos WhatsApp/Telegram</td></tr>
+        <tr><th>Influenciadores</th><td>Pedro Sobral, Natanael Oliveira, Camila Porto, Rafael Damasceno</td></tr>
+        <tr><th>Livros</th><td>Mente Milionária, 4 Horas por Semana, Pai Rico Pai Pobre</td></tr>
+        <tr><th>Marcas admira</th><td>Notion, Linear, Hotmart, RD Station</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-title">Jornada do Comprador &mdash; Funil de 6 Etapas</div>
+    <div style="padding-top:8px">
+      <div class="funnel-wrap">
+        <div class="funnel-step"><div class="funnel-bar"><div class="funnel-num">1</div><div class="funnel-content"><h4>Desconhecimento</h4><p>Usa Meta Ads nativo sem questionar — acha que é assim mesmo para todo mundo</p></div></div></div>
+        <div class="funnel-step"><div class="funnel-bar"><div class="funnel-num">2</div><div class="funnel-content"><h4>Consciência</h4><p>Percebe que perde horas em relatórios e o cliente não valoriza o esforço</p></div></div></div>
+        <div class="funnel-step"><div class="funnel-bar"><div class="funnel-num">3</div><div class="funnel-content"><h4>Consideração</h4><p>Pesquisa "dashboard meta ads", "ferramenta gestão tráfego", "melhor que gerenciador meta"</p></div></div></div>
+        <div class="funnel-step"><div class="funnel-bar"><div class="funnel-num">4</div><div class="funnel-content"><h4>Decisão</h4><p>Compara TractorPRO com AgendaPro, mLabs, Reportei — analisa preço e integrações</p></div></div></div>
+        <div class="funnel-step"><div class="funnel-bar"><div class="funnel-num">5</div><div class="funnel-content"><h4>Compra</h4><p>Viu vídeo de outro gestor usando + trial gratuito convenceu + R$97 cabe no bolso</p></div></div></div>
+        <div class="funnel-step"><div class="funnel-bar"><div class="funnel-num">6</div><div class="funnel-content"><h4>Pós-Compra</h4><p>Quer resultado rápido na 1ª semana — se não configurar fácil vai abandonar</p></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Mapa DxDxO — Top 10 Dores com Intensidade</div>
+    <table class="pain-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Dor</th>
+          <th>Frequência</th>
+          <th>Impacto</th>
+          <th>Intensidade</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="pain-table-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== SECTION: ICP ===== -->
+<section id="icp" class="section">
+  <div class="page-header">
+    <div class="breadcrumb">TractorPRO &rsaquo; Persona Profunda</div>
+    <div class="page-title">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13"/><path d="M2 2l20 20"/></svg>
+      Ideal Customer Profile (ICP)
+    </div>
+    <div class="page-subtitle">3 perfis prioritários de cliente ideal para o TractorPRO</div>
+  </div>
+
+  <div class="icp-grid">
+    <div class="icp-card icp-a">
+      <div class="icp-priority" style="color:#a78bfa">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#7c3aed"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Perfil A &mdash; Prioridade ALTA
+      </div>
+      <div class="icp-name">Gestor Solo</div>
+      <div class="icp-sub">Freelancer ou MEI &mdash; 1 a 3 anos de mercado</div>
+      <ul class="icp-traits">
+        <li>5 a 15 clientes ativos simultaneamente</li>
+        <li>Fatura R$5.000 a R$12.000 por mês</li>
+        <li>Usa planilha + Meta Ads nativo + WhatsApp</li>
+        <li>Trabalha completamente sozinho, sem equipe</li>
+        <li>Dor principal: falta de tempo e organização</li>
+      </ul>
+      <div class="icp-trigger"><strong>⚡ Trigger de Compra</strong>Perder cliente por falta de processo ou ver colega muito mais organizado e profissional</div>
+    </div>
+
+    <div class="icp-card icp-b">
+      <div class="icp-priority" style="color:#22d3ee">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#06b6d4"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Perfil B &mdash; Prioridade MÉDIA
+      </div>
+      <div class="icp-name">Pequena Agência</div>
+      <div class="icp-sub">2 a 5 pessoas &mdash; CNPJ ativo</div>
+      <ul class="icp-traits">
+        <li>10 a 30 clientes ativos na carteira</li>
+        <li>Clientes pagam R$1.500 a R$5.000/mês</li>
+        <li>Precisa de funcionalidade multi-usuário</li>
+        <li>Quer escalar sem precisar contratar mais</li>
+        <li>Dor principal: profissionalismo e escala</li>
+      </ul>
+      <div class="icp-trigger"><strong>⚡ Trigger de Compra</strong>Novo cliente grande que exige nível superior de profissionalismo e relatórios automatizados</div>
+    </div>
+
+    <div class="icp-card icp-c">
+      <div class="icp-priority" style="color:#4ade80">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#22c55e"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Perfil C &mdash; Prioridade BAIXA
+      </div>
+      <div class="icp-name">Recém-Formado</div>
+      <div class="icp-sub">Acabou o curso &mdash; Primeiros clientes</div>
+      <ul class="icp-traits">
+        <li>Fatura entre R$2.000 e R$5.000/mês</li>
+        <li>Assustado com a complexidade do Meta Ads</li>
+        <li>Quer parecer profissional para os clientes</li>
+        <li>Sensível a preço mas aberto a perceber valor</li>
+        <li>Dor principal: credibilidade e confiança</li>
+      </ul>
+      <div class="icp-trigger"><strong>⚡ Trigger de Compra</strong>Descobrir que existe uma forma muito mais fácil de gerir tráfego do que o gerenciador nativo</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION: MAPA EMPATIA ===== -->
+<section id="empathy" class="section">
+  <div class="page-header">
+    <div class="breadcrumb">TractorPRO &rsaquo; Persona Profunda</div>
+    <div class="page-title">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Mapa de Empatia
+    </div>
+    <div class="page-subtitle">Como Rafael pensa, vê, ouve e se comporta no dia a dia</div>
+  </div>
+
+  <div class="empathy-grid">
+    <div class="eq-card eq-think">
+      <div class="eq-title" style="color:#a78bfa">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/><circle cx="12" cy="12" r="10"/></svg>
+        Pensa &amp; Sente
+      </div>
+      <ul class="eq-list">
+        <li>Trabalha muito e ainda não chegou onde queria</li>
+        <li>Mercado ingrato — esforço invisível para o cliente</li>
+        <li>Tem potencial mas falta o sistema certo</li>
+        <li>Sempre no limite — uma campanha ruim destrói o mês</li>
+        <li>Medo constante de perder o que construiu até agora</li>
+      </ul>
+    </div>
+
+    <div class="eq-card eq-see">
+      <div class="eq-title" style="color:#22d3ee">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Vê
+      </div>
+      <ul class="eq-list">
+        <li>Colegas que parecem ter descoberto o segredo</li>
+        <li>Ferramentas caras que prometem resolver tudo</li>
+        <li>Clientes que não valorizam nem reconhecem o trabalho</li>
+        <li>Guru dizendo que é fácil, rápido e automático</li>
+        <li>Concorrentes ganhando mais fazendo aparentemente menos</li>
+      </ul>
+    </div>
+
+    <div class="eq-card eq-hear">
+      <div class="eq-title" style="color:#fbbf24">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        Ouve
+      </div>
+      <ul class="eq-list">
+        <li>"Quanto você cobra?" — com tom de desconfiança</li>
+        <li>"Tá dando resultado mesmo?"</li>
+        <li>"Meu primo faz isso de graça"</li>
+        <li>"Vi uma ferramenta que faz tudo automatizado"</li>
+        <li>"Precisamos conversar sobre os últimos resultados"</li>
+      </ul>
+    </div>
+
+    <div class="eq-card eq-say">
+      <div class="eq-title" style="color:#4ade80">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Fala &amp; Faz
+      </div>
+      <ul class="eq-list">
+        <li>Diz que está crescendo (por fora, nas redes)</li>
+        <li>Posta resultado e vitórias no Instagram</li>
+        <li>Por dentro: exausto e com medo do próximo mês</li>
+        <li>Aceita mais clientes para sentir mais segurança</li>
+        <li>Trabalha fins de semana "só nessa semana"</li>
+      </ul>
+    </div>
+
+    <div class="eq-card eq-pain">
+      <div class="eq-title" style="color:#f87171">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Dores
+      </div>
+      <ul class="eq-list">
+        <li>Tempo consumido por tarefas completamente operacionais</li>
+        <li>Desorganização que gera erro, estresse e perda de cliente</li>
+        <li>Cliente que não entende nem valoriza o trabalho feito</li>
+        <li>Meta Ads que drena toda a energia mental disponível</li>
+        <li>Renda imprevisível — ansiedade constante todo mês</li>
+      </ul>
+    </div>
+
+    <div class="eq-card eq-gain">
+      <div class="eq-title" style="color:#4ade80">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        Ganhos
+      </div>
+      <ul class="eq-list">
+        <li>Liberdade real — financeira e de tempo de verdade</li>
+        <li>Reconhecimento como profissional sério e competente</li>
+        <li>Escala sem aumentar as horas trabalhadas</li>
+        <li>Renda previsível e crescente mês a mês</li>
+        <li>Orgulho genuíno do que entrega aos clientes</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION: ANTI-PERSONA ===== -->
+<section id="anti" class="section">
+  <div class="page-header">
+    <div class="breadcrumb">TractorPRO &rsaquo; Persona Profunda</div>
+    <div class="page-title">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      Anti-Persona
+    </div>
+    <div class="page-subtitle">Quem NÃO é cliente ideal &mdash; evite desperdiçar recursos de vendas e suporte</div>
+  </div>
+
+  <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:14px 18px;margin-bottom:24px;display:flex;align-items:flex-start;gap:12px">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span style="font-size:13px;color:#fca5a5;line-height:1.5">Estes perfis consomem recursos de vendas, onboarding e suporte sem gerar LTV adequado. Identificar e qualificar cedo economiza tempo e protege a reputação do produto.</span>
+  </div>
+
+  <div class="anti-grid">
+    <div class="anti-card">
+      <div class="anti-num">1</div>
+      <div class="anti-title">Dono de Empresa DIY</div>
+      <div class="anti-desc">Quer fazer tráfego sozinho mesmo sem expertise. Não tem paciência para aprender o processo mínimo e vai culpar a ferramenta por resultados ruins.</div>
+      <div class="anti-why">⚠ Alta taxa de churn, culpa a ferramenta, reviews negativas</div>
+    </div>
+    <div class="anti-card">
+      <div class="anti-num">2</div>
+      <div class="anti-title">Gestor de Agência Grande</div>
+      <div class="anti-desc">Agência consolidada com time e sistema próprio. Não precisa do TractorPRO — já tem soluções enterprise com customizações avançadas.</div>
+      <div class="anti-why">⚠ Sobrequalificado, exige customização muito custosa</div>
+    </div>
+    <div class="anti-card">
+      <div class="anti-num">3</div>
+      <div class="anti-title">Quer Resultado Sem Processo</div>
+      <div class="anti-desc">Espera resultado mágico sem configurar, sem aprender, sem processo mínimo. Abandona na primeira dificuldade e vai embora completamente insatisfeito.</div>
+      <div class="anti-why">⚠ Churn na semana 1, prejudica métricas de ativação</div>
+    </div>
+    <div class="anti-card">
+      <div class="anti-num">4</div>
+      <div class="anti-title">Price-Sensitive Extremo</div>
+      <div class="anti-desc">Pede desconto, desaparece, volta, cancela, assina novamente. Ciclo vicioso que consome suporte sem jamais gerar valor real para nenhum lado.</div>
+      <div class="anti-why">⚠ LTV negativo, consome suporte, cancela sempre</div>
+    </div>
+    <div class="anti-card">
+      <div class="anti-num">5</div>
+      <div class="anti-title">Não Usa Meta/Google Ads</div>
+      <div class="anti-desc">Trabalha exclusivamente com outras mídias — orgânico, influencer, SEO. O produto simplesmente não se aplica ao seu fluxo de trabalho.</div>
+      <div class="anti-why">⚠ Fit zero — produto não resolve o problema deles</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION: COPY & HEADLINES ===== -->
+<section id="copy" class="section">
+  <div class="page-header">
+    <div class="breadcrumb">TractorPRO &rsaquo; Persona Profunda</div>
+    <div class="page-title">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Copy &amp; Headlines
+    </div>
+    <div class="page-subtitle">Clique em qualquer card para copiar o texto automaticamente</div>
+  </div>
+
+  <div class="copy-section">
+    <h3 style="font-size:13px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.7px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Headlines que Param o Scroll
+    </h3>
+    <div class="copy-grid" id="headlines-grid"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="copy-section">
+    <h3 style="font-size:13px;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:.7px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Frases que a Persona Usa
+    </h3>
+    <div class="copy-grid" id="phrases-grid"></div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<div class="copy-notification" id="copyNotif">Copiado para a área de transferência ✓</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const dimensions = {
+  a: [
+    {num:1,title:"Sombras Existenciais",items:["Medo de nunca sair do ciclo de trocar tempo por dinheiro","Sensação de apagar incêndio — nunca construindo algo","Dúvida de se escolheu a carreira certa","Medo de virar irrelevante quando a IA substituir os gestores","Vergonha de não ter processos organizados como os grandes","Sensação de que trabalha muito mas ninguém vê o valor","Medo de nunca conseguir descansar de verdade","Angústia de depender 100% da plataforma do Meta","Sensação de fraude — será que realmente sei o que faço?","Medo de perder cliente importante por erro operacional evitável"]},
+    {num:2,title:"Medos Fundamentais",items:["Perder cliente por falta de atenção numa campanha","Orçamento do cliente explodir sem ele perceber","Ficar sem clientes e sem renda fixa","Meta mudar o algoritmo e detonar seus resultados","Concorrente mais barato roubar seus clientes","Não conseguir provar o valor do trabalho para o cliente leigo","Ficar preso em clientes pequenos que pagam pouco e exigem muito","Não saber escalar — ter que contratar e virar gestor de pessoas","Cliente sumir sem pagar após meses de trabalho","Plataforma cair no dia mais importante da campanha"]},
+    {num:3,title:"Medos Ocultos",items:["Que clientes descubram que o trabalho poderia ser feito por qualquer um","Que a IA substitua completamente sua função em 2 anos","Que seus resultados sejam mais sorte do que habilidade","Que não consiga manter o ritmo conforme envelhece","Inveja silenciosa de quem faturou mais fazendo menos","Medo de pedir aumento de honorários e perder o cliente","Que a família não entenda por que ainda não chegou lá","Que o burnout chegue antes do sucesso financeiro","Que esteja construindo no terreno dos outros (Meta, Google)","Que nunca consiga ter uma agência de verdade"]},
+    {num:4,title:"Medos Primordiais",items:["Não ser suficiente como profissional e como provedor","Perder o controle de algo importante enquanto não estava olhando","Ser humilhado na frente de um cliente por um erro técnico","Trabalhar muito e não ter nada concreto para mostrar","Dependência de plataformas, de clientes, de algoritmos","Invisibilidade — ninguém sabe o que ele faz ou quanto vale","Instabilidade financeira que volta todo mês como ameaça","Não conseguir parar sem tudo desmoronar","Fracasso público — perder cliente importante com audiência","O esforço de anos não se converter em liberdade"]},
+    {num:5,title:"Feridas Ancestrais",items:["Criado com mentalidade de escassez","Viu pais trabalharem muito sem colher o suficiente","Aprendeu que só merece descansar depois que tudo estiver feito","Ouviu que tecnologia/internet não é carreira de verdade","Nunca foi reconhecido por resultados, só cobrado por falhas","Aprendeu a minimizar conquistas para não parecer arrogante","Cresceu em ambiente onde pedir ajuda era fraqueza","Associa valor pessoal com produtividade","Aprendeu que precisa provar constantemente seu lugar","Internalizou que quem trabalha por conta não tem garantias"]},
+    {num:6,title:"Feridas Emocionais",items:["Já perdeu cliente importante sem entender o porquê","Já foi desvalorizado — 'você cobra muito pra ficar no computador'","Sentiu que o cliente não confiava nele mesmo entregando resultado","Já teve campanha desastrosa e precisou engolir","Já trabalhou de graça com promessa de parceria que nunca veio","Já foi substituído por agência maior mesmo fazendo bom trabalho","Já se sentiu completamente sozinho quando deu errado","Já ficou sem dormir por campanha que não convertia","Já perdeu tempo aprendendo ferramenta que ficou obsoleta","Já sentiu inveja de quem tem produto próprio e renda recorrente"]}
+  ],
+  b: [
+    {num:7,title:"Necessidades Primais",items:["Controle — saber que nada está escapando","Velocidade — entregar mais em menos tempo","Reconhecimento — que o cliente veja e valorize o trabalho","Segurança — renda previsível todo mês","Simplicidade — menos ferramentas, menos abas abertas","Autonomia — não depender de dev nem de ninguém","Visibilidade — que seus resultados falem por si","Escala — atender mais sem trabalhar mais horas","Organização — processos que rodam mesmo quando está offline","Prova — dashboards que vendem o trabalho sozinhos"]},
+    {num:8,title:"Fantasias Não Realizadas",items:["Ter uma máquina que trabalha enquanto dorme","Acordar e ver relatórios prontos sem ter feito nada","Cliente que não precisa de explicação porque o dashboard fala sozinho","Ter 30, 50, 100 clientes sem trabalhar mais horas","Ser reconhecido como referência sem precisar fazer conteúdo","Ter liberdade geográfica real e duradoura","Nunca mais precisar entrar no gerenciador do Meta","Equipe pequena, faturamento grande, operação leve","Clientes que renovam sozinhos porque os resultados são óbvios","Ter tempo para estudar, criar e evoluir de verdade"]},
+    {num:9,title:"Desejos Inconfessáveis",items:["Que o cliente nunca descubra o quanto certos processos são manuais","Ganhar muito mais do que o cliente imagina que ele ganha","Demitir clientes chatos sem sentir culpa","Ser reconhecido como mais inteligente que os grandes nomes do mercado","Provar para quem duvidou que deu e dará certo","Não precisar mais vender — ter demanda entrando sozinha","Ter produto que gere dinheiro mesmo sumindo por um mês","Ser admirado pelos colegas que ainda sofrem no gerenciador","Que a Meta quebre ou simplesmente fique irrelevante","Trabalhar 4 horas por dia e ninguém saber"]},
+    {num:10,title:"Desejos Nucleares",items:["Liberdade de verdade — financeira e de tempo","Ser visto como profissional sério e de alto valor","Construir algo que dure e que seja genuinamente seu","Ter orgulho real do que entrega para os clientes","Fazer diferença tangível na vida e no negócio dos clientes","Não depender de ninguém para continuar crescendo","Sentir que evoluiu de forma consistente","Ter estabilidade sem abrir mão da autonomia","Deixar um legado no mercado digital","Sentir que o esforço de anos valeu a pena"]},
+    {num:11,title:"Necessidades Emocionais",items:["Ser compreendido — que alguém entenda o que é gerir tráfego de verdade","Reconhecimento do esforço invisível que ninguém vê","Pertencer a uma comunidade real de iguais","Validação de que o caminho escolhido faz sentido","Alívio — não precisar carregar tudo sozinho","Sentir que a ferramenta torce por ele e foi feita para ele","Confiança de que vai dar certo no longo prazo","Parceria — sentir que não está completamente sozinho","Clareza — saber exatamente onde está e para onde vai","Orgulho — poder mostrar o que faz com confiança genuína"]},
+    {num:12,title:"Buscas Infinitas",items:["A ferramenta perfeita que resolva tudo de uma vez","O cliente ideal que valoriza e paga bem pelo trabalho","O processo que torne absolutamente tudo automático","A forma de crescer sem virar escravo do próprio negócio","A prova definitiva de que é realmente bom no que faz","O momento em que finalmente vai poder descansar de verdade","A agência dos sonhos — pequena, lucrativa, respeitada","O reconhecimento que sente que merece há tanto tempo","A liberdade que prometeram que o marketing digital traria","A sensação definitiva de que chegou lá"]}
+  ],
+  c: [
+    {num:13,title:"Compensações Inconscientes",items:["Acumula ferramentas para sentir que tem controle","Trabalha até tarde para provar dedicação interna","Aceita clientes ruins para evitar a ansiedade do vazio","Superentrega para compensar insegurança sobre seu valor","Fica consumindo conteúdo educativo em vez de agir","Compra cursos que nunca termina de assistir","Faz relatórios elaborados demais para impressionar o cliente","Evita cobrar revisão de escopo por medo da reação","Assume mais do que realmente consegue entregar","Usa complexidade técnica para parecer mais valioso"]},
+    {num:14,title:"Mecanismos de Defesa",items:["Racionaliza procrastinação como planejamento estratégico","Culpa as plataformas quando os resultados não vêm","Minimiza conquistas para não criar expectativas altas demais","Evita mostrar o trabalho antes de estar perfeito","Diz que está quase pronto há semanas consecutivas","Compara preços para baixo quando perde um cliente","Justifica o burnout como uma fase natural de crescimento","Adia decisões importantes esperando o momento certo","Terceiriza a culpa — o algoritmo mudou, não foi ele","Busca validação externa de forma constante e intensa"]},
+    {num:15,title:"Comportamentos Compensatórios",items:["Assiste YouTube sobre produtividade mas não implementa nada","Monta planilhas elaboradíssimas que abandona em dias","Troca de ferramenta toda vez que fica frustrado","Faz networking online mas evita fechar negócio de verdade","Estuda muito, executa muito pouco","Salva conteúdos para ler depois e nunca lê","Reorganiza o processo em vez de simplesmente executar","Compra curso caro e assiste apenas as primeiras aulas","Começa múltiplos projetos ao mesmo tempo sem concluir","Usa a aparência de ocupação como escudo emocional"]},
+    {num:16,title:"Ciclos Viciosos",items:["Aceita cliente barato → sem tempo → não consegue cliente melhor","Procrastina relatório → cliente cobra → entrega correndo → desconfiança","Compra ferramenta nova → aprende pela metade → frustração → compra outra","Superentrega → cliente acostuma → cobra mais → gestão se esgota","Não aumenta preço → não investe em si → não evolui nunca","Fica ocupado → não prospecta → pipeline seca → aceita qualquer cliente","Trabalha até tarde → acorda cansado → baixa produtividade → repete","Não delega → não cresce → continua completamente sozinho","Resultado inconsistente → insegurança → dificuldade de vender com confiança","Sem processo → depende de memória → comete erro → perde confiança"]},
+    {num:17,title:"Crenças Limitantes",items:["Pra cobrar mais preciso ter resultados maiores primeiro","Se eu aumentar o preço vou inevitavelmente perder o cliente","Meu mercado simplesmente não paga o que eu valho","Preciso aprender muito mais antes de me posicionar como expert","Escalar significa contratar e eu não sei gerenciar pessoas","As grandes agências sempre vão ganhar de mim no final","Não sou naturalmente bom em vendas","A IA vai me substituir completamente em breve","Meu trabalho é muito difícil de explicar para o cliente leigo","Quem tem muitos clientes inevitavelmente atende mal todos"]},
+    {num:18,title:"Prisões Invisíveis",items:["Identidade de autônomo que sabota crescimento para agência","Lealdade cega a clientes antigos que pagam muito pouco","Necessidade de aprovação que impede cobrar o preço justo","Perfeccionismo que paralisa completamente a entrega","Obrigação de estar sempre disponível para qualquer demanda","Confusão permanente entre estar ocupado e ser produtivo","Medo de parecer ganancioso ao cobrar o preço que merece","Síndrome do impostor que não desaparece nunca","Crença de que só merece descanso quando tudo estiver sob controle","Identidade pessoal completamente confundida com produtividade"]}
+  ],
+  d: [
+    {num:19,title:"Questões de Identidade",items:["Sou freelancer ou empreendedor? Tensão entre os dois mundos","Dificuldade de se apresentar — o que eu faço exatamente?","Confunde identidade pessoal com resultados dos clientes","Não sabe se quer ser especialista em nicho ou generalista","Enfrenta julgamento de família que não entende o que faz","Sente que precisa parecer maior e mais estruturado do que é","Oscila entre confiança plena e síndrome do impostor no mesmo dia","Não sabe se o sucesso que quer é financeiro ou de liberdade","Quando o negócio vai mal questiona quem ele é como pessoa","Dificuldade profunda de separar 'eu' de 'meu trabalho'"]},
+    {num:20,title:"Dinâmicas de Poder",items:["Cliente que trata o gestor como funcionário contratado","Dificuldade de dizer não por medo de perder o relacionamento","Sente que a Meta tem poder total e absoluto sobre sua renda","Relação de dependência perigosa com clientes âncora","Evita cobrar revisão de escopo por medo da reação","Aceita demandas fora do contrato para manter a paz","Dificuldade de impor limites claros de horário","Sente que o cliente tem mais poder por ser quem paga","Resiste a pedir testemunho por medo de parecer desesperado","Prefere agradar a confrontar mesmo quando está claramente certo"]},
+    {num:21,title:"Traumas Profissionais",items:["Perdeu cliente importante logo quando estava mais confiante","Teve campanha que zerou o ROAS sem entender o motivo","Foi trocado por agência maior sem explicação ou aviso","Trabalhou meses por promessa de sociedade que nunca se materializou","Teve conta de anúncios banida sem nenhum aviso prévio","Cobrou menos por insegurança e depois soube que poderia ter cobrado o dobro","Fez parceria que terminou mal e perdeu amizade e dinheiro","Superentregou por meses seguidos e foi demitido via WhatsApp","Investiu em curso caro que simplesmente não entregou o prometido","Teve ideia de produto que não lançou e viu alguém lançar depois"]},
+    {num:22,title:"Inseguranças Profissionais",items:["Medo de que os resultados sejam fruto do momento do mercado","Dificuldade de explicar tecnicamente o que faz para leigos","Nunca tem certeza se está precificando de forma correta","Insegurança sobre copy, criativo e angle das campanhas","Medo de pegar cliente grande e não conseguir entregar","Dúvida genuína se tem autoridade suficiente no mercado","Não sabe quanto tempo vai durar a demanda por gestores humanos","Sente que está sempre correndo atrás do conhecimento novo","Medo de fazer live ou vídeo e travar completamente","Insegurança sobre escalar — nunca gerenciou equipe na vida"]},
+    {num:23,title:"Relacionamentos Tóxicos",items:["Cliente que paga em dia mas drena toda a energia mental","Parceiro que promete indicações e nunca entrega de verdade","Mentor que vende curso mas não está disponível para nada","Grupo de WhatsApp que gera mais comparação que colaboração real","Cliente que constantemente compara com concorrente mais barato","Colega que compartilha conhecimento sempre pela metade","Cliente que muda briefing depois de aprovado e culpa o gestor","Fornecedor que promete prazo e sistematicamente atrasa","Comunidade online que superficialmente apoia mas na verdade compete","Cliente que paga pouco mas exige como se pagasse muito"]},
+    {num:24,title:"Conflitos Internos",items:["Quer liberdade mas tem medo de abrir mão da segurança dos clientes","Quer crescer mas não quer de forma alguma virar gestor de pessoas","Quer ser reconhecido mas tem medo de se expor nas redes","Quer cobrar mais mas tem medo de perder quem já tem","Quer especializar em nicho mas tem medo de restringir demais","Quer produto digital mas sente que precisa de mais autoridade","Quer descansar mas a culpa de não trabalhar não deixa","Quer dizer não para cliente ruim mas precisa da renda no mês","Quer delegar mas não confia que alguém vai fazer igual a ele","Quer transparência com o cliente mas tem medo de perder a confiança"]}
+  ],
+  e: [
+    {num:25,title:"Vazios Primordiais",items:["Sensação de trabalhar muito mas não estar construindo algo permanente","Ausência de comunidade real — solidão profunda do empreendedor","Falta de propósito maior além da operação diária","Desconexão entre o que faz e o impacto real que causa","Vazio de não ter a quem perguntar quando está completamente perdido","Sensação de que a vida passou rápido enquanto trabalhava sem parar","Ausência de mentoria real, presente e disponível","Falta de clareza sobre o legado que de fato quer deixar","Desconexão com o próprio corpo — sem cuidar de si mesmo","Vazio de nunca ter celebrado de verdade nenhuma conquista sua"]},
+    {num:26,title:"Sombras Arquetípicas",items:["Medo secreto do próprio sucesso que evita admitir","Inveja que sente e tem vergonha de admitir que sente","Parte de si que quer desistir de tudo e recomeçar do zero","Raiva da Meta que canaliza em ironia mas nunca age de verdade","Desejo de poder que disfarça de missão de ajudar o mercado","Parte que sabe que poderia cobrar mais mas simplesmente não enfrenta","Arrogância velada — sei mais que a maioria mas finjo humildade","Medo profundo de ser visto pelos outros como ganancioso","Parte que sabota projetos antes de poderem ser julgados","Desejo de reconhecimento que ele mesmo desqualifica como ego"]},
+    {num:27,title:"Feridas da Alma",items:["Nunca ter sido o escolhido em momentos verdadeiramente importantes","Sensação de que sempre chegou tarde nas grandes oportunidades da vida","Ter colocado a alma inteira em projeto que simplesmente não deu certo","Ter percebido tarde demais que estava sendo explorado sistematicamente","A dor de ter seu trabalho copiado por outra pessoa sem crédito","O momento em que o cliente foi grosseiro e ele simplesmente engoliu","A vergonha de ter apresentado resultado ruim para um cliente","A solidão de não ter ninguém por perto para comemorar uma vitória","O peso enorme de suportar julgamento constante da família","O arrependimento de ter ficado na zona de conforto tempo demais"]},
+    {num:28,title:"Abismos Existenciais",items:["Se eu largar tudo hoje, o que ficaria de concreto?","Vertigem diante da própria liberdade — pode fazer qualquer coisa e paralisa","Medo de que a vida toda seja apenas trabalho sem propósito real","Estou construindo para mim ou para o algoritmo da Meta?","Ansiedade crescente sobre a velocidade absurda da IA","Questionamento se o modelo empreendedor digital é o que realmente quer","Se tiver sucesso grande vou perder a identidade de quem luta?","Medo do vazio que viria se chegasse exatamente onde quer chegar","Se dependo tanto da Meta, sou realmente livre de verdade?","Angústia de não saber separar quem ele é de como ele performa"]},
+    {num:29,title:"Paradoxos Fundamentais",items:["Quer escalar mas cada novo cliente aumenta o peso que carrega","Quer ser livre mas constrói correntes novas com cada cliente","Quanto mais cresce, mais medo tem de perder tudo o que construiu","Quer ser reconhecido mas tem medo profundo de se expor","Ama genuinamente o que faz mas odeia as ferramentas que usa","Quer clientes que valorizem o trabalho mas precisa primeiro se valorizar","Busca desesperadamente previsibilidade num mercado estruturalmente instável","Quer ajudar o cliente mas quanto mais ajuda mais dependente o cliente fica","Quer descansar mas quando descansa a culpa é insuportável","Investe em conhecimento mas cada novo aprendizado revela o quanto ainda não sabe"]},
+    {num:30,title:"Tensões Primordiais",items:["Segurança vs. Liberdade","Individualismo vs. Comunidade","Presente vs. Futuro","Controle vs. Confiança","Visibilidade vs. Vulnerabilidade","Ambição vs. Suficiência","Velocidade vs. Qualidade","Fazer vs. Ser","Abundância vs. Escassez","Independência vs. Pertencimento"]}
+  ]
+};
+
+const pains = [
+  {rank:1,text:"Terror de abrir o Gerenciador de Anúncios do Meta",freq:"Diária",impact:"Bloqueia produtividade total",score:10},
+  {rank:2,text:"Horas perdidas montando relatório manualmente",freq:"Semanal",impact:"Rouba tempo de prospecção",score:9},
+  {rank:3,text:"Cliente não entende o valor do trabalho feito",freq:"Mensal",impact:"Insegurança sobre precificação",score:9},
+  {rank:4,text:"Renda imprevisível mês a mês",freq:"Mensal",impact:"Gera ansiedade constante",score:8},
+  {rank:5,text:"Gerenciar múltiplos clientes em plataformas separadas",freq:"Diária",impact:"Causa erros e estresse",score:8},
+  {rank:6,text:"Medo de perder conta banida sem aviso prévio",freq:"Semanal",impact:"Tensão de fundo permanente",score:7},
+  {rank:7,text:"Não saber se campanha está funcionando sem entrar no Meta",freq:"Diária",impact:"Dependência mental intensa",score:7},
+  {rank:8,text:"Dificuldade de provar ROI de forma visual e simples",freq:"Semanal",impact:"Perde renovações de contrato",score:8},
+  {rank:9,text:"Sem processo para onboarding de novos clientes",freq:"Mensal",impact:"Cada cliente vira retrabalho",score:6},
+  {rank:10,text:"Escalabilidade — atende 12, quer chegar a 40 sem contratar",freq:"Constante",impact:"Teto de crescimento real",score:9}
+];
+
+const headlines = [
+  "Nunca mais abra o Gerenciador de Anúncios da Meta",
+  "Criei campanha completa em 4 minutos — sem tocar no Meta",
+  "Meu cliente viu o dashboard e renovou na hora",
+  "De 12 clientes para 40 sem contratar ninguém",
+  "Feito por gestor de tráfego que também odiava aquilo",
+  "O relatório foi pro cliente sozinho enquanto eu dormia"
+];
+
+const phrases = [
+  "Odeio ter que entrar no gerenciador",
+  "Perdi a tarde toda montando relatório",
+  "Meu cliente não entende o que estou fazendo",
+  "Preciso de um processo pra isso",
+  "Não aguento mais ficar apagando incêndio",
+  "Quero escalar sem contratar",
+  "Ferramenta que funciona de verdade, sem enrolação"
+];
+
+// ============================================================
+// RENDER DIMENSIONS
+// ============================================================
+function renderDimBlock(blockId, data) {
+  const container = document.getElementById(blockId);
+  if (!container) return;
+  data.forEach(dim => {
+    const card = document.createElement('div');
+    card.className = 'dim-card';
+    card.innerHTML =
+      '<div class="dim-card-header">' +
+        '<span class="dim-num">Dimensão ' + dim.num + '</span>' +
+        '<span class="chevron">▼</span>' +
+      '</div>' +
+      '<div class="dim-title">' + dim.title + '</div>' +
+      '<div class="dim-items">' +
+        '<ul>' + dim.items.map(function(i){ return '<li>' + i + '</li>'; }).join('') + '</ul>' +
+      '</div>';
+    card.addEventListener('click', function() {
+      var items = card.querySelector('.dim-items');
+      var isOpen = items.classList.contains('open');
+      items.classList.toggle('open', !isOpen);
+      card.classList.toggle('expanded', !isOpen);
+    });
+    container.appendChild(card);
+  });
+}
+
+renderDimBlock('block-a', dimensions.a);
+renderDimBlock('block-b', dimensions.b);
+renderDimBlock('block-c', dimensions.c);
+renderDimBlock('block-d', dimensions.d);
+renderDimBlock('block-e', dimensions.e);
+
+// ============================================================
+// RENDER PAIN TABLE
+// ============================================================
+var painBody = document.getElementById('pain-table-body');
+if (painBody) {
+  pains.forEach(function(p) {
+    var freqBadge = p.freq === 'Diária' ? 'badge-red' : p.freq === 'Semanal' ? 'badge-amber' : 'badge-cyan';
+    var fillColor = p.score >= 9 ? 'linear-gradient(90deg,#ef4444,#f97316)' : p.score >= 7 ? 'linear-gradient(90deg,#f59e0b,#eab308)' : 'linear-gradient(90deg,#22c55e,#16a34a)';
+    var scoreColor = p.score >= 9 ? '#f87171' : p.score >= 7 ? '#fbbf24' : '#4ade80';
+    painBody.innerHTML +=
+      '<tr>' +
+        '<td style="color:var(--text3);font-weight:800;font-size:16px">' + p.rank + '</td>' +
+        '<td style="font-weight:500">' + p.text + '</td>' +
+        '<td><span class="badge ' + freqBadge + '">' + p.freq + '</span></td>' +
+        '<td style="color:var(--text2);font-size:12px">' + p.impact + '</td>' +
+        '<td><div class="progress-bar"><div class="progress-fill" style="width:' + (p.score*10) + '%;background:' + fillColor + '"></div></div></td>' +
+        '<td style="font-weight:900;color:' + scoreColor + ';font-size:15px">' + p.score + '/10</td>' +
+      '</tr>';
+  });
+}
+
+// ============================================================
+// COPY FUNCTIONALITY
+// ============================================================
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(showCopyNotif);
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showCopyNotif();
+  }
+}
+
+function showCopyNotif() {
+  var notif = document.getElementById('copyNotif');
+  notif.classList.add('show');
+  setTimeout(function(){ notif.classList.remove('show'); }, 2000);
+}
+
+var hlGrid = document.getElementById('headlines-grid');
+if (hlGrid) {
+  headlines.forEach(function(h) {
+    var card = document.createElement('div');
+    card.className = 'copy-card headline';
+    card.innerHTML =
+      '<div class="copy-tag" style="color:#a78bfa">Headline &mdash; Para o Scroll</div>' +
+      '<div class="copy-text">&ldquo;' + h + '&rdquo;</div>' +
+      '<div class="copy-btn">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+        ' Clique para copiar' +
+      '</div>';
+    card.addEventListener('click', function(){ copyToClipboard(h); });
+    hlGrid.appendChild(card);
+  });
+}
+
+var phGrid = document.getElementById('phrases-grid');
+if (phGrid) {
+  phrases.forEach(function(p) {
+    var card = document.createElement('div');
+    card.className = 'copy-card phrase';
+    card.innerHTML =
+      '<div class="copy-tag" style="color:#fbbf24">Frase da Persona</div>' +
+      '<div class="copy-text">&ldquo;' + p + '&rdquo;</div>' +
+      '<div class="copy-btn">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+        ' Clique para copiar' +
+      '</div>';
+    card.addEventListener('click', function(){ copyToClipboard(p); });
+    phGrid.appendChild(card);
+  });
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  var sec = document.getElementById(id);
+  if (sec) sec.classList.add('active');
+  if (el) el.classList.add('active');
+}
+lucide.createIcons();
+</script>
+</body>
+</html>

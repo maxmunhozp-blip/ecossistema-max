@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sexy Canvas — Copy Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d1a;--surface:#13132a;--surface-alt:#1a1a33;--surface-hover:#20203d;
+  --border:#2a2a4a;--border-strong:#3a3a60;
+  --accent:#8b5cf6;--accent-2:#3b82f6;--accent-dim:rgba(139,92,246,.12);--accent-mid:rgba(139,92,246,.25);
+  --text-dark:#f1f5f9;--text:#cbd5e1;--text-muted:#7c8db5;--text-dim:#4a5a80;
+  --shadow:0 1px 3px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.2);
+  --shadow-lg:0 4px 24px rgba(0,0,0,.4);
+  --glow:0 0 20px rgba(139,92,246,.2);
+  --nav-h:56px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(13,13,26,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:24px}
+.nav-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--text-dark);text-decoration:none}
+.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;gap:2px;margin-left:8px}
+.nav-links a{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:.15s}
+.nav-links a:hover{color:var(--text-dark);background:var(--surface-alt)}
+.nav-links a.active{color:var(--accent);background:var(--accent-dim)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.badge-nav{background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#13132a 0%,#0f1535 50%,#130f2e 100%);border-bottom:1px solid var(--border);padding:40px 24px 32px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(139,92,246,.15) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-60px;left:10%;width:300px;height:300px;background:radial-gradient(circle,rgba(59,130,246,.1) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:900px;margin:0 auto}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--accent-dim);color:var(--accent);font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;margin-bottom:16px;border:1px solid var(--accent-mid)}
+.hero h1{font-size:32px;font-weight:800;color:var(--text-dark);margin-bottom:8px;letter-spacing:-.5px}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero p{font-size:15px;color:var(--text-muted);max-width:560px}
+.stats-row{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat-num{font-size:24px;font-weight:800;color:var(--text-dark)}
+.stat-label{font-size:12px;color:var(--text-muted)}
+
+/* TABS */
+.tabs-wrap{background:rgba(13,13,26,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:var(--nav-h);z-index:90}
+.tabs{display:flex;gap:0;padding:0 24px;max-width:1200px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:14px 16px;font-size:13px;font-weight:500;color:var(--text-muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:6px}
+.tab:hover{color:var(--text-dark);background:var(--surface-alt)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* CONTENT */
+.content{max-width:1200px;margin:0 auto;padding:32px 24px}
+.section{display:none}
+.section.active{display:block}
+
+/* TRIGGER HEADER */
+.trigger-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px;padding:24px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
+.trigger-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.trigger-info{flex:1}
+.trigger-name{font-size:20px;font-weight:800;color:var(--text-dark);margin-bottom:4px}
+.trigger-desire{font-size:14px;color:var(--text-muted);margin-bottom:8px}
+.trigger-question{font-size:13px;font-weight:500;color:var(--text);background:var(--surface-alt);padding:8px 12px;border-radius:8px;display:inline-block}
+.trigger-meta{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+/* HOOKS GRID */
+.hooks-title{font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.hooks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;margin-bottom:32px}
+.hook-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px;transition:.15s;cursor:pointer;position:relative}
+.hook-card:hover{border-color:var(--accent);box-shadow:0 0 0 1px rgba(139,92,246,.2),var(--shadow)}
+.hook-num{font-size:11px;font-weight:700;color:var(--text-dim);min-width:20px;padding-top:1px}
+.hook-text{font-size:13px;color:var(--text);line-height:1.5;flex:1}
+.hook-copy{position:absolute;right:12px;top:12px;width:28px;height:28px;border-radius:6px;background:transparent;border:1px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:.15s;color:var(--text-muted)}
+.hook-card:hover .hook-copy{opacity:1;background:var(--surface-alt);border-color:var(--border)}
+.hook-copy:hover{background:var(--accent-dim)!important;border-color:var(--accent-mid)!important;color:var(--accent)!important}
+
+/* CTA BOX */
+.cta-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-top:8px}
+.cta-box h3{font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.cta-tags{display:flex;gap:8px;flex-wrap:wrap}
+.cta-tag{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border);cursor:pointer;transition:.15s;color:var(--text);background:var(--surface-alt)}
+.cta-tag:hover{background:var(--accent-dim);border-color:var(--accent-mid);color:var(--accent)}
+
+/* COMBOS */
+.combos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.combo-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;transition:.15s}
+.combo-card:hover{box-shadow:var(--shadow-lg);border-color:var(--border-strong)}
+.combo-name{font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.combo-tags{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.combo-when{font-size:12px;color:var(--text-muted);margin-bottom:8px}
+.combo-example{font-size:13px;color:var(--text);background:var(--surface-alt);padding:10px 12px;border-radius:8px;font-style:italic;border-left:3px solid var(--accent-mid)}
+
+/* COMPLIANCE */
+.compliance-section{margin-bottom:24px}
+.compliance-title{font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.compliance-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.compliance-card{padding:14px 16px;border-radius:10px;border:1px solid}
+.compliance-card.warn{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.3);color:#fbbf24}
+.compliance-card.danger{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:#f87171}
+.compliance-card .c-trigger{font-weight:700;font-size:13px;margin-bottom:4px}
+.compliance-card .c-risk{font-size:12px;opacity:.8;margin-bottom:6px}
+.compliance-card .c-fix{font-size:12px;font-weight:500}
+.forbidden-list{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.25);border-radius:12px;padding:20px 24px}
+.forbidden-list h3{font-size:14px;font-weight:700;color:#f87171;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.forbidden-list ul{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:6px}
+.forbidden-list li{font-size:13px;color:#fca5a5;padding:4px 0;display:flex;align-items:center;gap:6px}
+.forbidden-list li::before{content:'✕';font-weight:700;color:#ef4444}
+
+/* OVERVIEW */
+.triggers-overview{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:32px}
+.overview-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:12px}
+.overview-card:hover{box-shadow:var(--shadow-lg);border-color:var(--border-strong);transform:translateY(-1px)}
+.ov-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ov-name{font-size:14px;font-weight:700;color:var(--text-dark)}
+.ov-desire{font-size:12px;color:var(--text-muted);margin-top:1px}
+.ov-count{margin-left:auto;font-size:11px;font-weight:600;color:var(--text-dim)}
+
+/* MOTIVADORES */
+.motivadores-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:32px}
+.mot-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.mot-name{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:2px}
+.mot-func{font-size:12px;color:var(--text-muted);margin-bottom:6px}
+.mot-tags{display:flex;gap:4px;flex-wrap:wrap}
+
+/* TEMP TABLE */
+.temp-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:32px}
+.temp-table th{background:var(--surface-alt);padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.temp-table td{padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}
+.temp-table tr:last-child td{border-bottom:none}
+
+/* TAGS */
+.tag{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid transparent}
+.tag-ganancia{background:#fefce8;color:#854d0e;border-color:#fef08a}
+.tag-luxuria{background:#fdf2f8;color:#9d174d;border-color:#fbcfe8}
+.tag-inveja{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
+.tag-ira{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+.tag-crianca{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
+.tag-gula{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+.tag-preguica{background:#f0fdf9;color:#065f46;border-color:#a7f3d0}
+.tag-vaidade{background:#f5f3ff;color:#5b21b6;border-color:#ddd6fe}
+.tag-combo{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tag-frio{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.tag-morno{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.tag-quente{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+.tag-sutil{background:#f0fdf4;color:#15803d;border-color:#bbf7d0}
+.tag-moderada{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.tag-agressiva{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;transition:.3s;opacity:0;pointer-events:none;z-index:1000;display:flex;align-items:center;gap:6px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* SECTION TITLE */
+.section-title{font-size:18px;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.section-sub{font-size:13px;color:var(--text-muted);margin-bottom:24px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    Ecossistema Max
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Hub</a>
+    <a href="skills.html">Skills</a>
+    <a href="criativos.html">Criativos</a>
+    <a href="resultado.html">Resultado</a>
+    <a href="sexy-canvas.html" class="active">Sexy Canvas</a>
+    <a href="sexy-canvas-tractorpro.html">TractorPRO</a>
+    <a href="xquads.html">Xquads</a>
+    <a href="terminal.html">Terminal</a>
+  </div>
+  <div class="nav-right">
+    <span class="badge-nav">8 Gatilhos</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><i data-lucide="flame" style="width:12px;height:12px"></i> Copy Engine</div>
+    <h1>Sexy <em>Canvas</em></h1>
+    <p>Framework de copy para tráfego direto baseado nos 7 pecados capitais + criança interior. 8 gatilhos emocionais, 80 hooks prontos, combos de alto impacto.</p>
+    <div class="stats-row">
+      <div class="stat"><span class="stat-num">8</span><span class="stat-label">Gatilhos</span></div>
+      <div class="stat"><span class="stat-num">80</span><span class="stat-label">Hooks prontos</span></div>
+      <div class="stat"><span class="stat-num">8</span><span class="stat-label">Combos</span></div>
+      <div class="stat"><span class="stat-num">7</span><span class="stat-label">Motivadores base</span></div>
+      <div class="stat"><span class="stat-num">3</span><span class="stat-label">Plataformas</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('overview')"><i data-lucide="layout-grid" style="width:14px;height:14px"></i> Visão Geral</button>
+    <button class="tab" onclick="showTab('ganancia')"><span class="tab-dot" style="background:#eab308"></span> Ganância</button>
+    <button class="tab" onclick="showTab('luxuria')"><span class="tab-dot" style="background:#ec4899"></span> Lúxuria</button>
+    <button class="tab" onclick="showTab('inveja')"><span class="tab-dot" style="background:#22c55e"></span> Inveja</button>
+    <button class="tab" onclick="showTab('ira')"><span class="tab-dot" style="background:#ef4444"></span> Ira</button>
+    <button class="tab" onclick="showTab('crianca')"><span class="tab-dot" style="background:#6366f1"></span> Criança Interior</button>
+    <button class="tab" onclick="showTab('gula')"><span class="tab-dot" style="background:#f97316"></span> Gula</button>
+    <button class="tab" onclick="showTab('preguica')"><span class="tab-dot" style="background:#10b981"></span> Preguiça</button>
+    <button class="tab" onclick="showTab('vaidade')"><span class="tab-dot" style="background:#8b5cf6"></span> Vaidade</button>
+    <button class="tab" onclick="showTab('combos')"><i data-lucide="zap" style="width:14px;height:14px"></i> Combos</button>
+    <button class="tab" onclick="showTab('compliance')"><i data-lucide="shield" style="width:14px;height:14px"></i> Compliance</button>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- OVERVIEW -->
+  <div id="tab-overview" class="section active">
+    <div class="section-title">Os 8 Gatilhos Emocionais</div>
+    <div class="section-sub">Clique em um gatilho para ver os 10 hooks prontos</div>
+    <div class="triggers-overview">
+      <div class="overview-card" onclick="showTab('ganancia')">
+        <div class="ov-icon" style="background:#fefce8">💰</div>
+        <div><div class="ov-name">Ganância</div><div class="ov-desire">Ter mais, acumular, vantagem</div></div>
+        <span class="ov-count">10 hooks</span>
+      </div>
+      <div class="overview-card" onclick="showTab('luxuria')">
+        <div class="ov-icon" style="background:#fdf2f8">💎</div>
+        <div><div class="ov-name">Lúxuria</div><div class="ov-desire">Desejo intenso, prazer, atração</div></div>
+        <span class="ov-count">10 hooks</span>
+      </div>
+      <div class="overview-card" onclick="showTab('inveja')">
+        <div class="ov-icon" style="background:#f0fdf4">👀</div>
+        <div><div class="ov-name">Inveja</div><div class="ov-desire">Querer o que o outro tem</div></div>
+        <span class="ov-count">10 hooks</span>
+      </div>
+      <div class="overview-card" onclick="showTab('ira')">
+        <div class="ov-icon" style="background:#fef2f2">🔥</div>
+        <div><div class="ov-name">Ira</div><div class="ov-desire">Raiva, frustração, indignação</div></div>
+        <span class="ov-count">10 hooks</span>
+      </div>
+      <div class="overview-card" onclick="showTab('crianca')">
+        <div class="ov-icon" style="background:#eef2ff">⭐</div>
+        <div><div class="ov-name">Criança Interior</div><div class="ov-desire">Nostalgia, diversão, leveza</div></div>
+        <span class="ov-count">10 hooks</span>
+      </div>
+      <div class="overview-card" onclick="showTab('gula')">
+        <div class="ov-icon" style="background:#fff7ed">🍀</div>
+        <div><div class="ov-name">Gula</div><div class="ov-desire">Querer tudo, excesso, abundância</div></div>
+        <span class="ov-count">10 hooks</span>
+      </div>
+      <div class="overview-card" onclick="showTab('preguica')">
+        <div class="ov-icon" style="background:#f0fdf9">⚡</div>
+        <div><div class="ov-name">Preguiça</div><div class="ov-desire">Facilidade, atalho, conveniência</div></div>
+        <span class="ov-count">10 hooks</span>
+      </div>
+      <div class="overview-card" onclick="showTab('vaidade')">
+        <div class="ov-icon" style="background:#f5f3ff">👑</div>
+        <div><div class="ov-name">Vaidade</div><div class="ov-desire">Ego, status, superioridade</div></div>
+        <span class="ov-count">10 hooks</span>
+      </div>
+    </div>
+
+    <div class="section-title">Os 7 Motivadores Base</div>
+    <div class="section-sub">Sustentam e amplificam os gatilhos emocionais</div>
+    <div class="motivadores-grid">
+      <div class="mot-card"><div class="mot-name">Curiosidade</div><div class="mot-func">Abre o loop mental</div><div class="mot-tags"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-inveja">Inveja</span><span class="tag tag-luxuria">Lúxuria</span></div></div>
+      <div class="mot-card"><div class="mot-name">Recompensa</div><div class="mot-func">Promete retorno</div><div class="mot-tags"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-gula">Gula</span></div></div>
+      <div class="mot-card"><div class="mot-name">Diversão</div><div class="mot-func">Gera engajamento</div><div class="mot-tags"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-luxuria">Lúxuria</span></div></div>
+      <div class="mot-card"><div class="mot-name">Segurança</div><div class="mot-func">Remove medo</div><div class="mot-tags"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-ira">Ira</span></div></div>
+      <div class="mot-card"><div class="mot-name">Liberdade</div><div class="mot-func">Promete autonomia</div><div class="mot-tags"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-ira">Ira</span></div></div>
+      <div class="mot-card"><div class="mot-name">Amor</div><div class="mot-func">Conecta emocionalmente</div><div class="mot-tags"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-inveja">Inveja</span></div></div>
+      <div class="mot-card"><div class="mot-name">Pertencimento</div><div class="mot-func">Cria tribo</div><div class="mot-tags"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-inveja">Inveja</span><span class="tag tag-crianca">Criança Interior</span></div></div>
+    </div>
+
+    <div class="section-title">Temperatura × Intensidade</div>
+    <div class="section-sub">Qual intensidade usar para cada temperatura de tráfego</div>
+    <table class="temp-table">
+      <thead><tr><th>Temperatura</th><th>Intensidade</th><th>Gatilhos mais eficazes</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-frio">Frio</span></td><td><span class="tag tag-sutil">Sutil</span> → <span class="tag tag-moderada">Moderada</span></td><td>Curiosidade via Ganância, Preguiça, Criança Interior</td></tr>
+        <tr><td><span class="tag tag-morno">Morno</span></td><td><span class="tag tag-moderada">Moderada</span></td><td>Inveja, Vaidade, Gula, Ira</td></tr>
+        <tr><td><span class="tag tag-quente">Quente</span></td><td><span class="tag tag-moderada">Moderada</span> → <span class="tag tag-agressiva">Agressiva</span></td><td>Ganância, Ira, Lúxuria, FOMO (Inveja+Gula)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- GANÂNCIA -->
+  <div id="tab-ganancia" class="section">
+    <div class="trigger-header">
+      <div class="trigger-icon" style="background:#fefce8;font-size:28px">💰</div>
+      <div class="trigger-info">
+        <div class="trigger-name">Ganância</div>
+        <div class="trigger-desire">Desejo primitivo: Ter mais, acumular, vantagem</div>
+        <div class="trigger-question">❓ "Como a pessoa GANHA mais do que pagou?"</div>
+        <div class="trigger-meta">
+          <span class="tag tag-ganancia">Ganância</span>
+          <span class="tag tag-frio">Frio</span><span class="tag tag-morno">Morno</span><span class="tag tag-quente">Quente</span>
+          <span class="tag tag-sutil">Sutil → Agressiva</span>
+        </div>
+      </div>
+    </div>
+    <div class="hooks-title">10 Hooks prontos</div>
+    <div class="hooks-grid" id="hooks-ganancia"></div>
+    <div class="cta-box">
+      <h3>CTAs alinhados — Ganância</h3>
+      <div class="cta-tags">
+        <span class="cta-tag" onclick="copyText(this)">Quero lucrar mais →</span>
+        <span class="cta-tag" onclick="copyText(this)">Garantir meu retorno →</span>
+        <span class="cta-tag" onclick="copyText(this)">Começar a faturar →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LÚXURIA -->
+  <div id="tab-luxuria" class="section">
+    <div class="trigger-header">
+      <div class="trigger-icon" style="background:#fdf2f8;font-size:28px">💎</div>
+      <div class="trigger-info">
+        <div class="trigger-name">Lúxuria</div>
+        <div class="trigger-desire">Desejo primitivo: Desejo intenso, prazer, atração</div>
+        <div class="trigger-question">❓ "O que torna isso IRRESISTÍVEL?"</div>
+        <div class="trigger-meta">
+          <span class="tag tag-luxuria">Lúxuria</span>
+          <span class="tag tag-morno">Morno</span><span class="tag tag-quente">Quente</span>
+          <span class="tag tag-moderada">Moderada → Agressiva</span>
+        </div>
+      </div>
+    </div>
+    <div class="hooks-title">10 Hooks prontos</div>
+    <div class="hooks-grid" id="hooks-luxuria"></div>
+    <div class="cta-box">
+      <h3>CTAs alinhados — Lúxuria</h3>
+      <div class="cta-tags">
+        <span class="cta-tag" onclick="copyText(this)">Quero essa vida →</span>
+        <span class="cta-tag" onclick="copyText(this)">Experimentar agora →</span>
+        <span class="cta-tag" onclick="copyText(this)">Eu mereço isso →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVEJA -->
+  <div id="tab-inveja" class="section">
+    <div class="trigger-header">
+      <div class="trigger-icon" style="background:#f0fdf4;font-size:28px">👀</div>
+      <div class="trigger-info">
+        <div class="trigger-name">Inveja</div>
+        <div class="trigger-desire">Desejo primitivo: Querer o que o outro tem</div>
+        <div class="trigger-question">❓ "O que os OUTROS vão pensar quando virem?"</div>
+        <div class="trigger-meta">
+          <span class="tag tag-inveja">Inveja</span>
+          <span class="tag tag-morno">Morno</span><span class="tag tag-quente">Quente</span>
+          <span class="tag tag-moderada">Moderada</span>
+        </div>
+      </div>
+    </div>
+    <div class="hooks-title">10 Hooks prontos</div>
+    <div class="hooks-grid" id="hooks-inveja"></div>
+    <div class="cta-box">
+      <h3>CTAs alinhados — Inveja</h3>
+      <div class="cta-tags">
+        <span class="cta-tag" onclick="copyText(this)">Eu também quero →</span>
+        <span class="cta-tag" onclick="copyText(this)">Não vou ficar pra trás →</span>
+        <span class="cta-tag" onclick="copyText(this)">Quero minha vez →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- IRA -->
+  <div id="tab-ira" class="section">
+    <div class="trigger-header">
+      <div class="trigger-icon" style="background:#fef2f2;font-size:28px">🔥</div>
+      <div class="trigger-info">
+        <div class="trigger-name">Ira</div>
+        <div class="trigger-desire">Desejo primitivo: Raiva, frustração, indignação</div>
+        <div class="trigger-question">❓ "Qual INJUSTIÇA revolta essa pessoa?"</div>
+        <div class="trigger-meta">
+          <span class="tag tag-ira">Ira</span>
+          <span class="tag tag-morno">Morno</span><span class="tag tag-quente">Quente</span>
+          <span class="tag tag-moderada">Moderada → Agressiva</span>
+        </div>
+      </div>
+    </div>
+    <div class="hooks-title">10 Hooks prontos</div>
+    <div class="hooks-grid" id="hooks-ira"></div>
+    <div class="cta-box">
+      <h3>CTAs alinhados — Ira</h3>
+      <div class="cta-tags">
+        <span class="cta-tag" onclick="copyText(this)">Chega! Vou mudar →</span>
+        <span class="cta-tag" onclick="copyText(this)">Quero a verdade →</span>
+        <span class="cta-tag" onclick="copyText(this)">Nunca mais →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRIANÇA INTERIOR -->
+  <div id="tab-crianca" class="section">
+    <div class="trigger-header">
+      <div class="trigger-icon" style="background:#eef2ff;font-size:28px">⭐</div>
+      <div class="trigger-info">
+        <div class="trigger-name">Criança Interior</div>
+        <div class="trigger-desire">Desejo primitivo: Nostalgia, diversão, leveza</div>
+        <div class="trigger-question">❓ "Como isso resgata ALEGRIA e simplicidade?"</div>
+        <div class="trigger-meta">
+          <span class="tag tag-crianca">Criança Interior</span>
+          <span class="tag tag-frio">Frio</span><span class="tag tag-morno">Morno</span>
+          <span class="tag tag-sutil">Sutil → Moderada</span>
+        </div>
+      </div>
+    </div>
+    <div class="hooks-title">10 Hooks prontos</div>
+    <div class="hooks-grid" id="hooks-crianca"></div>
+    <div class="cta-box">
+      <h3>CTAs alinhados — Criança Interior</h3>
+      <div class="cta-tags">
+        <span class="cta-tag" onclick="copyText(this)">Vou simplificar →</span>
+        <span class="cta-tag" onclick="copyText(this)">Quero leveza →</span>
+        <span class="cta-tag" onclick="copyText(this)">Bora! →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GULA -->
+  <div id="tab-gula" class="section">
+    <div class="trigger-header">
+      <div class="trigger-icon" style="background:#fff7ed;font-size:28px">🍀</div>
+      <div class="trigger-info">
+        <div class="trigger-name">Gula</div>
+        <div class="trigger-desire">Desejo primitivo: Querer tudo, excesso, abundância</div>
+        <div class="trigger-question">❓ "Como fazer a pessoa querer MAIS e MAIS?"</div>
+        <div class="trigger-meta">
+          <span class="tag tag-gula">Gula</span>
+          <span class="tag tag-morno">Morno</span><span class="tag tag-quente">Quente</span>
+          <span class="tag tag-moderada">Moderada → Agressiva</span>
+        </div>
+      </div>
+    </div>
+    <div class="hooks-title">10 Hooks prontos</div>
+    <div class="hooks-grid" id="hooks-gula"></div>
+    <div class="cta-box">
+      <h3>CTAs alinhados — Gula</h3>
+      <div class="cta-tags">
+        <span class="cta-tag" onclick="copyText(this)">Quero tudo isso →</span>
+        <span class="cta-tag" onclick="copyText(this)">Me dá acesso →</span>
+        <span class="cta-tag" onclick="copyText(this)">Quero o pacote completo →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREGUIÇA -->
+  <div id="tab-preguica" class="section">
+    <div class="trigger-header">
+      <div class="trigger-icon" style="background:#f0fdf9;font-size:28px">⚡</div>
+      <div class="trigger-info">
+        <div class="trigger-name">Preguiça</div>
+        <div class="trigger-desire">Desejo primitivo: Facilidade, atalho, conveniência</div>
+        <div class="trigger-question">❓ "Como isso SIMPLIFICA a vida drasticamente?"</div>
+        <div class="trigger-meta">
+          <span class="tag tag-preguica">Preguiça</span>
+          <span class="tag tag-frio">Frio</span><span class="tag tag-morno">Morno</span>
+          <span class="tag tag-sutil">Sutil → Moderada</span>
+        </div>
+      </div>
+    </div>
+    <div class="hooks-title">10 Hooks prontos</div>
+    <div class="hooks-grid" id="hooks-preguica"></div>
+    <div class="cta-box">
+      <h3>CTAs alinhados — Preguiça</h3>
+      <div class="cta-tags">
+        <span class="cta-tag" onclick="copyText(this)">Quero o atalho →</span>
+        <span class="cta-tag" onclick="copyText(this)">Me mostra como →</span>
+        <span class="cta-tag" onclick="copyText(this)">Quero o pronto →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- VAIDADE -->
+  <div id="tab-vaidade" class="section">
+    <div class="trigger-header">
+      <div class="trigger-icon" style="background:#f5f3ff;font-size:28px">👑</div>
+      <div class="trigger-info">
+        <div class="trigger-name">Vaidade</div>
+        <div class="trigger-desire">Desejo primitivo: Ego, status, superioridade</div>
+        <div class="trigger-question">❓ "Como isso faz a pessoa se sentir ESPECIAL?"</div>
+        <div class="trigger-meta">
+          <span class="tag tag-vaidade">Vaidade</span>
+          <span class="tag tag-morno">Morno</span><span class="tag tag-quente">Quente</span>
+          <span class="tag tag-moderada">Moderada</span>
+        </div>
+      </div>
+    </div>
+    <div class="hooks-title">10 Hooks prontos</div>
+    <div class="hooks-grid" id="hooks-vaidade"></div>
+    <div class="cta-box">
+      <h3>CTAs alinhados — Vaidade</h3>
+      <div class="cta-tags">
+        <span class="cta-tag" onclick="copyText(this)">Quero ser referência →</span>
+        <span class="cta-tag" onclick="copyText(this)">Entrar pro seleto grupo →</span>
+        <span class="cta-tag" onclick="copyText(this)">Elevar meu nível →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMBOS -->
+  <div id="tab-combos" class="section">
+    <div class="section-title">Combos de Alto Impacto</div>
+    <div class="section-sub">As copies mais poderosas combinam 2–3 gatilhos</div>
+    <div class="combos-grid" id="combos-grid"></div>
+  </div>
+
+  <!-- COMPLIANCE -->
+  <div id="tab-compliance" class="section">
+    <div class="section-title">Compliance & Segurança</div>
+    <div class="section-sub">Gatilhos que exigem cuidado nas políticas Meta / Google / TikTok</div>
+
+    <div class="compliance-section">
+      <div class="compliance-title"><i data-lucide="alert-triangle" style="width:16px;height:16px;color:#d97706"></i> Gatilhos com risco de reprovação</div>
+      <div class="compliance-grid">
+        <div class="compliance-card warn">
+          <div class="c-trigger">💰 Ganância</div>
+          <div class="c-risk">Promessas financeiras, renda garantida</div>
+          <div class="c-fix">✓ NUNCA prometer valores sem disclaimer. Use "resultados variam"</div>
+        </div>
+        <div class="compliance-card warn">
+          <div class="c-trigger">💎 Lúxuria</div>
+          <div class="c-risk">Conteúdo sensual ou apelativo</div>
+          <div class="c-fix">✓ Manter no desejo EMOCIONAL, não físico. Foco em experiência</div>
+        </div>
+        <div class="compliance-card danger">
+          <div class="c-trigger">🔥 Ira</div>
+          <div class="c-risk">Conteúdo negativo, linguagem agressiva</div>
+          <div class="c-fix">✓ Redirecionar ira pro SISTEMA, nunca pra PESSOA. Evitar "você está errado"</div>
+        </div>
+        <div class="compliance-card warn">
+          <div class="c-trigger">👀 Inveja</div>
+          <div class="c-risk">Comparação direta, bullying</div>
+          <div class="c-fix">✓ Usar "inspiração" não "comparação". Nunca "você é pior que"</div>
+        </div>
+        <div class="compliance-card warn">
+          <div class="c-trigger">🍀 Gula</div>
+          <div class="c-risk">Exagero, claims irreais</div>
+          <div class="c-fix">✓ Basear em números reais. "Mais de 200 aulas" é OK se for verdade</div>
+        </div>
+        <div class="compliance-card warn">
+          <div class="c-trigger">👑 Vaidade</div>
+          <div class="c-risk">Elitismo, exclusão explícita</div>
+          <div class="c-fix">✓ Usar "exclusivo" com cuidado. Nunca dizer "pra quem não pode não é"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="forbidden-list">
+      <h3><i data-lucide="x-circle" style="width:16px;height:16px"></i> Palavras e frases PROIBIDAS (auto-reprovação)</h3>
+      <ul>
+        <li>Fique rico rápido / Enriqueça / Dinheiro fácil</li>
+        <li>Garantido (resultado financeiro)</li>
+        <li>Cure / Trate / Elimine (saúde)</li>
+        <li>100% comprovado / Cientificamente provado (sem fonte)</li>
+        <li>Mencionar atributos físicos negativos da pessoa</li>
+        <li>Clickbait enganoso: "Você não vai acreditar"</li>
+        <li>Claims absolutos: "O único", "O melhor do mundo"</li>
+        <li>"Nunca visto antes"</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i data-lucide="check" style="width:14px;height:14px"></i> Copiado!</div>
+
+<script>
+// ─── Dados ────────────────────────────────────────────────────────────────
+const HOOKS = {
+  ganancia: [
+    "Como [resultado financeiro] em [prazo curto] sem [objeção]",
+    "O método que gera [X] por [período] no piloto automático",
+    "Ela investiu R$[X] e faturou R$[10X] em [prazo]",
+    "Você tá deixando dinheiro na mesa. Literalmente.",
+    "O segredo de quem fatura [X] por mês não é o que você pensa",
+    "Quanto você tá perdendo por não saber isso?",
+    "De [valor baixo] pra [valor alto] em [prazo]. Quer ver como?",
+    "Esse único ajuste triplicou o faturamento dela",
+    "Se você soubesse isso antes, já teria [resultado]",
+    "A estratégia de R$[valor] que paga [múltiplo]x de retorno"
+  ],
+  luxuria: [
+    "Imagina acordar amanhã e [cenário dos sonhos]...",
+    "A sensação de [experiência desejada] não tem preço",
+    "Isso é o que acontece quando você tem [resultado]: [cena irresistível]",
+    "Você merece [experiência de luxo]. E tá mais perto do que imagina.",
+    "Fecha os olhos e imagina [cenário perfeito]. Agora abre.",
+    "O sabor de [conquista] é viciante. E você vai querer mais.",
+    "Depois que você experimenta [resultado], não volta atrás.",
+    "Aquele momento em que você percebe: eu CONSEGUI.",
+    "A vida que você sempre quis começa com UMA decisão.",
+    "Isso não é luxo. É o mínimo que você merece."
+  ],
+  inveja: [
+    "Sua concorrente já tá fazendo isso. E você?",
+    "Enquanto você pensa, ela tá executando.",
+    "Todo mundo vai perguntar: como você conseguiu?",
+    "Aquela colega que começou depois de você já tá em [resultado]",
+    "[Nome] começou do zero e hoje [resultado impressionante]",
+    "O que você vai sentir quando VER alguém fazendo o que VOCÊ deveria?",
+    "Suas amigas vão querer saber seu segredo",
+    "O feed dela é só resultado. O seu pode ser também.",
+    "Alguém vai preencher essa vaga. Vai ser você ou outra?",
+    "Se não for você, vai ser quem? A concorrente tá esperando."
+  ],
+  ira: [
+    "Cansou de fazer tudo certo e não ver resultado?",
+    "Você não merece continuar sendo ignorada no mercado.",
+    "Chega de guru vendendo mentira. Isso aqui é REAL.",
+    "O sistema foi feito pra você não conseguir. Eu vim mudar isso.",
+    "Ninguém te ensinou porque não queriam que você soubesse.",
+    "Para de aceitar migalha. Você vale MUITO mais.",
+    "Tão te enganando. E eu vou provar.",
+    "A verdade que o mercado esconde de você...",
+    "Enquanto você luta sozinha, eles faturam nas suas costas.",
+    "Revoltada com seus resultados? BOM. Use essa raiva."
+  ],
+  crianca: [
+    "Lembra quando você sonhava grande? Esse sonho tá vivo.",
+    "A menina que você foi um dia teria orgulho de você?",
+    "Vamos simplificar tudo? Sem complicação, sem drama.",
+    "E se fosse tão simples quanto brincar de novo?",
+    "Aquele brilho no olho que você perdeu? Eu sei como trazer de volta.",
+    "Você não precisa ser perfeita. Precisa ser você.",
+    "Lembra da época que tudo era possível? Ainda é.",
+    "Vamos tirar o peso das costas e fazer isso com leveza?",
+    "A vida não precisa ser tão pesada. Vem comigo.",
+    "Esquece as regras. Faz do SEU jeito."
+  ],
+  gula: [
+    "Não é só [benefício 1]. É [benefício 1] + [2] + [3] + [4].",
+    "Leva tudo: [lista de bônus]. Sem pagar a mais.",
+    "Quanto mais você aprende, mais você quer. E eu tenho TUDO.",
+    "Não é 1 estratégia. São [número] estratégias prontas.",
+    "Você não quer só [resultado básico]. Quer [resultado completo + extra].",
+    "O pacote completo: de [A] até [Z], sem deixar nada de fora.",
+    "Tudo que você precisa num só lugar. TUDO.",
+    "Já imaginou ter acesso a [lista grande de recursos]?",
+    "Mais de [número] aulas/templates/ferramentas. Sim, TUDO isso.",
+    "Cada bônus vale mais que o investimento total."
+  ],
+  preguica: [
+    "Copy-paste: só copiar, colar e adaptar.",
+    "Sem enrolação. Faz em [tempo curto] e tá pronto.",
+    "O passo a passo mastigado que qualquer um consegue seguir.",
+    "Pronto pra usar. Zero dor de cabeça.",
+    "Eu fiz o trabalho difícil. Você só aplica.",
+    "Template pronto. Só preencher os espaços.",
+    "Não precisa ser expert. Não precisa de experiência.",
+    "Automático. Você configura uma vez e funciona sozinho.",
+    "Enquanto você dorme, [resultado] acontece.",
+    "Chega de perder horas tentando. Aqui é direto ao ponto."
+  ],
+  vaidade: [
+    "Pra quem não aceita ser mais uma no mercado.",
+    "Você não é qualquer uma. É por isso que isso aqui é pra você.",
+    "O que separa as TOP 1% das demais? Isso aqui.",
+    "Reconhecida, respeitada, referência. Esse é o caminho.",
+    "Não é todo mundo que tem acesso a isso. Você tem.",
+    "Prepare-se pra ser a referência do seu nicho.",
+    "Quando você chega nesse nível, as pessoas notam.",
+    "A diferença entre você e as demais? UMA decisão.",
+    "Exclusivo pra quem leva a sério.",
+    "Você vai ser a pessoa que todo mundo quer ter por perto."
+  ]
+};
+
+const COMBOS = [
+  {name:"Rainha do Nicho", tags:["Vaidade","Inveja"], when:"Persona competitiva", example:'"Enquanto suas concorrentes tentam, você já vai ter..."'},
+  {name:"Resultado Fácil", tags:["Preguiça","Ganância"], when:"Persona sobrecarregada", example:'"Fature [X] sem [esforço que odeia]"'},
+  {name:"Vingança Doce", tags:["Ira","Vaidade"], when:"Persona subestimada", example:'"Mostre pra quem duvidou o que você é capaz"'},
+  {name:"Tudo e Mais", tags:["Gula","Lúxuria"], when:"Persona ambiciosa", example:'"Imagine ter [tudo isso] e ainda [mais isso]"'},
+  {name:"Simples e Feliz", tags:["Criança Interior","Preguiça"], when:"Persona esgotada", example:'"Lembra quando era simples? Pode ser de novo"'},
+  {name:"Eu Também Quero", tags:["Inveja","Ganância"], when:"Persona que vê resultados dos outros", example:'"[Nome] conseguiu em [prazo]. Agora é sua vez."'},
+  {name:"Chega! Eu Mereço", tags:["Ira","Criança Interior"], when:"Persona frustrada e nostálgica", example:'"Você merece mais do que isso. E lá no fundo, você sabe."'},
+  {name:"Elite Club", tags:["Vaidade","Ganância"], when:"Persona que busca status", example:'"Pra quem quer estar no top 1% do [nicho]"'},
+];
+
+const TAG_CLASS = {
+  'Ganância':'tag-ganancia','Lúxuria':'tag-luxuria','Inveja':'tag-inveja',
+  'Ira':'tag-ira','Criança Interior':'tag-crianca','Gula':'tag-gula',
+  'Preguiça':'tag-preguica','Vaidade':'tag-vaidade'
+};
+
+// ─── Render hooks ─────────────────────────────────────────────────────────
+function renderHooks(key) {
+  const el = document.getElementById(`hooks-${key}`);
+  if (!el || el.children.length) return;
+  HOOKS[key].forEach((h, i) => {
+    el.innerHTML += `
+      <div class="hook-card">
+        <span class="hook-num">${i+1}</span>
+        <span class="hook-text">${h}</span>
+        <button class="hook-copy" onclick="copyHook(this,'${h.replace(/'/g,"\\'")}')">
+          <i data-lucide="copy" style="width:13px;height:13px"></i>
+        </button>
+      </div>`;
+  });
+  if(window.lucide) lucide.createIcons();
+}
+
+// ─── Render combos ────────────────────────────────────────────────────────
+function renderCombos() {
+  const el = document.getElementById('combos-grid');
+  if (!el || el.children.length) return;
+  COMBOS.forEach(c => {
+    const tags = c.tags.map(t => `<span class="tag ${TAG_CLASS[t]||'tag-combo'}">${t}</span>`).join('');
+    el.innerHTML += `
+      <div class="combo-card">
+        <div class="combo-name">${c.name}</div>
+        <div class="combo-tags">${tags}<span class="tag tag-combo">Combo</span></div>
+        <div class="combo-when">📌 Quando usar: ${c.when}</div>
+        <div class="combo-example">${c.example}</div>
+      </div>`;
+  });
+}
+
+// ─── Tabs ─────────────────────────────────────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${id}`).classList.add('active');
+  event.currentTarget.classList.add('active');
+
+  const hooksMap = {ganancia:'ganancia',luxuria:'luxuria',inveja:'inveja',ira:'ira',crianca:'crianca',gula:'gula',preguica:'preguica',vaidade:'vaidade'};
+  if (hooksMap[id]) renderHooks(hooksMap[id]);
+  if (id === 'combos') renderCombos();
+  if (window.lucide) lucide.createIcons();
+}
+
+// ─── Copy ─────────────────────────────────────────────────────────────────
+function copyHook(btn, text) {
+  navigator.clipboard.writeText(text).then(() => showToast());
+}
+function copyText(el) {
+  navigator.clipboard.writeText(el.textContent.trim()).then(() => showToast());
+}
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────
+lucide.createIcons();
+</script>
+</body>
+</html>

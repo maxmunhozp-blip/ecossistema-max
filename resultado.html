@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Resultado — Persona Rafael Mendes | Ecossistema Max</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f7f7f9;--surface:#fff;--surface2:#f2f2f4;
+  --border:#e4e4e7;--border2:#d1d1d6;
+  --blue:#2563eb;--blue-dim:#dbeafe;
+  --purple:#7c3aed;--purple-dim:#f3f0ff;
+  --green:#059669;--green-neon:#00d4a0;--green-dim:#dcfce7;
+  --dark:#111827;--text:#374151;--muted:#6b7280;--dim:#9ca3af;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
+  --shadow-lg:0 4px 20px rgba(0,0,0,.08);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* NAV */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid #e4e4e7;height:56px;display:flex;align-items:center;padding:0 24px;gap:20px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-icon{width:28px;height:28px;background:#7c3aed;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.logo-text{font-size:14px;font-weight:600;color:#111827}
+.logo-text strong{font-weight:900}
+.breadcrumb{display:none}
+.back-btn{display:none}
+.topbar-links{display:flex;gap:4px;margin-left:auto}
+.tl{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;color:#6b7280;text-decoration:none;transition:all .15s}
+.tl:hover{background:#f2f2f4;color:#111827}
+.tl.active{background:#f3f0ff;color:#7c3aed}
+
+/* LAYOUT */
+.wrap{max-width:1100px;margin:0 auto;padding:32px 28px}
+.page-header{animation:fadeUp .5s ease;margin-bottom:32px}
+.page-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:12px}
+.page-header h1{font-size:32px;font-weight:900;color:var(--dark);line-height:1.15;margin-bottom:8px}
+.page-header p{font-size:15px;color:var(--muted);line-height:1.6}
+
+/* HERO CARD */
+.hero-card{background:var(--purple-dim);border:1.5px solid rgba(124,58,237,.2);border-radius:20px;padding:36px;margin-bottom:24px;position:relative;overflow:hidden;animation:fadeUp .5s .05s ease forwards;opacity:0}
+.hero-card::before,.hero-card::after{display:none}
+.hero-inner{position:relative}
+.avatar-wrap{display:flex;align-items:center;gap:20px;margin-bottom:24px}
+.avatar{width:72px;height:72px;background:#7c3aed;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0}
+.avatar-info h2{font-size:22px;font-weight:800;color:var(--dark);margin-bottom:4px}
+.avatar-info p{font-size:14px;color:var(--muted);line-height:1.5}
+.avatar-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,.7);color:var(--muted);border:1px solid var(--border)}
+.badge.purple,.badge.blue,.badge.green{background:rgba(255,255,255,.7);color:#7c3aed;border-color:rgba(124,58,237,.2)}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kpi{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px;text-align:center}
+.kpi-num{font-size:22px;font-weight:800;margin-bottom:3px}
+.kpi-label{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+
+/* SECTION */
+.section{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:16px;animation:fadeUp .5s ease forwards;opacity:0}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;transition:background .15s;user-select:none}
+.section-head:hover{background:var(--surface2)}
+.section-head-left{display:flex;align-items:center;gap:12px}
+.section-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.section-title-text{font-size:15px;font-weight:700;color:var(--dark)}
+.section-sub{font-size:12px;color:var(--muted)}
+.chevron{font-size:12px;color:var(--dim);transition:transform .25s}
+.section.open .chevron{transform:rotate(180deg)}
+.section-body{display:none;padding:0 22px 22px;border-top:1px solid var(--border)}
+.section.open .section-body{display:block}
+
+/* GRID 2COL */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.card{background:var(--surface2);border-radius:12px;padding:16px}
+.card-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.item{display:flex;gap:8px;font-size:13px;color:var(--text);padding:4px 0;line-height:1.5}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+
+/* QUOTE */
+.quote{background:var(--purple-dim);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px;color:#6d28d9;font-style:italic;line-height:1.6;margin-bottom:10px}
+
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500}
+
+/* ICP CARDS */
+.icp-card{border-radius:12px;padding:16px}
+.icp-ideal{border:2px solid var(--green-neon);background:linear-gradient(135deg,rgba(0,212,160,.05),transparent)}
+.icp-good{border:2px solid var(--blue);background:linear-gradient(135deg,rgba(37,99,235,.05),transparent)}
+.icp-potential{border:2px solid var(--border);background:var(--surface2)}
+.icp-tier{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.icp-name{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:10px}
+
+/* EMPATIA */
+.empatia-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.eq{border-radius:12px;padding:16px}
+.eq-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+
+/* CRIATIVO CARDS */
+.crd{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow .2s}
+.crd:hover{box-shadow:var(--shadow)}
+.crd-num{font-size:11px;font-weight:800;color:var(--dim);letter-spacing:.08em;padding:12px 16px 0;text-transform:uppercase}
+.crd-img-wrap{display:block;position:relative;overflow:hidden;cursor:pointer;text-decoration:none}
+.crd-img{width:100%;aspect-ratio:1;object-fit:cover;display:block;transition:transform .3s}
+.crd-img-wrap:hover .crd-img{transform:scale(1.03)}
+.crd-dl{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;opacity:0;transition:opacity .2s}
+.crd-img-wrap:hover .crd-dl{opacity:1}
+.crd-info{padding:14px 16px 8px}
+.crd-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.crd-desc{font-size:12px;color:var(--muted);line-height:1.4}
+.crd-status{min-height:22px;margin:4px 16px 0;font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;display:inline-block}
+.crd-btns{display:flex;gap:6px;padding:10px 16px 16px}
+.btn-ok,.btn-fix,.btn-no{flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.btn-ok{background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0}
+.btn-ok:hover,.btn-ok.active{background:#22c55e;color:#fff;border-color:#22c55e}
+.btn-fix{background:#fffbeb;color:#d97706;border:1.5px solid #fde68a}
+.btn-fix:hover,.btn-fix.active{background:#f59e0b;color:#fff;border-color:#f59e0b}
+.btn-no{background:#fef2f2;color:#dc2626;border:1.5px solid #fecaca}
+.btn-no:hover,.btn-no.active{background:#ef4444;color:#fff;border-color:#ef4444}
+.crd.status-ok{border-color:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,.15)}
+.crd.status-fix{border-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.15)}
+.crd.status-no{border-color:#ef4444;box-shadow:0 0 0 2px rgba(239,68,68,.15)}
+
+/* ANTI PERSONA */
+.anti-card{border:1.5px solid rgba(239,68,68,.3);background:rgba(239,68,68,.04);border-radius:12px;padding:16px;margin-bottom:10px}
+.anti-num{font-size:10px;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.anti-name{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:6px}
+.anti-flag{display:inline-block;padding:3px 8px;background:rgba(239,68,68,.12);color:#ef4444;border-radius:4px;font-size:11px;font-weight:600;margin-top:6px}
+
+/* COPY CARDS */
+.copy-card{background:var(--dark);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;margin-bottom:10px;position:relative}
+.copy-card:hover{background:#1e293b}
+.copy-card:hover .copy-hint{opacity:1}
+.copy-hint{position:absolute;top:12px;right:12px;font-size:11px;color:var(--green-neon);opacity:0;transition:opacity .2s;font-weight:600}
+.copy-card-label{font-size:10px;color:#475569;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;font-weight:700}
+.copy-card-text{font-size:14px;color:#e2e8f0;line-height:1.6}
+
+/* DIMENSOES */
+.dim-block{border-radius:12px;padding:16px;margin-top:14px}
+.dim-block-title{font-size:12px;font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+.dim-item{border-radius:8px;padding:10px 14px;margin-bottom:6px;cursor:pointer;transition:all .2s}
+.dim-item-head{display:flex;align-items:center;justify-content:space-between}
+.dim-item-name{font-size:13px;font-weight:600}
+.dim-item-body{display:none;margin-top:10px;font-size:12px;line-height:1.7;padding-top:10px;border-top:1px solid rgba(255,255,255,.08)}
+.dim-item.open .dim-item-body{display:block}
+.dim-item.open .dim-chevron{transform:rotate(180deg)}
+.dim-chevron{font-size:10px;transition:transform .2s}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:var(--green-neon);padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;z-index:999;pointer-events:none;border:1px solid rgba(0,212,160,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="logo" href="index.html">
+    <div class="logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    <span class="logo-text">Ecossistema<strong>Max</strong></span>
+  </a>
+  <div class="topbar-links">
+    <a href="index.html" class="tl">Hub</a>
+    <a href="persona.html" class="tl">Persona</a>
+    <a href="criativos.html" class="tl">Criativos</a>
+    <a href="skills.html" class="tl">Skills</a>
+    <a href="resultado.html" class="tl active">Resultado</a>
+    <a href="sexy-canvas.html" class="tl">Sexy Canvas</a>
+    <a href="sexy-canvas-tractorpro.html" class="tl">TractorPRO</a>
+    <a href="xquads.html" class="tl">Xquads</a>
+    <a href="terminal.html" class="tl">Terminal</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-header">
+    <div class="page-tag">📦 Entregável gerado</div>
+    <h1>Persona Profunda<br>Rafael Mendes</h1>
+    <p>Cliente ideal do TractorPRO — 300+ insights + criativos prontos para usar</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <a href="#criativos" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none">✨ Ver Criativos Gerados</a>
+      <a href="#persona" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:var(--surface);border:1.5px solid var(--border);color:var(--text);border-radius:10px;font-size:13px;font-weight:600;text-decoration:none">👤 Ver Persona Completa</a>
+    </div>
+  </div>
+
+  <!-- HERO CARD -->
+  <div id="persona" class="hero-card">
+    <div class="hero-inner">
+      <div class="avatar-wrap">
+        <div class="avatar">👨‍💻</div>
+        <div class="avatar-info">
+          <h2>Rafael Mendes, 29 anos</h2>
+          <p>Gestor de tráfego freelancer · São Paulo, SP<br>Especialista em Meta Ads · 5 clientes ativos · R$7k-9k/mês</p>
+          <div class="avatar-badges">
+            <span class="badge purple">Meta Ads</span>
+            <span class="badge blue">Freelancer Solo</span>
+            <span class="badge green">Quer Escalar</span>
+            <span class="badge purple">ADHD provável</span>
+            <span class="badge blue">Classe B</span>
+          </div>
+        </div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-num" style="color:#c084fc">30</div><div class="kpi-label">Dimensões</div></div>
+        <div class="kpi"><div class="kpi-num" style="color:#60a5fa">5</div><div class="kpi-label">Blocos</div></div>
+        <div class="kpi"><div class="kpi-num" style="color:#00d4a0">3</div><div class="kpi-label">Perfis ICP</div></div>
+        <div class="kpi"><div class="kpi-num" style="color:#f472b6">5</div><div class="kpi-label">Anti-Personas</div></div>
+        <div class="kpi"><div class="kpi-num" style="color:#fbbf24">300+</div><div class="kpi-label">Insights</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DORES E DESEJOS -->
+  <div class="section open" style="animation-delay:.1s">
+    <div class="section-head" onclick="toggle(this)">
+      <div class="section-head-left">
+        <div class="section-icon" style="background:var(--purple-dim)">😤</div>
+        <div><div class="section-title-text">Dores & Desejos</div><div class="section-sub">Top 5 de cada + frases reais</div></div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="grid2">
+        <div class="card">
+          <div class="card-label" style="color:var(--purple)">🔥 Top 5 Dores</div>
+          <div class="item"><span class="dot" style="background:#ef4444;margin-top:6px"></span>Dependência total de 1-2 clientes grandes — medo constante de perder tudo</div>
+          <div class="item"><span class="dot" style="background:#ef4444;margin-top:6px"></span>8+ horas/semana em relatórios manuais que não geram resultado</div>
+          <div class="item"><span class="dot" style="background:#ef4444;margin-top:6px"></span>Medo de perder cliente quando ROAS cai sem explicação óbvia</div>
+          <div class="item"><span class="dot" style="background:#ef4444;margin-top:6px"></span>Incapacidade de escalar: atender mais clientes exige contratar e treinar</div>
+          <div class="item"><span class="dot" style="background:#ef4444;margin-top:6px"></span>Síndrome do impostor ao tentar cobrar R$3k+/cliente</div>
+        </div>
+        <div class="card">
+          <div class="card-label" style="color:var(--blue)">✨ Top 5 Desejos</div>
+          <div class="item"><span class="dot" style="background:var(--blue);margin-top:6px"></span>Ter 10+ clientes com resultados consistentes e previsíveis</div>
+          <div class="item"><span class="dot" style="background:var(--blue);margin-top:6px"></span>Dashboard automático que impressiona clientes e reduz reuniões</div>
+          <div class="item"><span class="dot" style="background:var(--blue);margin-top:6px"></span>Escalar para R$15k-20k/mês sem aumentar horas trabalhadas</div>
+          <div class="item"><span class="dot" style="background:var(--blue);margin-top:6px"></span>Ser reconhecido como gestor premium no nicho de e-commerce</div>
+          <div class="item"><span class="dot" style="background:var(--blue);margin-top:6px"></span>Trabalhar de qualquer lugar com liberdade total de agenda</div>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="card-label" style="color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">💬 Frases reais que ele usa</div>
+        <div class="quote">"Cara, eu passo mais tempo fazendo relatório do que otimizando campanha."</div>
+        <div class="quote">"Meu cliente me ligou nervoso às 7h porque o ROAS caiu."</div>
+        <div class="quote">"Quero escalar, mas não sei como atender mais sem me matar."</div>
+        <div class="quote">"Quando o Meta muda algo, eu fico correndo atrás que nem louco."</div>
+        <div class="quote">"Eu sei que poderia cobrar mais, mas fico com medo de perder o cliente."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GATILHOS E HEADLINES -->
+  <div class="section" style="animation-delay:.15s">
+    <div class="section-head" onclick="toggle(this)">
+      <div class="section-head-left">
+        <div class="section-icon" style="background:var(--blue-dim)">⚡</div>
+        <div><div class="section-title-text">Gatilhos & Headlines</div><div class="section-sub">O que ativa a compra — copy pronta para usar (clique para copiar)</div></div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div style="margin-top:16px">
+        <div class="card-label" style="color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">🎯 Gatilhos de Compra</div>
+        <div class="tags">
+          <span class="tag" style="background:rgba(124,58,237,.12);color:var(--purple)">Autoridade técnica comprovada</span>
+          <span class="tag" style="background:rgba(0,212,160,.1);color:var(--green)">Prova social de pares (gestor que usou)</span>
+          <span class="tag" style="background:rgba(37,99,235,.12);color:var(--blue)">Demonstração ao vivo do produto</span>
+          <span class="tag" style="background:rgba(245,158,11,.12);color:#d97706">ROI calculável e claro</span>
+          <span class="tag" style="background:rgba(239,68,68,.1);color:#ef4444">Fear of missing out — concorrente já usa</span>
+          <span class="tag" style="background:rgba(124,58,237,.12);color:var(--purple)">Escassez legítima de vagas</span>
+        </div>
+      </div>
+      <div style="margin-top:18px">
+        <div class="card-label" style="color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">📢 Headlines — clique para copiar</div>
+        <div class="copy-card" onclick="copyEl(this,'Gerencie 10 clientes de tráfego sem contratar ninguém')">
+          <div class="copy-card-label">Headline 1 — Benefício direto</div>
+          <div class="copy-card-text">Gerencie 10 clientes de tráfego sem contratar ninguém</div>
+          <div class="copy-hint">Copiar ↗</div>
+        </div>
+        <div class="copy-card" onclick="copyEl(this,'O dashboard que seus clientes vão pedir para ver todo dia')">
+          <div class="copy-card-label">Headline 2 — Prova implícita</div>
+          <div class="copy-card-text">O dashboard que seus clientes vão pedir para ver todo dia</div>
+          <div class="copy-hint">Copiar ↗</div>
+        </div>
+        <div class="copy-card" onclick="copyEl(this,'Para de perder 4h por semana em relatório manual')">
+          <div class="copy-card-label">Headline 3 — Dor específica</div>
+          <div class="copy-card-text">Para de perder 4h por semana em relatório manual</div>
+          <div class="copy-hint">Copiar ↗</div>
+        </div>
+        <div class="copy-card" onclick="copyEl(this,'IA que entende de Meta Ads como você — sem precisar explicar do zero')">
+          <div class="copy-card-label">Headline 4 — Produto</div>
+          <div class="copy-card-text">IA que entende de Meta Ads como você — sem precisar explicar do zero</div>
+          <div class="copy-hint">Copiar ↗</div>
+        </div>
+        <div class="copy-card" onclick="copyEl(this,'Escala para R$15k/mês sem aumentar uma hora sequer de trabalho')">
+          <div class="copy-card-label">Headline 5 — Resultado financeiro</div>
+          <div class="copy-card-text">Escala para R$15k/mês sem aumentar uma hora sequer de trabalho</div>
+          <div class="copy-hint">Copiar ↗</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ICP -->
+  <div class="section" style="animation-delay:.2s">
+    <div class="section-head" onclick="toggle(this)">
+      <div class="section-head-left">
+        <div class="section-icon" style="background:var(--green-dim)">🎯</div>
+        <div><div class="section-title-text">ICP — Perfis de Cliente Ideal</div><div class="section-sub">3 perfis com prioridade, triggers e critérios de desqualificação</div></div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="grid3">
+        <div class="icp-card icp-ideal">
+          <div class="icp-tier" style="color:var(--green-neon)">♛ IDEAL — Prioridade máxima</div>
+          <div class="icp-name">Gestor Solo Escalando</div>
+          <div class="item" style="font-size:12px">📍 Freelancer, 3-8 clientes ativos</div>
+          <div class="item" style="font-size:12px">💰 R$6k-12k/mês, quer dobrar</div>
+          <div class="item" style="font-size:12px">⏱️ Perde 8h+/sem em operacional</div>
+          <div class="item" style="font-size:12px">🔥 Alta urgência de mudança</div>
+          <div class="item" style="font-size:12px">✅ Já investe em ferramentas pagas</div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,212,160,.2);font-size:11px;color:var(--green)">Trigger: "Não consigo pegar mais cliente"</div>
+        </div>
+        <div class="icp-card icp-good">
+          <div class="icp-tier" style="color:var(--blue)">★ BOM — Alta conversão</div>
+          <div class="icp-name">Pequena Agência</div>
+          <div class="item" style="font-size:12px">📍 Dono + 1-3 funcionários</div>
+          <div class="item" style="font-size:12px">💰 R$15k-30k/mês faturamento</div>
+          <div class="item" style="font-size:12px">⚡ Quer padronizar processos</div>
+          <div class="item" style="font-size:12px">🎯 Ciclo de venda mais longo</div>
+          <div class="item" style="font-size:12px">✅ Budget para ferramentas</div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(37,99,235,.2);font-size:11px;color:var(--blue)">Trigger: "Preciso escalar com time"</div>
+        </div>
+        <div class="icp-card icp-potential">
+          <div class="icp-tier" style="color:var(--muted)">◆ POTENCIAL — Nutrimento longo</div>
+          <div class="icp-name">Recém-Formado Ambicioso</div>
+          <div class="item" style="font-size:12px">📍 0-2 clientes ativos</div>
+          <div class="item" style="font-size:12px">💰 Menos de R$3k/mês</div>
+          <div class="item" style="font-size:12px">📚 Ainda aprendendo Meta Ads</div>
+          <div class="item" style="font-size:12px">⏳ Precisa crescer primeiro</div>
+          <div class="item" style="font-size:12px">⚠️ Pode ver como caro</div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)">Trigger: "Quando tiver mais clientes…"</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:16px">
+        <div class="card-label" style="color:#ef4444;margin-bottom:10px">🚫 Desqualifica sempre</div>
+        <div class="tags">
+          <span class="tag" style="background:rgba(239,68,68,.1);color:#ef4444">Quer resultado sem esforço</span>
+          <span class="tag" style="background:rgba(239,68,68,.1);color:#ef4444">Não tem nenhum cliente ativo</span>
+          <span class="tag" style="background:rgba(239,68,68,.1);color:#ef4444">Não é gestor de tráfego</span>
+          <span class="tag" style="background:rgba(239,68,68,.1);color:#ef4444">Só quer "experimentar de graça"</span>
+          <span class="tag" style="background:rgba(239,68,68,.1);color:#ef4444">Nega qualquer investimento em ferramenta</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAPA DE EMPATIA -->
+  <div class="section" style="animation-delay:.25s">
+    <div class="section-head" onclick="toggle(this)">
+      <div class="section-head-left">
+        <div class="section-icon" style="background:var(--blue-dim)">🗺️</div>
+        <div><div class="section-title-text">Mapa de Empatia</div><div class="section-sub">O que Rafael pensa, sente, vê, ouve, fala e faz</div></div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="empatia-grid">
+        <div class="eq" style="background:var(--purple-dim);border:1px solid #ddd6fe">
+          <div class="eq-title" style="color:var(--purple)">🧠 PENSA & SENTE</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--purple)"></span>Ansiedade constante de que um cliente vai sumir</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--purple)"></span>Orgulho quando campanha performa acima do esperado</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--purple)"></span>Frustração com o caos operacional do dia a dia</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--purple)"></span>Ambição de ter uma operação "profissional de verdade"</div>
+        </div>
+        <div class="eq" style="background:var(--blue-dim);border:1px solid #bfdbfe">
+          <div class="eq-title" style="color:var(--blue)">👁️ VÊ</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--blue)"></span>Outros gestores postando faturamentos altos no LinkedIn</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--blue)"></span>Meta Ads ficando mais caro e imprevisível</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--blue)"></span>Clientes cada vez mais exigentes por transparência</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--blue)"></span>IA transformando a gestão de tráfego ao redor</div>
+        </div>
+        <div class="eq" style="background:var(--green-dim);border:1px solid #a7f3d0">
+          <div class="eq-title" style="color:var(--green)">👂 OUVE</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--green)"></span>"Você é caro" — clientes resistentes ao preço</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--green)"></span>Gurus prometendo "método para 10k/mês"</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--green)"></span>Comunidades de tráfego no WhatsApp e Discord</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:var(--green)"></span>Clientes pedindo relatório urgente às 8h da manhã</div>
+        </div>
+        <div class="eq" style="background:#fef3c7;border:1px solid #fde68a">
+          <div class="eq-title" style="color:#d97706">🗣️ FALA & FAZ</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:#d97706"></span>Trabalha das 8h às 22h sem separar lazer do trabalho</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:#d97706"></span>Acumula ferramentas para resolver problema de processo</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:#d97706"></span>Pede referência de ferramenta em grupos antes de comprar</div>
+          <div class="item" style="font-size:12px"><span class="dot" style="background:#d97706"></span>Testa feature nova no Meta antes de qualquer concorrente</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANTI-PERSONA -->
+  <div class="section" style="animation-delay:.3s">
+    <div class="section-head" onclick="toggle(this)">
+      <div class="section-head-left">
+        <div class="section-icon" style="background:#fee2e2">🚫</div>
+        <div><div class="section-title-text">Anti-Persona</div><div class="section-sub">5 perfis que NÃO devem ser atendidos — exclua nos anúncios</div></div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div style="margin-top:16px">
+        <div class="anti-card">
+          <div class="anti-num">Anti-Persona #1</div>
+          <div class="anti-name">O Caçador de Gratuito</div>
+          <div style="font-size:13px;color:var(--muted)">Quer ter acesso total ao produto sem pagar. Pede trial, desconto de 80%, ou "acesso beta perpétuo". Nunca converte e consome suporte.</div>
+          <span class="anti-flag">Excluir: interesse em "grátis", "trial", "beta"</span>
+        </div>
+        <div class="anti-card">
+          <div class="anti-num">Anti-Persona #2</div>
+          <div class="anti-name">O Descrente Digital</div>
+          <div style="font-size:13px;color:var(--muted)">Gestor antigo que não acredita em IA nem em automação. "Isso não funciona para meu nicho." Vai sabotar o produto internamente e pedir reembolso.</div>
+          <span class="anti-flag">Excluir: sem histórico de ferramentas pagas</span>
+        </div>
+        <div class="anti-card">
+          <div class="anti-num">Anti-Persona #3</div>
+          <div class="anti-name">O Iniciante Sem Cliente</div>
+          <div style="font-size:13px;color:var(--muted)">Quer usar o TractorPRO antes de ter clientes. Vai culpar a ferramenta pelo fracasso de não conseguir clientes, não pelo uso incorreto.</div>
+          <span class="anti-flag">Excluir: menos de 1 cliente ativo</span>
+        </div>
+        <div class="anti-card">
+          <div class="anti-num">Anti-Persona #4</div>
+          <div class="anti-name">O Gestor de Outro Nicho</div>
+          <div style="font-size:13px;color:var(--muted)">Trabalha com tráfego para saúde, educação ou político — nichos com regras completamente diferentes de e-commerce. Vai demandar customizações impossíveis.</div>
+          <span class="anti-flag">Excluir: tráfego para saúde/político/educação</span>
+        </div>
+        <div class="anti-card">
+          <div class="anti-num">Anti-Persona #5</div>
+          <div class="anti-name">O Especialista em Tudo</div>
+          <div style="font-size:13px;color:var(--muted)">Diz que já sabe tudo, questiona cada feature, compara com 10 ferramentas e nunca implementa de verdade. Gera ruído sem resultado.</div>
+          <span class="anti-flag">Excluir: comportamento de comparador compulsivo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUYER PERSONA -->
+  <div class="section" style="animation-delay:.35s">
+    <div class="section-head" onclick="toggle(this)">
+      <div class="section-head-left">
+        <div class="section-icon" style="background:var(--purple-dim)">👤</div>
+        <div><div class="section-title-text">Buyer Persona Completa</div><div class="section-sub">Demográfico, psicográfico, jornada de compra e "um dia na vida"</div></div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="grid2" style="margin-bottom:14px">
+        <div class="card">
+          <div class="card-label" style="color:var(--purple)">Demográfico</div>
+          <div class="item" style="font-size:12px"><b>Nome:</b> Rafael Mendes</div>
+          <div class="item" style="font-size:12px"><b>Idade:</b> 29 anos</div>
+          <div class="item" style="font-size:12px"><b>Cidade:</b> São Paulo, SP</div>
+          <div class="item" style="font-size:12px"><b>Renda:</b> R$7k-9k/mês</div>
+          <div class="item" style="font-size:12px"><b>Escolaridade:</b> Superior incompleto (largou para empreender)</div>
+          <div class="item" style="font-size:12px"><b>Estado civil:</b> Solteiro, namora há 1 ano</div>
+          <div class="item" style="font-size:12px"><b>Moradia:</b> Aluguel em SP, quer mudar para interior</div>
+        </div>
+        <div class="card">
+          <div class="card-label" style="color:var(--blue)">Psicográfico</div>
+          <div class="item" style="font-size:12px"><b>Personalidade:</b> Curioso, acelerado, multitarefa</div>
+          <div class="item" style="font-size:12px"><b>Valores:</b> Liberdade, resultado, autonomia</div>
+          <div class="item" style="font-size:12px"><b>Medos:</b> Fracasso público, dependência financeira</div>
+          <div class="item" style="font-size:12px"><b>Influências:</b> Pedro Sobral, Cai.ba, Luan Bueno</div>
+          <div class="item" style="font-size:12px"><b>Consome:</b> YouTube, grupos WhatsApp, podcasts</div>
+          <div class="item" style="font-size:12px"><b>Estilo de vida:</b> Trabalha de casa, mistura vida/trabalho</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-label" style="color:var(--green)">🌅 Um Dia na Vida do Rafael</div>
+        <div style="font-size:13px;color:var(--text);line-height:1.8">
+          <b>7h45</b> — Acorda e já checa o WhatsApp. Tem mensagem de cliente perguntando por que ROAS caiu.<br>
+          <b>8h30</b> — Abre 4 gerenciadores de anúncios. Começa a construir relatório no Google Sheets.<br>
+          <b>10h</b> — Reunião de alinhamento com cliente. Mostra print de tela, cliente pede mais dados.<br>
+          <b>12h</b> — Almoça na frente do computador assistindo vídeo sobre nova feature do Meta.<br>
+          <b>14h</b> — 2 horas otimizando campanhas. Cria 3 novos criativos para teste A/B.<br>
+          <b>16h</b> — Responde orçamento de lead novo. Fica sem saber quanto cobrar.<br>
+          <b>18h</b> — Termina relatório que levou 3h para fazer. Envia para cliente.<br>
+          <b>20h</b> — Estuda estratégia para proposta nova. Dorme pensando em métricas.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LINK PARA PERSONA DASHBOARD COMPLETO -->
+  <a href="persona.html" target="_blank" style="display:flex;align-items:center;justify-content:space-between;background:var(--dark);border-radius:16px;padding:20px 24px;text-decoration:none;transition:all .2s;animation:fadeUp .5s .4s ease forwards;opacity:0;margin-bottom:8px" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='var(--dark)'">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--green-neon);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Dashboard Interativo Completo</div>
+      <div style="font-size:15px;font-weight:700;color:#fff">Ver as 30 Dimensões Psicológicas completas →</div>
+      <div style="font-size:12px;color:#475569;margin-top:2px">5 blocos · 30 dimensões expansíveis · Mapa de Empatia visual</div>
+    </div>
+    <div style="font-size:32px;flex-shrink:0">🧠</div>
+  </a>
+
+</div>
+
+<div class="toast" id="toast">Copiado!</div>
+
+<script>
+function toggle(head){
+  const sec=head.closest('.section');
+  sec.classList.toggle('open');
+}
+function copyEl(card,text){
+  navigator.clipboard.writeText(text);
+  card.style.borderColor='var(--green-neon)';
+  setTimeout(()=>card.style.borderColor='',800);
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+// auto open first section
+document.querySelectorAll('.section').forEach((s,i)=>{
+  if(i===0) s.classList.add('open');
+});
+function copyContent(btn, id){
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText);
+  const orig = btn.textContent;
+  btn.textContent = '✓ Copiado!';
+  btn.style.background = 'var(--green-dim)'; btn.style.color = 'var(--green)';
+  setTimeout(()=>{ btn.textContent=orig; btn.style.background=''; btn.style.color=''; }, 2000);
+}
+
+// APPROVAL SYSTEM
+const STORE = 'tp_review_v1';
+const labels = {ok:'✓ Aprovado',fix:'✎ Melhorar',no:'✕ Reprovado'};
+const colors = {ok:'#22c55e',fix:'#f59e0b',no:'#ef4444'};
+
+function setStatus(id, val, clickedBtn) {
+  const data = JSON.parse(localStorage.getItem(STORE)||'{}');
+  data[id] = val;
+  localStorage.setItem(STORE, JSON.stringify(data));
+  renderStatuses();
+}
+
+function renderStatuses() {
+  const data = JSON.parse(localStorage.getItem(STORE)||'{}');
+  const all = document.querySelectorAll('[data-id]');
+  let ok=0,fix=0,no=0,pending=0;
+
+  all.forEach(crd => {
+    const id = crd.dataset.id;
+    const val = data[id];
+    const st = document.getElementById('st-'+id);
+    const btns = crd.querySelectorAll('.btn-ok,.btn-fix,.btn-no');
+    crd.classList.remove('status-ok','status-fix','status-no');
+    btns.forEach(b=>b.classList.remove('active'));
+    if (val) {
+      crd.classList.add('status-'+val);
+      if(st){ st.textContent=labels[val]; st.style.background=colors[val]+'22'; st.style.color=colors[val]; }
+      btns.forEach(b=>{ if(b.classList.contains('btn-'+val)) b.classList.add('active'); });
+      if(val==='ok') ok++; else if(val==='fix') fix++; else no++;
+    } else {
+      if(st){ st.textContent=''; st.style.background=''; }
+      pending++;
+    }
+  });
+
+  // inline approval on ads (not data-id cards)
+  ['ad-1','ad-2','ad-3'].forEach(id => {
+    const val = data[id];
+    const st = document.getElementById('st-'+id);
+    if(!st) return;
+    if(val){
+      st.textContent=labels[val]; st.style.background=colors[val]+'22'; st.style.color=colors[val];
+      if(val==='ok') ok++; else if(val==='fix') fix++; else no++;
+    } else { st.textContent=''; pending++; }
+  });
+
+  document.getElementById('cnt-ok').textContent = ok;
+  document.getElementById('cnt-fix').textContent = fix;
+  document.getElementById('cnt-no').textContent = no;
+  document.getElementById('cnt-pending').textContent = pending;
+}
+
+// also allow setStatus for inline ad buttons
+document.addEventListener('click', e => {
+  if(e.target.matches('[onclick*="setStatus"]')) return; // handled by onclick
+});
+
+window.addEventListener('load', renderStatuses);
+lucide.createIcons();
+</script>
+
+<!-- CONTEUDO GERADO -->
+<div id="criativos" class="wrap" style="padding-top:0">
+
+  <div style="margin:8px 0 24px;display:flex;align-items:center;gap:10px">
+    <div style="height:1px;flex:1;background:var(--border)"></div>
+    <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;background:linear-gradient(135deg,var(--purple),var(--blue));border-radius:20px;font-size:12px;font-weight:700;color:#fff">✨ CRIATIVOS GERADOS</div>
+    <div style="height:1px;flex:1;background:var(--border)"></div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div id="status-bar" style="background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:18px 24px;margin-bottom:24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+    <div style="font-size:13px;font-weight:700;color:var(--dark)">Revisão de criativos</div>
+    <div style="display:flex;gap:16px;margin-left:auto;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)">
+        <div style="width:10px;height:10px;background:#22c55e;border-radius:50%"></div>
+        Aprovado: <strong id="cnt-ok" style="color:#22c55e">0</strong>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)">
+        <div style="width:10px;height:10px;background:#f59e0b;border-radius:50%"></div>
+        Melhorar: <strong id="cnt-fix" style="color:#f59e0b">0</strong>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)">
+        <div style="width:10px;height:10px;background:#ef4444;border-radius:50%"></div>
+        Reprovado: <strong id="cnt-no" style="color:#ef4444">0</strong>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)">
+        Pendente: <strong id="cnt-pending" style="color:var(--muted)">0</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARROSSEL -->
+  <div class="section open" style="margin-bottom:16px">
+    <div class="section-head" onclick="toggle(this)">
+      <div class="section-head-left">
+        <div class="section-icon" style="background:var(--blue-dim)">🎠</div>
+        <div>
+          <div class="section-title-text">Carrossel Instagram — "Por que você gasta 3h fazendo relatório"</div>
+          <div class="section-sub">9 slides · 1080×1080px · JPG pronto para postar · TractorPRO</div>
+        </div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div style="margin-top:20px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px">
+
+          <div class="crd" data-id="slide-01-capa">
+            <div class="crd-num">01</div>
+            <a href="criativos/01-capa.jpg" download class="crd-img-wrap">
+              <img src="criativos/01-capa.jpg" class="crd-img"/>
+              <div class="crd-dl">⬇ Baixar JPG</div>
+            </a>
+            <div class="crd-info">
+              <div class="crd-title">Capa</div>
+              <div class="crd-desc">Hook principal · Para o scroll · "3 horas por cliente"</div>
+            </div>
+            <div class="crd-status" id="st-slide-01-capa"></div>
+            <div class="crd-btns">
+              <button class="btn-ok" onclick="setStatus('slide-01-capa','ok',this)">✓ Aprovado</button>
+              <button class="btn-fix" onclick="setStatus('slide-01-capa','fix',this)">✎ Melhorar</button>
+              <button class="btn-no" onclick="setStatus('slide-01-capa','no',this)">✕ Reprovar</button>
+            </div>
+          </div>
+
+          <div class="crd" data-id="slide-02-dor">
+            <div class="crd-num">02</div>
+            <a href="criativos/02-dor.jpg" download class="crd-img-wrap">
+              <img src="criativos/02-dor.jpg" class="crd-img"/>
+              <div class="crd-dl">⬇ Baixar JPG</div>
+            </a>
+            <div class="crd-info">
+              <div class="crd-title">Gancho / Dor</div>
+              <div class="crd-desc">Sexta 8h · 5 clientes esperando · campanha parada</div>
+            </div>
+            <div class="crd-status" id="st-slide-02-dor"></div>
+            <div class="crd-btns">
+              <button class="btn-ok" onclick="setStatus('slide-02-dor','ok',this)">✓ Aprovado</button>
+              <button class="btn-fix" onclick="setStatus('slide-02-dor','fix',this)">✎ Melhorar</button>
+              <button class="btn-no" onclick="setStatus('slide-02-dor','no',this)">✕ Reprovar</button>
+            </div>
+          </div>
+
+          <div class="crd" data-id="slide-03-virada">
+            <div class="crd-num">03</div>
+            <a href="criativos/03-virada.jpg" download class="crd-img-wrap">
+              <img src="criativos/03-virada.jpg" class="crd-img"/>
+              <div class="crd-dl">⬇ Baixar JPG</div>
+            </a>
+            <div class="crd-info">
+              <div class="crd-title">Virada</div>
+              <div class="crd-desc">O problema não é você · é o processo de 1 cliente</div>
+            </div>
+            <div class="crd-status" id="st-slide-03-virada"></div>
+            <div class="crd-btns">
+              <button class="btn-ok" onclick="setStatus('slide-03-virada','ok',this)">✓ Aprovado</button>
+              <button class="btn-fix" onclick="setStatus('slide-03-virada','fix',this)">✎ Melhorar</button>
+              <button class="btn-no" onclick="setStatus('slide-03-virada','no',this)">✕ Reprovar</button>
+            </div>
+          </div>
+
+          <div class="crd" data-id="slide-04-erro1">
+            <div class="crd-num">04</div>
+            <a href="criativos/04-erro1.jpg" download class="crd-img-wrap">
+              <img src="criativos/04-erro1.jpg" class="crd-img"/>
+              <div class="crd-dl">⬇ Baixar JPG</div>
+            </a>
+            <div class="crd-info">
+              <div class="crd-title">Erro 01</div>
+              <div class="crd-desc">Meta/Google/Planilha separados · trabalho braçal</div>
+            </div>
+            <div class="crd-status" id="st-slide-04-erro1"></div>
+            <div class="crd-btns">
+              <button class="btn-ok" onclick="setStatus('slide-04-erro1','ok',this)">✓ Aprovado</button>
+              <button class="btn-fix" onclick="setStatus('slide-04-erro1','fix',this)">✎ Melhorar</button>
+              <button class="btn-no" onclick="setStatus('slide-04-erro1','no',this)">✕ Reprovar</button>
+            </div>
+          </div>
+
+          <div class="crd" data-id="slide-05-erro2">
+            <div class="crd-num">05</div>
+            <a href="criativos/05-erro2.jpg" download class="crd-img-wrap">
+              <img src="criativos/05-erro2.jpg" class="crd-img"/>
+              <div class="crd-dl">⬇ Baixar JPG</div>
+            </a>
+            <div class="crd-info">
+              <div class="crd-title">Erro 02</div>
+              <div class="crd-desc">ROAS caiu · cliente sabe antes de você · sem alerta</div>
+            </div>
+            <div class="crd-status" id="st-slide-05-erro2"></div>
+            <div class="crd-btns">
+              <button class="btn-ok" onclick="setStatus('slide-05-erro2','ok',this)">✓ Aprovado</button>
+              <button class="btn-fix" onclick="setStatus('slide-05-erro2','fix',this)">✎ Melhorar</button>
+              <button class="btn-no" onclick="setStatus('slide-05-erro2','no',this)">✕ Reprovar</button>
+            </div>
+          </div>
+
+          <div class="crd" data-id="slide-06-erro3">
+            <div class="crd-num">06</div>
+            <a href="criativos/06-erro3.jpg" download class="crd-img-wrap">
+              <img src="criativos/06-erro3.jpg" class="crd-img"/>
+              <div class="crd-dl">⬇ Baixar JPG</div>
+            </a>
+            <div class="crd-info">
+              <div class="crd-title">Erro 03</div>
+              <div class="crd-desc">Relatório sem análise · print de tela · sem contexto</div>
+            </div>
+            <div class="crd-status" id="st-slide-06-erro3"></div>
+            <div class="crd-btns">
+              <button class="btn-ok" onclick="setStatus('slide-06-erro3','ok',this)">✓ Aprovado</button>
+              <button class="btn-fix" onclick="setStatus('slide-06-erro3','fix',this)">✎ Melhorar</button>
+              <button class="btn-no" onclick="setStatus('slide-06-erro3','no',this)">✕ Reprovar</button>
+            </div>
+          </div>
+
+          <div class="crd" data-id="slide-07-prova">
+            <div class="crd-num">07</div>
+            <a href="criativos/07-prova.jpg" download class="crd-img-wrap">
+              <img src="criativos/07-prova.jpg" class="crd-img"/>
+              <div class="crd-dl">⬇ Baixar JPG</div>
+            </a>
+            <div class="crd-info">
+              <div class="crd-title">Prova Social</div>
+              <div class="crd-desc">6→9 clientes · 18h→40min · depoimento com dado</div>
+            </div>
+            <div class="crd-status" id="st-slide-07-prova"></div>
+            <div class="crd-btns">
+              <button class="btn-ok" onclick="setStatus('slide-07-prova','ok',this)">✓ Aprovado</button>
+              <button class="btn-fix" onclick="setStatus('slide-07-prova','fix',this)">✎ Melhorar</button>
+              <button class="btn-no" onclick="setStatus('slide-07-prova','no',this)">✕ Reprovar</button>
+            </div>
+          </div>
+
+          <div class="crd" data-id="slide-08-oferta">
+            <div class="crd-num">08</div>
+            <a href="criativos/08-oferta.jpg" download class="crd-img-wrap">
+              <img src="criativos/08-oferta.jpg" class="crd-img"/>
+              <div class="crd-dl">⬇ Baixar JPG</div>
+            </a>
+            <div class="crd-info">
+              <div class="crd-title">Oferta — TractorPRO</div>
+              <div class="crd-desc">Features · CTA "Teste grátis 14 dias" · tractorpro.com.br</div>
+            </div>
+            <div class="crd-status" id="st-slide-08-oferta"></div>
+            <div class="crd-btns">
+              <button class="btn-ok" onclick="setStatus('slide-08-oferta','ok',this)">✓ Aprovado</button>
+              <button class="btn-fix" onclick="setStatus('slide-08-oferta','fix',this)">✎ Melhorar</button>
+              <button class="btn-no" onclick="setStatus('slide-08-oferta','no',this)">✕ Reprovar</button>
+            </div>
+          </div>
+
+          <div class="crd" data-id="slide-09-cta">
+            <div class="crd-num">09</div>
+            <a href="criativos/09-cta.jpg" download class="crd-img-wrap">
+              <img src="criativos/09-cta.jpg" class="crd-img"/>
+              <div class="crd-dl">⬇ Baixar JPG</div>
+            </a>
+            <div class="crd-info">
+              <div class="crd-title">CTA Final</div>
+              <div class="crd-desc">Salvar · comentar número · engajamento</div>
+            </div>
+            <div class="crd-status" id="st-slide-09-cta"></div>
+            <div class="crd-btns">
+              <button class="btn-ok" onclick="setStatus('slide-09-cta','ok',this)">✓ Aprovado</button>
+              <button class="btn-fix" onclick="setStatus('slide-09-cta','fix',this)">✎ Melhorar</button>
+              <button class="btn-no" onclick="setStatus('slide-09-cta','no',this)">✕ Reprovar</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANUNCIOS META -->
+  <div class="section" style="margin-bottom:16px">
+    <div class="section-head" onclick="toggle(this)">
+      <div class="section-head-left">
+        <div class="section-icon" style="background:var(--purple-dim)">📣</div>
+        <div>
+          <div class="section-title-text">Anúncios Meta Ads — 3 variações</div>
+          <div class="section-sub">Copy pronta · Conversão · Tráfego · Desejo (remarketing)</div>
+        </div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div style="margin-top:18px;display:flex;flex-direction:column;gap:14px">
+
+        <div style="background:var(--surface2);border-radius:12px;padding:20px;border-left:3px solid var(--purple)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+            <div style="font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.05em">Anúncio 1 — Conversão · Clique no Site</div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <div class="crd-status" id="st-ad-1" style="margin:0"></div>
+              <button class="btn-ok" onclick="setStatus('ad-1','ok',this)" style="padding:4px 10px;font-size:11px">✓</button>
+              <button class="btn-fix" onclick="setStatus('ad-1','fix',this)" style="padding:4px 10px;font-size:11px">✎</button>
+              <button class="btn-no" onclick="setStatus('ad-1','no',this)" style="padding:4px 10px;font-size:11px">✕</button>
+              <button onclick="copyContent(this,'ad1-content')" style="padding:5px 12px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif">Copiar</button>
+            </div>
+          </div>
+          <div id="ad1-content" style="font-size:13px;color:var(--text);line-height:1.9">
+            <strong>🎯 HEADLINE:</strong> Gerencie 10 clientes de tráfego sem contratar ninguém<br><br>
+            <strong>📝 TEXTO:</strong><br>
+            Você é gestor de tráfego e vive nesse ciclo:<br><br>
+            ❌ Cliente cobra relatório → você larga campanha para fazer planilha<br>
+            ❌ ROAS cai → você descobre quando o cliente liga às 8h<br>
+            ❌ Quer pegar mais cliente → não tem tempo nem processo pra isso<br><br>
+            O TractorPRO foi feito por gestor de tráfego, para gestor de tráfego.<br><br>
+            ✅ Dashboard unificado: Meta + Google em uma tela<br>
+            ✅ Relatórios automáticos no WhatsApp do cliente toda semana<br>
+            ✅ IA que analisa campanha e já diz o que otimizar<br>
+            ✅ Alerta em tempo real quando performance muda<br><br>
+            Sem contrato. Sem setup complicado. Testa grátis por 14 dias.<br><br>
+            <strong>🔗 CTA:</strong> Teste grátis agora · tractorpro.com.br
+          </div>
+        </div>
+
+        <div style="background:var(--surface2);border-radius:12px;padding:20px;border-left:3px solid var(--blue)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+            <div style="font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.05em">Anúncio 2 — Tráfego · Awareness</div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <div class="crd-status" id="st-ad-2" style="margin:0"></div>
+              <button class="btn-ok" onclick="setStatus('ad-2','ok',this)" style="padding:4px 10px;font-size:11px">✓</button>
+              <button class="btn-fix" onclick="setStatus('ad-2','fix',this)" style="padding:4px 10px;font-size:11px">✎</button>
+              <button class="btn-no" onclick="setStatus('ad-2','no',this)" style="padding:4px 10px;font-size:11px">✕</button>
+              <button onclick="copyContent(this,'ad2-content')" style="padding:5px 12px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif">Copiar</button>
+            </div>
+          </div>
+          <div id="ad2-content" style="font-size:13px;color:var(--text);line-height:1.9">
+            <strong>🎯 HEADLINE:</strong> Por que gestores de tráfego bons ainda ganham pouco?<br><br>
+            <strong>📝 TEXTO:</strong><br>
+            Não é falta de skill.<br>
+            Não é falta de esforço.<br><br>
+            É que o processo que você usa foi feito para 1 cliente — e você está tentando escalar com ele para 8.<br><br>
+            Toda hora que você passa exportando dado, montando planilha, respondendo print no WhatsApp... é uma hora a menos otimizando campanha.<br><br>
+            Gestor que escala tem sistema. Não trabalha mais. Trabalha diferente.<br><br>
+            O que acontece quando você para de fazer trabalho operacional e foca só no que gera resultado?<br><br>
+            <strong>🔗 CTA:</strong> Saiba mais · tractorpro.com.br
+          </div>
+        </div>
+
+        <div style="background:var(--surface2);border-radius:12px;padding:20px;border-left:3px solid var(--green-neon)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+            <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.05em">Anúncio 3 — Desejo · Remarketing</div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <div class="crd-status" id="st-ad-3" style="margin:0"></div>
+              <button class="btn-ok" onclick="setStatus('ad-3','ok',this)" style="padding:4px 10px;font-size:11px">✓</button>
+              <button class="btn-fix" onclick="setStatus('ad-3','fix',this)" style="padding:4px 10px;font-size:11px">✎</button>
+              <button class="btn-no" onclick="setStatus('ad-3','no',this)" style="padding:4px 10px;font-size:11px">✕</button>
+              <button onclick="copyContent(this,'ad3-content')" style="padding:5px 12px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif">Copiar</button>
+            </div>
+          </div>
+          <div id="ad3-content" style="font-size:13px;color:var(--text);line-height:1.9">
+            <strong>🎯 HEADLINE:</strong> Você ainda montando relatório na mão?<br><br>
+            <strong>📝 TEXTO:</strong><br>
+            Enquanto você lê isso, tem gestor de tráfego que já mandou o relatório da semana automaticamente para todos os clientes.<br><br>
+            Sem abrir planilha. Sem exportar dado. Sem passar 3h fazendo isso.<br><br>
+            847 gestores de tráfego já pararam de fazer esse trabalho braçal.<br><br>
+            Você ainda não.<br><br>
+            Teste grátis por 14 dias — e na próxima sexta você não vai passar o dia montando relatório.<br><br>
+            <strong>🔗 CTA:</strong> Começar agora · tractorpro.com.br
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL DE VENDA -->
+  <div class="section" style="margin-bottom:16px">
+    <div class="section-head" onclick="toggle(this)">
+      <div class="section-head-left">
+        <div class="section-icon" style="background:var(--green-dim)">📧</div>
+        <div>
+          <div class="section-title-text">Email de Venda — Sequência de Nutrição</div>
+          <div class="section-sub">Email #1 da sequência · Ativação de lead frio · Tom: par para par</div>
+        </div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div style="display:flex;justify-content:flex-end;margin-top:16px;margin-bottom:12px">
+        <button onclick="copyContent(this,'email-content')" style="padding:7px 16px;background:var(--green-dim);color:var(--green);border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">Copiar email</button>
+      </div>
+      <div id="email-content" style="background:var(--surface2);border-radius:12px;padding:24px;font-size:14px;color:var(--text);line-height:1.9">
+        <strong>ASSUNTO:</strong> O erro que quase me fez perder um cliente importante<br><br>
+        ---<br><br>
+        Oi [Nome],<br><br>
+        Deixa eu te contar uma história rápida.<br><br>
+        Eram 8h de uma sexta-feira. Meu cliente ligou nervoso. O ROAS tinha caído pela metade durante a madrugada e eu nem sabia — porque eu só ia ver os números quando fosse montar o relatório da semana.<br><br>
+        Passei aquela manhã toda apagando incêndio, pedindo desculpa e explicando o inexplicável.<br><br>
+        O cliente ficou. Mas eu fiquei com aquele gosto amargo de "isso não pode acontecer de novo".<br><br>
+        O problema não era eu. Era o processo.<br>
+        Eu estava gerenciando 6 clientes olhando para 6 contas separadas, em 6 abas diferentes, exportando dados manualmente toda semana.<br><br>
+        Impossível ter controle real assim.<br><br>
+        Foi por isso que eu construí o TractorPRO.<br><br>
+        Um lugar só para todos os seus clientes, Meta + Google integrados, alertas automáticos quando algo muda, e relatório que chega no WhatsApp do cliente antes dele perguntar.<br><br>
+        Não precisei contratar ninguém. Não mudei meu horário de trabalho.<br>
+        Só parei de usar ferramenta errada para o trabalho certo.<br><br>
+        Se você também gerencia mais de 3 clientes e sente que alguma coisa sempre escapa — <strong>testa o TractorPRO grátis por 14 dias.</strong><br><br>
+        Sem cartão. Setup em 5 minutos.<br><br>
+        [LINK DO TESTE GRÁTIS]<br><br>
+        Qualquer dúvida, responde esse email. Eu mesmo respondo.<br><br>
+        Abraço,<br>
+        Max
+      </div>
+    </div>
+  </div>
+
+  <!-- COPY LANDING PAGE -->
+  <div class="section" style="margin-bottom:40px">
+    <div class="section-head" onclick="toggle(this)">
+      <div class="section-head-left">
+        <div class="section-icon" style="background:var(--blue-dim)">🖥️</div>
+        <div>
+          <div class="section-title-text">Copy Landing Page — Hero + Bullets + CTA</div>
+          <div class="section-sub">Bloco principal da página · TractorPRO · Baseado nas dores do Rafael</div>
+        </div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div style="display:flex;justify-content:flex-end;margin-top:16px;margin-bottom:12px">
+        <button onclick="copyContent(this,'landing-content')" style="padding:7px 16px;background:var(--blue-dim);color:var(--blue);border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">Copiar tudo</button>
+      </div>
+      <div id="landing-content" style="background:var(--surface2);border-radius:12px;padding:24px;font-size:13px;color:var(--text);line-height:1.9">
+        <strong style="display:block;margin-bottom:16px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em">HERO</strong>
+        <div style="font-size:22px;font-weight:800;color:var(--dark);line-height:1.3;margin-bottom:10px">O dashboard que gestores de tráfego usam para gerenciar 10 clientes sem contratar ninguém</div>
+        <div style="font-size:15px;color:var(--muted);margin-bottom:24px;line-height:1.6">Meta + Google integrados. Relatórios automáticos no WhatsApp. IA que analisa suas campanhas antes do cliente reclamar.</div>
+
+        <strong style="display:block;margin-bottom:12px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em">AGITAÇÃO — "Se você é gestor de tráfego, você vive isso:"</strong>
+        <div style="margin-bottom:6px">❌ Passa horas em planilha em vez de otimizar campanha</div>
+        <div style="margin-bottom:6px">❌ Cliente descobre o problema antes de você</div>
+        <div style="margin-bottom:6px">❌ Quer escalar mas não tem processo pra isso</div>
+        <div style="margin-bottom:24px">❌ Cobra menos do que deveria porque entrega menos do que poderia</div>
+
+        <strong style="display:block;margin-bottom:12px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em">BENEFÍCIOS</strong>
+        <div style="margin-bottom:6px">✅ <strong>Visão unificada</strong> — Meta + Google + múltiplos clientes em uma tela só</div>
+        <div style="margin-bottom:6px">✅ <strong>Relatório automático</strong> — chega no WhatsApp do cliente toda semana sem você tocar</div>
+        <div style="margin-bottom:6px">✅ <strong>IA para análise</strong> — entende os dados e já diz o que otimizar, sem você explicar do zero</div>
+        <div style="margin-bottom:6px">✅ <strong>Alertas em tempo real</strong> — você sabe antes do cliente que algo mudou</div>
+        <div style="margin-bottom:6px">✅ <strong>Multi-cliente</strong> — escala sem contratar, sem complicar</div>
+        <div style="margin-bottom:24px">✅ <strong>Setup em 5 minutos</strong> — conecta e já começa a usar</div>
+
+        <strong style="display:block;margin-bottom:12px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em">CTA PRINCIPAL</strong>
+        <div style="font-size:16px;font-weight:800;color:var(--dark);margin-bottom:6px">Testa grátis por 14 dias. Sem cartão de crédito.</div>
+        <div style="color:var(--muted)">Cancela quando quiser. Sem pegadinha. Sem contrato.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

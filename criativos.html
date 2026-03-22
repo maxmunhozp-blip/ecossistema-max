@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Criativos — TractorPRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f7f7f9;--surface:#fff;--surface-alt:#f2f2f4;--surface-hover:#ebebed;
+  --border:#e4e4e7;--border-strong:#d1d1d6;
+  --accent:#7c3aed;--accent-dim:#f3f0ff;--accent-mid:#ede9fe;
+  --purple:#7c3aed;--purple-dim:#f3f0ff;
+  --blue:#2563eb;--blue-dim:#dbeafe;
+  --green:#059669;--green-neon:#00d4a0;--green-dim:#dcfce7;
+  --red:#ef4444;--red-dim:#fef2f2;
+  --amber:#f59e0b;--amber-dim:#fffbeb;
+  --text-dark:#111827;--text:#374151;--text-muted:#6b7280;--text-dim:#9ca3af;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
+  --shadow-lg:0 4px 20px rgba(0,0,0,.08);
+  --nav-h:56px;--radius:10px;--radius-lg:14px;
+  /* compat aliases */
+  --s2:var(--surface-alt);--border2:var(--border-strong);
+  --blue-d:var(--blue-dim);--purple-d:var(--purple-dim);
+  --gneon:var(--green-neon);--green-d:var(--green-dim);
+  --dark:var(--text-dark);--muted:var(--text-muted);--dim:var(--text-dim);
+  --red-d:var(--red-dim);--amber-d:var(--amber-dim);
+  --sh:var(--shadow);--shl:var(--shadow-lg);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);height:var(--nav-h);display:flex;align-items:center;padding:0 24px;gap:16px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
+.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.logo-text{font-size:14px;font-weight:600;color:var(--text-dark)}
+.logo-text strong{font-weight:900}
+.nav-links{display:flex;gap:4px;margin-right:auto}
+.nl{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:all .15s}
+.nl:hover{background:var(--surface-alt);color:var(--text-dark)}
+.nl.active{background:var(--purple-dim);color:var(--purple)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-btn{display:flex;align-items:center;gap:5px;padding:6px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;background:none;text-decoration:none;font-family:'Inter',sans-serif;transition:all .15s}
+.nav-btn:hover{border-color:var(--purple);color:var(--purple)}
+.nav-btn.primary{background:var(--accent);color:#fff;border-color:transparent}
+.nav-btn.primary:hover{opacity:.9;color:#fff}
+
+/* LAYOUT */
+.wrap{max-width:1200px;margin:0 auto;padding:28px 24px}
+
+/* HEADER */
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.page-head-left h1{font-size:26px;font-weight:900;color:var(--dark);margin-bottom:4px}
+.page-head-left p{font-size:13px;color:var(--muted)}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* STATS STRIP */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
+.stat{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px}
+.stat-num{font-size:26px;font-weight:900;color:var(--dark);margin-bottom:2px}
+.stat-label{font-size:11px;color:var(--muted);font-weight:500}
+.stat.green .stat-num{color:var(--green)}
+.stat.amber .stat-num{color:var(--amber)}
+.stat.red .stat-num{color:var(--red)}
+.stat.blue .stat-num{color:var(--blue)}
+
+/* FILTER BAR */
+.filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.filter-btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all .15s;font-family:'Inter',sans-serif}
+.filter-btn.active,.filter-btn:hover{background:var(--purple-d);border-color:var(--purple);color:var(--purple)}
+.filter-sep{flex:1}
+.search{padding:7px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;background:var(--surface);color:var(--text);outline:none;width:220px}
+.search:focus{border-color:var(--purple)}
+
+/* CAMPAIGN BLOCK */
+.campaign{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;margin-bottom:16px;overflow:hidden;transition:box-shadow .2s}
+.campaign:hover{box-shadow:var(--sh)}
+.campaign-head{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+.campaign-head:hover{background:var(--s2)}
+.campaign-toggle{font-size:11px;color:var(--dim);transition:transform .25s;margin-left:auto;flex-shrink:0}
+.campaign.open .campaign-toggle{transform:rotate(180deg)}
+.campaign-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.campaign-meta{flex:1;min-width:0}
+.campaign-name{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:3px}
+.campaign-info{font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+.campaign-badges{display:flex;gap:6px;flex-shrink:0}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.b-ok{background:var(--green-d);color:var(--green)}
+.b-fix{background:var(--amber-d);color:var(--amber)}
+.b-no{background:var(--red-d);color:var(--red)}
+.b-pend{background:var(--s2);color:var(--muted);border:1px solid var(--border)}
+.b-blue{background:var(--blue-d);color:var(--blue)}
+.b-purple{background:var(--purple-d);color:var(--purple)}
+.b-draft{background:#f1f5f9;color:var(--dim)}
+
+.campaign-dl-btn{display:flex;align-items:center;gap:5px;padding:6px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:none;font-family:'Inter',sans-serif;color:var(--muted);transition:all .15s;white-space:nowrap}
+.campaign-dl-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+/* CAMPAIGN BODY */
+.campaign-body{display:none;border-top:1px solid var(--border);padding:20px}
+.campaign.open .campaign-body{display:block}
+
+/* GRID — lista compacta */
+.grid{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;border:1.5px solid var(--border)}
+
+/* CREATIVE ROW */
+.cc{display:flex;align-items:center;gap:16px;padding:12px 16px;background:var(--surface);transition:background .15s;position:relative}
+.cc:hover{background:var(--s2)}
+.cc.st-ok{border-left:3px solid var(--green)}
+.cc.st-fix{border-left:3px solid var(--amber)}
+.cc.st-no{border-left:3px solid var(--red)}
+.cc.st-pend{border-left:3px solid var(--border)}
+
+/* THUMBNAIL — pequeno, fixo */
+.cc-thumb{flex-shrink:0;width:56px;height:70px;border-radius:6px;overflow:hidden;position:relative;cursor:zoom-in;background:var(--s2)}
+.cc-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.cc-num{position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:10px}
+
+/* INFO */
+.cc-info{flex:1;min-width:0}
+.cc-title{font-size:13px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.cc-desc{font-size:11px;color:var(--muted);line-height:1.4}
+
+/* STATUS BADGE */
+.cc-status-badge{flex-shrink:0;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;min-width:70px;text-align:center}
+
+/* ACTIONS — botões inline à direita */
+.cc-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.vbtn{padding:6px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;background:var(--surface);transition:all .15s;white-space:nowrap}
+.vbtn-ok{color:var(--green);border-color:rgba(5,150,105,.3)}
+.vbtn-ok:hover,.vbtn-ok.active{background:var(--green);color:#fff;border-color:var(--green)}
+.vbtn-fix{color:var(--amber);border-color:rgba(245,158,11,.3)}
+.vbtn-fix:hover,.vbtn-fix.active{background:var(--amber);color:#fff;border-color:var(--amber)}
+.vbtn-no{color:var(--red);border-color:rgba(239,68,68,.3)}
+.vbtn-no:hover,.vbtn-no.active{background:var(--red);color:#fff;border-color:var(--red)}
+.cc-dl{display:flex;align-items:center;gap:4px;padding:6px 10px;background:none;border:1.5px solid var(--border);border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:var(--muted);text-decoration:none;transition:all .15s}
+.cc-dl:hover{border-color:var(--accent);color:var(--accent)}
+/* remove dot — replaced by row left border */
+.cc-status-dot{display:none}
+
+/* STATUS LABEL */
+.cc-st-label{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin:0 12px 6px}
+
+/* COPY SECTION */
+.copy-block{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:16px}
+.copy-block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.copy-block-title{font-size:12px;font-weight:700;color:var(--dark)}
+.copy-btn{padding:5px 12px;background:var(--surface);border:1.5px solid var(--border);border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:var(--muted);transition:all .15s}
+.copy-btn:hover{border-color:var(--purple);color:var(--purple)}
+.copy-content{font-size:12px;color:var(--text);line-height:1.8;white-space:pre-wrap}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+
+@media(max-width:600px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .page-head{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="logo">
+    <div class="logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    <span class="logo-text">Ecossistema<strong>Max</strong></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nl" data-page="hub">Hub</a>
+    <a href="persona.html" class="nl" data-page="persona">Persona</a>
+    <a href="criativos.html" class="nl active" data-page="criativos">Criativos</a>
+    <a href="skills.html" class="nl" data-page="skills">Skills</a>
+    <a href="resultado.html" class="nl" data-page="resultado">Resultado</a>
+    <a href="sexy-canvas.html" class="nl" data-page="sexy-canvas">Sexy Canvas</a>
+    <a href="sexy-canvas-tractorpro.html" class="nl" data-page="tractorpro">TractorPRO</a>
+    <a href="xquads.html" class="nl" data-page="xquads">Xquads</a>
+    <a href="terminal.html" class="nl" data-page="terminal">Terminal</a>
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn primary" onclick="dlAll()">⬇ Baixar aprovados</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="page-head">
+    <div class="page-head-left">
+      <h1>Criativos TractorPRO</h1>
+      <p>Gestão de criativos por campanha · Clique na campanha para expandir · Hover na thumbnail para preview</p>
+    </div>
+    <div class="head-actions">
+      <button class="nav-btn" onclick="expandAll()">↕ Expandir tudo</button>
+      <button class="nav-btn" onclick="collapseAll()">↕ Fechar tudo</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="s-total">0</div><div class="stat-label">Total de criativos</div></div>
+    <div class="stat green"><div class="stat-num" id="s-ok">0</div><div class="stat-label">Aprovados</div></div>
+    <div class="stat amber"><div class="stat-num" id="s-fix">0</div><div class="stat-label">A melhorar</div></div>
+    <div class="stat red"><div class="stat-num" id="s-no">0</div><div class="stat-label">Reprovados</div></div>
+    <div class="stat blue"><div class="stat-num" id="s-pend">0</div><div class="stat-label">Pendentes</div></div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <button class="filter-btn active" onclick="filter('all',this)">Todos</button>
+    <button class="filter-btn" onclick="filter('ok',this)">✓ Aprovados</button>
+    <button class="filter-btn" onclick="filter('fix',this)">✎ A melhorar</button>
+    <button class="filter-btn" onclick="filter('no',this)">✕ Reprovados</button>
+    <button class="filter-btn" onclick="filter('pend',this)">⏳ Pendentes</button>
+    <div class="filter-sep"></div>
+    <input class="search" type="text" placeholder="Buscar criativo..." oninput="search(this.value)"/>
+  </div>
+
+  <!-- CAMPAIGNS -->
+  <div id="campaigns-container"></div>
+
+</div>
+
+
+<script>
+const STORE = 'tp_creatives_v1';
+
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const campaigns = [
+  {
+    id: 'camp-mar-2026-carrossel',
+    name: 'Carrossel — "Por que você gasta 3h em relatório"',
+    month: 'Março 2026',
+    type: 'Carrossel Instagram',
+    icon: '🎠',
+    color: '#dbeafe',
+    creatives: [
+      { id:'c01', num:'01', title:'Capa', desc:'Hook · "3 horas por cliente · toda semana"', file:'criativos/01-capa.jpg' },
+      { id:'c02', num:'02', title:'Gancho / Dor', desc:'Sexta 8h · 5 clientes esperando · campanha parada', file:'criativos/02-dor.jpg' },
+      { id:'c03', num:'03', title:'Virada', desc:'O problema não é você · é o processo', file:'criativos/03-virada.jpg' },
+      { id:'c04', num:'04', title:'Erro 01', desc:'Meta/Google/Planilha separados · trabalho braçal', file:'criativos/04-erro1.jpg' },
+      { id:'c05', num:'05', title:'Erro 02', desc:'ROAS caiu · cliente sabe antes de você', file:'criativos/05-erro2.jpg' },
+      { id:'c06', num:'06', title:'Erro 03', desc:'Relatório sem análise · sem próximo passo', file:'criativos/06-erro3.jpg' },
+      { id:'c07', num:'07', title:'Prova Social', desc:'6→9 clientes · 18h→40min de relatório', file:'criativos/07-prova.jpg' },
+      { id:'c08', num:'08', title:'Oferta TractorPRO', desc:'Features · "Teste grátis 14 dias"', file:'criativos/08-oferta.jpg' },
+      { id:'c09', num:'09', title:'CTA Final', desc:'Salvar · comentar · engajamento', file:'criativos/09-cta.jpg' },
+    ],
+    copies: [
+      { title:'Legenda do post', id:'copy-leg-1', content:`Você é gestor de tráfego e passa mais tempo em planilha do que em campanha.
+
+Meta numa aba. Google noutra. Relatório que leva 3h por cliente.
+
+O TractorPRO resolve isso:
+→ Dashboard unificado: Meta + Google em uma tela
+→ Relatório automático no WhatsApp do cliente
+→ IA que analisa e diz o que otimizar
+
+Salva esse carrossel. Na próxima sexta você vai lembrar.
+
+Qual dos 3 erros você ainda comete? Comenta o número 👇
+
+#gestordetrafego #trafegopago #metaads #googleads #freelancerdigital` }
+    ]
+  },
+  {
+    id: 'camp-mar-2026-feed',
+    name: 'Feed 4:5 — 9 temas · Linha editorial visual',
+    month: 'Março 2026',
+    type: 'Feed Instagram 1080×1350',
+    icon: '🎨',
+    color: '#ede9fe',
+    creatives: [
+      { id:'f01', num:'01', title:'Você foi contratado pra otimizar', desc:'Dark minimalista · roxo · tipografia grande', file:'criativos/feed/01-contratado-otimizar.jpg' },
+      { id:'f02', num:'02', title:'O cliente ligou. Você não viu.', desc:'Dark dramático · vermelho/preto · tensão', file:'criativos/feed/02-cliente-ligou.jpg' },
+      { id:'f03', num:'03', title:'Processo, não mais horas', desc:'Dark gradiente · azul · visual circular', file:'criativos/feed/03-processo-escala.jpg' },
+      { id:'f04', num:'04', title:'Antes vs Depois', desc:'Light clean · verde · cards comparativos', file:'criativos/feed/04-antes-depois.jpg' },
+      { id:'f05', num:'05', title:'IA analisa enquanto você dorme', desc:'Dark tech · verde neon · grid background', file:'criativos/feed/05-ia-dorme.jpg' },
+      { id:'f06', num:'06', title:'Seu concorrente já entrega automático', desc:'Dark split · roxo/azul · dados de prova', file:'criativos/feed/06-concorrente.jpg' },
+      { id:'f07', num:'07', title:'10 clientes com processo de 1', desc:'Light bold · azul/branco · cards limpos', file:'criativos/feed/07-10-clientes.jpg' },
+      { id:'f08', num:'08', title:'Depoimento premium', desc:'Dark premium · roxo/dourado · citação', file:'criativos/feed/08-depoimento-premium.jpg' },
+      { id:'f09', num:'09', title:'Por que gestores bons ganham pouco', desc:'Dark tipográfico · roxo/preto · contraste máximo', file:'criativos/feed/09-gestores-bons.jpg' },
+    ],
+    copies: [
+      { title:'Legenda — "Você foi contratado pra otimizar"', id:'copy-feed-01', content:`Você foi contratado pra otimizar campanha.
+
+Não pra ser o cara que fica 3h por semana exportando Excel, copiando número, colando em planilha, formatando, mandando por email.
+
+Isso é trabalho braçal. Não é gestão de tráfego.
+
+O TractorPRO faz essa parte pra você, automaticamente.
+
+Você fica com o que importa: otimizar, testar, escalar.
+
+Teste grátis 14 dias 👇 tractorpro.com.br
+
+#gestordetrafego #trafegopago #metaads #freelancerdigital #agenciadigital` },
+      { title:'Legenda — "Seu concorrente"', id:'copy-feed-06', content:`Enquanto você monta relatório na mão, tem gestor com a mesma quantidade de clientes entregando relatório automático toda segunda de manhã.
+
+Sem abrir planilha. Sem exportar dado.
+
+847 gestores já pararam de fazer esse trabalho.
+
+A diferença não é skill. É ferramenta.
+
+tractorpro.com.br — teste grátis 14 dias
+
+#gestordetrafego #trafegopago #metaads` }
+    ]
+  }
+];
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function getData() { return JSON.parse(localStorage.getItem(STORE)||'{}'); }
+function saveData(d) { localStorage.setItem(STORE, JSON.stringify(d)); }
+
+function setStatus(id, val) {
+  const d = getData(); d[id] = val; saveData(d);
+  renderAll();
+}
+
+function getStatusClass(val) {
+  if(!val) return '';
+  return 'st-'+val;
+}
+function getDotClass(val) {
+  if(!val) return 'dot-pend';
+  return 'dot-'+val;
+}
+function getLabelHtml(val) {
+  if(!val) return '';
+  const map = {ok:['✓ Aprovado','#22c55e'],fix:['✎ Melhorar','#f59e0b'],no:['✕ Reprovado','#ef4444']};
+  const [txt, col] = map[val];
+  return `<span class="cc-st-label" style="background:${col}22;color:${col}">${txt}</span>`;
+}
+
+function renderAll() {
+  const data = getData();
+  const container = document.getElementById('campaigns-container');
+  container.innerHTML = '';
+
+  let total=0, ok=0, fix=0, no=0;
+
+  campaigns.forEach(camp => {
+    const campOk = camp.creatives.filter(c=>data[c.id]==='ok').length;
+    const campFix = camp.creatives.filter(c=>data[c.id]==='fix').length;
+    const campNo = camp.creatives.filter(c=>data[c.id]==='no').length;
+    const campPend = camp.creatives.filter(c=>!data[c.id]).length;
+    total += camp.creatives.length;
+    ok += campOk; fix += campFix; no += campNo;
+
+    const badgesHtml = [
+      campOk ? `<span class="badge b-ok">✓ ${campOk}</span>` : '',
+      campFix ? `<span class="badge b-fix">✎ ${campFix}</span>` : '',
+      campNo ? `<span class="badge b-no">✕ ${campNo}</span>` : '',
+      campPend ? `<span class="badge b-pend">⏳ ${campPend}</span>` : '',
+    ].join('');
+
+    const statusBadge = (val) => {
+      if(!val) return `<span class="cc-status-badge" style="background:var(--s2);color:var(--muted);border:1px solid var(--border)">Pendente</span>`;
+      const map={ok:['Aprovado','var(--green-d)','var(--green)'],fix:['Melhorar','var(--amber-d)','var(--amber)'],no:['Reprovado','var(--red-d)','var(--red)']};
+      const [t,bg,col]=map[val];
+      return `<span class="cc-status-badge" style="background:${bg};color:${col}">${t}</span>`;
+    };
+    const cardsHtml = camp.creatives.map(c => {
+      const val = data[c.id];
+      return `
+        <div class="cc ${getStatusClass(val)}" data-status="${val||'pend'}" data-id="${c.id}">
+          <div class="cc-thumb">
+            <img src="${c.file}" alt="${c.title}" loading="lazy"/>
+            <div class="cc-num">${c.num}</div>
+          </div>
+          <div class="cc-info">
+            <div class="cc-title">${c.title}</div>
+            <div class="cc-desc">${c.desc}</div>
+          </div>
+          ${statusBadge(val)}
+          <div class="cc-actions">
+            <button class="vbtn vbtn-ok ${val==='ok'?'active':''}" onclick="setStatus('${c.id}','ok')" title="Aprovar">✓ Aprovar</button>
+            <button class="vbtn vbtn-fix ${val==='fix'?'active':''}" onclick="setStatus('${c.id}','fix')" title="Melhorar">Melhorar</button>
+            <button class="vbtn vbtn-no ${val==='no'?'active':''}" onclick="setStatus('${c.id}','no')" title="Reprovar">✕</button>
+            <a class="cc-dl" href="${c.file}" download="tractorpro-${c.num}.jpg" title="Baixar JPG"><i data-lucide="download" style="width:13px;height:13px;stroke:currentColor"></i></a>
+          </div>
+        </div>`;
+    }).join('');
+
+    const copiesHtml = camp.copies ? camp.copies.map(cp => `
+      <div class="copy-block">
+        <div class="copy-block-head">
+          <div class="copy-block-title">📝 ${cp.title}</div>
+          <button class="copy-btn" onclick="doCopy(this,'${cp.id}')">Copiar</button>
+        </div>
+        <div class="copy-content" id="${cp.id}">${cp.content}</div>
+      </div>`).join('') : '';
+
+    const el = document.createElement('div');
+    el.className = 'campaign open';
+    el.dataset.campid = camp.id;
+    el.innerHTML = `
+      <div class="campaign-head" onclick="toggleCampaign(this.closest('.campaign'))">
+        <div class="campaign-icon" style="background:${camp.color}">${camp.icon}</div>
+        <div class="campaign-meta">
+          <div class="campaign-name">${camp.name}</div>
+          <div class="campaign-info">
+            <span>${camp.month}</span>
+            <span>${camp.type}</span>
+            <span>${camp.creatives.length} criativos</span>
+          </div>
+        </div>
+        <div class="campaign-badges">${badgesHtml}</div>
+        <button class="campaign-dl-btn" onclick="event.stopPropagation();dlCampaign('${camp.id}')">⬇ Baixar tudo</button>
+        <div class="campaign-toggle">▼</div>
+      </div>
+      <div class="campaign-body">
+        <div class="grid">${cardsHtml}</div>
+        ${copiesHtml}
+      </div>`;
+    container.appendChild(el);
+  });
+
+  const pend = total - ok - fix - no;
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-ok').textContent = ok;
+  document.getElementById('s-fix').textContent = fix;
+  document.getElementById('s-no').textContent = no;
+  document.getElementById('s-pend').textContent = pend;
+  if(window.lucide) lucide.createIcons();
+}
+
+// ─── TOGGLE ──────────────────────────────────────────────────────────────────
+function toggleCampaign(el) { el.classList.toggle('open'); }
+function expandAll() { document.querySelectorAll('.campaign').forEach(c=>c.classList.add('open')); }
+function collapseAll() { document.querySelectorAll('.campaign').forEach(c=>c.classList.remove('open')); }
+
+
+// ─── FILTER ──────────────────────────────────────────────────────────────────
+function filter(val, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.cc').forEach(c => {
+    const st = c.dataset.status;
+    const show = val==='all' || (val==='pend' ? st==='pend' : st===val);
+    c.style.display = show ? '' : 'none';
+  });
+}
+
+function search(q) {
+  const lq = q.toLowerCase();
+  document.querySelectorAll('.cc').forEach(c => {
+    const t = (c.dataset.title||'').toLowerCase();
+    const d = (c.dataset.desc||'').toLowerCase();
+    c.style.display = (!q || t.includes(lq) || d.includes(lq)) ? '' : 'none';
+  });
+}
+
+// ─── DOWNLOAD ────────────────────────────────────────────────────────────────
+function dlCampaign(campId) {
+  const camp = campaigns.find(c=>c.id===campId);
+  if(!camp) return;
+  camp.creatives.forEach((c,i) => {
+    setTimeout(()=>{
+      const a = document.createElement('a');
+      a.href = c.file;
+      a.download = `tractorpro-${c.num}-${c.title.toLowerCase().replace(/\s+/g,'-')}.jpg`;
+      a.click();
+    }, i*300);
+  });
+}
+
+function dlAll() {
+  const data = getData();
+  campaigns.forEach(camp => {
+    camp.creatives.filter(c=>data[c.id]==='ok').forEach((c,i) => {
+      setTimeout(()=>{
+        const a = document.createElement('a');
+        a.href = c.file;
+        a.download = `tractorpro-${c.num}-${c.title.toLowerCase().replace(/\s+/g,'-')}.jpg`;
+        a.click();
+      }, i*300);
+    });
+  });
+}
+
+// ─── COPY ────────────────────────────────────────────────────────────────────
+function doCopy(btn, id) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copiado!';
+    btn.style.background = '#d1fae5'; btn.style.color = '#059669';
+    setTimeout(()=>{ btn.textContent=orig; btn.style.background=''; btn.style.color=''; }, 2000);
+  });
+}
+
+window.addEventListener('load', () => { renderAll(); lucide.createIcons(); });
+</script>
+</body>
+</html>
