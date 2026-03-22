@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meu Fluxo — Método de Produtividade para Freelancers e Empreendedores</title>
+<meta name="description" content="Pare de trabalhar no caos. Meu Fluxo é o método que organiza sua vida profissional de uma vez por todas — clientes, projetos, finanças e tempo.">
+
+<!-- Meta Pixel (placeholder) -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+// fbq('init', 'SEU_PIXEL_ID');
+// fbq('track', 'PageView');
+</script>
+
+<style>
+  :root {
+    --purple: #7c3aed;
+    --purple-light: #a78bfa;
+    --purple-dark: #5b21b6;
+    --green: #10b981;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --bg: #0d0d0f;
+    --bg2: #111113;
+    --surface: #1a1a1e;
+    --surface2: #22222a;
+    --border: rgba(255,255,255,.08);
+    --text: #e8e8ee;
+    --text-dim: #9ca3af;
+    --text-muted: #6b7280;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; font-weight: 800; }
+  h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); line-height: 1.2; font-weight: 700; }
+  h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); line-height: 1.3; font-weight: 600; }
+  p { font-size: 1.05rem; line-height: 1.75; }
+
+  .container { max-width: 780px; margin: 0 auto; padding: 0 20px; }
+  .container-wide { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+  /* ── STICKY BAR ── */
+  .sticky-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: var(--purple-dark);
+    padding: 10px 20px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 20px rgba(124,58,237,.4);
+  }
+  .sticky-bar span { font-size: .875rem; font-weight: 500; }
+  .sticky-bar strong { color: var(--yellow); }
+  .sticky-cta {
+    background: var(--yellow); color: #000;
+    font-weight: 700; font-size: .8rem;
+    padding: 6px 16px; border-radius: 6px;
+    text-decoration: none; white-space: nowrap;
+    transition: opacity .15s;
+  }
+  .sticky-cta:hover { opacity: .9; }
+  #sticky-countdown { font-weight: 700; color: var(--yellow); font-size: .875rem; }
+
+  /* ── TOP BAND ── */
+  .top-band {
+    background: linear-gradient(135deg, #1a0a3e 0%, #0d0d0f 100%);
+    padding: 100px 20px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .top-band::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(124,58,237,.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .eyebrow {
+    display: inline-block;
+    background: rgba(124,58,237,.15);
+    border: 1px solid rgba(124,58,237,.3);
+    color: var(--purple-light);
+    padding: 6px 14px; border-radius: 20px;
+    font-size: .8rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero-headline { color: var(--white); margin-bottom: 20px; }
+  .hero-headline em { color: var(--purple-light); font-style: normal; }
+  .hero-sub {
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    color: var(--text-dim);
+    max-width: 580px; margin: 0 auto 36px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-main {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    color: #fff; font-weight: 700; font-size: 1.1rem;
+    padding: 18px 36px; border-radius: 12px;
+    text-decoration: none; border: none; cursor: pointer;
+    box-shadow: 0 8px 30px rgba(124,58,237,.4);
+    transition: all .2s; line-height: 1;
+  }
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124,58,237,.5); }
+  .btn-main.yellow {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 8px 30px rgba(245,158,11,.35);
+  }
+  .btn-main.yellow:hover { box-shadow: 0 12px 40px rgba(245,158,11,.5); }
+  .btn-guarantee { font-size: .8rem; color: var(--text-muted); margin-top: 10px; display: block; }
+
+  /* ── SECTIONS ── */
+  section { padding: 72px 20px; }
+  section.dark { background: var(--bg2); }
+  section.surface { background: var(--surface); }
+  .section-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--purple-light); margin-bottom: 16px;
+  }
+  .section-label::before { content: ''; width: 20px; height: 2px; background: var(--purple-light); }
+
+  /* ── PAIN SECTION ── */
+  .pain-list { list-style: none; margin-top: 28px; }
+  .pain-list li {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+    font-size: 1rem;
+  }
+  .pain-list li:last-child { border-bottom: none; }
+  .pain-icon { color: var(--red); font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: rgba(124,58,237,.08);
+    border: 1px solid rgba(124,58,237,.2);
+    border-left: 4px solid var(--purple);
+    border-radius: 10px; padding: 20px 24px;
+    margin: 28px 0;
+  }
+  .callout p { font-size: 1.05rem; }
+
+  /* ── COST BOX ── */
+  .cost-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px; margin-top: 28px;
+  }
+  .cost-card {
+    background: rgba(239,68,68,.06);
+    border: 1px solid rgba(239,68,68,.15);
+    border-radius: 12px; padding: 20px;
+  }
+  .cost-card .cost-label { font-size: .75rem; color: var(--red); text-transform: uppercase; font-weight: 600; margin-bottom: 8px; letter-spacing: .05em; }
+  .cost-card .cost-val { font-size: 1.4rem; font-weight: 700; color: var(--white); }
+  .cost-card .cost-desc { font-size: .85rem; color: var(--text-dim); margin-top: 4px; }
+
+  /* ── STORY ── */
+  .story-block { max-width: 680px; }
+  .story-block p + p { margin-top: 16px; }
+  .story-photo {
+    width: 140px; height: 140px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--surface2), var(--surface));
+    border: 3px solid rgba(124,58,237,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; flex-shrink: 0;
+    float: right; margin: 0 0 20px 28px;
+  }
+
+  /* ── TRANSFORMATION ── */
+  .before-after {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px; margin-top: 28px;
+  }
+  @media (max-width: 560px) { .before-after { grid-template-columns: 1fr; } }
+  .ba-col {
+    background: var(--surface); border-radius: 14px; padding: 24px;
+    border: 1px solid var(--border);
+  }
+  .ba-col.after { border-color: rgba(16,185,129,.2); background: rgba(16,185,129,.04); }
+  .ba-label {
+    font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 16px;
+  }
+  .ba-col .ba-label { color: var(--red); }
+  .ba-col.after .ba-label { color: var(--green); }
+  .ba-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    font-size: .9rem;
+  }
+  .ba-item:last-child { border-bottom: none; }
+  .ba-item .icon { flex-shrink: 0; margin-top: 2px; }
+
+  /* ── METHOD STEPS ── */
+  .method-steps { list-style: none; margin-top: 28px; }
+  .method-step {
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 20px 0; border-bottom: 1px solid var(--border);
+  }
+  .method-step:last-child { border-bottom: none; }
+  .step-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1rem; flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(124,58,237,.3);
+  }
+  .step-content h4 { font-weight: 700; margin-bottom: 4px; font-size: 1rem; }
+  .step-content p { font-size: .9rem; color: var(--text-dim); }
+
+  /* ── OFFER ── */
+  .offer-box {
+    background: var(--surface2);
+    border: 1px solid rgba(124,58,237,.25);
+    border-radius: 20px; padding: 40px;
+    margin-top: 32px;
+  }
+  .offer-name {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+    color: #fff; font-weight: 800; font-size: 1.6rem;
+    padding: 10px 24px; border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .offer-tagline { color: var(--text-dim); margin-bottom: 28px; font-size: .95rem; }
+  .offer-items { list-style: none; }
+  .offer-item {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    padding: 16px 0; border-bottom: 1px solid var(--border);
+  }
+  .offer-item:last-child { border-bottom: none; }
+  .offer-item-info { flex: 1; }
+  .offer-item-title { font-weight: 600; margin-bottom: 3px; font-size: .95rem; }
+  .offer-item-desc { font-size: .82rem; color: var(--text-dim); }
+  .offer-item-price { color: var(--text-dim); font-size: .85rem; white-space: nowrap; flex-shrink: 0; }
+  .offer-total {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 20px; margin-top: 8px;
+    border-top: 1px solid rgba(124,58,237,.2);
+  }
+  .offer-total-label { font-size: .85rem; color: var(--text-dim); }
+  .offer-total-val { font-size: 1.3rem; font-weight: 700; text-decoration: line-through; color: var(--text-muted); }
+
+  /* ── PRICE ── */
+  .price-box {
+    background: linear-gradient(135deg, rgba(124,58,237,.12) 0%, rgba(91,33,182,.08) 100%);
+    border: 1px solid rgba(124,58,237,.25);
+    border-radius: 16px; padding: 32px;
+    text-align: center; margin-top: 24px;
+  }
+  .price-not { font-size: .85rem; color: var(--text-dim); text-decoration: line-through; margin-bottom: 4px; }
+  .price-main { font-size: clamp(2.2rem, 6vw, 3.5rem); font-weight: 800; color: var(--white); line-height: 1; }
+  .price-or { font-size: .85rem; color: var(--text-dim); margin: 8px 0; }
+  .price-cash { font-size: 1.3rem; font-weight: 700; color: var(--green); }
+  .price-compare { font-size: .8rem; color: var(--text-dim); margin-top: 8px; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px; margin-top: 32px;
+  }
+  .testimonial {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px;
+  }
+  .testimonial-text { font-size: .9rem; color: var(--text-dim); margin-bottom: 16px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 10px; }
+  .testimonial-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: .85rem; flex-shrink: 0;
+  }
+  .testimonial-name { font-weight: 600; font-size: .85rem; }
+  .testimonial-role { font-size: .75rem; color: var(--text-muted); }
+  .stars { color: var(--yellow); font-size: .8rem; margin-bottom: 10px; }
+
+  /* ── GUARANTEE ── */
+  .guarantee-box {
+    background: rgba(16,185,129,.05);
+    border: 1px solid rgba(16,185,129,.2);
+    border-radius: 16px; padding: 32px;
+    display: flex; gap: 24px; align-items: flex-start;
+    margin-top: 28px;
+  }
+  .guarantee-icon { font-size: 3rem; flex-shrink: 0; }
+  .guarantee-title { font-weight: 700; font-size: 1.1rem; color: var(--green); margin-bottom: 8px; }
+
+  /* ── FAQ ── */
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+  }
+  .faq-q { font-weight: 600; font-size: .95rem; cursor: pointer; display: flex; justify-content: space-between; gap: 12px; }
+  .faq-a { font-size: .9rem; color: var(--text-dim); margin-top: 10px; display: none; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-toggle { flex-shrink: 0; color: var(--purple-light); }
+
+  /* ── CTA FINAL ── */
+  .cta-final {
+    background: linear-gradient(135deg, #1a0a3e 0%, var(--bg2) 100%);
+    text-align: center; padding: 80px 20px;
+    position: relative; overflow: hidden;
+  }
+  .cta-final::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 50% 60% at 50% 100%, rgba(124,58,237,.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .countdown-box {
+    display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    background: rgba(0,0,0,.3); border: 1px solid rgba(124,58,237,.3);
+    border-radius: 10px; padding: 12px 20px;
+    margin-bottom: 28px;
+  }
+  .countdown-label { font-size: .8rem; color: var(--text-dim); }
+  .countdown-unit {
+    background: var(--surface2); border-radius: 6px;
+    padding: 6px 10px; text-align: center;
+    min-width: 50px;
+  }
+  .countdown-num { font-size: 1.4rem; font-weight: 800; color: var(--white); line-height: 1; display: block; }
+  .countdown-sep { font-size: 1.2rem; font-weight: 700; color: var(--purple-light); }
+  .countdown-u { font-size: .65rem; color: var(--text-muted); }
+
+  /* ── WHATSAPP FLOAT ── */
+  .wa-float {
+    position: fixed; bottom: 24px; right: 24px; z-index: 888;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #25d366;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(37,211,102,.4);
+    text-decoration: none; transition: transform .2s;
+  }
+  .wa-float:hover { transform: scale(1.1); }
+  .wa-float svg { width: 28px; height: 28px; fill: #fff; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg); border-top: 1px solid var(--border);
+    padding: 32px 20px; text-align: center;
+    font-size: .8rem; color: var(--text-muted);
+  }
+
+  /* ── UTILITIES ── */
+  .text-center { text-align: center; }
+  .text-purple { color: var(--purple-light); }
+  .text-green { color: var(--green); }
+  .text-yellow { color: var(--yellow); }
+  .mt8 { margin-top: 8px; }
+  .mt16 { margin-top: 16px; }
+  .mt24 { margin-top: 24px; }
+  .mt32 { margin-top: 32px; }
+  .mt48 { margin-top: 48px; }
+  .mb8 { margin-bottom: 8px; }
+  .divider { width: 48px; height: 3px; background: var(--purple); border-radius: 2px; margin: 16px auto 0; }
+  .badge {
+    display: inline-block;
+    background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.25);
+    color: var(--green); padding: 4px 10px; border-radius: 20px;
+    font-size: .75rem; font-weight: 600;
+  }
+
+  @media (max-width: 600px) {
+    .offer-box { padding: 24px 20px; }
+    .guarantee-box { flex-direction: column; gap: 16px; }
+    .sticky-bar { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ STICKY BAR ═══ -->
+<div class="sticky-bar">
+  <span>⚡ Oferta especial encerra em <strong id="sticky-countdown">--:--:--</strong></span>
+  <a href="#comprar" class="sticky-cta">Quero o Meu Fluxo →</a>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="top-band">
+  <div class="container">
+    <div class="eyebrow">🎯 Método de Produtividade</div>
+    <h1 class="hero-headline">
+      Você não está <em>sem tempo</em>.<br>
+      Você está <em>sem sistema</em>.
+    </h1>
+    <p class="hero-sub">
+      Meu Fluxo é o método que organiza seus projetos, clientes e finanças de uma vez por todas — pra você parar de apagar incêndio e começar a construir algo de verdade.
+    </p>
+    <a href="#comprar" class="btn-main yellow" style="font-size:1.15rem">
+      👉 Quero organizar minha vida profissional
+    </a>
+    <br>
+    <span class="btn-guarantee">🔒 7 dias de garantia · Acesso imediato · Funciona do celular</span>
+
+    <div style="margin-top:48px; display:flex; justify-content:center; gap:40px; flex-wrap:wrap;">
+      <div style="text-align:center">
+        <div style="font-size:1.8rem;font-weight:800;color:#fff">+1.240</div>
+        <div style="font-size:.8rem;color:var(--text-dim)">profissionais organizados</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:1.8rem;font-weight:800;color:#fff">4.9★</div>
+        <div style="font-size:.8rem;color:var(--text-dim)">avaliação média</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:1.8rem;font-weight:800;color:#fff">72h</div>
+        <div style="font-size:.8rem;color:var(--text-dim)">pra sentir a diferença</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROBLEMA ═══ -->
+<section class="dark">
+  <div class="container">
+    <div class="section-label">O Problema</div>
+    <h2>Reconhece esse cenário?</h2>
+    <p class="mt16" style="color:var(--text-dim)">
+      Você é bom no que faz. Tem clientes, tem projetos, tem talento. Mas o dia acaba e a sensação é sempre a mesma: correu muito, entregou pouco, e ainda tem uma lista enorme pra amanhã.
+    </p>
+
+    <ul class="pain-list mt24">
+      <li>
+        <span class="pain-icon">✗</span>
+        <div><strong>Caixa de entrada no caos</strong> — mensagens de cliente misturadas com meme do grupo da família e notificação de app. Você perde prazo, cliente fica insatisfeito.</div>
+      </li>
+      <li>
+        <span class="pain-icon">✗</span>
+        <div><strong>Dinheiro some sem explicação</strong> — você fatura, mas nunca sabe quanto sobrou de verdade. Fim do mês: conta no limite.</div>
+      </li>
+      <li>
+        <span class="pain-icon">✗</span>
+        <div><strong>Projetos sem controle</strong> — o que tá atrasado? O que precisa de resposta? Você só descobre quando o cliente reclama.</div>
+      </li>
+      <li>
+        <span class="pain-icon">✗</span>
+        <div><strong>Horas trabalhadas que somem</strong> — você não consegue cobrar o que vale porque não sabe quanto tempo gasta em cada projeto.</div>
+      </li>
+      <li>
+        <span class="pain-icon">✗</span>
+        <div><strong>Sensação de nunca progredir</strong> — trabalha demais, descansa de menos, e a cada mês parece que recomeça do zero.</div>
+      </li>
+    </ul>
+
+    <div class="callout mt32">
+      <p><strong>Não é falta de esforço.</strong> Você já trabalha muito. O problema é que <strong>sem sistema, mais esforço só gera mais caos</strong>. Um freelancer desorganizado com dois clientes já sofre. Imagina com dez.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AMPLIFICAÇÃO ═══ -->
+<section>
+  <div class="container">
+    <div class="section-label">O Custo Real</div>
+    <h2>Quanto esse caos está te custando?</h2>
+    <p class="mt16" style="color:var(--text-dim)">Vamos fazer uma conta rápida e honesta:</p>
+
+    <div class="cost-grid">
+      <div class="cost-card">
+        <div class="cost-label">💸 Em dinheiro</div>
+        <div class="cost-val">R$ 800–2.400</div>
+        <div class="cost-desc">Por mês perdidos em projetos mal precificados e tempo não cobrado</div>
+      </div>
+      <div class="cost-card">
+        <div class="cost-label">⏱ Em tempo</div>
+        <div class="cost-val">8–12h/semana</div>
+        <div class="cost-desc">Gastas reorganizando, respondendo urgência, procurando arquivo</div>
+      </div>
+      <div class="cost-card">
+        <div class="cost-label">😴 Em energia</div>
+        <div class="cost-val">Alta constante</div>
+        <div class="cost-desc">Ansiedade, culpa e sensação de que algo vai explodir</div>
+      </div>
+    </div>
+
+    <div class="callout mt32">
+      <p>Se você tem 3 anos no mercado e não criou um sistema, você <strong>já perdeu entre R$ 86.400 e R$ 259.200</strong> em valor não cobrado, projetos mal gerenciados e oportunidades perdidas. Esse dinheiro foi pro cliente, pro concorrente organizado, ou simplesmente evaporou.</p>
+    </div>
+
+    <p class="mt24" style="color:var(--text-dim)">E o pior: quanto mais você cresce sem sistema, pior fica. Mais clientes = mais caos. É um buraco que você mesmo está cavando.</p>
+  </div>
+</section>
+
+<!-- ═══ HISTÓRIA ═══ -->
+<section class="dark">
+  <div class="container">
+    <div class="section-label">A História</div>
+    <h2>Como o Meu Fluxo nasceu</h2>
+
+    <div class="story-block mt24">
+      <div class="story-photo">🧑‍💻</div>
+
+      <p>Há 4 anos, eu era um freelancer que faturava bem mas vivia no vermelho. Agenda cheia, dinheiro sumido, projetos atrasados, clientes insatisfeitos.</p>
+
+      <p class="mt16">Tentei de tudo: planilhas do Excel que abandonava na terceira semana, apps de produtividade que viravam mais uma aba aberta, consultorias caras que me davam frameworks lindos que não sobreviviam ao primeiro prazo apertado.</p>
+
+      <p class="mt16">O problema não era dedicação. Eu trabalhava 12, 14 horas por dia. O problema era que eu trabalhava <strong>em tudo ao mesmo tempo, sem prioridade, sem visibilidade, sem controle</strong>.</p>
+
+      <p class="mt16">A virada veio quando percebi uma coisa simples: <em>os profissionais que faturavam o dobro trabalhando metade do tempo não eram mais talentosos — eles tinham um sistema.</em></p>
+
+      <p class="mt16">Passei 8 meses estudando como os 5% mais produtivos do mercado digital estruturavam o trabalho. Testei com meus próprios projetos. Refinei com 47 clientes. E o que funcionou — e continuou funcionando — virou o <strong>Meu Fluxo</strong>.</p>
+
+      <p class="mt16">Hoje, meu faturamento triplicou e trabalho menos horas. Mas o mais importante: <strong>eu sei exatamente o que precisa ser feito, quando fazer, e quanto ganhei por isso</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MÉTODO ═══ -->
+<section>
+  <div class="container">
+    <div class="section-label">O Método</div>
+    <h2>Os 4 pilares do <span class="text-purple">Meu Fluxo</span></h2>
+    <p class="mt16" style="color:var(--text-dim)">Um sistema completo, construído para quem tem pouco tempo e muito pra entregar.</p>
+
+    <ul class="method-steps">
+      <li class="method-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Captura Única — o fim do caos de entrada</h4>
+          <p>Um único ponto de entrada para tudo: tarefas, mensagens de cliente, ideias, prazos. Nada se perde, tudo tem seu lugar. Você processa uma vez por dia, em 20 minutos.</p>
+        </div>
+      </li>
+      <li class="method-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Controle de Projetos — visibilidade total</h4>
+          <p>Dashboard simples com status de cada projeto, próximo passo, prazo e valor. Você sabe em 30 segundos o que precisa de atenção agora — sem precisar acessar mil ferramentas.</p>
+        </div>
+      </li>
+      <li class="method-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Fluxo Financeiro — sabe quanto ganhou de verdade</h4>
+          <p>Controle de horas por projeto, entradas previstas, custos fixos e resultado líquido. Em 5 minutos por dia você tem clareza financeira que a maioria dos freelancers nunca tem.</p>
+        </div>
+      </li>
+      <li class="method-step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Rotina Profissional — trabalho focado sem culpa</h4>
+          <p>Blocos de tempo para trabalho profundo, revisão semanal em 30 minutos, e critérios claros para aceitar ou recusar projetos. Você para de ser escravo do cliente urgente.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ TRANSFORMAÇÃO ═══ -->
+<section class="dark">
+  <div class="container">
+    <div class="section-label">Transformação</div>
+    <h2>Sua vida antes e depois do <span class="text-purple">Meu Fluxo</span></h2>
+
+    <div class="before-after">
+      <div class="ba-col">
+        <div class="ba-label">❌ Antes</div>
+        <div class="ba-item"><span class="icon">•</span> Não sabe o que fazer primeiro no dia</div>
+        <div class="ba-item"><span class="icon">•</span> Descobre prazo atrasado quando cliente cobra</div>
+        <div class="ba-item"><span class="icon">•</span> Fatura mas não sabe quanto sobrou</div>
+        <div class="ba-item"><span class="icon">•</span> Trabalha 10h e sente que fez pouco</div>
+        <div class="ba-item"><span class="icon">•</span> Aceita qualquer projeto com medo de recusar</div>
+        <div class="ba-item"><span class="icon">•</span> Ansiedade constante com o que pode estar esquecendo</div>
+        <div class="ba-item"><span class="icon">•</span> Fim de semana culpado porque "deveria estar trabalhando"</div>
+      </div>
+      <div class="ba-col after">
+        <div class="ba-label">✅ Depois</div>
+        <div class="ba-item"><span class="icon" style="color:var(--green)">✓</span> Abre o dia sabendo exatamente o que fazer</div>
+        <div class="ba-item"><span class="icon" style="color:var(--green)">✓</span> Entrega antes do prazo, cliente impressionado</div>
+        <div class="ba-item"><span class="icon" style="color:var(--green)">✓</span> Fecha o mês sabendo o lucro real ao centavo</div>
+        <div class="ba-item"><span class="icon" style="color:var(--green)">✓</span> Trabalha 6h com foco e produz mais do que antes</div>
+        <div class="ba-item"><span class="icon" style="color:var(--green)">✓</span> Escolhe projetos com critério e cobra o que vale</div>
+        <div class="ba-item"><span class="icon" style="color:var(--green)">✓</span> Mentalidade tranquila — tudo está capturado</div>
+        <div class="ba-item"><span class="icon" style="color:var(--green)">✓</span> Desconecta no final de semana sem culpa</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ OFERTA ═══ -->
+<section id="comprar">
+  <div class="container">
+    <div class="section-label">A Oferta</div>
+    <h2 class="text-center">Tudo que você recebe no <span class="text-purple">Meu Fluxo</span></h2>
+
+    <div class="offer-box">
+      <div class="offer-name">🎯 Meu Fluxo</div>
+      <p class="offer-tagline">Método completo de produtividade e gestão para freelancers e empreendedores</p>
+
+      <ul class="offer-items">
+        <li class="offer-item">
+          <div class="offer-item-info">
+            <div class="offer-item-title">📦 Módulo 1 — Sistema de Captura Única</div>
+            <div class="offer-item-desc">Configure seu ponto de entrada único em menos de 2 horas. Templates prontos para Notion, Obsidian ou papel.</div>
+          </div>
+          <div class="offer-item-price">R$ 197</div>
+        </li>
+        <li class="offer-item">
+          <div class="offer-item-info">
+            <div class="offer-item-title">📦 Módulo 2 — Dashboard de Projetos</div>
+            <div class="offer-item-desc">Visibilidade total do seu pipeline. Customizável para qualquer tipo de trabalho freelancer ou agência.</div>
+          </div>
+          <div class="offer-item-price">R$ 247</div>
+        </li>
+        <li class="offer-item">
+          <div class="offer-item-info">
+            <div class="offer-item-title">📦 Módulo 3 — Controle Financeiro Simplificado</div>
+            <div class="offer-item-desc">Entradas, saídas, horas por projeto e lucro real. Sem planilha complicada — só o que importa.</div>
+          </div>
+          <div class="offer-item-price">R$ 197</div>
+        </li>
+        <li class="offer-item">
+          <div class="offer-item-info">
+            <div class="offer-item-title">📦 Módulo 4 — Rotina Profissional de Alta Performance</div>
+            <div class="offer-item-desc">Modelo de dia, revisão semanal e rituais que separam profissionais que avançam dos que ficam parados.</div>
+          </div>
+          <div class="offer-item-price">R$ 147</div>
+        </li>
+        <li class="offer-item" style="background:rgba(124,58,237,.05);margin:0 -16px;padding:16px 16px;border-radius:8px;border-color:rgba(124,58,237,.2)">
+          <div class="offer-item-info">
+            <div class="offer-item-title">🎁 BÔNUS 1 — 37 Templates Prontos</div>
+            <div class="offer-item-desc">Proposta comercial, contrato simples, onboarding de cliente, relatório de entrega. Copie, adapte, use hoje.</div>
+          </div>
+          <div class="offer-item-price" style="color:var(--purple-light)">R$ 297</div>
+        </li>
+        <li class="offer-item" style="background:rgba(124,58,237,.05);margin:0 -16px;padding:16px 16px;border-radius:8px;border-color:rgba(124,58,237,.2)">
+          <div class="offer-item-info">
+            <div class="offer-item-title">🎁 BÔNUS 2 — Calculadora de Precificação</div>
+            <div class="offer-item-desc">Descubra o preço mínimo e ideal para cada tipo de projeto, considerando horas, complexidade e posicionamento.</div>
+          </div>
+          <div class="offer-item-price" style="color:var(--purple-light)">R$ 97</div>
+        </li>
+        <li class="offer-item" style="background:rgba(124,58,237,.05);margin:0 -16px;padding:16px 16px;border-radius:8px;border-color:rgba(124,58,237,.2)">
+          <div class="offer-item-info">
+            <div class="offer-item-title">🎁 BÔNUS 3 — Comunidade Meu Fluxo (6 meses)</div>
+            <div class="offer-item-desc">Grupo exclusivo com revisão semanal ao vivo, tiragem de dúvidas e suporte da comunidade.</div>
+          </div>
+          <div class="offer-item-price" style="color:var(--purple-light)">R$ 297</div>
+        </li>
+
+        <li class="offer-total">
+          <div class="offer-total-label">Valor total do pacote</div>
+          <div class="offer-total-val">R$ 1.479</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="price-box">
+      <p class="price-not">De R$ 1.479 — hoje:</p>
+      <div class="price-main">10x de R$ 57</div>
+      <div class="price-or">ou</div>
+      <div class="price-cash">R$ 497 à vista (economia de R$ 73)</div>
+      <div class="price-compare">Menos que R$ 2 por dia pelo primeiro ano — menos que um café</div>
+
+      <div style="margin-top:28px">
+        <a href="#" class="btn-main yellow" style="width:100%;justify-content:center;max-width:460px">
+          🚀 QUERO O MEU FLUXO AGORA
+        </a>
+        <div style="margin-top:8px;font-size:.8rem;color:var(--text-dim);text-align:center">
+          Pagamento seguro via Hotmart · Acesso imediato após confirmação
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DEPOIMENTOS ═══ -->
+<section class="dark">
+  <div class="container-wide">
+    <div style="text-align:center">
+      <div class="section-label" style="justify-content:center">Quem já usa</div>
+      <h2>O que os alunos dizem</h2>
+    </div>
+
+    <div class="testimonials-grid mt32">
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Em 3 dias eu já tinha clareza que não tinha em 2 anos. Parei de trabalhar aos sábados porque finalmente o trabalho de semana ficava no lugar certo."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">CL</div>
+          <div>
+            <div class="testimonial-name">Carlos Lima</div>
+            <div class="testimonial-role">Designer Freelancer · São Paulo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"A calculadora de precificação sozinha já pagou o curso 3 vezes. Eu cobrava R$ 800 por projetos que deviam ser R$ 2.200. Hoje não aceito mais abaixo do preço certo."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AF</div>
+          <div>
+            <div class="testimonial-name">Ana Figueiredo</div>
+            <div class="testimonial-role">Redatora · Belo Horizonte</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Sou terapeuta e achei que não era 'pra mim'. Mas o sistema funciona pra qualquer tipo de serviço. Hoje tenho 14 pacientes semanais, zero prazo perdido, e ainda tenho tarde de quinta livre."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MV</div>
+          <div>
+            <div class="testimonial-name">Marina Vasconcelos</div>
+            <div class="testimonial-role">Terapeuta Holística · Florianópolis</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ GARANTIA ═══ -->
+<section>
+  <div class="container">
+    <div class="section-label">Risco Zero</div>
+    <h2>Garantia <span class="text-green">Resultado em 7 Dias</span></h2>
+
+    <div class="guarantee-box">
+      <div class="guarantee-icon">🛡️</div>
+      <div>
+        <div class="guarantee-title">7 dias de garantia incondicional</div>
+        <p>Entre agora. Acesse todo o conteúdo. Aplique o sistema. Se em 7 dias você não sentir uma diferença real na sua organização e clareza profissional, basta me enviar uma mensagem e devolvemos 100% do seu investimento — sem perguntas, sem burocracia, sem ressentimento.</p>
+        <p class="mt8" style="font-size:.85rem;color:var(--text-dim)">O risco é zero pra você. Todo o risco é meu. Porque eu sei que quando você implementa o primeiro pilar, a sensação de controle aparece em horas — não semanas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="dark">
+  <div class="container">
+    <div class="section-label">Dúvidas Frequentes</div>
+    <h2>Perguntas frequentes</h2>
+
+    <div style="margin-top:28px">
+      <div class="faq-item open">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Funciona para qualquer tipo de freelancer?</span>
+          <span class="faq-toggle">▾</span>
+        </div>
+        <div class="faq-a">Sim. O sistema foi testado com designers, redatores, desenvolvedores, fotógrafos, consultores, terapeutas, coaches e profissionais de marketing. Os princípios são universais — você adapta as ferramentas ao seu contexto.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Precisa ser tech? Usar ferramentas complicadas?</span>
+          <span class="faq-toggle">▾</span>
+        </div>
+        <div class="faq-a">Não. O método funciona com papel e caneta, Notion, Google Sheets, ou qualquer ferramenta que você já usa. Você aprende o princípio, não fica dependente de um app específico.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Quanto tempo leva pra implementar?</span>
+          <span class="faq-toggle">▾</span>
+        </div>
+        <div class="faq-a">A configuração inicial leva 2–3 horas (dá pra fazer num sábado de manhã). Depois, o sistema roda com 20–30 minutos por dia. No terceiro dia você já sente a diferença. Em duas semanas virou hábito.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>E se eu travar em alguma parte?</span>
+          <span class="faq-toggle">▾</span>
+        </div>
+        <div class="faq-a">Você tem 6 meses de acesso à comunidade exclusiva com suporte direto. Além disso, cada módulo tem um FAQ próprio com as dúvidas mais comuns. Ninguém fica sozinho.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>O acesso tem prazo?</span>
+          <span class="faq-toggle">▾</span>
+        </div>
+        <div class="faq-a">O conteúdo dos módulos é seu para sempre. O acesso à comunidade é de 6 meses — renovável com desconto exclusivo para alunos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA FINAL ═══ -->
+<section class="cta-final">
+  <div class="container" style="position:relative;z-index:1">
+    <h2 style="color:var(--white)">Você tem dois caminhos</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:28px 0;max-width:580px;margin-left:auto;margin-right:auto">
+      <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:20px;text-align:left">
+        <div style="font-weight:700;color:var(--red);margin-bottom:8px;font-size:.9rem">CAMINHO 1</div>
+        <p style="font-size:.88rem;color:var(--text-dim)">Fechar essa página, voltar ao caos de sempre, trabalhar muito, ganhar pouco, e lembrar dessa página daqui a 6 meses na mesma situação.</p>
+      </div>
+      <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:20px;text-align:left">
+        <div style="font-weight:700;color:var(--green);margin-bottom:8px;font-size:.9rem">CAMINHO 2</div>
+        <p style="font-size:.88rem;color:var(--text-dim)">Clicar no botão, montar o sistema nos próximos 3 dias, e começar a semana que vem com clareza total sobre o que fazer, quanto ganhar e quando parar.</p>
+      </div>
+    </div>
+
+    <div class="countdown-box">
+      <span class="countdown-label">⚡ Oferta especial termina em</span>
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-h">--</span>
+        <span class="countdown-u">horas</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-m">--</span>
+        <span class="countdown-u">min</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-s">--</span>
+        <span class="countdown-u">seg</span>
+      </div>
+    </div>
+
+    <a href="#" class="btn-main yellow" style="font-size:1.15rem;padding:20px 40px">
+      🚀 QUERO O MEU FLUXO — 10x de R$ 57
+    </a>
+    <br>
+    <span class="btn-guarantee" style="margin-top:12px">🛡️ Garantia de 7 dias · Acesso imediato · Pagamento seguro</span>
+
+    <p style="margin-top:32px;font-size:.85rem;color:var(--text-muted);max-width:480px;margin-left:auto;margin-right:auto">
+      P.S. — Se você leu até aqui, é porque o caos que descrevi te tocou de verdade. Confia nesse instinto. Com a garantia de 7 dias, você literalmente não tem nada a perder e um sistema inteiro a ganhar.
+    </p>
+    <p style="margin-top:8px;font-size:.85rem;color:var(--text-muted)">
+      P.P.S. — Os bônus (templates + calculadora + comunidade) somam R$ 691. Eles só estão incluídos nessa oferta. Quando a promoção acabar, o preço volta pra R$ 697 sem os bônus.
+    </p>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <p>© 2025 Meu Fluxo · Todos os direitos reservados</p>
+  <p class="mt8"><a href="#" style="color:var(--text-muted)">Política de Privacidade</a> · <a href="#" style="color:var(--text-muted)">Termos de Uso</a> · <a href="#" style="color:var(--text-muted)">Suporte</a></p>
+  <p class="mt8" style="font-size:.75rem">Este produto é comercializado com apoio da Hotmart. A plataforma não faz controle editorial do conteúdo do produto comercializado, nem verifica a veracidade das informações contidas nos materiais. O sucesso de seus resultados depende do seu empenho, dedicação, conhecimento e habilidades.</p>
+</footer>
+
+<!-- ═══ WHATSAPP FLOAT ═══ -->
+<a href="https://wa.me/5511999999999?text=Oi!%20Tenho%20uma%20dúvida%20sobre%20o%20Meu%20Fluxo" class="wa-float" target="_blank" rel="noopener" title="Fale no WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- ═══ SCRIPTS ═══ -->
+<script>
+// ── Countdown ─────────────────────────────────────────────────────────────────
+(function(){
+  const KEY = 'meufluxo_deadline';
+  let deadline = localStorage.getItem(KEY);
+  if (!deadline) {
+    deadline = Date.now() + (24 * 60 * 60 * 1000); // 24h a partir do 1o acesso
+    localStorage.setItem(KEY, deadline);
+  }
+  deadline = parseInt(deadline);
+
+  function fmt(n){ return String(n).padStart(2,'0'); }
+
+  function tick(){
+    const diff = deadline - Date.now();
+    if (diff <= 0) {
+      ['cd-h','cd-m','cd-s'].forEach(id => document.getElementById(id).textContent = '00');
+      document.getElementById('sticky-countdown').textContent = '00:00:00';
+      return;
+    }
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-h').textContent = fmt(h);
+    document.getElementById('cd-m').textContent = fmt(m);
+    document.getElementById('cd-s').textContent = fmt(s);
+    document.getElementById('sticky-countdown').textContent = `${fmt(h)}:${fmt(m)}:${fmt(s)}`;
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+
+// ── FAQ ────────────────────────────────────────────────────────────────────────
+function toggleFaq(el) {
+  const item = el.closest('.faq-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// ── Sticky bar hide on hero ────────────────────────────────────────────────────
+window.addEventListener('scroll', function(){
+  const bar = document.querySelector('.sticky-bar');
+  bar.style.opacity = window.scrollY > 300 ? '1' : '0';
+  bar.style.pointerEvents = window.scrollY > 300 ? 'all' : 'none';
+});
+document.querySelector('.sticky-bar').style.opacity = '0';
+</script>
+
+</body>
+</html>
