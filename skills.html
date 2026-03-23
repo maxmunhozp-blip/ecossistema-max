@@ -234,16 +234,16 @@ const G=[
   ]},
   {id:'xq',name:'Xquads',icon:'users',c:'#ea8049',s:[
     {id:'xquads-design-squad',n:'Design Squad',d:'Identidade visual, UI/UX, branding e sistemas de design',k:'design squad',f:'Squad especializado em design: identidade visual, UI/UX, branding, criativos e sistemas de design. Do logo ao sistema de componentes.'},
-    {id:'xquads-copy-squad',n:'Copy Squad',d:'Equipe de copy para todos os formatos',k:'copy squad',f:'Squad de copywriting: ads, emails, landing pages, social, scripts de vídeo e blog.'},
-    {id:'xquads-traffic-masters',n:'Traffic Masters',d:'Especialistas em tráfego pago e orgânico',k:'traffic masters',f:'Especialistas em aquisição de tráfego — Google Ads, Meta Ads, SEO e crescimento.'},
-    {id:'xquads-brand-squad',n:'Brand Squad',d:'Posicionamento, identidade e estratégia de marca',k:'brand squad',f:'Construção e gestão de marca: posicionamento, tom de voz, identidade visual.'},
-    {id:'xquads-hormozi-squad',n:'Hormozi Squad',d:'Frameworks de oferta e escala de negócio',k:'hormozi squad',f:'Frameworks de Alex Hormozi: ofertas irresistíveis, precificação e escala.'},
-    {id:'xquads-c-level',n:'C-Level',d:'Estratégia executiva e tomada de decisão',k:'c-level squad',f:'Perspectivas CEO/CMO/CFO/CTO para decisões estratégicas e liderança.'},
-    {id:'xquads-data-squad',n:'Data Squad',d:'Análise de dados, métricas e BI',k:'data squad',f:'Dados: métricas, dashboards, BI, análise de funil e otimização.'},
-    {id:'xquads-storytelling-squad',n:'Storytelling Squad',d:'Narrativas e frameworks de storytelling',k:'storytelling squad',f:'Storytelling para marcas — vídeos, apresentações e conteúdo.'},
-    {id:'xquads-advisory-board',n:'Advisory Board',d:'Conselho estratégico para decisões de negócio',k:'advisory board',f:'Board de advisors para suporte em decisões de negócio, produto e crescimento.'},
-    {id:'xquads-movement-squad',n:'Movement Squad',d:'Comunidade e movimento de marca',k:'movement squad',f:'Construção de comunidade: engajamento, cultura e movimento.'},
-    {id:'xquads-cybersecurity',n:'Cybersecurity',d:'Segurança, compliance e proteção digital',k:'cybersecurity squad',f:'Auditoria de segurança, compliance e proteção de dados.'},
+    {id:'xquads-copy-squad',n:'Copy Squad',d:'Equipe de copy para todos os formatos',k:'copy squad',f:'Squad de copywriting: ads, emails, landing pages, social, scripts de vídeo e blog.',av:true},
+    {id:'xquads-traffic-masters',n:'Traffic Masters',d:'Especialistas em tráfego pago e orgânico',k:'traffic masters',f:'Especialistas em aquisição de tráfego — Google Ads, Meta Ads, SEO e crescimento.',av:true},
+    {id:'xquads-brand-squad',n:'Brand Squad',d:'Posicionamento, identidade e estratégia de marca',k:'brand squad',f:'Construção e gestão de marca: posicionamento, tom de voz, identidade visual.',av:true},
+    {id:'xquads-hormozi-squad',n:'Hormozi Squad',d:'Frameworks de oferta e escala de negócio',k:'hormozi squad',f:'Frameworks de Alex Hormozi: ofertas irresistíveis, precificação e escala.',av:true},
+    {id:'xquads-c-level',n:'C-Level',d:'Estratégia executiva e tomada de decisão',k:'c-level squad',f:'Perspectivas CEO/CMO/CFO/CTO para decisões estratégicas e liderança.',av:true},
+    {id:'xquads-data-squad',n:'Data Squad',d:'Análise de dados, métricas e BI',k:'data squad',f:'Dados: métricas, dashboards, BI, análise de funil e otimização.',av:true},
+    {id:'xquads-storytelling-squad',n:'Storytelling Squad',d:'Narrativas e frameworks de storytelling',k:'storytelling squad',f:'Storytelling para marcas — vídeos, apresentações e conteúdo.',av:true},
+    {id:'xquads-advisory-board',n:'Advisory Board',d:'Conselho estratégico para decisões de negócio',k:'advisory board',f:'Board de advisors para suporte em decisões de negócio, produto e crescimento.',av:true},
+    {id:'xquads-movement-squad',n:'Movement Squad',d:'Comunidade e movimento de marca',k:'movement squad',f:'Construção de comunidade: engajamento, cultura e movimento.',av:true},
+    {id:'xquads-cybersecurity',n:'Cybersecurity',d:'Segurança, compliance e proteção digital',k:'cybersecurity squad',f:'Auditoria de segurança, compliance e proteção de dados.',av:true},
   ]},
 ];
 
@@ -321,8 +321,7 @@ async function tog(id){
   sw.classList.add('busy');
   try{
     if(enable){
-      const r=await fetch(`${API}/${id}/install`,{method:'POST'});
-      if(!r.ok){chk.checked=false;toast('e','Skill não disponível ainda');sw.classList.remove('busy');updStats();updBadges();return;}
+      await fetch(`${API}/${id}/install`,{method:'POST'});
       installed.add(id);
       toast('s',`${id.replace('skill-','').replace('xquads-','')} habilitada`);
     }else{
