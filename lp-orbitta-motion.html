@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbitta Messenger — Seu WhatsApp pessoal não escala. Orbitta escala.</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Lenis Smooth Scroll -->
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+  /* ===================== RESET & BASE ===================== */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #090600;
+    --surface: #130e03;
+    --accent: #f97316;
+    --accent2: #ea580c;
+    --text: #fef3e8;
+    --muted: #9a6a3a;
+    --font-display: 'Oswald', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  html { scroll-behavior: auto; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  /* ===================== CUSTOM CURSOR ===================== */
+  #cursor {
+    position: fixed;
+    width: 16px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s cubic-bezier(0.25,0.46,0.45,0.94),
+                height 0.3s cubic-bezier(0.25,0.46,0.45,0.94),
+                background 0.3s ease;
+    mix-blend-mode: normal;
+    will-change: transform;
+  }
+
+  #cursor.expanded {
+    width: 40px;
+    height: 40px;
+    background: rgba(249,115,22,0.3);
+    border: 2px solid var(--accent);
+  }
+
+  #cursor-ring {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(249,115,22,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    will-change: transform;
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+  }
+
+  /* ===================== NAV ===================== */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.4s ease;
+  }
+
+  nav.scrolled {
+    background: rgba(9,6,0,0.85);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border-bottom: 1px solid rgba(249,115,22,0.15);
+    padding: 14px 48px;
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 2px;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+  }
+
+  .nav-back:hover { color: var(--accent); }
+
+  .nav-back svg { width: 16px; height: 16px; }
+
+  .nav-cta {
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .nav-cta:hover {
+    background: var(--accent2);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(249,115,22,0.4);
+  }
+
+  /* ===================== HERO ===================== */
+  #hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(249,115,22,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(249,115,22,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* Decorative O */
+  .hero-o {
+    position: absolute;
+    font-family: var(--font-display);
+    font-size: 60vw;
+    font-weight: 700;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(249,115,22,0.06);
+    line-height: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  /* Ember particles */
+  .embers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .ember {
+    position: absolute;
+    bottom: -10px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: rise var(--duration, 4s) var(--delay, 0s) infinite ease-out;
+    box-shadow: 0 0 6px var(--accent), 0 0 12px var(--accent);
+    opacity: 0;
+  }
+
+  @keyframes rise {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+    10% { opacity: 0.8; }
+    50% { transform: translateY(-40vh) translateX(var(--drift, 20px)) scale(0.7); opacity: 0.4; }
+    100% { transform: translateY(-80vh) translateX(var(--drift2, 40px)) scale(0); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 1200px;
+    padding: 0 24px;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+  }
+
+  .hero-headline {
+    font-family: var(--font-display);
+    font-size: clamp(72px, 14vw, 200px);
+    font-weight: 700;
+    line-height: 0.9;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    transform-origin: center top;
+    opacity: 0;
+  }
+
+  .hero-headline .accent-line {
+    display: block;
+    background: linear-gradient(135deg, var(--accent) 0%, #fbbf24 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-tagline {
+    font-family: var(--font-body);
+    font-size: clamp(16px, 2.5vw, 22px);
+    color: var(--muted);
+    margin-top: 32px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+    opacity: 0;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 48px;
+    flex-wrap: wrap;
+    opacity: 0;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    color: var(--bg);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 16px;
+    padding: 18px 40px;
+    border-radius: 8px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 0 rgba(249,115,22,0);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 60px rgba(249,115,22,0.5);
+  }
+
+  .btn-primary:hover::before { opacity: 1; }
+
+  .hero-note {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hero-note::before {
+    content: '✓';
+    color: var(--accent);
+  }
+
+  /* ===================== STATS STRIP ===================== */
+  #stats {
+    background: var(--surface);
+    border-top: 1px solid rgba(249,115,22,0.1);
+    border-bottom: 1px solid rgba(249,115,22,0.1);
+    padding: 60px 48px;
+  }
+
+  .stats-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(249,115,22,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .stat-item {
+    background: var(--surface);
+    padding: 40px 32px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+
+  /* ===================== DOR ===================== */
+  #dor {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 64px;
+  }
+
+  /* Split text strikethrough */
+  .split-text-container {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5.5vw, 64px);
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin-bottom: 64px;
+  }
+
+  .word-pessoal {
+    position: relative;
+    display: inline-block;
+    color: var(--muted);
+  }
+
+  .strikethrough-line {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    height: 3px;
+    width: 0%;
+    background: var(--accent);
+    transform: translateY(-50%);
+    transform-origin: left center;
+  }
+
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .pain-card {
+    background: var(--surface);
+    border: 1px solid rgba(249,115,22,0.08);
+    border-radius: 16px;
+    padding: 40px 32px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pain-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .pain-card:hover::before { transform: scaleX(1); }
+
+  .pain-card:hover {
+    border-color: rgba(249,115,22,0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .pain-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .pain-title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .pain-desc {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ===================== ANTES/DEPOIS ===================== */
+  #antes-depois-wrapper {
+    position: relative;
+  }
+
+  #antes-depois {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .ad-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 48px;
+    display: flex;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+  }
+
+  .ad-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .ad-label {
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  #ad-before .ad-label { color: #ef4444; }
+  #ad-after .ad-label { color: var(--accent); }
+
+  /* Phone mockup */
+  .phone-mockup {
+    width: 220px;
+    height: 420px;
+    background: #1a1a1a;
+    border-radius: 36px;
+    border: 2px solid #333;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+  }
+
+  .phone-screen {
+    position: absolute;
+    inset: 8px;
+    background: #111;
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .phone-status {
+    height: 28px;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+  }
+
+  .phone-status-time {
+    font-size: 10px;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .wa-header {
+    background: #128C7E;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .wa-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #25D366;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .wa-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .wa-messages {
+    flex: 1;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow: hidden;
+  }
+
+  .wa-msg {
+    background: #202c33;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 9px;
+    color: #e9edef;
+    max-width: 75%;
+    line-height: 1.4;
+    position: relative;
+  }
+
+  .wa-msg.sent {
+    background: #005c4b;
+    align-self: flex-end;
+    border-radius: 8px 8px 2px 8px;
+  }
+
+  .wa-msg.received {
+    align-self: flex-start;
+    border-radius: 8px 8px 8px 2px;
+  }
+
+  .msg-time { font-size: 7px; color: #8696a0; margin-top: 2px; }
+
+  /* Chaos indicators */
+  .chaos-overlay {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    pointer-events: none;
+  }
+
+  .notif-badge {
+    background: #ef4444;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 20px;
+    white-space: nowrap;
+    animation: pulse-badge 1.5s infinite ease-in-out;
+  }
+
+  @keyframes pulse-badge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Orbitta organized phone */
+  .orb-header {
+    background: linear-gradient(135deg, #1a0e00, #2a1500);
+    border-bottom: 1px solid rgba(249,115,22,0.3);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .orb-logo-small {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+
+  .orb-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 6px #22c55e;
+  }
+
+  .orb-queue {
+    flex: 1;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .queue-item {
+    background: rgba(249,115,22,0.08);
+    border: 1px solid rgba(249,115,22,0.15);
+    border-radius: 6px;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .queue-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .queue-info { flex: 1; min-width: 0; }
+
+  .queue-name { font-size: 8px; color: var(--text); font-weight: 600; }
+  .queue-msg { font-size: 7px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .queue-badge-green {
+    background: rgba(34,197,94,0.2);
+    color: #22c55e;
+    font-size: 7px;
+    padding: 2px 5px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  /* AD divider line */
+  .ad-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+    transform-origin: top center;
+    scaleY: 0;
+  }
+
+  .ad-vs {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  .ad-title-block {
+    text-align: center;
+  }
+
+  .ad-main-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  #ad-before .ad-main-title { color: #ef4444; }
+  #ad-after .ad-main-title { color: var(--accent); }
+
+  .ad-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* ===================== FEATURES HORIZONTAL ===================== */
+  #features-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  #features-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .features-header {
+    padding: 0 48px;
+    margin-bottom: 48px;
+  }
+
+  .features-track {
+    display: flex;
+    gap: 24px;
+    padding: 0 48px;
+    will-change: transform;
+  }
+
+  .feature-card {
+    min-width: 300px;
+    background: var(--surface);
+    border: 1px solid rgba(249,115,22,0.1);
+    border-radius: 20px;
+    padding: 40px 32px;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .feature-card:hover::after { transform: scaleX(1); }
+  .feature-card:hover {
+    border-color: rgba(249,115,22,0.25);
+    box-shadow: 0 0 60px rgba(249,115,22,0.08);
+  }
+
+  .feature-icon-wrap {
+    width: 56px;
+    height: 56px;
+    background: rgba(249,115,22,0.1);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(249,115,22,0.2);
+  }
+
+  .feature-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .feature-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .feature-tag {
+    display: inline-block;
+    margin-top: 20px;
+    background: rgba(249,115,22,0.1);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+
+  /* ===================== COMO FUNCIONA ===================== */
+  #como-funciona {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 64px;
+    position: relative;
+  }
+
+  .steps-grid::before {
+    content: '';
+    position: absolute;
+    top: 48px;
+    left: 16.66%;
+    right: 16.66%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .step-item {
+    padding: 0 40px;
+    text-align: center;
+  }
+
+  .step-number {
+    font-family: var(--font-display);
+    font-size: 80px;
+    font-weight: 700;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(249,115,22,0.3);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .step-num-inner {
+    display: block;
+  }
+
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ===================== DEPOIMENTOS ===================== */
+  #depoimentos {
+    padding: 120px 48px;
+    background: var(--surface);
+  }
+
+  .depoimentos-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 64px;
+  }
+
+  .testimonial-card {
+    background: var(--bg);
+    border: 1px solid rgba(249,115,22,0.1);
+    border-radius: 20px;
+    padding: 40px 32px;
+    transform: perspective(800px) rotateY(15deg);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .testimonial-card:hover {
+    border-color: rgba(249,115,22,0.25);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .stars {
+    color: var(--accent);
+    font-size: 16px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+
+  .testimonial-text {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.8;
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+
+  .testimonial-text::before { content: '"'; color: var(--accent); font-size: 24px; line-height: 0; }
+  .testimonial-text::after { content: '"'; color: var(--accent); font-size: 24px; line-height: 0; }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .author-name {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .author-role {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ===================== PREÇO ===================== */
+  #preco {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .preco-anchor {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 48px;
+    font-size: 14px;
+    color: #ef4444;
+  }
+
+  .preco-anchor s { opacity: 0.6; }
+  .preco-anchor strong { color: var(--accent); }
+  .preco-anchor-arrow {
+    color: var(--accent);
+    font-size: 20px;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 16px;
+  }
+
+  .pricing-card {
+    background: var(--surface);
+    border: 1px solid rgba(249,115,22,0.1);
+    border-radius: 20px;
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    transform: translateY(60px);
+    opacity: 0;
+  }
+
+  .pricing-card.featured {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, #1a0c00 0%, var(--surface) 100%);
+    box-shadow: 0 0 60px rgba(249,115,22,0.15), 0 0 120px rgba(249,115,22,0.05);
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+
+  .pricing-plan {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .pricing-price {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .pricing-price sup {
+    font-size: 24px;
+    vertical-align: super;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .pricing-price-period {
+    font-size: 14px;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-weight: 400;
+    margin-top: 4px;
+    margin-bottom: 32px;
+  }
+
+  .pricing-divider {
+    height: 1px;
+    background: rgba(249,115,22,0.1);
+    margin-bottom: 28px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .pricing-features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text);
+    opacity: 0.85;
+  }
+
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .btn-pricing {
+    display: block;
+    text-align: center;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-pricing-outline {
+    border: 2px solid rgba(249,115,22,0.3);
+    color: var(--accent);
+  }
+
+  .btn-pricing-outline:hover {
+    border-color: var(--accent);
+    background: rgba(249,115,22,0.05);
+  }
+
+  .btn-pricing-fill {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: var(--bg);
+    box-shadow: 0 8px 30px rgba(249,115,22,0.3);
+  }
+
+  .btn-pricing-fill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 50px rgba(249,115,22,0.5);
+  }
+
+  /* ===================== FINAL CTA ===================== */
+  #final-cta {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    padding: 120px 48px;
+    background: linear-gradient(135deg, #1a0800 0%, var(--bg) 50%, #1a0800 100%);
+  }
+
+  #final-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(249,115,22,0.12) 0%, transparent 70%);
+  }
+
+  .final-cta-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+  }
+
+  .final-cta-title {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text);
+    line-height: 0.95;
+    margin-bottom: 24px;
+  }
+
+  .final-cta-title .accent-line {
+    display: block;
+    background: linear-gradient(135deg, var(--accent), #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .final-cta-sub {
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  .final-cta-notes {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+
+  .final-note {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .final-note::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ===================== FOOTER ===================== */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid rgba(249,115,22,0.08);
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 2px;
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 32px;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.3s ease;
+  }
+
+  .footer-links a:hover { color: var(--accent); }
+
+  .footer-copy {
+    font-size: 12px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* ===================== UTILITIES ===================== */
+  .text-accent { color: var(--accent); }
+  .text-muted { color: var(--muted); }
+
+  .glow-text {
+    text-shadow: 0 0 40px rgba(249,115,22,0.5), 0 0 80px rgba(249,115,22,0.2);
+  }
+
+  .orange-glow {
+    box-shadow: 0 0 60px rgba(249,115,22,0.2), 0 0 120px rgba(249,115,22,0.1);
+  }
+
+  /* ===================== SCROLL INDICATOR ===================== */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: bounce 2s infinite ease-in-out;
+  }
+
+  .scroll-indicator-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .pain-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr; gap: 48px; }
+    .steps-grid::before { display: none; }
+    .ad-container { flex-direction: column; }
+    footer { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+  }
+
+  /* Orbitta glow effect on right side */
+  #ad-after .phone-mockup {
+    box-shadow: 0 0 0 1px rgba(249,115,22,0.3), 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(249,115,22,0.15);
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 12H5M12 5l-7 7 7 7"/>
+    </svg>
+    Voltar ao início
+  </a>
+  <a href="#" class="nav-logo">ORBITT<span>A</span></a>
+  <a href="#testar" class="nav-cta">Testar 7 dias grátis</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-o">O</div>
+
+  <!-- Embers -->
+  <div class="embers" id="embers"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">CRM + WhatsApp Multi-atendente para PMEs</p>
+    <h1 class="hero-headline" id="hero-headline">
+      <span>SEU WHATSAPP</span>
+      <span class="accent-line glow-text">NÃO ESCALA.</span>
+    </h1>
+    <p class="hero-tagline" id="hero-tagline">
+      Você construiu um negócio.<br>Mas virou escravo do WhatsApp.
+    </p>
+    <div class="hero-cta-group" id="hero-cta">
+      <a href="#testar" class="btn-primary">
+        ⚡ Testar 7 dias grátis
+      </a>
+      <span class="hero-note">Sem cartão de crédito</span>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Rolar</span>
+    <div class="scroll-indicator-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <span class="stat-number" data-target="500" data-prefix="+" data-suffix="">0</span>
+      <span class="stat-label">PMEs já usam Orbitta</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="197" data-prefix="R$" data-suffix="/mês">R$0</span>
+      <span class="stat-label">vs R$950 da concorrência</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="1" data-prefix="" data-suffix=" dia">0</span>
+      <span class="stat-label">Para configurar tudo</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="30" data-prefix="" data-suffix=" min">0</span>
+      <span class="stat-label">Para treinar sua equipe</span>
+    </div>
+  </div>
+</section>
+
+<!-- DOR -->
+<section id="dor">
+  <p class="section-label">O Problema</p>
+  <div class="split-text-container" id="split-text">
+    <span>Seu WhatsApp </span><span class="word-pessoal">pessoal<span class="strikethrough-line" id="strikethrough"></span></span><span> não escala.</span>
+  </div>
+  <p class="section-sub">
+    Roberto, a gente sabe como é. Você responde cliente, atende fornecedor, ainda cobra no mesmo número. Não tem como crescer assim.
+  </p>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <span class="pain-icon">🔒</span>
+      <h3 class="pain-title">Não consegue delegar</h3>
+      <p class="pain-desc">Tudo depende de você. Funcionário precisa do seu celular pra responder cliente? Isso não é empresa, é cilada. A qualquer hora você está travado.</p>
+    </div>
+    <div class="pain-card">
+      <span class="pain-icon">💸</span>
+      <h3 class="pain-title">Clientes indo embora</h3>
+      <p class="pain-desc">Cliente manda mensagem às 14h, você vê às 18h. Já foi. Ele foi na concorrência. Cada mensagem não respondida é dinheiro jogado fora.</p>
+    </div>
+    <div class="pain-card">
+      <span class="pain-icon">😰</span>
+      <h3 class="pain-title">Vida pessoal misturada</h3>
+      <p class="pain-desc">Férias? Sábado de manhã? Não existe. O WhatsApp toca a qualquer hora. Sua família sabe o que é competir com notificação de cliente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ANTES / DEPOIS -->
+<div id="antes-depois-wrapper" style="height: 400vh;">
+  <section id="antes-depois">
+    <div class="ad-container">
+
+      <!-- BEFORE -->
+      <div class="ad-side" id="ad-before">
+        <div class="ad-title-block">
+          <p class="ad-label">ANTES</p>
+          <h3 class="ad-main-title">WhatsApp Pessoal</h3>
+          <p class="ad-desc">Caos, confusão, clientes sem resposta</p>
+        </div>
+        <div class="phone-mockup" id="phone-chaos">
+          <div class="phone-screen">
+            <div class="phone-status">
+              <span class="phone-status-time">09:47</span>
+            </div>
+            <div class="wa-header">
+              <div class="wa-avatar">W</div>
+              <div>
+                <div class="wa-name">WhatsApp</div>
+              </div>
+            </div>
+            <div class="wa-messages">
+              <div class="wa-msg received">
+                Oi, quanto fica o freio?
+                <div class="msg-time">08:12</div>
+              </div>
+              <div class="wa-msg received">
+                Ei me responde!
+                <div class="msg-time">08:45</div>
+              </div>
+              <div class="wa-msg sent">
+                Olá! R$280 na mão de obra
+                <div class="msg-time">09:10</div>
+              </div>
+              <div class="wa-msg received">
+                Você faz revisão?
+                <div class="msg-time">09:11</div>
+              </div>
+              <div class="wa-msg received">
+                Meu carro tá fazendo barulho
+                <div class="msg-time">09:22</div>
+              </div>
+              <div class="wa-msg received">
+                Alô???
+                <div class="msg-time">09:38</div>
+              </div>
+            </div>
+          </div>
+          <div class="chaos-overlay">
+            <div class="notif-badge">47 não lidas</div>
+            <div class="notif-badge">⚠️ 3 urgentes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIVIDER -->
+      <div style="position: relative; width: 2px; align-self: stretch; flex-shrink: 0;">
+        <div class="ad-divider" id="ad-divider"></div>
+        <div class="ad-vs" id="ad-vs">VS</div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="ad-side" id="ad-after">
+        <div class="ad-title-block">
+          <p class="ad-label">DEPOIS</p>
+          <h3 class="ad-main-title">Orbitta</h3>
+          <p class="ad-desc">Organizado, escalável, sua equipe no controle</p>
+        </div>
+        <div class="phone-mockup" id="phone-orbitta">
+          <div class="phone-screen">
+            <div class="phone-status">
+              <span class="phone-status-time">09:47</span>
+            </div>
+            <div class="orb-header">
+              <span class="orb-logo-small">ORBITTA</span>
+              <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#22c55e;">
+                <div class="orb-status-dot"></div>
+                3 online
+              </div>
+            </div>
+            <div class="orb-queue">
+              <div style="font-size:9px;color:var(--muted);padding:4px 0;font-weight:600;">FILA DE ATENDIMENTO</div>
+              <div class="queue-item">
+                <div class="queue-avatar">JR</div>
+                <div class="queue-info">
+                  <div class="queue-name">João Roberto</div>
+                  <div class="queue-msg">Quanto fica o freio?</div>
+                </div>
+                <div class="queue-badge-green">Ana</div>
+              </div>
+              <div class="queue-item">
+                <div class="queue-avatar">MC</div>
+                <div class="queue-info">
+                  <div class="queue-name">Maria Conceição</div>
+                  <div class="queue-msg">Revisão disponível?</div>
+                </div>
+                <div class="queue-badge-green">Pedro</div>
+              </div>
+              <div class="queue-item">
+                <div class="queue-avatar">FS</div>
+                <div class="queue-info">
+                  <div class="queue-name">Felipe Santos</div>
+                  <div class="queue-msg">Preciso agendar</div>
+                </div>
+                <div style="background:rgba(249,115,22,0.2);color:var(--accent);font-size:7px;padding:2px 5px;border-radius:10px;font-weight:600;">Aguard.</div>
+              </div>
+              <div style="margin-top:8px;padding:8px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:6px;font-size:8px;color:#22c55e;text-align:center;">
+                ✓ Tempo médio: 2min resposta
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- FEATURES HORIZONTAL -->
+<div id="features-wrapper" style="height: 250vh;">
+  <div id="features-sticky">
+    <div class="features-header">
+      <p class="section-label">O que você ganha</p>
+      <h2 class="section-title">Tudo que sua empresa precisa.</h2>
+    </div>
+    <div class="features-track" id="features-track">
+      <div class="feature-card">
+        <div class="feature-icon-wrap">👥</div>
+        <h3 class="feature-title">Multi-atendente</h3>
+        <p class="feature-desc">Sua equipe toda atende pelo mesmo número. Cada um no seu atendimento. Chega de passar celular na mão.</p>
+        <span class="feature-tag">Incluso em todos</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">📢</div>
+        <h3 class="feature-title">Disparo em massa</h3>
+        <p class="feature-desc">Manda promoção, lembrete de consulta, confirmação de agendamento pra toda sua base de uma vez só.</p>
+        <span class="feature-tag">Até 10k contatos</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">📋</div>
+        <h3 class="feature-title">CRM Simples</h3>
+        <p class="feature-desc">Histórico de cada cliente na palma da mão. Sabe quantas vezes o João veio, o que comprou, o que deve.</p>
+        <span class="feature-tag">Sem planilha</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">⏱️</div>
+        <h3 class="feature-title">Filas de Atendimento</h3>
+        <p class="feature-desc">Organiza quem tá esperando, quem tá sendo atendido. Nenhum cliente cai no vácuo nunca mais.</p>
+        <span class="feature-tag">Tempo real</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">⚡</div>
+        <h3 class="feature-title">Respostas Rápidas</h3>
+        <p class="feature-desc">Cria templates das perguntas que mais aparecem. Um atalho e resposta enviada. Poupa horas por dia.</p>
+        <span class="feature-tag">Infinitas</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">📊</div>
+        <h3 class="feature-title">Relatórios</h3>
+        <p class="feature-desc">Vê quem atendeu mais, tempo de resposta, satisfação. Sabe o que acontece no seu negócio quando você não tá olhando.</p>
+        <span class="feature-tag">Diário</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona">
+  <p class="section-label">É Simples Assim</p>
+  <h2 class="section-title">1 dia pra estar no ar.</h2>
+  <div class="steps-grid">
+    <div class="step-item">
+      <div class="step-number"><span class="step-num-inner" data-step="1">01</span></div>
+      <h3 class="step-title">Conecta o número</h3>
+      <p class="step-desc">Escaneia o QR Code. Pronto. Seu WhatsApp comercial está dentro da Orbitta. Não muda número, não perde histórico.</p>
+    </div>
+    <div class="step-item">
+      <div class="step-number"><span class="step-num-inner" data-step="2">02</span></div>
+      <h3 class="step-title">Adiciona a equipe</h3>
+      <p class="step-desc">Cadastra seus atendentes, define quem vê o quê. Em 30 minutos todo mundo já sabe usar. Sério.</p>
+    </div>
+    <div class="step-item">
+      <div class="step-number"><span class="step-num-inner" data-step="3">03</span></div>
+      <h3 class="step-title">Começa a escalar</h3>
+      <p class="step-desc">Cliente chega, vai pra fila, atendente pega, resolve. Você vê tudo no dashboard. Relaxa de verdade pela primeira vez.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section id="depoimentos">
+  <div class="depoimentos-inner">
+    <p class="section-label">Quem já usa</p>
+    <h2 class="section-title">Dono de PME fala com dono de PME.</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card" id="test-1">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">
+          Minha oficina tinha 2 funcionários mas só eu respondia cliente. Agora os dois atendem e eu só olho o relatório. Nunca mais fiquei preso no celular na hora de fazer serviço.
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background: linear-gradient(135deg, #f97316, #ea580c);">RA</div>
+          <div>
+            <div class="author-name">Roberto Alves</div>
+            <div class="author-role">Oficina Mecânica — Campinas, SP</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card" id="test-2">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">
+          Na ótica eu precisava confirmar consulta, mandar promoção, responder dúvida. Era uma loucura. Agora disparo lembrete pras 200 consultas do mês de uma vez. Economizo umas 3 horas por semana fácil.
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">CM</div>
+          <div>
+            <div class="author-name">Cláudia Mendes</div>
+            <div class="author-role">Ótica Premium — Belo Horizonte, MG</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card" id="test-3">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">
+          Sábado era meu pior dia. Agendamento, confirmação, cliente sumindo. Hoje minha recepcionista cuida de tudo pela Orbitta e eu faço o que eu gosto: trabalhar no salão. R$197 é o melhor investimento que fiz.
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">FC</div>
+          <div>
+            <div class="author-name">Fernanda Costa</div>
+            <div class="author-role">Salão de Beleza — Florianópolis, SC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREÇO -->
+<section id="preco">
+  <p class="section-label">Investimento</p>
+  <h2 class="section-title">1 cliente a mais já paga.</h2>
+  <div class="preco-anchor">
+    <span>IA Conecta cobra <s>R$950/mês</s></span>
+    <span class="preco-anchor-arrow">→</span>
+    <span>Orbitta entrega o essencial por <strong>R$197/mês</strong></span>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card" id="pricing-1">
+      <div class="pricing-plan">Starter</div>
+      <div class="pricing-price"><sup>R$</sup>197</div>
+      <div class="pricing-price-period">por mês · anual</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>3 atendentes</li>
+        <li>5.000 disparos/mês</li>
+        <li>CRM básico</li>
+        <li>Filas de atendimento</li>
+        <li>50 respostas rápidas</li>
+        <li>Relatórios semanais</li>
+      </ul>
+      <a href="#testar" class="btn-pricing btn-pricing-outline">Testar grátis</a>
+    </div>
+    <div class="pricing-card featured" id="pricing-2">
+      <div class="pricing-badge">Mais vendido</div>
+      <div class="pricing-plan">Profissional</div>
+      <div class="pricing-price"><sup>R$</sup>297</div>
+      <div class="pricing-price-period">por mês · anual</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>10 atendentes</li>
+        <li>20.000 disparos/mês</li>
+        <li>CRM completo + tags</li>
+        <li>Filas + automações</li>
+        <li>Respostas ilimitadas</li>
+        <li>Relatórios diários</li>
+        <li>API integração</li>
+        <li>Suporte prioritário</li>
+      </ul>
+      <a href="#testar" class="btn-pricing btn-pricing-fill">Testar grátis</a>
+    </div>
+    <div class="pricing-card" id="pricing-3">
+      <div class="pricing-plan">Enterprise</div>
+      <div class="pricing-price"><sup>R$</sup>397</div>
+      <div class="pricing-price-period">por mês · anual</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>Atendentes ilimitados</li>
+        <li>100.000 disparos/mês</li>
+        <li>CRM + funil de vendas</li>
+        <li>Chatbot com IA</li>
+        <li>Multi-empresas</li>
+        <li>Dashboard gerencial</li>
+        <li>Integrações avançadas</li>
+        <li>Gerente de conta dedicado</li>
+      </ul>
+      <a href="#testar" class="btn-pricing btn-pricing-outline">Testar grátis</a>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="final-cta">
+  <div class="final-cta-inner">
+    <h2 class="final-cta-title">
+      <span>CHEGA DE</span>
+      <span class="accent-line">ESCRAVIDÃO.</span>
+    </h2>
+    <p class="final-cta-sub">
+      Teste Orbitta por 7 dias grátis. Sem cartão, sem burocracia.<br>
+      Configure hoje, respire amanhã.
+    </p>
+    <a href="#testar" id="testar" class="btn-primary" style="display:inline-block; font-size:18px; padding:22px 56px;">
+      ⚡ Começar agora — 7 dias grátis
+    </a>
+    <div class="final-cta-notes">
+      <span class="final-note">Sem cartão de crédito</span>
+      <span class="final-note">Cancela quando quiser</span>
+      <span class="final-note">Setup em 1 dia</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ORBITT<span>A</span></div>
+  <div class="footer-links">
+    <a href="#">Termos de Uso</a>
+    <a href="#">Privacidade</a>
+    <a href="#">Suporte</a>
+    <a href="index.html">← Voltar</a>
+  </div>
+  <p class="footer-copy">© 2025 Orbitta Messenger. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+// ==================== LENIS SMOOTH SCROLL ====================
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  smooth: true,
+});
+
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
+
+// Connect Lenis with GSAP ScrollTrigger
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+gsap.ticker.lagSmoothing(0);
+
+// ==================== GSAP SETUP ====================
+gsap.registerPlugin(ScrollTrigger);
+
+// ==================== CUSTOM CURSOR ====================
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+let mouseX = 0, mouseY = 0;
+let ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  gsap.to(cursor, { x: mouseX, y: mouseY, duration: 0.1, ease: 'none' });
+});
+
+function animateRing() {
+  ringX += (mouseX - ringX) * 0.12;
+  ringY += (mouseY - ringY) * 0.12;
+  gsap.set(cursorRing, { x: ringX, y: ringY });
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+const hoverables = document.querySelectorAll('a, button, .pain-card, .feature-card, .testimonial-card, .pricing-card, .btn-primary');
+hoverables.forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+});
+
+// ==================== EMBER PARTICLES ====================
+(function createEmbers() {
+  const container = document.getElementById('embers');
+  const count = 30;
+  for (let i = 0; i < count; i++) {
+    const e = document.createElement('div');
+    e.className = 'ember';
+    const left = Math.random() * 100;
+    const duration = 3 + Math.random() * 4;
+    const delay = Math.random() * 5;
+    const drift = (Math.random() - 0.5) * 80;
+    const drift2 = (Math.random() - 0.5) * 120;
+    e.style.cssText = `
+      left: ${left}%;
+      --duration: ${duration}s;
+      --delay: ${delay}s;
+      --drift: ${drift}px;
+      --drift2: ${drift2}px;
+      width: ${1 + Math.random() * 3}px;
+      height: ${1 + Math.random() * 3}px;
+    `;
+    container.appendChild(e);
+  }
+})();
+
+// ==================== NAV SCROLL ====================
+const navbar = document.getElementById('navbar');
+ScrollTrigger.create({
+  start: 'top -80px',
+  onEnter: () => navbar.classList.add('scrolled'),
+  onLeaveBack: () => navbar.classList.remove('scrolled'),
+});
+
+// ==================== HERO ANIMATIONS ====================
+const heroTl = gsap.timeline({ delay: 0.3 });
+heroTl
+  .to('.hero-eyebrow', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', from: { y: 30 } })
+  .fromTo('#hero-headline', { opacity: 0, y: 60, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: 'power3.out' }, '-=0.4')
+  .fromTo('#hero-tagline', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+  .fromTo('#hero-cta', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5');
+
+// HERO PIN & SCALE DOWN
+gsap.to('#hero-headline', {
+  scale: 0.55,
+  opacity: 0,
+  y: -80,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: 1.5,
+  }
+});
+
+gsap.to('.hero-o', {
+  scale: 1.3,
+  opacity: 0,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: 2,
+  }
+});
+
+// ==================== STATS COUNTERS ====================
+const statNumbers = document.querySelectorAll('.stat-number');
+
+statNumbers.forEach(el => {
+  const target = parseInt(el.dataset.target);
+  const prefix = el.dataset.prefix || '';
+  const suffix = el.dataset.suffix || '';
+
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 85%',
+    once: true,
+    onEnter: () => {
+      gsap.to({ val: 0 }, {
+        val: target,
+        duration: 2,
+        ease: 'power2.out',
+        onUpdate: function() {
+          el.textContent = prefix + Math.round(this.targets()[0].val) + suffix;
+        }
+      });
+    }
+  });
+});
+
+// ==================== STRIKETHROUGH ====================
+const strikethrough = document.getElementById('strikethrough');
+ScrollTrigger.create({
+  trigger: '#split-text',
+  start: 'top 70%',
+  once: true,
+  onEnter: () => {
+    gsap.to(strikethrough, {
+      width: '100%',
+      duration: 0.8,
+      ease: 'power3.inOut',
+    });
+    gsap.to('.word-pessoal', {
+      color: '#ef4444',
+      duration: 0.5,
+      delay: 0.4,
+    });
+  }
+});
+
+// Pain cards stagger
+gsap.fromTo('.pain-card', {
+  opacity: 0, y: 50,
+}, {
+  opacity: 1, y: 0,
+  duration: 0.8,
+  ease: 'power3.out',
+  stagger: 0.15,
+  scrollTrigger: {
+    trigger: '.pain-grid',
+    start: 'top 75%',
+  }
+});
+
+// ==================== ANTES/DEPOIS PINNED ====================
+const adWrapper = document.getElementById('antes-depois-wrapper');
+const adBefore = document.getElementById('ad-before');
+const adAfter = document.getElementById('ad-after');
+const adDivider = document.getElementById('ad-divider');
+const adVs = document.getElementById('ad-vs');
+
+const adTl = gsap.timeline({
+  scrollTrigger: {
+    trigger: adWrapper,
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: 1,
+  }
+});
+
+adTl
+  .fromTo(adDivider, { scaleY: 0 }, { scaleY: 1, duration: 0.3 }, 0)
+  .fromTo(adVs, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.2 }, 0.15)
+  .to(adBefore, { opacity: 0, x: -80, duration: 0.4 }, 0.3)
+  .fromTo(adAfter, { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: 0.4 }, 0.3)
+  .to('#phone-orbitta', {
+    boxShadow: '0 0 0 1px rgba(249,115,22,0.5), 0 40px 80px rgba(0,0,0,0.6), 0 0 80px rgba(249,115,22,0.25)',
+    duration: 0.3,
+  }, 0.5);
+
+// ==================== FEATURES HORIZONTAL SCROLL ====================
+const track = document.getElementById('features-track');
+const featuresWrapper = document.getElementById('features-wrapper');
+
+gsap.to(track, {
+  x: () => -(track.scrollWidth - track.parentElement.clientWidth + 96),
+  ease: 'none',
+  scrollTrigger: {
+    trigger: featuresWrapper,
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: 1,
+    invalidateOnRefresh: true,
+  }
+});
+
+// ==================== STEPS ANIMATION ====================
+gsap.fromTo('.step-item', {
+  opacity: 0, y: 60,
+}, {
+  opacity: 1, y: 0,
+  duration: 0.8,
+  ease: 'power3.out',
+  stagger: 0.2,
+  scrollTrigger: {
+    trigger: '.steps-grid',
+    start: 'top 75%',
+  }
+});
+
+// Animate step numbers stroke color
+document.querySelectorAll('.step-num-inner').forEach((el, i) => {
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 80%',
+    once: true,
+    onEnter: () => {
+      gsap.to(el.parentElement, {
+        '-webkit-text-stroke-color': 'rgba(249,115,22,0.8)',
+        duration: 0.6,
+        delay: i * 0.2,
+        ease: 'power2.out',
+      });
+    }
+  });
+});
+
+// ==================== TESTIMONIALS ====================
+const testimonials = document.querySelectorAll('.testimonial-card');
+testimonials.forEach((card, i) => {
+  gsap.to(card, {
+    opacity: 1,
+    rotateY: 0,
+    duration: 0.9,
+    ease: 'power3.out',
+    delay: i * 0.15,
+    scrollTrigger: {
+      trigger: card,
+      start: 'top 80%',
+    }
+  });
+});
+
+// ==================== PRICING CARDS ====================
+const pricingCards = document.querySelectorAll('.pricing-card');
+pricingCards.forEach((card, i) => {
+  gsap.to(card, {
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    ease: 'back.out(1.4)',
+    delay: i * 0.15,
+    scrollTrigger: {
+      trigger: '#preco',
+      start: 'top 75%',
+    }
+  });
+});
+
+// ==================== FINAL CTA REVEAL ====================
+gsap.fromTo('.final-cta-inner', {
+  opacity: 0, scale: 0.9,
+}, {
+  opacity: 1, scale: 1,
+  duration: 1.0,
+  ease: 'power3.out',
+  scrollTrigger: {
+    trigger: '#final-cta',
+    start: 'top 75%',
+  }
+});
+
+// ==================== SECTION TITLES REVEAL ====================
+gsap.utils.toArray('.section-title').forEach(el => {
+  gsap.fromTo(el, {
+    opacity: 0, y: 40,
+  }, {
+    opacity: 1, y: 0,
+    duration: 0.8,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 80%',
+    }
+  });
+});
+
+gsap.utils.toArray('.section-label').forEach(el => {
+  gsap.fromTo(el, {
+    opacity: 0, x: -20,
+  }, {
+    opacity: 1, x: 0,
+    duration: 0.6,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 85%',
+    }
+  });
+});
+
+// ==================== HERO EYEBROW INIT ====================
+gsap.set('.hero-eyebrow', { y: 30 });
+
+// ==================== ORANGE GLOW PULSE on featured card ====================
+gsap.to('.pricing-card.featured', {
+  boxShadow: '0 0 80px rgba(249,115,22,0.25), 0 0 160px rgba(249,115,22,0.1)',
+  repeat: -1,
+  yoyo: true,
+  duration: 2.5,
+  ease: 'sine.inOut',
+});
+
+// ==================== HERO FLOATING GLOW ====================
+gsap.to('.hero-glow', {
+  scale: 1.3,
+  opacity: 0.7,
+  repeat: -1,
+  yoyo: true,
+  duration: 3,
+  ease: 'sine.inOut',
+});
+
+console.log('🔥 Orbitta Motion — all systems operational');
+</script>
+</body>
+</html>
