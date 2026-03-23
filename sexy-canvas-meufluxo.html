@@ -115,8 +115,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 
 .tele-btn{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;border:none;border-radius:30px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(16,185,129,.35);transition:.2s;font-family:'Inter',sans-serif;z-index:200}
 .tele-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(16,185,129,.45)}
-.hero-lp-btn{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:#fff;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(16,185,129,.35);transition:.2s;margin-top:18px;border:1px solid rgba(255,255,255,.1)}
-.hero-lp-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(16,185,129,.5)}
+.hero-lp-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.hero-lp-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;transition:.2s;border:1px solid rgba(255,255,255,.15)}
+.hero-lp-btn:hover{transform:translateY(-2px)}
+.hero-lp-btn.dark{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(16,185,129,.35)}
+.hero-lp-btn.dark:hover{box-shadow:0 8px 24px rgba(16,185,129,.5)}
+.hero-lp-btn.clara{background:#f5f0e8;color:#1a1a2e;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.hero-lp-btn.clara:hover{box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.hero-lp-btn.premium{background:linear-gradient(135deg,#575ECF,#7B83FF);color:#fff;box-shadow:0 4px 16px rgba(87,94,207,.4)}
+.hero-lp-btn.premium:hover{box-shadow:0 8px 24px rgba(87,94,207,.6)}
 </style>
 </head>
 <body>
@@ -152,10 +159,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
       <div class="hero-meta-item"><i data-lucide="thermometer" style="width:13px;height:13px"></i> Temperatura: <strong>Frio → Morno</strong></div>
       <div class="hero-meta-item"><i data-lucide="link" style="width:13px;height:13px"></i> Destino: <strong>meufluxo.com.br</strong></div>
     </div>
-    <a href="lp-meu-fluxo.html" target="_blank" class="hero-lp-btn">
-      <i data-lucide="layout" style="width:14px;height:14px"></i>
-      Ver Landing Page
-    </a>
+    <div class="hero-lp-btns">
+      <a href="lp-meu-fluxo.html" target="_blank" class="hero-lp-btn dark">
+        <i data-lucide="moon" style="width:14px;height:14px"></i>
+        LP Dark
+      </a>
+      <a href="lp-meu-fluxo-clara.html" target="_blank" class="hero-lp-btn clara">
+        <i data-lucide="sun" style="width:14px;height:14px"></i>
+        LP Clara
+      </a>
+      <a href="lp-meu-fluxo-premium.html" target="_blank" class="hero-lp-btn premium">
+        <i data-lucide="sparkles" style="width:14px;height:14px"></i>
+        LP Premium
+      </a>
+    </div>
   </div>
 </div>
 
