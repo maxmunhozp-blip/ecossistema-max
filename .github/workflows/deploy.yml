@@ -8,6 +8,7 @@ jobs:
   deploy-vps:
     name: Deploy → VPS
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
@@ -42,32 +43,9 @@ jobs:
               [ -f "$dir/SKILL.md" ] && cp "$dir/SKILL.md" "/opt/skill-data/${id}.md"
             done
 
-  notify-telegram:
-    name: Notifica Telegram
-    runs-on: ubuntu-latest
-    needs: deploy-vps
-    if: always()
-    steps:
-      - name: Envia status do deploy
-        env:
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          STATUS="${{ needs.deploy-vps.result }}"
-          COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -1)
-          if [ "$STATUS" = "success" ]; then
-            TEXT="✅ Deploy concluído — ${COMMIT_MSG}"
-          else
-            TEXT="❌ Deploy falhou — ${COMMIT_MSG}"
-          fi
-          curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
-            -H "Content-Type: application/json" \
-            -d "{\"chat_id\":\"${CHAT_ID}\",\"text\":\"${TEXT}\"}"
-
   deploy-hostinger:
     name: Deploy → Hostinger
     runs-on: ubuntu-latest
-    needs: deploy-vps
     steps:
       - uses: actions/checkout@v4
 
@@ -100,3 +78,27 @@ jobs:
             **/.git*/**
             **/node_modules/**
             .github/**
+
+  notify-telegram:
+    name: Notifica Telegram
+    runs-on: ubuntu-latest
+    needs: [deploy-vps, deploy-hostinger]
+    if: always()
+    steps:
+      - name: Envia status do deploy
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          VPS="${{ needs.deploy-vps.result }}"
+          HST="${{ needs.deploy-hostinger.result }}"
+          COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -1)
+          if [ "$HST" = "success" ]; then
+            VPS_ICON="$([ "$VPS" = "success" ] && echo "✅" || echo "⚠️")"
+            TEXT="${VPS_ICON} VPS | ✅ Hostinger — ${COMMIT_MSG}"
+          else
+            TEXT="❌ Deploy falhou — ${COMMIT_MSG}"
+          fi
+          curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\":\"${CHAT_ID}\",\"text\":\"${TEXT}\"}"
