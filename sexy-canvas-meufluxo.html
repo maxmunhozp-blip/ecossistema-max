@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sexy Canvas — MeuFluxo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1a14;--surface:#0f1f17;--surface-alt:#152a1e;--surface-hover:#1c3626;
+  --border:#1e3d2a;--border-strong:#2a5438;
+  --accent:#10b981;--accent-2:#059669;--accent-dim:rgba(16,185,129,.12);--accent-mid:rgba(16,185,129,.25);
+  --text-dark:#f0fdf4;--text:#d1fae5;--text-muted:#6b9e84;--text-dim:#3a6650;
+  --shadow:0 1px 3px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.2);
+  --shadow-lg:0 4px 24px rgba(0,0,0,.4);
+  --nav-h:56px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+
+.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(13,26,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:24px}
+.nav-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--text-dark);text-decoration:none}
+.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;gap:2px;margin-left:8px}
+.nav-links a{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:.15s}
+.nav-links a:hover{color:var(--text-dark);background:var(--surface-alt)}
+.nav-links a.active{color:var(--accent);background:var(--accent-dim)}
+
+.hero{background:linear-gradient(135deg,#0f1f17 0%,#0d2018 50%,#0f2416 100%);border-bottom:1px solid var(--border);padding:36px 24px 28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-40px;width:360px;height:360px;background:radial-gradient(circle,rgba(16,185,129,.18) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-60px;left:5%;width:280px;height:280px;background:radial-gradient(circle,rgba(5,150,105,.1) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:960px;margin:0 auto}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--accent-dim);color:var(--accent);font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;margin-bottom:14px;border:1px solid var(--accent-mid)}
+.hero h1{font-size:28px;font-weight:800;color:var(--text-dark);margin-bottom:6px;letter-spacing:-.5px}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
+.hero-meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted)}
+.hero-meta-item strong{color:var(--text-dark)}
+
+.tabs-wrap{background:rgba(13,26,20,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:var(--nav-h);z-index:90}
+.tabs{display:flex;padding:0 24px;overflow-x:auto;scrollbar-width:none;max-width:1100px;margin:0 auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:13px 14px;font-size:13px;font-weight:500;color:var(--text-muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:5px}
+.tab:hover{color:var(--text-dark)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+.content{max-width:1100px;margin:0 auto;padding:28px 24px}
+.section{display:none}.section.active{display:block}
+
+.canvas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:32px}
+.canvas-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
+.canvas-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.canvas-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.canvas-title{font-size:13px;font-weight:700;color:var(--text-dark)}
+.canvas-items{list-style:none;display:flex;flex-direction:column;gap:5px}
+.canvas-items li{font-size:12px;color:var(--text);padding:4px 8px;background:var(--surface-alt);border-radius:6px;line-height:1.4}
+.canvas-phrase{font-size:13px;font-style:italic;color:var(--accent);background:var(--accent-dim);border:1px solid var(--accent-mid);padding:8px 12px;border-radius:8px;margin-top:8px}
+
+.copies-section{margin-bottom:36px}
+.copies-trigger-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+.cth-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.cth-name{font-size:17px;font-weight:800;color:var(--text-dark)}
+.cth-meta{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
+.copies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.copy-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;transition:.15s}
+.copy-card:hover{box-shadow:0 0 0 1px rgba(16,185,129,.25),var(--shadow-lg);border-color:var(--accent)}
+.copy-card-header{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.copy-hook{font-size:15px;font-weight:700;color:var(--text-dark);line-height:1.4;margin-bottom:10px}
+.copy-body{font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;margin-bottom:10px}
+.copy-cta-box{background:var(--accent);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:10px;display:inline-block}
+.copy-visual{font-size:11px;color:var(--text-muted);background:var(--surface-alt);padding:6px 10px;border-radius:6px;margin-bottom:12px}
+.copy-footer{display:flex;justify-content:flex-end}
+.btn-copy{padding:7px 14px;background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-muted);transition:.15s;display:flex;align-items:center;gap:5px;font-family:'Inter',sans-serif}
+.btn-copy:hover{background:var(--accent-dim);border-color:var(--accent-mid);color:var(--accent)}
+
+.combos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.combo-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
+.combo-name{font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:6px}
+.combo-tags{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.combo-copies{display:flex;flex-direction:column;gap:8px}
+.combo-copy-item{background:var(--surface-alt);border-radius:8px;padding:10px 12px;cursor:pointer;transition:.15s;font-size:13px;color:var(--text);line-height:1.4}
+.combo-copy-item:hover{background:var(--accent-dim);color:var(--accent)}
+
+.ranking-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.ranking-table th{background:var(--surface-alt);padding:11px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.ranking-table td{padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}
+.ranking-table tr:last-child td{border-bottom:none}
+.rank-badge{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.rb-1{background:#f59e0b}.rb-2{background:#10b981}.rb-3{background:#6366f1}.rb-4{background:#3b82f6}.rb-5{background:#6b7280}
+
+.tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid transparent}
+.tag-ganancia{background:#fefce8;color:#854d0e;border-color:#fef08a}
+.tag-luxuria{background:#fdf2f8;color:#9d174d;border-color:#fbcfe8}
+.tag-inveja{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
+.tag-ira{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+.tag-crianca{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
+.tag-gula{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+.tag-preguica{background:#f0fdf9;color:#065f46;border-color:#a7f3d0}
+.tag-vaidade{background:#f5f3ff;color:#5b21b6;border-color:#ddd6fe}
+.tag-combo{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tag-frio{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.tag-morno{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.tag-quente{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+.tag-sutil{background:#f0fdf4;color:#15803d;border-color:#bbf7d0}
+.tag-moderada{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.tag-agressiva{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+
+.section-title{font-size:18px;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.section-sub{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+.divider{height:1px;background:var(--border);margin:28px 0}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;transition:.3s;opacity:0;pointer-events:none;z-index:1000;display:flex;align-items:center;gap:6px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.tele-btn{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;border:none;border-radius:30px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(16,185,129,.35);transition:.2s;font-family:'Inter',sans-serif;z-index:200}
+.tele-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(16,185,129,.45)}
+.lp-collapse{margin-top:18px}
+.lp-collapse-trigger{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text-muted);padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
+.lp-collapse-trigger:hover{background:rgba(255,255,255,.1);color:#fff}
+.lp-collapse-trigger .chevron{width:14px;height:14px;transition:transform .25s}
+.lp-collapse-trigger.open .chevron{transform:rotate(180deg)}
+.lp-collapse-body{overflow:hidden;max-height:0;transition:max-height .3s ease,opacity .3s ease;opacity:0}
+.lp-collapse-body.open{max-height:200px;opacity:1}
+.hero-lp-btns{display:flex;gap:10px;flex-wrap:wrap;padding-top:12px}
+.hero-lp-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;transition:.2s;border:1px solid rgba(255,255,255,.15)}
+.hero-lp-btn:hover{transform:translateY(-2px)}
+.hero-lp-btn.dark{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(16,185,129,.35)}
+.hero-lp-btn.dark:hover{box-shadow:0 8px 24px rgba(16,185,129,.5)}
+.hero-lp-btn.clara{background:#f5f0e8;color:#1a1a2e;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.hero-lp-btn.clara:hover{box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.hero-lp-btn.premium{background:linear-gradient(135deg,#575ECF,#7B83FF);color:#fff;box-shadow:0 4px 16px rgba(87,94,207,.4)}
+.hero-lp-btn.premium:hover{box-shadow:0 8px 24px rgba(87,94,207,.6)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    Ecossistema Max
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Hub</a>
+    <a href="persona.html">Persona</a>
+    <a href="criativos.html">Criativos</a>
+    <a href="skills.html">Skills</a>
+    <a href="resultado.html">Resultado</a>
+    <a href="sexy-canvas.html">Sexy Canvas</a>
+    <a href="sexy-canvas-tractorpro.html">TractorPRO</a>
+    <a href="sexy-canvas-meufluxo.html" class="active">MeuFluxo</a>
+    <a href="sexy-canvas-orbitta.html">Orbitta</a>
+    <a href="xquads.html">Xquads</a>
+    <a href="terminal.html">Terminal</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><i data-lucide="flame" style="width:12px;height:12px"></i> Sexy Canvas Gerado</div>
+    <h1>MeuFluxo — <em>Canvas Completo</em></h1>
+    <p style="font-size:14px;color:var(--text-muted);margin-top:6px">8 gatilhos × 3 variações = 24 copies prontas para teste + 4 combos + ranking de prioridade</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><i data-lucide="user" style="width:13px;height:13px"></i> Persona: <strong>Lucas Ferreira — TDAH/Neurodivergente</strong></div>
+      <div class="hero-meta-item"><i data-lucide="smartphone" style="width:13px;height:13px"></i> Plataforma: <strong>Instagram + TikTok Orgânico</strong></div>
+      <div class="hero-meta-item"><i data-lucide="thermometer" style="width:13px;height:13px"></i> Temperatura: <strong>Frio → Morno</strong></div>
+      <div class="hero-meta-item"><i data-lucide="link" style="width:13px;height:13px"></i> Destino: <strong>meufluxo.com.br</strong></div>
+    </div>
+    <div class="lp-collapse">
+      <button class="lp-collapse-trigger" onclick="toggleLP(this)">
+        <i data-lucide="layout" style="width:14px;height:14px"></i>
+        Landing Pages (4)
+        <i data-lucide="chevron-down" class="chevron"></i>
+      </button>
+      <div class="lp-collapse-body">
+        <div class="hero-lp-btns">
+          <a href="lp-meu-fluxo.html" target="_blank" class="hero-lp-btn dark">
+            <i data-lucide="moon" style="width:14px;height:14px"></i>
+            LP Dark
+          </a>
+          <a href="lp-meu-fluxo-clara.html" target="_blank" class="hero-lp-btn clara">
+            <i data-lucide="sun" style="width:14px;height:14px"></i>
+            LP Clara
+          </a>
+          <a href="lp-meu-fluxo-premium.html" target="_blank" class="hero-lp-btn premium">
+            <i data-lucide="sparkles" style="width:14px;height:14px"></i>
+            LP Premium
+          </a>
+          <a href="lp-meu-fluxo-motion.html" target="_blank" class="hero-lp-btn" style="background:linear-gradient(135deg,#575ECF,#a78bfa);color:#fff;box-shadow:0 4px 16px rgba(87,94,207,.5)">
+            <i data-lucide="zap" style="width:14px;height:14px"></i>
+            LP Motion
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('canvas')"><i data-lucide="layout-grid" style="width:13px;height:13px"></i> Canvas Persona</button>
+    <button class="tab" onclick="showTab('copies')"><i data-lucide="copy" style="width:13px;height:13px"></i> 24 Copies</button>
+    <button class="tab" onclick="showTab('combos')"><i data-lucide="zap" style="width:13px;height:13px"></i> Combos</button>
+    <button class="tab" onclick="showTab('ranking')"><i data-lucide="bar-chart-2" style="width:13px;height:13px"></i> Ranking</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- CANVAS PERSONA -->
+<div id="tab-canvas" class="section active">
+  <div class="section-title">Canvas da Persona</div>
+  <div class="section-sub">Lucas Ferreira mapeado nos 8 gatilhos do Sexy Canvas</div>
+  <div class="canvas-grid">
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fefce8">💰</div>
+        <span class="canvas-title">Ganância</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Quer: provar que é tão produtivo quanto sente que poderia ser</li>
+        <li>Vantagem: usar o hiperfoco como ferramenta, não como sintoma</li>
+        <li>Retorno esperado: R$19/mês que se paga com um prazo não perdido</li>
+      </ul>
+      <div class="canvas-phrase">"Imagina terminar o dia sabendo exatamente o que eu fiz..."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fdf2f8">💎</div>
+        <span class="canvas-title">Lúxuria</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Desejo: abrir o app de manhã e sentir paz, não ansiedade</li>
+        <li>Experiência irresistível: começar sem o peso de ontem na tela</li>
+        <li>O que faz os olhos brilharem: app que não te julga quando você falha</li>
+      </ul>
+      <div class="canvas-phrase">"Imagina abrir o app e não ter lista de vergonha esperando..."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#f0fdf4">👀</div>
+        <span class="canvas-title">Inveja</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Inveja de: pessoas que parecem conseguir entregar consistentemente</li>
+        <li>Vê outros conquistando: reputação de confiável e organizado</li>
+        <li>Quer que pensem: "ele tem TDAH e ainda assim entrega"</li>
+      </ul>
+      <div class="canvas-phrase">"Por que todo mundo parece conseguir e eu não?"</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fef2f2">🔥</div>
+        <span class="canvas-title">Ira</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Furiosa com: apps que acumulam lista de "atrasado" sem dó</li>
+        <li>Injustiça: "você é desorganizado" quando é o app que é errado</li>
+        <li>Raiva de: sentir culpa toda vez que abre o Notion</li>
+      </ul>
+      <div class="canvas-phrase">"Notion não foi feito pro meu cérebro. Nenhum deles foi."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#eef2ff">⭐</div>
+        <span class="canvas-title">Criança Interior</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Sonho antigo: só querer terminar um dia e sentir que fez algo</li>
+        <li>Simplicidade perdida: época que tarefas eram simples e sem culpa</li>
+        <li>Alegria genuína: check na tarefa e aquela sensação de completude</li>
+      </ul>
+      <div class="canvas-phrase">"Só quero terminar o dia sabendo que fiz pelo menos uma coisa."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fff7ed">🍀</div>
+        <span class="canvas-title">Gula</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Nunca tem o suficiente: reset sem culpa + modo foco + blocos de tempo</li>
+        <li>Consumiria sem parar: qualquer coisa que entenda o cérebro TDAH</li>
+        <li>Abundância que busca: consistência, paz, sensação de controle gentil</li>
+      </ul>
+      <div class="canvas-phrase">"Quero o reset, o foco, as notificações certas e zero julgamento."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#f0fdf9">⚡</div>
+        <span class="canvas-title">Preguiça</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Pagaria pra não ter que fazer: decidir entre 30 tarefas pela manhã</li>
+        <li>Processo que odeia: abrir o app e ter que priorizar do zero</li>
+        <li>Atalho perfeito: abrir e já saber o que fazer agora, sem pensar</li>
+      </ul>
+      <div class="canvas-phrase">"Só me fala o que fazer agora. Uma coisa. Só uma."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#f5f3ff">👑</div>
+        <span class="canvas-title">Vaidade</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Quer ser visto como: alguém que funciona bem mesmo com TDAH</li>
+        <li>Status que busca: provar que neurodivergente pode ser produtivo</li>
+        <li>Alimenta o ego: recomendar o app pro terapeuta e ela aprovar</li>
+      </ul>
+      <div class="canvas-phrase">"Quero que as pessoas saibam que tenho TDAH e ainda assim entrego."</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 24 COPIES -->
+<div id="tab-copies" class="section">
+  <div class="section-title">24 Copies por Gatilho</div>
+  <div class="section-sub">3 variações por gatilho · Instagram / TikTok · Tráfego Frio → Morno</div>
+
+  <!-- GANÂNCIA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fefce8">💰</div>
+      <div>
+        <div class="cth-name">Ganância</div>
+        <div class="cth-meta"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-frio">Frio</span><span class="tag tag-sutil">Sutil</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="ganancia-a">
+        <div class="copy-card-header"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Pessoas com TDAH não são improdutivas. Estão usando a ferramenta errada.</div>
+        <div class="copy-body">Todoist foi feito pra quem consegue ter lista de 50 tarefas e não entrar em colapso.
+
+Notion foi feito pra quem tem paciência pra montar sistema.
+
+Você não falhou nesses apps. Eles falharam com você.
+
+O MeuFluxo foi feito do zero pra funcionar com o jeito que o cérebro TDAH realmente opera: em blocos, sem culpa, só o agora.</div>
+        <div class="copy-cta-box">→ Teste grátis 30 dias · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: tela de Notion com 47 tarefas vs. tela do MeuFluxo com 3. Texto: "Não é você. É o app."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ganancia-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ganancia-b">
+        <div class="copy-card-header"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Prazo perdido com TDAH não é irresponsabilidade. É falta de ferramenta certa.</div>
+        <div class="copy-body">Cada prazo perdido é dinheiro, reputação, ou oportunidade que vai embora.
+
+Não porque você é desorganizado. Porque nenhum app de tarefa foi construído pra como sua cabeça funciona.
+
+O MeuFluxo usa o conceito de Tempo Vivo: 3 blocos por dia, reset sem punição, só o que importa agora.
+
+Seu próximo prazo você entrega.</div>
+        <div class="copy-cta-box">→ Começa grátis · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: notificação "Tarefa entregue no prazo ✓" com fundo verde suave. Texto: "Quando o app entende você, você entrega."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ganancia-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ganancia-c">
+        <div class="copy-card-header"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">R$19/mês. Menos que um café por semana. Mais que qualquer outro app te deu.</div>
+        <div class="copy-body">Você já pagou por Notion, Todoist, Things, e nenhum funcionou de verdade.
+
+Não porque você não se dedicou. Porque não foram feitos pra você.
+
+O MeuFluxo foi.
+
+Feito por quem tem TDAH, pra quem tem TDAH. Com reset diário, sem lista de vergonha, sem te punir quando a tarde foi embora.</div>
+        <div class="copy-cta-box">→ R$19/mês · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: comparativo "Quanto você já gastou em apps que não funcionaram?" com lista. Texto: "Esse foi feito pra você."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ganancia-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- LÚXURIA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fdf2f8">💎</div>
+      <div>
+        <div class="cth-name">Lúxuria</div>
+        <div class="cth-meta"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-frio">Frio</span><span class="tag tag-sutil">Sutil</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="luxuria-a">
+        <div class="copy-card-header"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Imagina abrir o app de manhã e não ter lista de culpa esperando.</div>
+        <div class="copy-body">Sem "3 dias atrasado". Sem "pendente desde segunda". Sem aquela sensação de peso antes do dia nem começar.
+
+Só o que você pode fazer agora. De manhã.
+
+O MeuFluxo reseta a cada bloco de tempo. A tarde é uma nova oportunidade. A noite também.
+
+Isso não é falta de responsabilidade. É como o cérebro TDAH funciona melhor.</div>
+        <div class="copy-cta-box">→ Quero essa paz · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: tela limpa do app com luz suave de manhã. 3 tarefas. Nada mais. Texto: "Bom dia. Aqui está o seu agora."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('luxuria-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="luxuria-b">
+        <div class="copy-card-header"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Terminar o dia com 3 tarefas feitas e sentir que foi suficiente. Você merece isso.</div>
+        <div class="copy-body">Com TDAH, a tendência é sentir que nunca é suficiente.
+
+Fez 3 coisas, mas tinha 12 na lista. Então o dia foi ruim.
+
+O MeuFluxo muda isso: você começa cada bloco com 3-5 tarefas. Fez? Começa a celebrar. Não fez? Reset sem drama na próxima.
+
+Sensação de completude real. Todo dia.</div>
+        <div class="copy-cta-box">→ Quero essa sensação · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: animação de check verde com celebração discreta. Texto: "Fez uma coisa hoje? Isso importa."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('luxuria-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="luxuria-c">
+        <div class="copy-card-header"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Nunca mais o app te acusa quando você abre.</div>
+        <div class="copy-body">Você conhece aquela sensação. Abre o Todoist. "7 tarefas atrasadas". Fecha o Todoist.
+
+Esse ciclo não é preguiça. É o app te punindo em vez de te ajudar.
+
+O MeuFluxo não tem contador de "atrasado". Não tem lista de vergonha. Não existe "você deveria ter feito isso".
+
+Existe só: o que você pode fazer agora?</div>
+        <div class="copy-cta-box">→ Chega de culpa · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: X vermelho sobre contador "47 atrasadas" vs. tela limpa do MeuFluxo. Texto: "Seu app não deveria te fazer sentir culpado."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('luxuria-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- INVEJA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#f0fdf4">👀</div>
+      <div>
+        <div class="cth-name">Inveja</div>
+        <div class="cth-meta"><span class="tag tag-inveja">Inveja</span><span class="tag tag-morno">Morno</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="inveja-a">
+        <div class="copy-card-header"><span class="tag tag-inveja">Inveja</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Aquelas pessoas que conseguem entregar consistentemente. Você não é diferente delas.</div>
+        <div class="copy-body">A diferença raramente é força de vontade ou disciplina.
+
+É que o sistema delas funciona com o jeito que elas pensam.
+
+Para o cérebro TDAH, a maioria dos sistemas foi feita pra outro jeito de pensar. O MeuFluxo é o primeiro feito pro seu.
+
+Blocos curtos. Reset sem punição. Só o próximo passo.</div>
+        <div class="copy-cta-box">→ Quero meu sistema · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: dois caminhos — app tradicional com lista enorme vs. MeuFluxo com 3 tarefas. Texto: "Não é sobre disciplina. É sobre o sistema certo."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('inveja-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="inveja-b">
+        <div class="copy-card-header"><span class="tag tag-inveja">Inveja</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Neurodivergentes que são produtivos não têm mais força de vontade. Têm ferramenta melhor.</div>
+        <div class="copy-body">Conhece alguém com TDAH que parece funcionar bem?
+
+Provavelmente encontrou o sistema que funciona com o cérebro deles — não contra.
+
+O MeuFluxo é esse sistema: Tempo Vivo, blocos de 3-5 tarefas, sem acúmulo de culpa, notificações gentis.
+
+Agora é sua vez.</div>
+        <div class="copy-cta-box">→ Eu também quero · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: print de usuário do MeuFluxo compartilhando resultado. "Primeira semana sem ansiedade de app de tarefas." Texto: "Outros já encontraram. Você pode também."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('inveja-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="inveja-c">
+        <div class="copy-card-header"><span class="tag tag-inveja">Inveja</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Enquanto você ainda luta contra a lista de tarefas, outros com TDAH já pararam de lutar.</div>
+        <div class="copy-body">Não é crítica. É a realidade.
+
+Tem gente com TDAH que encontrou o jeito certo de trabalhar com o cérebro delas — não contra.
+
+A diferença? Um app feito pra elas.
+
+O MeuFluxo chegou no mesmo resultado por um caminho diferente: sem punição, sem lista interminável, só o presente.</div>
+        <div class="copy-cta-box">→ Parar de lutar · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: "Antes: guerra com o app. Depois: paz com o app." Simples, direto. Texto: "Você merece parar de lutar."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('inveja-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- IRA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fef2f2">🔥</div>
+      <div>
+        <div class="cth-name">Ira</div>
+        <div class="cth-meta"><span class="tag tag-ira">Ira</span><span class="tag tag-morno">Morno</span><span class="tag tag-moderada">Moderada</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="ira-a">
+        <div class="copy-card-header"><span class="tag tag-ira">Ira</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Notion foi feito pra quem NÃO tem TDAH. E eles sabem disso.</div>
+        <div class="copy-body">Você não falhou no Notion. O Notion falhou com você.
+
+Uma ferramenta de produtividade que te faz sentir culpado toda vez que você abre não é uma ferramenta de produtividade — é uma armadilha.
+
+O MeuFluxo foi construído sabendo que cérebro TDAH não é um bug a ser corrigido. É um jeito diferente de funcionar que precisa de ferramenta diferente.</div>
+        <div class="copy-cta-box">→ Ferramenta certa · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: ícone do Notion com X vermelho. Texto: "Você não falhou no Notion. O Notion falhou com você."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ira-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ira-b">
+        <div class="copy-card-header"><span class="tag tag-ira">Ira</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Cansou de ser chamado de preguiçoso por um problema que é do app, não seu?</div>
+        <div class="copy-body">Por anos, apps de produtividade partiram do princípio que você é o problema.
+
+"Você precisa de mais disciplina." "Você precisa de mais comprometimento."
+
+Mentira.
+
+Você precisa de um app que entende que TDAH não é preguiça. É um sistema motivacional diferente que precisa de ferramentas diferentes.
+
+O MeuFluxo foi construído sabendo disso.</div>
+        <div class="copy-cta-box">→ Chega disso · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: texto "Você não é preguiçoso. Você só tem o app errado." em destaque. Fundo verde suave.</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ira-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ira-c">
+        <div class="copy-card-header"><span class="tag tag-ira">Ira</span><span class="tag tag-agressiva">Agressiva</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Quantas vezes você vai tentar o Notion antes de aceitar que ele não foi feito pra você?</div>
+        <div class="copy-body">Não é ironia. É sério.
+
+Notion, Todoist, Trello — todos ótimos. Para neurotípicos.
+
+Para TDAH, eles geram mais ansiedade do que resolução. A lista acusa. O histórico envergonha. O sistema exige mais energia do que você tem.
+
+Existe um app diferente. Feito especificamente para como sua cabeça funciona. Sem lista de culpa, sem histórico de vergonha.</div>
+        <div class="copy-cta-box">→ Último app que você vai precisar · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: cemitério de apps "Aqui jaz: Notion, Todoist, Trello, Things..." Texto: "Agora chegou um que entende você."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ira-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CRIANÇA INTERIOR -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#eef2ff">⭐</div>
+      <div>
+        <div class="cth-name">Criança Interior</div>
+        <div class="cth-meta"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-frio">Frio</span><span class="tag tag-sutil">Sutil</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="crianca-a">
+        <div class="copy-card-header"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Você só quer terminar o dia sabendo que fez algo. Esse sentimento é legítimo.</div>
+        <div class="copy-body">Não é ambição de mundo. Não é querer virar CEO.
+
+É só querer fechar os olhos à noite sem aquela sensação de que o dia passou e nada aconteceu.
+
+O MeuFluxo foi feito pra isso. Não pra te tornar uma máquina de produtividade. Pra te dar a sensação real de que você fez o que importava — mesmo que fosse só uma coisa.
+
+Uma coisa é o suficiente.</div>
+        <div class="copy-cta-box">→ Quero essa sensação · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: pessoa descansando com expressão de paz. Texto: "Fiz o que precisava fazer hoje. Pode dormir."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('crianca-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="crianca-b">
+        <div class="copy-card-header"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Lembra quando completar uma tarefa era motivo de alegria? Dá pra ter de novo.</div>
+        <div class="copy-body">Em algum momento, os apps de tarefa transformaram completar em rotina — e falhar em culpa.
+
+A animação de check virou nada. A lista ficou longa demais pra ter significado.
+
+O MeuFluxo tem animação de celebração quando você completa uma tarefa. Discreta. Gentil. Mas ela existe.
+
+Porque cada check importa. Especialmente com TDAH.</div>
+        <div class="copy-cta-box">→ Vou recuperar isso · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: animação gentil de confete ao completar tarefa. Texto: "Cada check importa. O MeuFluxo sabe disso."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('crianca-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="crianca-c">
+        <div class="copy-card-header"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">E se recomeçar do zero toda manhã fosse uma feature, não uma fraqueza?</div>
+        <div class="copy-body">Pra quem tem TDAH, recomeçar é natural. O problema é que todos os apps punem esse recomeço.
+
+"Você não fez isso de segunda." "Esse item está aqui há 3 semanas." "Você está atrasado em 12 tarefas."
+
+O MeuFluxo celebra o recomeço. Cada manhã é clean slate. Cada tarde é nova oportunidade. Sem rastro do que não foi feito.
+
+Isso não é irresponsabilidade. É saúde mental.</div>
+        <div class="copy-cta-box">→ Quero o recomeço · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: nascer do sol com tela limpa do app. Texto: "Cada manhã começa do zero. Sem culpa."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('crianca-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- GULA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fff7ed">🍀</div>
+      <div>
+        <div class="cth-name">Gula</div>
+        <div class="cth-meta"><span class="tag tag-gula">Gula</span><span class="tag tag-morno">Morno</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="gula-a">
+        <div class="copy-card-header"><span class="tag tag-gula">Gula</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Blocos de Tempo Vivo + Modo Foco + Reset sem punição + Zero lista de culpa. Tudo num lugar.</div>
+        <div class="copy-body">Não é só um app de tarefa que reseta. É um sistema completo para o cérebro TDAH.
+
+Tempo Vivo: manhã, tarde e noite como blocos independentes.
+Modo Foco: some tudo, aparece só a próxima tarefa.
+Reset suave: o que não foi feito não migra como "atrasado".
+Notificações gentis: no momento certo, do jeito certo.
+
+Tudo construído do zero pensando em como o TDAH realmente funciona.</div>
+        <div class="copy-cta-box">→ Quero tudo isso · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: grid dos 4 recursos principais do MeuFluxo. Texto: "Feito inteiro pra você."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('gula-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="gula-b">
+        <div class="copy-card-header"><span class="tag tag-gula">Gula</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">30 dias de MeuFluxo grátis: Tempo Vivo, Modo Foco, Reset, tudo sem limite.</div>
+        <div class="copy-body">Você tem 30 dias pra testar tudo.
+
+Sem cartão de crédito. Sem versão "lite" limitada. O produto completo.
+
+Use o Tempo Vivo pra organizar o dia em blocos. Use o Modo Foco quando precisar terminar aquela tarefa importante. Use o Reset como permissão pra recomeçar.
+
+30 dias. Pra você sentir a diferença.</div>
+        <div class="copy-cta-box">→ Começa hoje grátis · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: "30 dias. Produto completo. Sem cartão." em tipografia limpa. Fundo verde suave.</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('gula-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="gula-c">
+        <div class="copy-card-header"><span class="tag tag-gula">Gula</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">App que entende TDAH de verdade: reset, foco, blocos, celebração e zero julgamento.</div>
+        <div class="copy-body">Não é marketing. É como foi construído.
+
+Cada decisão de design foi tomada pensando: "como o cérebro TDAH vai reagir a isso?"
+
+Nenhuma notificação agressiva. Nenhuma lista de "você falhou". Nenhuma gamificação que cansa depois de 3 dias.
+
+Só o que funciona. Só o que respeita como você é.</div>
+        <div class="copy-cta-box">→ Esse é pra mim · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: checklist de "o que o MeuFluxo NÃO tem" (lista de vergonha, notificação agressiva, histórico acusador). Texto: "Às vezes o diferencial é o que não tem."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('gula-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PREGUIÇA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#f0fdf9">⚡</div>
+      <div>
+        <div class="cth-name">Preguiça</div>
+        <div class="cth-meta"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-frio">Frio</span><span class="tag tag-sutil">Sutil</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="preguica-a">
+        <div class="copy-card-header"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Abriu o app. Já sabe o que fazer. Sem decidir, sem priorizar, sem pensar.</div>
+        <div class="copy-body">Pra quem tem TDAH, a batalha do dia começa antes de qualquer tarefa.
+
+Abrir o app, ver 30 itens, decidir qual fazer primeiro, entrar em paralisia.
+
+O MeuFluxo tem 3-5 tarefas por período. Só. Já definidas. Você abre e já sabe: é essa, depois essa, depois essa.
+
+Zero decisão matinal. Só ação.</div>
+        <div class="copy-cta-box">→ Quero o simples · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: tela do app com 3 tarefas do período da manhã. Nada mais. Texto: "Abriu. Já sabe. Vai lá."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('preguica-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="preguica-b">
+        <div class="copy-card-header"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Modo Foco: apaga tudo. Aparece só a próxima tarefa. É só isso.</div>
+        <div class="copy-body">Quando o TDAH precisa terminar algo importante, o maior inimigo é a tela cheia.
+
+Notificações, outras tarefas, o Instagram ali do lado, aquela ideia que surgiu do nada.
+
+O Modo Foco do MeuFluxo apaga tudo. Mostra só: a próxima tarefa e um timer.
+
+É o equivalente digital de fechar em um quarto vazio.</div>
+        <div class="copy-cta-box">→ Preciso disso · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: tela em modo foco com fundo escuro, uma tarefa e timer. Minimalismo total. Texto: "Uma tarefa. Só ela."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('preguica-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="preguica-c">
+        <div class="copy-card-header"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Quanto tempo você gasta organizando a lista em vez de fazer o que está nela?</div>
+        <div class="copy-body">É o ciclo clássico do TDAH:
+
+Abre o app. A lista está errada. Começa a reorganizar. Passa 40 minutos criando sistema de prioridade que vai abandonar amanhã. O trabalho não foi feito.
+
+O MeuFluxo corta esse ciclo. Você define as tarefas do período. Depois fecha o modo de edição e entra no modo ação.
+
+Organização e ação são separadas. Com intenção.</div>
+        <div class="copy-cta-box">→ Cortar esse ciclo · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: diagrama do ciclo vicioso TDAH (reorganizar → não agir → reorganizar) com seta quebrando o ciclo. Texto: "O MeuFluxo quebra esse ciclo."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('preguica-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- VAIDADE -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#f5f3ff">👑</div>
+      <div>
+        <div class="cth-name">Vaidade</div>
+        <div class="cth-meta"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-morno">Morno</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="vaidade-a">
+        <div class="copy-card-header"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Pra quem quer mostrar que TDAH não é desculpa — é só um jeito diferente de funcionar.</div>
+        <div class="copy-body">Você sabe que não é.
+
+TDAH não é preguiça. Não é falta de vontade. É um sistema neurológico diferente que funciona diferente.
+
+O MeuFluxo existe pra provar isso — pra você e pra todo mundo que duvidou.
+
+Com a ferramenta certa, TDAH não é limitação. É só um jeito diferente de ser produtivo.</div>
+        <div class="copy-cta-box">→ Provar de vez · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: pessoa confiante com fundo de conquista. Texto: "TDAH e produtividade não são opostos. Só precisam de ferramenta diferente."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('vaidade-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="vaidade-b">
+        <div class="copy-card-header"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Seu terapeuta vai perguntar que app você usa. Você vai mostrar o MeuFluxo.</div>
+        <div class="copy-body">Sério.
+
+O MeuFluxo foi desenhado em parceria com a forma que psicólogos especializados em TDAH entendem que o cérebro neurodivergente funciona.
+
+Não é app de produtividade disfarçado de "TDAH friendly". É construído do zero pra isso.
+
+A validação do terapeuta não é surpresa. É consequência.</div>
+        <div class="copy-cta-box">→ Quero recomendar isso · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: print de review "Minha psicóloga adorou quando mostrei". Texto: "Quando o app é certo, até o terapeuta aprova."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('vaidade-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="vaidade-c">
+        <div class="copy-card-header"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Não é todo mundo com TDAH que encontra o sistema que funciona. Você pode ser esse.</div>
+        <div class="copy-body">A maioria das pessoas com TDAH vai continuar lutando contra apps que não foram feitos pra elas.
+
+Algumas vão encontrar o sistema certo e mudar como funcionam.
+
+O MeuFluxo foi feito pra ser esse sistema. Não pra todo mundo — pra quem entende que TDAH precisa de abordagem diferente.
+
+Se você chegou até aqui, você é esse alguém.</div>
+        <div class="copy-cta-box">→ Sou esse alguém · meufluxo.com.br</div>
+        <div class="copy-visual">📸 Visual: comunidade de usuários TDAH do MeuFluxo. Texto: "Os que encontraram o jeito certo. Você pode ser um deles."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('vaidade-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMBOS -->
+<div id="tab-combos" class="section">
+  <div class="section-title">Combos de Alto Impacto — MeuFluxo</div>
+  <div class="section-sub">Copies que combinam 2 gatilhos para máxima conversão</div>
+  <div class="combos-grid">
+
+    <div class="combo-card">
+      <div class="combo-name">Culpa Zero</div>
+      <div class="combo-tags"><span class="tag tag-ira">Ira</span><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Persona saturada de apps que a acusam</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Notion te acusa toda vez que você abre. O MeuFluxo celebra quando você faz uma coisa. Qual você prefere? → meufluxo.com.br</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Você não falhou no Todoist. O Todoist falhou com você. Agora existe um app que foi feito do zero pra funcionar com TDAH. Sem lista de culpa. Sem histórico de vergonha.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">O único app de tarefas que não te faz sentir culpado quando você abre. Feito por quem tem TDAH, pra quem tem TDAH. 30 dias grátis.</div>
+      </div>
+    </div>
+
+    <div class="combo-card">
+      <div class="combo-name">O Sistema Certo</div>
+      <div class="combo-tags"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-ganancia">Ganância</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Persona que quer resultado sem mais esforço</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Abriu. 3 tarefas do período. Fez. Reset. Assim deveria ser. O MeuFluxo foi feito exatamente assim — pra funcionar com o cérebro TDAH, não contra. → meufluxo.com.br</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Não precisa de mais disciplina. Precisa de sistema que funciona com como você pensa. O MeuFluxo é esse sistema. E cabe em 30 dias de teste grátis.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Quanto você poderia entregar se o app só mostrasse o que você pode fazer agora — sem te sobrecarregar com o resto? Isso é o MeuFluxo.</div>
+      </div>
+    </div>
+
+    <div class="combo-card">
+      <div class="combo-name">Identidade TDAH</div>
+      <div class="combo-tags"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Persona que quer provar que pode funcionar bem com TDAH</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">TDAH não é desculpa. É só um jeito diferente de funcionar. E com a ferramenta certa, você pode entregar tão bem quanto qualquer um. O MeuFluxo é essa ferramenta.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Lembra quando você era criança e completar uma tarefa era alegria pura? O MeuFluxo celebra cada check. Cada pequena vitória importa.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Feito por quem tem TDAH pra quem tem TDAH. Não é marketing — é autenticidade. Max criou o app que ele sempre quis ter. Agora é seu.</div>
+      </div>
+    </div>
+
+    <div class="combo-card">
+      <div class="combo-name">Nova Chance</div>
+      <div class="combo-tags"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-inveja">Inveja</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Persona que quer o que outros já conseguiram</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Pessoas com TDAH que conseguem entregar consistentemente não têm mais força de vontade. Têm ferramenta que funciona com o cérebro delas. Você merece ter isso.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Cada manhã é nova oportunidade. Sem rastro do que não foi feito. Sem culpa de ontem. Só o que você pode fazer agora. Isso é o MeuFluxo.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Você já teve dias onde tudo fluiu? O MeuFluxo foi feito pra ter mais desses dias. Não todos — mas mais. 30 dias grátis pra sentir.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RANKING -->
+<div id="tab-ranking" class="section">
+  <div class="section-title">Ranking de Prioridade para Teste</div>
+  <div class="section-sub">Gatilhos ordenados por potencial de conversão para Lucas Ferreira · Instagram/TikTok Orgânico</div>
+  <table class="ranking-table">
+    <thead>
+      <tr>
+        <th>Prioridade</th>
+        <th>Gatilho / Combo</th>
+        <th>Motivo</th>
+        <th>Orçamento</th>
+        <th>Temperatura</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="rank-badge rb-1">1</span></td>
+        <td><span class="tag tag-ira">Ira</span> + "Notion não foi feito pra você"</td>
+        <td>Dor mais universal e reconhecível da persona. Valida o problema antes de oferecer solução. Alta identificação imediata.</td>
+        <td>35%</td>
+        <td><span class="tag tag-frio">Frio</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-2">2</span></td>
+        <td><span class="tag tag-combo">Combo</span> Culpa Zero (Ira + Lúxuria)</td>
+        <td>Combina a raiva do app atual com o desejo de paz. Máximo impacto emocional. Funciona em frio e morno.</td>
+        <td>25%</td>
+        <td><span class="tag tag-frio">Frio</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-3">3</span></td>
+        <td><span class="tag tag-preguica">Preguiça</span> + "Só me fala o que fazer agora"</td>
+        <td>Resolve a paralisia matinal do TDAH. Hook concreto, benefício imediato. Alta conversão em quem já conhece o problema.</td>
+        <td>20%</td>
+        <td><span class="tag tag-morno">Morno</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-4">4</span></td>
+        <td><span class="tag tag-crianca">Criança Interior</span> + "Uma coisa é suficiente"</td>
+        <td>Tom gentil e validador. Funciona muito bem em comunidades TDAH onde a audiência é pré-aquecida.</td>
+        <td>15%</td>
+        <td><span class="tag tag-morno">Morno</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-5">5</span></td>
+        <td><span class="tag tag-vaidade">Vaidade</span> + "TDAH não é desculpa"</td>
+        <td>Funciona como remarketing para quem já conhece o produto. Ativa identidade e pertencimento.</td>
+        <td>5%</td>
+        <td><span class="tag tag-quente">Quente</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:20px;padding:16px 20px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.25);border-radius:12px">
+    <div style="font-size:13px;font-weight:700;color:#10b981;margin-bottom:6px">⚠️ Notas de Tom — MeuFluxo</div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:6px">
+      <li style="font-size:13px;color:#6ee7b7">• Tom principal: sem julgamento, sem cobrança — a persona já se cobra o suficiente</li>
+      <li style="font-size:13px;color:#6ee7b7">• Ira: direcionada ao SISTEMA (apps, design neurotípico) — nunca ao usuário nem à condição TDAH</li>
+      <li style="font-size:13px;color:#6ee7b7">• Não prometer "cura" ou "transformação total" — prometer alívio, suporte, ferramenta certa</li>
+      <li style="font-size:13px;color:#6ee7b7">• Celebrar o pequeno: "fez uma coisa" é vitória real nesse contexto</li>
+      <li style="font-size:13px;color:#6ee7b7">• Nunca usar linguagem clínica — falar de TDAH como quem vive, não como quem estuda</li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<div class="toast" id="toast"><i data-lucide="check" style="width:14px;height:14px"></i> Copiado!</div>
+<button class="tele-btn" onclick="copyAll()"><i data-lucide="radio" style="width:14px;height:14px"></i> Copiar Tudo (Teleprompter)</button>
+
+<script>
+function toggleLP(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(`tab-${id}`).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(window.lucide) lucide.createIcons();
+}
+
+function showToast(){
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+function copyText(el){
+  navigator.clipboard.writeText(el.textContent.trim()).then(()=>showToast());
+}
+
+function copyCard(id){
+  const card=document.querySelector(`[data-copy="${id}"]`);
+  if(!card) return;
+  const hook=card.querySelector('.copy-hook')?.textContent.trim()||'';
+  const body=card.querySelector('.copy-body')?.textContent.trim()||'';
+  const cta=card.querySelector('.copy-cta-box')?.textContent.trim()||'';
+  navigator.clipboard.writeText(`${hook}\n\n${body}\n\n${cta}`).then(()=>showToast());
+}
+
+function copyAll(){
+  const cards=document.querySelectorAll('.copy-card');
+  let all='SEXY CANVAS — MEUFLUXO\n';
+  all+='Persona: Lucas Ferreira — TDAH/Neurodivergente\n';
+  all+='================================\n\n';
+  cards.forEach((card,i)=>{
+    const gatilho=card.querySelector('.copy-card-header .tag')?.textContent||'';
+    const hook=card.querySelector('.copy-hook')?.textContent.trim()||'';
+    const body=card.querySelector('.copy-body')?.textContent.trim()||'';
+    const cta=card.querySelector('.copy-cta-box')?.textContent.trim()||'';
+    all+=`--- COPY ${i+1} [${gatilho}] ---\n`;
+    all+=`HOOK: ${hook}\n\n`;
+    all+=`${body}\n\n`;
+    all+=`CTA: ${cta}\n\n`;
+  });
+  navigator.clipboard.writeText(all).then(()=>{
+    document.getElementById('toast').innerHTML='<i data-lucide="check" style="width:14px;height:14px"></i> 24 copies copiadas!';
+    showToast();
+  });
+}
+
+lucide.createIcons();
+</script>
+</body>
+</html>

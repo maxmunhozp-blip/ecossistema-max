@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MeuFluxo — O único app de tarefas que não te faz sentir culpado</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0C;
+      --surface: #1A1A28;
+      --elevated: #1E1E30;
+      --accent: #575ECF;
+      --accent-glow: rgba(87, 94, 207, 0.35);
+      --accent-light: #7279E8;
+      --text-primary: #E8E8F0;
+      --text-secondary: #8888A0;
+      --text-muted: #4A4A60;
+      --border: rgba(87, 94, 207, 0.18);
+    }
+
+    html { scroll-behavior: auto; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── CUSTOM CURSOR ─── */
+    #cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+      will-change: transform;
+    }
+
+    #cursor-ring {
+      position: fixed;
+      top: 0; left: 0;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(87, 94, 207, 0.5);
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      will-change: transform;
+    }
+
+    body:hover #cursor { opacity: 1; }
+
+    /* ─── SCROLL PROGRESS ─── */
+    #scroll-progress {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .progress-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .progress-dot.active {
+      background: var(--accent);
+      transform: scale(1.5);
+    }
+
+    /* ─── NAVIGATION ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.4s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(10, 10, 12, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 48px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .nav-logo-icon {
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      color: white;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-back {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover { color: var(--text-primary); }
+
+    .nav-cta {
+      padding: 10px 22px;
+      background: var(--accent);
+      color: white;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent-light);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Animated blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.25;
+      animation: blobFloat 12s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .blob-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #575ECF 0%, transparent 70%);
+      top: -200px; left: -100px;
+      animation-delay: 0s;
+    }
+
+    .blob-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #8B5CF6 0%, transparent 70%);
+      top: 50%; right: -150px;
+      animation-delay: -4s;
+    }
+
+    .blob-3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #3B82F6 0%, transparent 70%);
+      bottom: -100px; left: 40%;
+      animation-delay: -8s;
+    }
+
+    @keyframes blobFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -40px) scale(1.05); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    /* Floating rings */
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(87, 94, 207, 0.15);
+      pointer-events: none;
+      animation: ringPulse 8s ease-in-out infinite;
+    }
+
+    .ring-1 { width: 200px; height: 200px; top: 15%; right: 15%; animation-delay: 0s; }
+    .ring-2 { width: 120px; height: 120px; top: 60%; left: 8%; animation-delay: -3s; }
+    .ring-3 { width: 80px; height: 80px; bottom: 20%; right: 25%; animation-delay: -6s; }
+
+    @keyframes ringPulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: 900px;
+      padding: 0 24px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(87, 94, 207, 0.12);
+      border: 1px solid rgba(87, 94, 207, 0.3);
+      border-radius: 100px;
+      font-size: 13px;
+      color: var(--accent-light);
+      margin-bottom: 32px;
+      opacity: 0;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(44px, 7.5vw, 96px);
+      line-height: 1.0;
+      letter-spacing: -2px;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+
+    .hero-title .word {
+      display: inline-block;
+      overflow: hidden;
+      margin-right: 0.2em;
+    }
+
+    .hero-title .word .char {
+      display: inline-block;
+      will-change: transform;
+    }
+
+    .hero-title .accent-word {
+      color: var(--accent);
+      position: relative;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 48px;
+      line-height: 1.65;
+      opacity: 0;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      opacity: 0;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: var(--accent);
+      color: white;
+      border-radius: 100px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover::before { opacity: 1; }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(87, 94, 207, 0.45);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 100px;
+      font-size: 16px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+
+    .hero-note {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ─── APP MOCKUP ─── */
+    .app-mockup {
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 240px;
+      background: var(--elevated);
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .mockup-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .mockup-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .mockup-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      background: rgba(87, 94, 207, 0.2);
+      color: var(--accent-light);
+      border-radius: 100px;
+    }
+
+    .mockup-block {
+      margin-bottom: 14px;
+    }
+
+    .mockup-block-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--surface);
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .task-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .task-done {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+
+    /* ─── SCROLL PIN WRAPPER ─── */
+    .pin-wrap { overflow: hidden; }
+
+    /* ─── PROOF STRIP ─── */
+    #proof {
+      padding: 80px 48px;
+      display: flex;
+      justify-content: center;
+      gap: 80px;
+      flex-wrap: wrap;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .proof-item {
+      text-align: center;
+    }
+
+    .proof-number {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 56px);
+      color: var(--text-primary);
+      display: block;
+      letter-spacing: -2px;
+    }
+
+    .proof-number span.accent { color: var(--accent); }
+
+    .proof-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* ─── SECTION BASE ─── */
+    section {
+      position: relative;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(32px, 4.5vw, 56px);
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+    }
+
+    .section-sub {
+      font-size: clamp(16px, 1.8vw, 19px);
+      color: var(--text-secondary);
+      line-height: 1.65;
+      max-width: 560px;
+    }
+
+    /* ─── DOR (PAIN) ─── */
+    #dor {
+      padding: 120px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .dor-header {
+      max-width: 600px;
+      margin-bottom: 64px;
+    }
+
+    .dor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .dor-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      opacity: 0;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .dor-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .dor-card:hover::before { opacity: 1; }
+    .dor-card:hover { border-color: rgba(87, 94, 207, 0.4); }
+
+    .dor-icon {
+      width: 48px; height: 48px;
+      background: rgba(87, 94, 207, 0.12);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .dor-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .dor-card p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* ─── TEMPO VIVO ─── */
+    #tempo-vivo-trigger {
+      /* This element controls the pinning */
+    }
+
+    #tempo-vivo {
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tv-bg {
+      position: absolute;
+      inset: 0;
+      transition: background 1s ease;
+    }
+
+    .tv-panel {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 48px;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .tv-emoji {
+      font-size: clamp(60px, 8vw, 100px);
+      margin-bottom: 24px;
+      display: block;
+      filter: drop-shadow(0 0 40px rgba(255,200,100,0.4));
+    }
+
+    .tv-time {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      opacity: 0.7;
+    }
+
+    .tv-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(40px, 6vw, 80px);
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+      line-height: 1;
+    }
+
+    .tv-desc {
+      font-size: clamp(17px, 2vw, 22px);
+      color: rgba(232, 232, 240, 0.75);
+      max-width: 480px;
+      line-height: 1.6;
+    }
+
+    .tv-section-label {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(232, 232, 240, 0.4);
+      white-space: nowrap;
+    }
+
+    .tv-progress {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+
+    .tv-prog-dot {
+      width: 24px; height: 3px;
+      border-radius: 100px;
+      background: rgba(232, 232, 240, 0.2);
+      transition: all 0.4s;
+    }
+
+    .tv-prog-dot.active {
+      background: rgba(232, 232, 240, 0.8);
+      width: 40px;
+    }
+
+    /* ─── HORIZONTAL SCROLL ─── */
+    #features-section {
+      padding: 120px 0;
+      overflow: hidden;
+    }
+
+    .features-header {
+      padding: 0 48px;
+      max-width: 1200px;
+      margin: 0 auto 60px;
+    }
+
+    .features-track-wrap {
+      overflow: hidden;
+    }
+
+    #features-track {
+      display: flex;
+      gap: 24px;
+      padding: 0 48px;
+      width: max-content;
+    }
+
+    .feature-card {
+      width: 340px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(87, 94, 207, 0.08) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feature-card:hover::after { opacity: 1; }
+    .feature-card:hover { border-color: rgba(87, 94, 207, 0.35); transform: translateY(-4px); }
+
+    .feature-icon {
+      width: 52px; height: 52px;
+      background: rgba(87, 94, 207, 0.12);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+
+    .feature-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .feature-card p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .feature-num {
+      position: absolute;
+      top: 28px; right: 28px;
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    /* ─── TESTIMONIALS ─── */
+    #testimonials {
+      padding: 120px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .test-header { max-width: 600px; margin-bottom: 64px; }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .test-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      opacity: 0;
+      position: relative;
+    }
+
+    .test-stars {
+      font-size: 16px;
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+    }
+
+    .test-quote {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .test-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .test-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .test-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .test-role {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .test-tag {
+      position: absolute;
+      top: 24px; right: 24px;
+      font-size: 10px;
+      padding: 4px 10px;
+      background: rgba(87, 94, 207, 0.12);
+      color: var(--accent-light);
+      border-radius: 100px;
+      border: 1px solid rgba(87, 94, 207, 0.2);
+    }
+
+    /* ─── PRICING ─── */
+    #pricing {
+      padding: 120px 48px;
+      text-align: center;
+    }
+
+    .pricing-header { max-width: 600px; margin: 0 auto 64px; }
+
+    .pricing-card {
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--elevated);
+      border: 1px solid rgba(87, 94, 207, 0.4);
+      border-radius: 28px;
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+    }
+
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    }
+
+    .pricing-glow {
+      position: absolute;
+      top: -100px; left: 50%;
+      transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(87, 94, 207, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .pricing-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .pricing-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+    }
+
+    .pricing-price {
+      margin-bottom: 32px;
+    }
+
+    .pricing-currency {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      vertical-align: top;
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    .pricing-amount {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 72px;
+      color: var(--text-primary);
+      letter-spacing: -3px;
+      line-height: 1;
+    }
+
+    .pricing-period {
+      font-size: 16px;
+      color: var(--text-secondary);
+      display: block;
+      margin-top: 4px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 36px;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .pricing-features li:last-child { border-bottom: none; }
+
+    .pricing-check {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: rgba(87, 94, 207, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+      color: var(--accent-light);
+    }
+
+    .pricing-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    /* ─── FINAL CTA ─── */
+    #cta-final {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.2;
+      animation: blobFloat 15s ease-in-out infinite;
+    }
+
+    .cta-blob-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, #575ECF 0%, transparent 60%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 0s;
+    }
+
+    .cta-blob-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #8B5CF6 0%, transparent 60%);
+      top: 20%; right: 10%;
+      animation-delay: -5s;
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 10;
+      max-width: 700px;
+    }
+
+    .cta-eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .cta-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 64px);
+      color: var(--text-primary);
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .cta-sub {
+      font-size: clamp(17px, 2vw, 20px);
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 48px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 48px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 24px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .footer-logo-icon {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 12px;
+      color: white;
+    }
+
+    .footer-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ─── PARALLAX FLOATERS ─── */
+    .parallax-el {
+      position: absolute;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    /* ─── UTILITY ─── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      nav.scrolled { padding: 12px 24px; }
+      .nav-links .btn-ghost { display: none; }
+      #proof { padding: 60px 24px; gap: 40px; }
+      #dor, #testimonials { padding: 80px 24px; }
+      .features-header { padding: 0 24px; }
+      #features-track { padding: 0 24px; }
+      #pricing, #cta-final { padding: 80px 24px; }
+      footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+      .app-mockup { display: none; }
+      #scroll-progress { display: none; }
+      .hero-content { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Scroll Progress -->
+  <div id="scroll-progress">
+    <div class="progress-dot active" data-section="hero"></div>
+    <div class="progress-dot" data-section="proof"></div>
+    <div class="progress-dot" data-section="dor"></div>
+    <div class="progress-dot" data-section="tempo-vivo-trigger"></div>
+    <div class="progress-dot" data-section="features-section"></div>
+    <div class="progress-dot" data-section="testimonials"></div>
+    <div class="progress-dot" data-section="pricing"></div>
+    <div class="progress-dot" data-section="cta-final"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">MF</div>
+      <span class="nav-logo-text">MeuFluxo</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-back">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Ecossistema
+      </a>
+      <a href="#pricing" class="btn-ghost" style="padding:10px 20px; font-size:14px;">Ver preços</a>
+      <a href="#" class="nav-cta">Começar grátis</a>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section id="hero">
+    <!-- Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- Floating rings -->
+    <div class="ring ring-1 parallax-el" data-speed="0.3"></div>
+    <div class="ring ring-2 parallax-el" data-speed="0.5"></div>
+    <div class="ring ring-3 parallax-el" data-speed="0.2"></div>
+
+    <!-- App Mockup -->
+    <div class="app-mockup" id="app-mockup">
+      <div class="mockup-header">
+        <span class="mockup-title">Hoje</span>
+        <span class="mockup-badge">Manhã</span>
+      </div>
+      <div class="mockup-block">
+        <div class="mockup-block-label">🌅 <span>Prioridades</span></div>
+        <div class="task-item">
+          <div class="task-dot" style="background:#575ECF"></div>
+          <span>Responder emails</span>
+        </div>
+        <div class="task-item task-done">
+          <div class="task-dot" style="background:#22C55E"></div>
+          <span>Tomar café ☕</span>
+        </div>
+        <div class="task-item">
+          <div class="task-dot" style="background:#F59E0B"></div>
+          <span>Reunião 10h</span>
+        </div>
+      </div>
+      <div class="mockup-block">
+        <div class="mockup-block-label">💡 <span>Sem pressão</span></div>
+        <div class="task-item" style="background:rgba(87,94,207,0.08); border:1px solid rgba(87,94,207,0.2);">
+          <div class="task-dot" style="background:#575ECF"></div>
+          <span style="color:var(--accent-light)">Foco agora</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="hero-content" id="hero-content">
+      <div class="hero-badge" id="hero-badge">
+        Feito com TDAH, pra quem tem TDAH
+      </div>
+
+      <h1 class="hero-title" id="hero-title">
+        O único app de tarefas que não te faz sentir culpado
+      </h1>
+
+      <p class="hero-sub" id="hero-sub">
+        MeuFluxo foi feito com TDAH, pra quem tem TDAH. Nada de lista infinita de tarefas atrasadas. Cada dia começa do zero.
+      </p>
+
+      <div class="hero-cta-group" id="hero-cta">
+        <a href="#" class="btn-primary">
+          Começar grátis 14 dias
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#tempo-vivo-trigger" class="btn-ghost">Como funciona</a>
+      </div>
+      <p class="hero-note" id="hero-note">Sem cartão de crédito · Cancela quando quiser</p>
+    </div>
+  </section>
+
+  <!-- ─── PROOF STRIP ─── -->
+  <section id="proof">
+    <div class="proof-item">
+      <span class="proof-number">
+        <span class="count" data-target="47000" data-suffix="+" id="count-users">0</span>
+      </span>
+      <div class="proof-label">pessoas com TDAH usam</div>
+    </div>
+    <div class="proof-item">
+      <span class="proof-number">
+        <span class="count" data-target="94" data-suffix="%" id="count-satisfaction">0</span>
+      </span>
+      <div class="proof-label">se sentem menos culpados</div>
+    </div>
+    <div class="proof-item">
+      <span class="proof-number">
+        <span class="count" data-target="3" data-suffix="x" id="count-focus">0</span>
+      </span>
+      <div class="proof-label">mais foco no dia</div>
+    </div>
+    <div class="proof-item">
+      <span class="proof-number">
+        <span class="count" data-target="14" data-suffix=" dias" id="count-trial">0</span>
+      </span>
+      <div class="proof-label">grátis pra experimentar</div>
+    </div>
+  </section>
+
+  <!-- ─── DOR ─── -->
+  <section id="dor">
+    <div class="dor-header">
+      <span class="section-label">O problema</span>
+      <h2 class="section-title">Os outros apps foram feitos para quem não tem TDAH</h2>
+      <p class="section-sub">Você não é desorganizado. O método é que é errado.</p>
+    </div>
+
+    <div class="dor-grid">
+      <div class="dor-card">
+        <div class="dor-icon">😤</div>
+        <h3>Apps tradicionais te punem</h3>
+        <p>Notion, Todoist, Trello foram feitos pra cérebros neurotípicos. A lista de atrasados paralisa — não motiva. Você abre, sente culpa, fecha. Repete amanhã.</p>
+      </div>
+      <div class="dor-card">
+        <div class="dor-icon">😔</div>
+        <h3>Culpa que não para</h3>
+        <p>Ver 47 tarefas atrasadas não te faz agir. Te faz fechar o app e evitar olhar. A culpa acumula, o app vira inimigo, e você desiste do sistema todo.</p>
+      </div>
+      <div class="dor-card">
+        <div class="dor-icon">🔄</div>
+        <h3>Método que não encaixa</h3>
+        <p>Pomodoro, GTD, time-blocking. Todos exigem consistência que TDAH estruturalmente não tem. Você tenta, falha, se culpa. O ciclo nunca para.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TEMPO VIVO (PINNED) ─── -->
+  <div id="tempo-vivo-trigger">
+    <div id="tempo-vivo">
+      <div class="tv-bg" id="tv-bg"></div>
+
+      <span class="tv-section-label">Tempo Vivo</span>
+
+      <!-- Panel 1: Manhã -->
+      <div class="tv-panel" id="tv-panel-1">
+        <span class="tv-emoji">🌅</span>
+        <span class="tv-time">Manhã</span>
+        <h2 class="tv-title">Um começo novo.</h2>
+        <p class="tv-desc">Cada manhã é uma tela em branco. Não existe ontem. Não existe lista de atrasados. Só o que importa agora.</p>
+      </div>
+
+      <!-- Panel 2: Tarde -->
+      <div class="tv-panel" id="tv-panel-2">
+        <span class="tv-emoji">🌤</span>
+        <span class="tv-time">Tarde</span>
+        <h2 class="tv-title">Sem peso do que ficou.</h2>
+        <p class="tv-desc">A tarde começa do zero também. O que não fez de manhã não existe mais. Só o que faz sentido agora, no bloco atual.</p>
+      </div>
+
+      <!-- Panel 3: Noite -->
+      <div class="tv-panel" id="tv-panel-3">
+        <span class="tv-emoji">🌙</span>
+        <span class="tv-time">Noite</span>
+        <h2 class="tv-title">Fechar com leveza.</h2>
+        <p class="tv-desc">Encerre o dia sem culpa. O que não foi feito já era de ontem. Amanhã começa do zero de novo. Sempre começa do zero.</p>
+      </div>
+
+      <!-- Progress dots -->
+      <div class="tv-progress">
+        <div class="tv-prog-dot active" id="tv-dot-1"></div>
+        <div class="tv-prog-dot" id="tv-dot-2"></div>
+        <div class="tv-prog-dot" id="tv-dot-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── FEATURES (HORIZONTAL SCROLL) ─── -->
+  <section id="features-section">
+    <div class="features-header">
+      <span class="section-label">Como funciona</span>
+      <h2 class="section-title">Tudo pensado pro seu jeito de funcionar</h2>
+      <p class="section-sub">Não é você que tem que se adaptar ao app. O app foi feito pra funcionar com o seu cérebro — não contra ele.</p>
+    </div>
+
+    <div class="features-track-wrap">
+      <div id="features-track">
+
+        <div class="feature-card">
+          <span class="feature-num">01</span>
+          <div class="feature-icon">⏰</div>
+          <h3>Tempo Vivo</h3>
+          <p>Dia dividido em 3 blocos: manhã, tarde, noite. Cada bloco reseta. Sem tarefas atrasadas acumulando.</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-num">02</span>
+          <div class="feature-icon">🧠</div>
+          <h3>Zero culpa, zero pressão</h3>
+          <p>Nenhuma notificação agressiva. Nenhuma contagem de dias perdidos. Só o que importa hoje, neste momento.</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-num">03</span>
+          <div class="feature-icon">🎯</div>
+          <h3>Foco no agora</h3>
+          <p>Uma tarefa por vez. Sem overwhelm. O app te mostra só o que é relevante para o bloco atual do dia.</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-num">04</span>
+          <div class="feature-icon">🔔</div>
+          <h3>Notificações gentis</h3>
+          <p>Lembretes que encorajam, não cobram. Linguagem cuidadosa, sem julgamento, pensada por pessoas com TDAH.</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-num">05</span>
+          <div class="feature-icon">✨</div>
+          <h3>Feito com TDAH</h3>
+          <p>Desenvolvido por pessoas com TDAH e TEA, com input de neuropsicólogos. Não é "acessível" — é nativo.</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-num">06</span>
+          <div class="feature-icon">🔄</div>
+          <h3>Recomeço diário</h3>
+          <p>Cada amanhecer é um novo começo automático. O sistema reseta sozinho. Você não precisa fazer nada.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TESTIMONIALS ─── -->
+  <section id="testimonials">
+    <div class="test-header">
+      <span class="section-label">Depoimentos</span>
+      <h2 class="section-title">Pessoas que encontraram o fluxo</h2>
+      <p class="section-sub">Adultos com TDAH que pararam de se culpar por não conseguir usar Notion.</p>
+    </div>
+
+    <div class="test-grid">
+      <div class="test-card">
+        <span class="test-tag">TDAH</span>
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"Passei anos me sentindo uma fracassada por não conseguir manter um sistema de tarefas. MeuFluxo foi a primeira vez que cheguei no fim do dia sem culpa. Parece bobo, mas pra mim foi enorme."</p>
+        <div class="test-author">
+          <div class="test-avatar">CA</div>
+          <div>
+            <div class="test-name">Camila Andrade</div>
+            <div class="test-role">Designer freelancer, São Paulo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-card">
+        <span class="test-tag">TDAH + TEA</span>
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"Diagnóstico com 31 anos. Todos os apps que tentei me faziam sentir pior. MeuFluxo é diferente — quando não consigo fazer uma tarefa, ela simplesmente some. Não tem punishment. Só recomeço."</p>
+        <div class="test-author">
+          <div class="test-avatar" style="background:#7279E8">RF</div>
+          <div>
+            <div class="test-name">Rafael Fonseca</div>
+            <div class="test-role">Engenheiro de software, Belo Horizonte</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-card">
+        <span class="test-tag">TDAH</span>
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"Tentei Notion, Asana, Trello, todo tipo de bullet journal. Nada ficava. Com MeuFluxo, três meses usando todo dia. É o único app que não virei inimigo. Os blocos de Tempo Vivo salvaram minha produtividade."</p>
+        <div class="test-author">
+          <div class="test-avatar" style="background:#8B5CF6">LM</div>
+          <div>
+            <div class="test-name">Larissa Menezes</div>
+            <div class="test-role">Terapeuta ocupacional, Porto Alegre</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PRICING ─── -->
+  <section id="pricing">
+    <div class="pricing-header">
+      <span class="section-label">Preço</span>
+      <h2 class="section-title">Simples como o app</h2>
+      <p class="section-sub" style="margin: 0 auto;">Um plano. Sem asteriscos. Sem plano "Pro" escondido. Tudo incluso pelo preço de um café por semana.</p>
+    </div>
+
+    <div class="pricing-card" id="pricing-card">
+      <div class="pricing-glow"></div>
+      <span class="pricing-label">MeuFluxo Completo</span>
+      <div class="pricing-name">Tudo que você precisa</div>
+
+      <div class="pricing-price">
+        <span class="pricing-currency">R$</span>
+        <span class="pricing-amount">29</span>
+        <span class="pricing-period">/mês · cobrado mensalmente</span>
+      </div>
+
+      <ul class="pricing-features">
+        <li><span class="pricing-check">✓</span> Tempo Vivo (3 blocos diários)</li>
+        <li><span class="pricing-check">✓</span> Reset automático sem culpa</li>
+        <li><span class="pricing-check">✓</span> Notificações gentis</li>
+        <li><span class="pricing-check">✓</span> Modo foco no agora</li>
+        <li><span class="pricing-check">✓</span> Histórico semanal leve</li>
+        <li><span class="pricing-check">✓</span> Suporte humano (feito por nós)</li>
+      </ul>
+
+      <a href="#" class="btn-primary" style="width:100%; justify-content:center; font-size:17px; padding:18px;">
+        Começar grátis por 14 dias
+      </a>
+      <p class="pricing-note">Sem cartão de crédito · Cancela a qualquer momento</p>
+    </div>
+  </section>
+
+  <!-- ─── FINAL CTA ─── -->
+  <section id="cta-final">
+    <div class="cta-blob cta-blob-1"></div>
+    <div class="cta-blob cta-blob-2"></div>
+
+    <div class="cta-content" id="cta-content">
+      <span class="cta-eyebrow">Pronto pra começar?</span>
+      <h2 class="cta-title">Seu cérebro merece uma ferramenta que funciona com ele</h2>
+      <p class="cta-sub">Sem culpa. Sem listas infinitas. Sem o peso de ontem. Só o que importa agora.</p>
+
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="#" class="btn-primary" style="font-size:18px; padding:18px 40px;">
+          Começar grátis 14 dias
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+      <p style="margin-top:16px; font-size:13px; color:var(--text-muted);">Sem cartão de crédito · Cancela quando quiser · 14 dias grátis</p>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <a href="index.html" class="footer-logo">
+      <div class="footer-logo-icon">MF</div>
+      <span class="footer-brand">MeuFluxo</span>
+    </a>
+    <span class="footer-copy">© 2025 MeuFluxo · Feito com TDAH pra quem tem TDAH</span>
+    <div class="footer-links">
+      <a href="index.html">Ecossistema MAX</a>
+      <a href="#">Privacidade</a>
+      <a href="#">Termos</a>
+    </div>
+  </footer>
+
+  <script>
+    /* ══════════════════════════════════════════════
+       LENIS SMOOTH SCROLL + GSAP INTEGRATION
+    ══════════════════════════════════════════════ */
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      smoothWheel: true,
+      touchMultiplier: 2,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Integrate Lenis with ScrollTrigger
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+
+    /* ══════════════════════════════════════════════
+       CUSTOM CURSOR
+    ══════════════════════════════════════════════ */
+    const cursor = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursor-ring');
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function animateCursor() {
+      // Cursor follows mouse with lerp
+      cursorX += (mouseX - cursorX) * 0.18;
+      cursorY += (mouseY - cursorY) * 0.18;
+      cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+
+      // Ring follows with more lag
+      ringX += (mouseX - ringX) * 0.07;
+      ringY += (mouseY - ringY) * 0.07;
+      cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Cursor scale on hover
+    document.querySelectorAll('a, button, .feature-card, .dor-card, .test-card').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        gsap.to(cursor, { width: 40, height: 40, duration: 0.3 });
+        gsap.to(cursorRing, { scale: 1.5, opacity: 0.5, duration: 0.3 });
+      });
+      el.addEventListener('mouseleave', () => {
+        gsap.to(cursor, { width: 20, height: 20, duration: 0.3 });
+        gsap.to(cursorRing, { scale: 1, opacity: 1, duration: 0.3 });
+      });
+    });
+
+    /* ══════════════════════════════════════════════
+       REGISTER SCROLL TRIGGER
+    ══════════════════════════════════════════════ */
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ══════════════════════════════════════════════
+       NAV SCROLL STATE
+    ══════════════════════════════════════════════ */
+    ScrollTrigger.create({
+      start: 'top -80',
+      onEnter: () => document.getElementById('navbar').classList.add('scrolled'),
+      onLeaveBack: () => document.getElementById('navbar').classList.remove('scrolled'),
+    });
+
+    /* ══════════════════════════════════════════════
+       SCROLL PROGRESS DOTS
+    ══════════════════════════════════════════════ */
+    const sections = ['hero', 'proof', 'dor', 'tempo-vivo-trigger', 'features-section', 'testimonials', 'pricing', 'cta-final'];
+    const dots = document.querySelectorAll('.progress-dot');
+
+    sections.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 60%',
+        end: 'bottom 40%',
+        onEnter: () => activateDot(i),
+        onEnterBack: () => activateDot(i),
+      });
+    });
+
+    function activateDot(index) {
+      dots.forEach((d, i) => d.classList.toggle('active', i === index));
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        const target = document.getElementById(sections[i]);
+        if (target) lenis.scrollTo(target, { duration: 1.2 });
+      });
+    });
+
+    /* ══════════════════════════════════════════════
+       HERO ANIMATIONS
+    ══════════════════════════════════════════════ */
+    // Split hero title into words + chars
+    const heroTitle = document.getElementById('hero-title');
+    const originalText = heroTitle.innerText;
+    const words = originalText.split(' ');
+
+    heroTitle.innerHTML = words.map(word => {
+      const chars = word.split('').map(char => `<span class="char">${char}</span>`).join('');
+      return `<span class="word">${chars}</span>`;
+    }).join(' ');
+
+    // Also color the word "culpado"
+    const allWords = heroTitle.querySelectorAll('.word');
+    allWords.forEach(w => {
+      if (w.innerText.trim() === 'culpado') {
+        w.style.color = 'var(--accent)';
+      }
+    });
+
+    // Hero entrance animation (on load)
+    const tl = gsap.timeline({ delay: 0.3 });
+
+    tl.fromTo('#hero-badge', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
+      .fromTo(heroTitle.querySelectorAll('.char'),
+        { opacity: 0, y: 60, rotationX: -40 },
+        { opacity: 1, y: 0, rotationX: 0, duration: 0.7, stagger: 0.025, ease: 'back.out(1.7)' },
+        '-=0.4')
+      .fromTo('#hero-sub', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.3')
+      .fromTo('#hero-cta', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .fromTo('#hero-note', { opacity: 0 }, { opacity: 1, duration: 0.6 }, '-=0.3')
+      .fromTo('#app-mockup', { opacity: 0, x: 40, rotationY: 20 }, { opacity: 1, x: 0, rotationY: 0, duration: 1, ease: 'power3.out' }, '-=0.8');
+
+    /* ══════════════════════════════════════════════
+       PARALLAX FLOATING ELEMENTS
+    ══════════════════════════════════════════════ */
+    document.querySelectorAll('.parallax-el').forEach(el => {
+      const speed = parseFloat(el.dataset.speed) || 0.3;
+      gsap.to(el, {
+        y: () => window.innerHeight * speed * -1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        }
+      });
+    });
+
+    /* ══════════════════════════════════════════════
+       PROOF STRIP — COUNTER ANIMATION
+    ══════════════════════════════════════════════ */
+    function animateCounter(el) {
+      const target = parseInt(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      let current = 0;
+      const duration = 2000;
+      const step = target / (duration / 16);
+
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        if (target >= 1000) {
+          el.textContent = Math.floor(current).toLocaleString('pt-BR') + suffix;
+        } else {
+          el.textContent = Math.floor(current) + suffix;
+        }
+        if (current >= target) clearInterval(timer);
+      }, 16);
+    }
+
+    ScrollTrigger.create({
+      trigger: '#proof',
+      start: 'top 80%',
+      once: true,
+      onEnter: () => {
+        document.querySelectorAll('.count').forEach(el => animateCounter(el));
+      }
+    });
+
+    /* ══════════════════════════════════════════════
+       DOR CARDS — STAGGER REVEAL
+    ══════════════════════════════════════════════ */
+    gsap.fromTo('.dor-card',
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1, y: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#dor',
+          start: 'top 70%',
+        }
+      }
+    );
+
+    /* ══════════════════════════════════════════════
+       TEMPO VIVO — PINNED CINEMATIC SECTION
+    ══════════════════════════════════════════════ */
+    const tvBg = document.getElementById('tv-bg');
+    const panels = [
+      document.getElementById('tv-panel-1'),
+      document.getElementById('tv-panel-2'),
+      document.getElementById('tv-panel-3'),
+    ];
+    const tvDots = [
+      document.getElementById('tv-dot-1'),
+      document.getElementById('tv-dot-2'),
+      document.getElementById('tv-dot-3'),
+    ];
+
+    const tvColors = [
+      'linear-gradient(135deg, #1A1208 0%, #2A1F0A 50%, #0A0A0C 100%)',
+      'linear-gradient(135deg, #0D1A2A 0%, #0A1520 50%, #0A0A0C 100%)',
+      'linear-gradient(135deg, #080A1A 0%, #0C0E25 50%, #0A0A0C 100%)',
+    ];
+
+    function activateTVPanel(index) {
+      panels.forEach((p, i) => {
+        if (i === index) {
+          gsap.to(p, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' });
+        } else {
+          gsap.to(p, { opacity: 0, y: i < index ? -40 : 40, duration: 0.5, ease: 'power3.in' });
+        }
+      });
+
+      tvDots.forEach((d, i) => d.classList.toggle('active', i === index));
+      gsap.to(tvBg, { background: tvColors[index], duration: 1, ease: 'power2.inOut' });
+    }
+
+    // Initial state
+    gsap.set(panels[0], { opacity: 1, y: 0 });
+    gsap.set(panels[1], { opacity: 0, y: 40 });
+    gsap.set(panels[2], { opacity: 0, y: 40 });
+    tvBg.style.background = tvColors[0];
+
+    // Pin the section for 300vh
+    const tvST = ScrollTrigger.create({
+      trigger: '#tempo-vivo-trigger',
+      start: 'top top',
+      end: '+=300%',
+      pin: true,
+      scrub: false,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        if (progress < 0.33) activateTVPanel(0);
+        else if (progress < 0.66) activateTVPanel(1);
+        else activateTVPanel(2);
+      }
+    });
+
+    /* ══════════════════════════════════════════════
+       FEATURES — HORIZONTAL SCROLL
+    ══════════════════════════════════════════════ */
+    const featureTrack = document.getElementById('features-track');
+    const featureCards = featureTrack.querySelectorAll('.feature-card');
+
+    // Calculate total scroll width
+    let trackWidth;
+
+    function setupHorizontalScroll() {
+      trackWidth = featureTrack.scrollWidth - window.innerWidth + 96; // 48px padding each side
+
+      gsap.to(featureTrack, {
+        x: -trackWidth,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#features-section',
+          start: 'center center',
+          end: () => `+=${trackWidth}`,
+          scrub: 1,
+          pin: true,
+        }
+      });
+    }
+
+    setupHorizontalScroll();
+
+    /* ══════════════════════════════════════════════
+       TESTIMONIALS — STAGGER REVEAL
+    ══════════════════════════════════════════════ */
+    gsap.fromTo('.test-card',
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1, y: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#testimonials',
+          start: 'top 70%',
+        }
+      }
+    );
+
+    /* ══════════════════════════════════════════════
+       PRICING CARD REVEAL
+    ══════════════════════════════════════════════ */
+    gsap.fromTo('#pricing-card',
+      { opacity: 0, y: 60, scale: 0.95 },
+      {
+        opacity: 1, y: 0, scale: 1,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#pricing',
+          start: 'top 70%',
+        }
+      }
+    );
+
+    /* ══════════════════════════════════════════════
+       CTA FINAL REVEAL
+    ══════════════════════════════════════════════ */
+    gsap.fromTo('#cta-content',
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1, y: 0,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#cta-final',
+          start: 'top 70%',
+        }
+      }
+    );
+
+    /* ══════════════════════════════════════════════
+       SECTION HEADERS REVEAL
+    ══════════════════════════════════════════════ */
+    document.querySelectorAll('.section-label, .section-title, .section-sub, .dor-header .section-sub, .test-header .section-sub, .pricing-header .section-sub').forEach(el => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+          }
+        }
+      );
+    });
+
+    /* ══════════════════════════════════════════════
+       APP MOCKUP FLOATING ANIMATION
+    ══════════════════════════════════════════════ */
+    gsap.to('#app-mockup', {
+      y: -12,
+      duration: 3,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+    });
+
+    /* ══════════════════════════════════════════════
+       REFRESH ON RESIZE
+    ══════════════════════════════════════════════ */
+    window.addEventListener('resize', () => {
+      ScrollTrigger.refresh();
+    });
+
+    /* ══════════════════════════════════════════════
+       SMOOTH ANCHOR LINKS
+    ══════════════════════════════════════════════ */
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href === '#') return;
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          lenis.scrollTo(target, { duration: 1.4 });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

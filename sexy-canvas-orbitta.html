@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sexy Canvas — Orbitta Messenger</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#1a0f00;--surface:#211400;--surface-alt:#2a1c00;--surface-hover:#352500;
+  --border:#3d2800;--border-strong:#5a3d00;
+  --accent:#f97316;--accent-2:#ea580c;--accent-dim:rgba(249,115,22,.12);--accent-mid:rgba(249,115,22,.25);
+  --text-dark:#fff7ed;--text:#fed7aa;--text-muted:#9a6030;--text-dim:#5a3a18;
+  --shadow:0 1px 3px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.2);
+  --shadow-lg:0 4px 24px rgba(0,0,0,.4);
+  --nav-h:56px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+
+.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(26,15,0,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:24px}
+.nav-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--text-dark);text-decoration:none}
+.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;gap:2px;margin-left:8px}
+.nav-links a{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:.15s}
+.nav-links a:hover{color:var(--text-dark);background:var(--surface-alt)}
+.nav-links a.active{color:var(--accent);background:var(--accent-dim)}
+
+.hero{background:linear-gradient(135deg,#211400 0%,#1a1000 50%,#201200 100%);border-bottom:1px solid var(--border);padding:36px 24px 28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-40px;width:360px;height:360px;background:radial-gradient(circle,rgba(249,115,22,.18) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-60px;left:5%;width:280px;height:280px;background:radial-gradient(circle,rgba(234,88,12,.1) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:960px;margin:0 auto}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--accent-dim);color:var(--accent);font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;margin-bottom:14px;border:1px solid var(--accent-mid)}
+.hero h1{font-size:28px;font-weight:800;color:var(--text-dark);margin-bottom:6px;letter-spacing:-.5px}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
+.hero-meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted)}
+.hero-meta-item strong{color:var(--text-dark)}
+.lp-collapse{margin-top:18px}
+.lp-collapse-trigger{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text-muted);padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
+.lp-collapse-trigger:hover{background:rgba(255,255,255,.1);color:var(--text-dark)}
+.lp-collapse-trigger .chevron{width:14px;height:14px;transition:transform .25s}
+.lp-collapse-trigger.open .chevron{transform:rotate(180deg)}
+.lp-collapse-body{overflow:hidden;max-height:0;transition:max-height .3s ease,opacity .3s ease;opacity:0}
+.lp-collapse-body.open{max-height:200px;opacity:1}
+.hero-lp-btns{display:flex;gap:10px;flex-wrap:wrap;padding-top:12px}
+.hero-lp-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;transition:.2s;border:1px solid rgba(255,255,255,.15)}
+.hero-lp-btn:hover{transform:translateY(-2px)}
+.lp-empty{padding-top:12px;font-size:13px;color:var(--text-muted)}
+
+.tabs-wrap{background:rgba(26,15,0,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:var(--nav-h);z-index:90}
+.tabs{display:flex;padding:0 24px;overflow-x:auto;scrollbar-width:none;max-width:1100px;margin:0 auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:13px 14px;font-size:13px;font-weight:500;color:var(--text-muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:5px}
+.tab:hover{color:var(--text-dark)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+.content{max-width:1100px;margin:0 auto;padding:28px 24px}
+.section{display:none}.section.active{display:block}
+
+.canvas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:32px}
+.canvas-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
+.canvas-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.canvas-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.canvas-title{font-size:13px;font-weight:700;color:var(--text-dark)}
+.canvas-items{list-style:none;display:flex;flex-direction:column;gap:5px}
+.canvas-items li{font-size:12px;color:var(--text);padding:4px 8px;background:var(--surface-alt);border-radius:6px;line-height:1.4}
+.canvas-phrase{font-size:13px;font-style:italic;color:var(--accent);background:var(--accent-dim);border:1px solid var(--accent-mid);padding:8px 12px;border-radius:8px;margin-top:8px}
+
+.copies-section{margin-bottom:36px}
+.copies-trigger-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+.cth-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.cth-name{font-size:17px;font-weight:800;color:var(--text-dark)}
+.cth-meta{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
+.copies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.copy-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;transition:.15s}
+.copy-card:hover{box-shadow:0 0 0 1px rgba(249,115,22,.25),var(--shadow-lg);border-color:var(--accent)}
+.copy-card-header{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.copy-hook{font-size:15px;font-weight:700;color:var(--text-dark);line-height:1.4;margin-bottom:10px}
+.copy-body{font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;margin-bottom:10px}
+.copy-cta-box{background:var(--accent);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:10px;display:inline-block}
+.copy-visual{font-size:11px;color:var(--text-muted);background:var(--surface-alt);padding:6px 10px;border-radius:6px;margin-bottom:12px}
+.copy-footer{display:flex;justify-content:flex-end}
+.btn-copy{padding:7px 14px;background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-muted);transition:.15s;display:flex;align-items:center;gap:5px;font-family:'Inter',sans-serif}
+.btn-copy:hover{background:var(--accent-dim);border-color:var(--accent-mid);color:var(--accent)}
+
+.combos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.combo-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
+.combo-name{font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:6px}
+.combo-tags{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.combo-copies{display:flex;flex-direction:column;gap:8px}
+.combo-copy-item{background:var(--surface-alt);border-radius:8px;padding:10px 12px;cursor:pointer;transition:.15s;font-size:13px;color:var(--text);line-height:1.4}
+.combo-copy-item:hover{background:var(--accent-dim);color:var(--accent)}
+
+.ranking-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.ranking-table th{background:var(--surface-alt);padding:11px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.ranking-table td{padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}
+.ranking-table tr:last-child td{border-bottom:none}
+.rank-badge{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.rb-1{background:#f59e0b}.rb-2{background:#f97316}.rb-3{background:#6366f1}.rb-4{background:#10b981}.rb-5{background:#6b7280}
+
+.tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid transparent}
+.tag-ganancia{background:#fefce8;color:#854d0e;border-color:#fef08a}
+.tag-luxuria{background:#fdf2f8;color:#9d174d;border-color:#fbcfe8}
+.tag-inveja{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
+.tag-ira{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+.tag-crianca{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
+.tag-gula{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+.tag-preguica{background:#f0fdf9;color:#065f46;border-color:#a7f3d0}
+.tag-vaidade{background:#f5f3ff;color:#5b21b6;border-color:#ddd6fe}
+.tag-combo{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tag-frio{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.tag-morno{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.tag-quente{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+.tag-sutil{background:#f0fdf4;color:#15803d;border-color:#bbf7d0}
+.tag-moderada{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.tag-agressiva{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+
+.section-title{font-size:18px;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.section-sub{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+.divider{height:1px;background:var(--border);margin:28px 0}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;transition:.3s;opacity:0;pointer-events:none;z-index:1000;display:flex;align-items:center;gap:6px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.tele-btn{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;border:none;border-radius:30px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(249,115,22,.35);transition:.2s;font-family:'Inter',sans-serif;z-index:200}
+.tele-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(249,115,22,.45)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    Ecossistema Max
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Hub</a>
+    <a href="persona.html">Persona</a>
+    <a href="criativos.html">Criativos</a>
+    <a href="skills.html">Skills</a>
+    <a href="resultado.html">Resultado</a>
+    <a href="sexy-canvas.html">Sexy Canvas</a>
+    <a href="sexy-canvas-tractorpro.html">TractorPRO</a>
+    <a href="sexy-canvas-meufluxo.html">MeuFluxo</a>
+    <a href="sexy-canvas-orbitta.html" class="active">Orbitta</a>
+    <a href="xquads.html">Xquads</a>
+    <a href="terminal.html">Terminal</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><i data-lucide="flame" style="width:12px;height:12px"></i> Sexy Canvas Gerado</div>
+    <h1>Orbitta Messenger — <em>Canvas Completo</em></h1>
+    <p style="font-size:14px;color:var(--text-muted);margin-top:6px">8 gatilhos × 3 variações = 24 copies prontas para teste + 4 combos + ranking de prioridade</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><i data-lucide="user" style="width:13px;height:13px"></i> Persona: <strong>Roberto Silva — Dono de PME</strong></div>
+      <div class="hero-meta-item"><i data-lucide="search" style="width:13px;height:13px"></i> Plataforma: <strong>Google Ads + Cold Outreach</strong></div>
+      <div class="hero-meta-item"><i data-lucide="thermometer" style="width:13px;height:13px"></i> Temperatura: <strong>Frio → Morno</strong></div>
+      <div class="hero-meta-item"><i data-lucide="link" style="width:13px;height:13px"></i> Destino: <strong>orbitta.com.br</strong></div>
+    </div>
+    <div class="lp-collapse">
+      <button class="lp-collapse-trigger" onclick="toggleLP(this)">
+        <i data-lucide="layout" style="width:14px;height:14px"></i>
+        Landing Pages (2)
+        <i data-lucide="chevron-down" class="chevron"></i>
+      </button>
+      <div class="lp-collapse-body">
+        <div class="hero-lp-btns">
+          <a href="lp-orbitta.html" target="_blank" class="hero-lp-btn" style="background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(249,115,22,.35)">
+            <i data-lucide="layout" style="width:14px;height:14px"></i>
+            LP Dark
+          </a>
+          <a href="lp-orbitta-motion.html" target="_blank" class="hero-lp-btn" style="background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;box-shadow:0 4px 16px rgba(249,115,22,.5)">
+            <i data-lucide="zap" style="width:14px;height:14px"></i>
+            LP Motion
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('canvas')"><i data-lucide="layout-grid" style="width:13px;height:13px"></i> Canvas Persona</button>
+    <button class="tab" onclick="showTab('copies')"><i data-lucide="copy" style="width:13px;height:13px"></i> 24 Copies</button>
+    <button class="tab" onclick="showTab('combos')"><i data-lucide="zap" style="width:13px;height:13px"></i> Combos</button>
+    <button class="tab" onclick="showTab('ranking')"><i data-lucide="bar-chart-2" style="width:13px;height:13px"></i> Ranking</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- CANVAS PERSONA -->
+<div id="tab-canvas" class="section active">
+  <div class="section-title">Canvas da Persona</div>
+  <div class="section-sub">Roberto Silva mapeado nos 8 gatilhos do Sexy Canvas</div>
+  <div class="canvas-grid">
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fefce8">💰</div>
+        <span class="canvas-title">Ganância</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Quer acumular: clientes que retornam sem ele correr atrás</li>
+        <li>Vantagem: 5 clientes a mais por mês já paga o Orbitta</li>
+        <li>Retorno esperado: ROI direto em revenue, não em economia de tempo</li>
+      </ul>
+      <div class="canvas-phrase">"Quanto eu perco toda semana de cliente que não recebo followup?"</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fdf2f8">💎</div>
+        <span class="canvas-title">Lúxuria</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Desejo: fim de semana inteiro sem abrir WhatsApp do negócio</li>
+        <li>Experiência irresistível: férias de verdade com negócio funcionando</li>
+        <li>O que faz os olhos brilharem: funcionário atendendo enquanto ele está ausente</li>
+      </ul>
+      <div class="canvas-phrase">"Imagina tirar 5 dias de férias e o negócio não parar..."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#f0fdf4">👀</div>
+        <span class="canvas-title">Inveja</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Inveja de: concorrente que parece ter atendimento sempre rápido</li>
+        <li>Vê outros conquistando: sistema que parece empresa grande</li>
+        <li>Quer que pensem: "essa empresa é profissional, tem processo"</li>
+      </ul>
+      <div class="canvas-phrase">"Como aquele concorrente consegue responder tão rápido?"</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fef2f2">🔥</div>
+        <span class="canvas-title">Ira</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Furiosa com: WhatsApp pessoal misturado com o do negócio</li>
+        <li>Injustiça: construiu empresa mas está preso no celular 24h</li>
+        <li>Raiva de: perder cliente porque demorou a responder</li>
+      </ul>
+      <div class="canvas-phrase">"Respondo WhatsApp enquanto janto, enquanto fico com a família. Não tem como mais."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#eef2ff">⭐</div>
+        <span class="canvas-title">Criança Interior</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Sonho antigo: ter negócio próprio e ter liberdade</li>
+        <li>Simplicidade perdida: época que era só ele e o negócio funcionava</li>
+        <li>Alegria genuína: negócio que funciona sem precisar estar lá</li>
+      </ul>
+      <div class="canvas-phrase">"Abri esse negócio pra ter liberdade. E acabei virando escravo dele."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#fff7ed">🍀</div>
+        <span class="canvas-title">Gula</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Nunca tem o suficiente: multi-atendente + disparo + CRM + relatórios</li>
+        <li>Consumiria sem parar: tudo que tire o WhatsApp pessoal do negócio</li>
+        <li>Abundância que busca: controle, histórico, escala, funcionário autônomo</li>
+      </ul>
+      <div class="canvas-phrase">"Quero multi-atendente, disparo em massa, histórico do cliente e ainda ser mais barato que a IA Conecta."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#f0fdf9">⚡</div>
+        <span class="canvas-title">Preguiça</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Pagaria pra não ter que fazer: responder mensagem às 22h</li>
+        <li>Processo que odeia: delegar atendimento sem histórico do cliente</li>
+        <li>Atalho perfeito: funcionário que atende sozinho com tudo disponível</li>
+      </ul>
+      <div class="canvas-phrase">"Quero dar o celular pro funcionário e ele resolver. Sem me perguntar nada."</div>
+    </div>
+
+    <div class="canvas-card">
+      <div class="canvas-card-header">
+        <div class="canvas-icon" style="background:#f5f3ff">👑</div>
+        <span class="canvas-title">Vaidade</span>
+      </div>
+      <ul class="canvas-items">
+        <li>Quer ser visto como: empresa de verdade, não pessoa física atendendo</li>
+        <li>Status que busca: "essa oficina tem processo profissional"</li>
+        <li>Alimenta o ego: cliente elogiar a rapidez do atendimento</li>
+      </ul>
+      <div class="canvas-phrase">"Quero que o cliente perceba que somos uma empresa organizada."</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 24 COPIES -->
+<div id="tab-copies" class="section">
+  <div class="section-title">24 Copies por Gatilho</div>
+  <div class="section-sub">3 variações por gatilho · Google Ads / Cold Outreach · B2B PME</div>
+
+  <!-- GANÂNCIA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fefce8">💰</div>
+      <div>
+        <div class="cth-name">Ganância</div>
+        <div class="cth-meta"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-frio">Frio</span><span class="tag tag-sutil">Sutil</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="ganancia-a">
+        <div class="copy-card-header"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Donos de oficina: quanto você perde todo mês de cliente que não recebeu followup?</div>
+        <div class="copy-body">Cada cliente que passou pela sua oficina e não recebeu mensagem nos próximos 6 meses é um cliente que provavelmente foi pro concorrente.
+
+Não por mal atendimento. Por falta de contato.
+
+O Orbitta automatiza o disparo de reativação: envia mensagem para 200 clientes em 10 minutos, com o nome de cada um, sem você tocar em nada.
+
+5 clientes que voltam já pagam o Orbitta por um ano.</div>
+        <div class="copy-cta-box">→ Teste 7 dias grátis · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: cálculo simples: "5 clientes reativados × R$400 = R$2.000. Orbitta custa R$297/mês." Texto: "O ROI é óbvio."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ganancia-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ganancia-b">
+        <div class="copy-card-header"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Seu concorrente usa IA Conecta a R$950/mês. Você pode ter o mesmo por R$297.</div>
+        <div class="copy-body">Multi-atendente no mesmo número. Disparo em massa com personalização. CRM simples. Histórico de conversa.
+
+Tudo que o IA Conecta oferece pra PME — sem o preço de empresa grande.
+
+O Orbitta foi feito pra dono de oficina, ótica, salão. Não pra multinacional.
+
+70% mais barato. 80% do que você precisa.</div>
+        <div class="copy-cta-box">→ Ver o comparativo · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: tabela simples "IA Conecta R$950 vs Orbitta R$297" com recursos marcados. Texto: "Pague pelo que você usa."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ganancia-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ganancia-c">
+        <div class="copy-card-header"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Oficina que faz campanha de reativação mensalmente fatura 30% mais. Sem novos clientes.</div>
+        <div class="copy-body">Você já tem os clientes. Eles só pararam de vir.
+
+A campanha de reativação é simples: seleciona quem não apareceu nos últimos 6 meses, manda mensagem com oferta ou lembrete, espera retorno.
+
+Com o Orbitta, são 10 minutos de trabalho pra enviar pra 200 clientes — com nome de cada um, personalizado.
+
+O que você faz com 30% a mais de faturamento?</div>
+        <div class="copy-cta-box">→ Quero esse resultado · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: print fictício de campanha enviada "200 clientes notificados em 8 minutos". Texto: "Reativação em 10 minutos. Revenue no mês."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ganancia-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- LÚXURIA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fdf2f8">💎</div>
+      <div>
+        <div class="cth-name">Lúxuria</div>
+        <div class="cth-meta"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-morno">Morno</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="luxuria-a">
+        <div class="copy-card-header"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Quando foi a última vez que você passou um fim de semana sem abrir o WhatsApp do negócio?</div>
+        <div class="copy-body">Se você está pensando e não lembra, o problema não é você.
+
+É que o WhatsApp pessoal virou o sistema de atendimento da empresa. E sistema que depende de você 24h não é sistema — é corrente.
+
+O Orbitta separa o WhatsApp do negócio do seu pessoal. Funcionários atendem no número da empresa sem você precisar estar lá.
+
+Fim de semana livre. De verdade.</div>
+        <div class="copy-cta-box">→ Quero esse fim de semana · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: pessoa na praia com celular desligado. Notificação de fundo: "3 atendimentos resolvidos pelo seu time." Texto: "O negócio funcionou. Sem você."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('luxuria-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="luxuria-b">
+        <div class="copy-card-header"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Imagina tirar férias de 5 dias e voltar pra empresa que funcionou normalmente.</div>
+        <div class="copy-body">Não é sonho. É o que donos de PME que usam o Orbitta relatam.
+
+Funcionários atendendo no número da empresa. Histórico de cliente acessível pra qualquer um do time. Respostas rápidas salvas. Filas organizadas.
+
+A operação funciona sem você ser o centro.
+
+E quando você volta, não tem 300 mensagens esperando.</div>
+        <div class="copy-cta-box">→ Quero essa realidade · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: dono de empresa com expressão relaxada. Dashboard de atendimento em segundo plano funcionando. Texto: "Você merece férias de verdade."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('luxuria-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="luxuria-c">
+        <div class="copy-card-header"><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Jantar com a família sem interromper pra responder WhatsApp de cliente. Isso é possível.</div>
+        <div class="copy-body">Roberto responde WhatsApp enquanto janta.
+
+Não porque quer. Porque não tem escolha — se ele não responde, ninguém responde.
+
+O Orbitta muda isso. O número do negócio fica no celular de quem atende, não no seu pessoal. Você cria os templates de resposta. O time usa.
+
+Você janta. O negócio continua.</div>
+        <div class="copy-cta-box">→ Jantar em paz · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: família jantando, pessoa com celular virado pra baixo. Texto: "Seu negócio não precisa parar quando você para."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('luxuria-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- INVEJA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#f0fdf4">👀</div>
+      <div>
+        <div class="cth-name">Inveja</div>
+        <div class="cth-meta"><span class="tag tag-inveja">Inveja</span><span class="tag tag-morno">Morno</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="inveja-a">
+        <div class="copy-card-header"><span class="tag tag-inveja">Inveja</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Aquela oficina do bairro que sempre responde rápido. Você já perguntou como eles fazem?</div>
+        <div class="copy-body">Não é que eles têm mais funcionários que você.
+
+É que eles têm sistema. Multi-atendente no mesmo número. Todos veem o histórico. Todos conseguem responder sem precisar do dono.
+
+Com o Orbitta, o seu time pode fazer o mesmo. Em 1 dia de configuração, sem TI, sem treinamento de semana.
+
+Seu cliente vai perceber a diferença.</div>
+        <div class="copy-cta-box">→ Eu também quero · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: comparativo de velocidade de resposta. "Sem Orbitta: 3h. Com Orbitta: 12 min." Texto: "Velocidade de resposta vira vantagem competitiva."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('inveja-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="inveja-b">
+        <div class="copy-card-header"><span class="tag tag-inveja">Inveja</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Seu cliente vai perguntar: "como vocês são sempre tão organizados?" Você vai responder: "sistema."</div>
+        <div class="copy-body">Quando um cliente manda mensagem e recebe resposta rápida com o histórico certo, ele para de comparar com o concorrente.
+
+Ele indica.
+
+O Orbitta entrega ao seu cliente a experiência de empresa organizada: resposta rápida, histórico acessível, comunicação profissional.
+
+E você implementa em 1 dia.</div>
+        <div class="copy-cta-box">→ Quero essa reputação · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: review de cliente "Melhor atendimento que já tive em oficina." Texto: "Reputação de empresa grande. Preço de PME."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('inveja-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="inveja-c">
+        <div class="copy-card-header"><span class="tag tag-inveja">Inveja</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Enquanto você ainda usa WhatsApp pessoal pro negócio, seus concorrentes já têm sistema profissional.</div>
+        <div class="copy-body">Não é crítica. É realidade.
+
+Empresas que têm atendimento via WhatsApp Business API — com multi-atendente e disparo — respondem mais rápido, perdem menos cliente e fidelizam mais.
+
+Você pode entrar nesse nível por R$197/mês.
+
+Ou esperar enquanto o concorrente pega seus clientes.</div>
+        <div class="copy-cta-box">→ Entrar nesse nível · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: linha do tempo "Concorrente → Orbitta → você?" Texto: "Alguém vai ficar pra trás. Não seja você."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('inveja-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- IRA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fef2f2">🔥</div>
+      <div>
+        <div class="cth-name">Ira</div>
+        <div class="cth-meta"><span class="tag tag-ira">Ira</span><span class="tag tag-quente">Quente</span><span class="tag tag-moderada">Moderada</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="ira-a">
+        <div class="copy-card-header"><span class="tag tag-ira">Ira</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Você construiu esse negócio do zero. Merece ter mais do que WhatsApp pessoal como sistema de atendimento.</div>
+        <div class="copy-body">Você não abriu empresa pra ficar preso no celular.
+
+Mas quando o WhatsApp pessoal virou o único canal de atendimento, foi isso que aconteceu.
+
+O Orbitta separa sua vida pessoal do negócio. Número da empresa separado. Time atendendo sem você. Histórico centralizado.
+
+Você construiu algo. Hora de ter sistema na altura do que construiu.</div>
+        <div class="copy-cta-box">→ Meu negócio merece mais · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: dono de empresa com expressão de alívio ao separar dois celulares. Texto: "Seu WhatsApp pessoal de volta pra você."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ira-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ira-b">
+        <div class="copy-card-header"><span class="tag tag-ira">Ira</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Cansou de perder cliente porque demorou a responder? O problema não é você. É o sistema.</div>
+        <div class="copy-body">Com WhatsApp pessoal, quando você está ocupado, ninguém responde.
+
+E cliente que não recebe resposta em 1h vai pro concorrente. Simples assim.
+
+Com o Orbitta, qualquer atendente do time pode pegar a conversa com histórico completo do cliente. Você fica sabendo do que aconteceu.
+
+Menos cliente perdido. Mais revenue.</div>
+        <div class="copy-cta-box">→ Não perder mais cliente · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: conversa de WhatsApp com cliente perguntando e "visto" sem resposta. Texto abaixo: "Esse cliente já foi pro concorrente."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ira-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="ira-c">
+        <div class="copy-card-header"><span class="tag tag-ira">Ira</span><span class="tag tag-agressiva">Agressiva</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Você é dono do negócio ou escravo do WhatsApp?</div>
+        <div class="copy-body">É honesto perguntar.
+
+Quando o celular pessoal é o único canal de atendimento, você não tem negócio que funciona sem você. Você tem um emprego sem salário fixo e sem descanso.
+
+O Orbitta muda isso em 1 dia:
+- Multi-atendente no número da empresa
+- Funcionário atende, você acompanha
+- Sábado à noite é seu de novo
+
+Dono de negócio que tem sistema. Não escravo.</div>
+        <div class="copy-cta-box">→ Quero ser dono de verdade · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: dois lados — "Sem sistema: escravo do WhatsApp" vs "Com Orbitta: dono do negócio". Texto: "A diferença é sistema."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('ira-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CRIANÇA INTERIOR -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#eef2ff">⭐</div>
+      <div>
+        <div class="cth-name">Criança Interior</div>
+        <div class="cth-meta"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-frio">Frio</span><span class="tag tag-sutil">Sutil</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="crianca-a">
+        <div class="copy-card-header"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Você abriu esse negócio pra ter liberdade. Quando foi que isso mudou?</div>
+        <div class="copy-body">Teve um momento em que abrir o próprio negócio era empolgante.
+
+Seu horário. Suas regras. Sua autonomia.
+
+Em algum ponto, o negócio cresceu e a autonomia diminuiu. Quanto mais clientes, mais você ficou preso no atendimento.
+
+O Orbitta não vai resolver tudo. Mas vai devolver algo: a sensação de que o negócio funciona sem você precisar estar em todo lugar ao mesmo tempo.</div>
+        <div class="copy-cta-box">→ Recuperar essa liberdade · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: foto de negócio no início (empolgação) vs. foto atual (celular na mão 24h). Texto: "O Orbitta não muda o passado. Muda o presente."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('crianca-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="crianca-b">
+        <div class="copy-card-header"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Imagine ter um negócio que funciona quando você não está. Isso não é sonho — é sistema.</div>
+        <div class="copy-body">Todo dono de PME tem esse sonho.
+
+Um negócio que funciona mesmo quando você dorme, quando você viaja, quando você está presente em outra coisa.
+
+O Orbitta não automatiza tudo. Mas resolve o gargalo principal: o atendimento que só funcionava com você.
+
+Funcionário que atende. Sistema que organiza. Você que supervisiona — quando quiser.</div>
+        <div class="copy-cta-box">→ Quero esse sistema · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: painel do Orbitta com atendimentos sendo resolvidos. Dono de negócio em segundo plano relaxado. Texto: "Sistema trabalhando. Você descansando."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('crianca-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="crianca-c">
+        <div class="copy-card-header"><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Poder tirar férias de verdade. É muito pedir pra quem construiu o próprio negócio?</div>
+        <div class="copy-body">Não é.
+
+Mas exige sistema. E sistema de atendimento é o primeiro passo.
+
+Com o Orbitta, seu time atende no WhatsApp da empresa enquanto você está fora. Com histórico, com respostas rápidas, com organização.
+
+O negócio não para quando você para.
+
+Férias deixam de ser culpa e voltam a ser descanso.</div>
+        <div class="copy-cta-box">→ Mereço isso · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: dono de empresa em férias com telefone no bolso, não na mão. Texto: "Você construiu. Agora descanse."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('crianca-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- GULA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#fff7ed">🍀</div>
+      <div>
+        <div class="cth-name">Gula</div>
+        <div class="cth-meta"><span class="tag tag-gula">Gula</span><span class="tag tag-morno">Morno</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="gula-a">
+        <div class="copy-card-header"><span class="tag tag-gula">Gula</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Multi-atendente + disparo em massa + CRM + relatórios + histórico. Por R$297/mês.</div>
+        <div class="copy-body">IA Conecta cobra R$950/mês por isso. O Orbitta cobra R$297.
+
+Não porque é inferior — porque não tem o que você não precisa.
+
+Multi-atendente: vários funcionários no mesmo número.
+Disparo em massa: 500 clientes em 10 minutos.
+CRM integrado: histórico, tags, funil.
+Relatórios: quantas mensagens, tempo de resposta.
+
+Tudo que PME precisa. Sem complexidade de empresa grande.</div>
+        <div class="copy-cta-box">→ Quero tudo isso · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: grid com os 4 recursos principais. Cada um com ícone e descrição curta. Texto: "Completo. Simples. PME."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('gula-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="gula-b">
+        <div class="copy-card-header"><span class="tag tag-gula">Gula</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">7 dias de Orbitta grátis: multi-atendente, disparo, CRM, relatórios — produto completo.</div>
+        <div class="copy-body">Você tem 7 dias pra usar tudo.
+
+Sem cartão de crédito. Sem versão "lite". O produto inteiro.
+
+Configure o multi-atendente em 1 dia. Faça sua primeira campanha de disparo. Veja o histórico de cliente se montando automaticamente.
+
+7 dias são suficientes pra você ver o negócio funcionando diferente.</div>
+        <div class="copy-cta-box">→ Começa o trial · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: "7 dias. Produto completo. Sem cartão." em tipografia laranja limpa. Texto: "Suficiente pra sentir a diferença."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('gula-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="gula-c">
+        <div class="copy-card-header"><span class="tag tag-gula">Gula</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Do atendimento ao disparo de reativação — tudo num lugar. Sem integrar 5 ferramentas.</div>
+        <div class="copy-body">WhatsApp Business pro atendimento. Planilha pro histórico de cliente. Excel pro disparo. Outra coisa pro relatório.
+
+Isso é o que a maioria das PMEs usa. E perde tempo toda semana sincronizando tudo.
+
+O Orbitta centraliza: atendimento, histórico, disparo e relatório no mesmo lugar.
+
+Um login. Tudo conectado. Funcionando desde o primeiro dia.</div>
+        <div class="copy-cta-box">→ Centralizar tudo · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: antes (5 ferramentas desconectadas) vs. depois (Orbitta centralizando tudo). Texto: "Menos ferramentas. Mais resultado."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('gula-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PREGUIÇA -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#f0fdf9">⚡</div>
+      <div>
+        <div class="cth-name">Preguiça</div>
+        <div class="cth-meta"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-frio">Frio</span><span class="tag tag-sutil">Sutil</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="preguica-a">
+        <div class="copy-card-header"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">Seu funcionário aprende o Orbitta em 30 minutos. Sério.</div>
+        <div class="copy-body">Não exige TI. Não tem treinamento de 2 semanas. Não tem manual de 100 páginas.
+
+É simples de propósito — porque foi feito pra dono de oficina, não pra gestor de TI de empresa grande.
+
+Você configura em 1 dia. Seu funcionário aprende em 30 minutos.
+
+Na semana seguinte, o atendimento já está rodando diferente.</div>
+        <div class="copy-cta-box">→ Esse é simples de verdade · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: timer "30 minutos" com checklist de onboarding completo. Texto: "Simples de propósito."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('preguica-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="preguica-b">
+        <div class="copy-card-header"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-sutil">Sutil</span><span class="tag tag-frio">Frio</span></div>
+        <div class="copy-hook">O funcionário pega o celular, entra no Orbitta, vê o histórico do cliente, responde. Sem te ligar.</div>
+        <div class="copy-body">Esse é o cenário que donos de PME querem mas não conseguem com WhatsApp pessoal.
+
+Funcionário não pode pegar o seu celular pessoal. Não tem o histórico. Liga pra você pra cada coisa.
+
+Com o Orbitta, o número da empresa fica acessível pra todo o time. Histórico centralizado. Respostas rápidas salvas. Fila organizada.
+
+Funcionário atende. Você acompanha o dashboard. Só.
+
+</div>
+        <div class="copy-cta-box">→ Quero delegar de verdade · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: funcionário respondendo WhatsApp com expressão confiante. Histórico do cliente visível na tela. Texto: "Ele atendeu. Sem te perguntar nada."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('preguica-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="preguica-c">
+        <div class="copy-card-header"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Campanha de reativação para 300 clientes em 10 minutos. Sem digitação manual, sem copiar e colar.</div>
+        <div class="copy-body">Sabe aquela lista de clientes que não aparecem há 6 meses?
+
+Com o Orbitta você seleciona, escreve a mensagem uma vez com o campo {nome} e manda pra todos.
+
+Cada um recebe com o próprio nome. Personalizado. Parece que foi escrito à mão.
+
+Você fez em 10 minutos o que levaria um dia inteiro.</div>
+        <div class="copy-cta-box">→ Quero esse atalho · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: contador "300 mensagens enviadas em 9 min 32 seg." Texto: "Reativação que levaria 1 dia feita em 10 minutos."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('preguica-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- VAIDADE -->
+  <div class="copies-section">
+    <div class="copies-trigger-header">
+      <div class="cth-icon" style="background:#f5f3ff">👑</div>
+      <div>
+        <div class="cth-name">Vaidade</div>
+        <div class="cth-meta"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-morno">Morno</span></div>
+      </div>
+    </div>
+    <div class="copies-grid">
+      <div class="copy-card" data-copy="vaidade-a">
+        <div class="copy-card-header"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">Sua oficina merece ser tratada como empresa. Não como pessoa física com WhatsApp.</div>
+        <div class="copy-body">Você tem funcionários. Você tem clientes fidelizados. Você tem anos de trabalho.
+
+Mas o canal de atendimento ainda é o seu celular pessoal. E isso manda uma mensagem pro cliente que você não quer.
+
+O Orbitta profissionaliza o atendimento: número da empresa, time organizado, histórico centralizado.
+
+Cliente vê empresa. Você se sente empresa.</div>
+        <div class="copy-cta-box">→ Ser visto como empresa · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: logo de oficina profissional com número de WhatsApp da empresa abaixo. Texto: "Atendimento na altura do negócio que você construiu."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('vaidade-a')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="vaidade-b">
+        <div class="copy-card-header"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-morno">Morno</span></div>
+        <div class="copy-hook">O que separa oficina de bairro de oficina referência? Na maioria dos casos, é atendimento.</div>
+        <div class="copy-body">Não é só qualidade técnica. Qualidade técnica é commodity.
+
+É a rapidez da resposta. É lembrar do nome do cliente. É proatividade — mandar mensagem antes do cliente precisar.
+
+O Orbitta entrega isso: resposta rápida via time, CRM com histórico, disparo de reativação pro cliente sentir que você se importa.
+
+Isso é o que constrói referência de bairro.</div>
+        <div class="copy-cta-box">→ Quero ser referência · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: avaliações 5 estrelas no Google. "Atendimento incrível, respondem rápido." Texto: "Reputação construída no atendimento."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('vaidade-b')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+
+      <div class="copy-card" data-copy="vaidade-c">
+        <div class="copy-card-header"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-moderada">Moderada</span><span class="tag tag-quente">Quente</span></div>
+        <div class="copy-hook">Quando você tiver sistema profissional de atendimento, vai saber que o negócio cresceu de verdade.</div>
+        <div class="copy-body">Tem um momento que todo dono de PME percebe: o negócio virou empresa de verdade.
+
+Não é quando o faturamento bate um número. É quando o negócio funciona sem depender 100% de você.
+
+O Orbitta é um passo nessa direção. Não resolve tudo. Mas resolve o maior gargalo: o atendimento que só funciona quando você está.
+
+Você construiu algo que vale mais do que isso.</div>
+        <div class="copy-cta-box">→ Meu negócio cresceu · orbitta.com.br</div>
+        <div class="copy-visual">📸 Visual: dono de PME olhando pro negócio com orgulho. Texto: "Você construiu. Agora coloca na altura do que construiu."</div>
+        <div class="copy-footer"><button class="btn-copy" onclick="copyCard('vaidade-c')"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMBOS -->
+<div id="tab-combos" class="section">
+  <div class="section-title">Combos de Alto Impacto — Orbitta</div>
+  <div class="section-sub">Copies que combinam 2 gatilhos para máxima conversão</div>
+  <div class="combos-grid">
+
+    <div class="combo-card">
+      <div class="combo-name">ROI Direto</div>
+      <div class="combo-tags"><span class="tag tag-ganancia">Ganância</span><span class="tag tag-preguica">Preguiça</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Dono de PME focado em resultado financeiro</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Campanha de reativação em 10 minutos. 5 clientes que voltam já pagam o Orbitta por 1 ano. Quanto você está perdendo sem isso? → orbitta.com.br</div>
+        <div class="combo-copy-item" onclick="copyText(this)">IA Conecta cobra R$950 pelo que você usa 30%. O Orbitta cobra R$297 pelo que você realmente precisa. E 5 clientes reativados pagam o ano inteiro.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Disparo de reativação pro 300 clientes inativos. 10 minutos de trabalho. Resultado: cliente que volta e paga. Isso é Orbitta. → orbitta.com.br</div>
+      </div>
+    </div>
+
+    <div class="combo-card">
+      <div class="combo-name">Liberdade Real</div>
+      <div class="combo-tags"><span class="tag tag-ira">Ira</span><span class="tag tag-luxuria">Lúxuria</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Dono preso no WhatsApp pessoal 24h</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Você abriu empresa pra ter liberdade. Mas o WhatsApp pessoal te prendeu. O Orbitta devolve o seu celular de volta. → orbitta.com.br</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Responder WhatsApp às 22h não é dedicação. É falta de sistema. Com Orbitta, seu time atende. Você janta com a família.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Férias de 5 dias com o negócio funcionando. Não é sonho — é o que donos de PME com Orbitta já fazem. 7 dias grátis pra testar.</div>
+      </div>
+    </div>
+
+    <div class="combo-card">
+      <div class="combo-name">Empresa Profissional</div>
+      <div class="combo-tags"><span class="tag tag-vaidade">Vaidade</span><span class="tag tag-inveja">Inveja</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Dono que quer ser visto como empresa organizada</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Aquela oficina que responde rápido e parece sempre organizada? Tem sistema. O Orbitta é esse sistema. Por R$197/mês. → orbitta.com.br</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Seu cliente percebe quando tem sistema. Percebe quando não tem. O Orbitta transforma seu atendimento no que você já deveria ter.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Número da empresa separado. Time organizado. Histórico centralizado. É assim que empresa profissional atende. O Orbitta faz isso por R$297/mês.</div>
+      </div>
+    </div>
+
+    <div class="combo-card">
+      <div class="combo-name">Simplicidade que Escala</div>
+      <div class="combo-tags"><span class="tag tag-preguica">Preguiça</span><span class="tag tag-crianca">Criança Interior</span><span class="tag tag-combo">Combo</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">📌 Dono que quer crescer sem complicar</p>
+      <div class="combo-copies">
+        <div class="combo-copy-item" onclick="copyText(this)">Você abriu esse negócio pra ser simples. O Orbitta é simples. 1 dia de configuração. 30 minutos de treinamento. E o negócio funciona diferente.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Crescer não precisa significar mais complicação. Orbitta é o sistema que permite crescer sem explodir o atendimento. Simple, direto, funciona.</div>
+        <div class="combo-copy-item" onclick="copyText(this)">Funcionário aprende em 30 minutos. Você configura em 1 dia. Negócio funciona sem você no centro. Isso é escala simples. → orbitta.com.br</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RANKING -->
+<div id="tab-ranking" class="section">
+  <div class="section-title">Ranking de Prioridade para Teste</div>
+  <div class="section-sub">Gatilhos ordenados por potencial de conversão para Roberto Silva · Google Ads / Cold Outreach B2B</div>
+  <table class="ranking-table">
+    <thead>
+      <tr>
+        <th>Prioridade</th>
+        <th>Gatilho / Combo</th>
+        <th>Motivo</th>
+        <th>Orçamento</th>
+        <th>Temperatura</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="rank-badge rb-1">1</span></td>
+        <td><span class="tag tag-ira">Ira</span> + "Dono do negócio ou escravo do WhatsApp?"</td>
+        <td>Dor número 1 da persona. Hook que nomeia o problema de forma que Roberto reconhece imediatamente. Alta identificação.</td>
+        <td>30%</td>
+        <td><span class="tag tag-frio">Frio</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-2">2</span></td>
+        <td><span class="tag tag-ganancia">Ganância</span> + "5 clientes reativados pagam o ano"</td>
+        <td>ROI direto e calculável. B2B fecha mais rápido quando o argumento financeiro é concreto. Alta conversão em morno.</td>
+        <td>25%</td>
+        <td><span class="tag tag-morno">Morno</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-3">3</span></td>
+        <td><span class="tag tag-combo">Combo</span> ROI Direto (Ganância + Preguiça)</td>
+        <td>Combina o argumento financeiro com a facilidade de execução. Máximo impacto pra dono de PME ocupado.</td>
+        <td>20%</td>
+        <td><span class="tag tag-morno">Morno</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-4">4</span></td>
+        <td><span class="tag tag-luxuria">Lúxuria</span> + "Férias de verdade"</td>
+        <td>Desejo emocional forte. Funciona bem em conteúdo orgânico e remarketing. Alta ressonância com persona cansada.</td>
+        <td>15%</td>
+        <td><span class="tag tag-morno">Morno</span></td>
+      </tr>
+      <tr>
+        <td><span class="rank-badge rb-5">5</span></td>
+        <td><span class="tag tag-vaidade">Vaidade</span> + "Atendimento na altura do negócio"</td>
+        <td>Posicionamento e orgulho. Funciona melhor como remarketing pra quem já conhece o produto.</td>
+        <td>10%</td>
+        <td><span class="tag tag-quente">Quente</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:20px;padding:16px 20px;background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.25);border-radius:12px">
+    <div style="font-size:13px;font-weight:700;color:#f97316;margin-bottom:6px">⚠️ Notas de Tom — Orbitta</div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:6px">
+      <li style="font-size:13px;color:#fdba74">• Tom principal: direto, sem enrolação — Roberto não tem tempo pra filosofia, quer resultado</li>
+      <li style="font-size:13px;color:#fdba74">• Sempre falar em ROI explícito: "5 clientes reativados", "R$297 vs R$950", "1 dia de configuração"</li>
+      <li style="font-size:13px;color:#fdba74">• Ira: direcionada ao SISTEMA (WhatsApp pessoal como canal, falta de processo) — nunca ao cliente</li>
+      <li style="font-size:13px;color:#fdba74">• Ganância: não prometer número exato de reativação — use "até 5 clientes" ou "donos relatam"</li>
+      <li style="font-size:13px;color:#fdba74">• Roberto usa Android Samsung — evitar referências exclusivas a iOS no copy</li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<div class="toast" id="toast"><i data-lucide="check" style="width:14px;height:14px"></i> Copiado!</div>
+<button class="tele-btn" onclick="copyAll()"><i data-lucide="radio" style="width:14px;height:14px"></i> Copiar Tudo (Teleprompter)</button>
+
+<script>
+function toggleLP(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(`tab-${id}`).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(window.lucide) lucide.createIcons();
+}
+
+function showToast(){
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+function copyText(el){
+  navigator.clipboard.writeText(el.textContent.trim()).then(()=>showToast());
+}
+
+function copyCard(id){
+  const card=document.querySelector(`[data-copy="${id}"]`);
+  if(!card) return;
+  const hook=card.querySelector('.copy-hook')?.textContent.trim()||'';
+  const body=card.querySelector('.copy-body')?.textContent.trim()||'';
+  const cta=card.querySelector('.copy-cta-box')?.textContent.trim()||'';
+  navigator.clipboard.writeText(`${hook}\n\n${body}\n\n${cta}`).then(()=>showToast());
+}
+
+function copyAll(){
+  const cards=document.querySelectorAll('.copy-card');
+  let all='SEXY CANVAS — ORBITTA MESSENGER\n';
+  all+='Persona: Roberto Silva — Dono de PME\n';
+  all+='================================\n\n';
+  cards.forEach((card,i)=>{
+    const gatilho=card.querySelector('.copy-card-header .tag')?.textContent||'';
+    const hook=card.querySelector('.copy-hook')?.textContent.trim()||'';
+    const body=card.querySelector('.copy-body')?.textContent.trim()||'';
+    const cta=card.querySelector('.copy-cta-box')?.textContent.trim()||'';
+    all+=`--- COPY ${i+1} [${gatilho}] ---\n`;
+    all+=`HOOK: ${hook}\n\n`;
+    all+=`${body}\n\n`;
+    all+=`CTA: ${cta}\n\n`;
+  });
+  navigator.clipboard.writeText(all).then(()=>{
+    document.getElementById('toast').innerHTML='<i data-lucide="check" style="width:14px;height:14px"></i> 24 copies copiadas!';
+    showToast();
+  });
+}
+
+lucide.createIcons();
+</script>
+</body>
+</html>

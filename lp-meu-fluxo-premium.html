@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MeuFluxo — Feito para o seu cérebro</title>
+<meta name="description" content="O único app de tarefas que não te faz sentir culpado. Tempo Vivo: cada bloco reinicia. Feito por quem tem TDAH, pra quem tem TDAH.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,700;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090f;
+  --surface:#10101a;
+  --surface2:#161622;
+  --accent:#575ECF;
+  --accent-bright:#7B83FF;
+  --accent-dim:rgba(87,94,207,.1);
+  --accent-mid:rgba(87,94,207,.22);
+  --green:#50FA7B;
+  --amber:#FFB86C;
+  --text:#E8E8F5;
+  --dim:#8888AA;
+  --muted:#44445A;
+  --border:rgba(255,255,255,.06);
+  --r:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+
+/* ─ NAV ─ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:54px;display:flex;align-items:center;padding:0 32px;gap:12px;
+  transition:background .3s,backdrop-filter .3s,border-color .3s;
+}
+.nav.scrolled{
+  background:rgba(9,9,15,.85);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:9px;
+  font-family:'Epilogue',sans-serif;font-weight:900;font-size:17px;color:#fff;
+}
+.nav-orb{
+  width:26px;height:26px;border-radius:50%;
+  background:conic-gradient(from 200deg,var(--accent),var(--accent-bright),var(--green),var(--accent));
+  animation:spin 8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.nav-back{
+  margin-left:auto;font-size:12px;color:var(--muted);
+  padding:5px 11px;border-radius:7px;border:1px solid var(--border);
+  transition:.15s;
+}
+.nav-back:hover{color:var(--dim);border-color:rgba(255,255,255,.1)}
+.nav-cta{
+  background:var(--accent);color:#fff;
+  font-size:12px;font-weight:600;
+  padding:7px 16px;border-radius:8px;transition:.15s;
+}
+.nav-cta:hover{background:var(--accent-bright)}
+
+/* ─ HERO ─ */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 0 80px;
+  position:relative;overflow:hidden;
+}
+
+/* Animated canvas bg */
+.hero-canvas{
+  position:absolute;inset:0;
+  background:var(--bg);
+  overflow:hidden;
+}
+.orb{
+  position:absolute;border-radius:50%;
+  filter:blur(80px);pointer-events:none;
+  animation:drift var(--d,12s) ease-in-out infinite alternate;
+}
+.orb-1{width:600px;height:600px;top:-200px;left:-100px;background:rgba(87,94,207,.2);--d:14s}
+.orb-2{width:500px;height:500px;top:30%;right:-150px;background:rgba(189,147,249,.15);--d:10s}
+.orb-3{width:400px;height:400px;bottom:-100px;left:30%;background:rgba(80,250,123,.08);--d:16s}
+.orb-4{width:300px;height:300px;top:20%;left:40%;background:rgba(255,184,108,.07);--d:9s}
+@keyframes drift{
+  0%{transform:translate(0,0) scale(1)}
+  100%{transform:translate(40px,30px) scale(1.1)}
+}
+
+/* Noise texture */
+.hero-noise{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+
+/* Animated grid */
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(87,94,207,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(87,94,207,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 70% 70% at 50% 40%,black 0%,transparent 80%);
+  pointer-events:none;
+}
+
+/* Floating app mockup */
+.hero-mockup{
+  position:absolute;
+  right:-40px;top:50%;transform:translateY(-50%);
+  width:320px;
+  animation:float 6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes float{
+  0%,100%{transform:translateY(-50%)}
+  50%{transform:translateY(calc(-50% - 16px))}
+}
+.mockup-frame{
+  background:rgba(16,16,26,.9);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:16px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 32px 80px rgba(0,0,0,.5),0 0 0 1px rgba(87,94,207,.15),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.mockup-topbar{
+  display:flex;align-items:center;gap:6px;margin-bottom:14px;
+}
+.mockup-dot{width:8px;height:8px;border-radius:50%}
+.mockup-title{
+  font-family:'Epilogue',sans-serif;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.4);margin-left:auto;
+}
+.mockup-block-label{
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:8px;
+}
+.mockup-tasks{list-style:none;margin-bottom:12px}
+.mockup-task{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 8px;border-radius:7px;margin-bottom:4px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.05);
+  font-size:10px;color:rgba(255,255,255,.55);
+}
+.mockup-check{
+  width:12px;height:12px;border-radius:3px;
+  border:1.5px solid;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:7px;
+}
+.mockup-dot-project{width:6px;height:6px;border-radius:50%;margin-left:auto;flex-shrink:0}
+
+/* Hero content */
+.hero-content{
+  max-width:680px;
+  padding:0 48px;
+  position:relative;z-index:2;
+}
+.hero-label{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent-bright);
+  margin-bottom:24px;
+}
+.hero-label-line{width:28px;height:1px;background:var(--accent-bright)}
+
+.hero-h{
+  font-family:'Epilogue',sans-serif;
+  font-size:clamp(3rem,7vw,5.5rem);
+  font-weight:900;line-height:.95;
+  letter-spacing:-.04em;
+  color:#fff;
+  margin-bottom:24px;
+}
+.hero-h .line2{
+  font-style:italic;
+  background:linear-gradient(135deg,var(--accent-bright),var(--green));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-h .line3{
+  position:relative;display:inline-block;color:rgba(255,255,255,.25);
+}
+.hero-h .line3::after{
+  content:'';position:absolute;
+  left:0;right:0;top:55%;height:5px;
+  background:linear-gradient(90deg,#FF6B6B,#FF8E8E);
+  border-radius:3px;
+  transform:rotate(-1.5deg) scaleX(0);transform-origin:left;
+  animation:slash 0.6s cubic-bezier(.22,1,.36,1) 1.4s forwards;
+}
+@keyframes slash{to{transform:rotate(-1.5deg) scaleX(1)}}
+
+.hero-desc{
+  font-size:1.05rem;color:var(--dim);
+  max-width:460px;line-height:1.75;
+  margin-bottom:36px;
+}
+.hero-desc strong{color:var(--text);font-weight:500}
+
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+.btn-hero{
+  display:inline-flex;align-items:center;gap:9px;
+  font-size:.95rem;font-weight:600;
+  padding:13px 26px;border-radius:10px;
+  transition:.2s;cursor:pointer;border:none;font-family:'Inter',sans-serif;
+}
+.btn-hero.primary{
+  background:var(--accent);color:#fff;
+  box-shadow:0 8px 32px rgba(87,94,207,.4);
+}
+.btn-hero.primary:hover{background:var(--accent-bright);transform:translateY(-2px);box-shadow:0 12px 40px rgba(87,94,207,.5)}
+.btn-hero.ghost{
+  background:rgba(255,255,255,.05);color:var(--dim);
+  border:1px solid var(--border);
+}
+.btn-hero.ghost:hover{background:rgba(255,255,255,.08);color:var(--text);border-color:rgba(255,255,255,.1)}
+.hero-micro{font-size:.75rem;color:var(--muted)}
+
+/* ─ SOCIAL PROOF STRIP ─ */
+.proof-strip{
+  padding:20px 48px;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:40px;flex-wrap:wrap;
+  background:rgba(255,255,255,.015);
+  position:relative;z-index:2;
+}
+.proof-item{display:flex;align-items:center;gap:10px}
+.proof-num{
+  font-family:'Epilogue',sans-serif;
+  font-size:1.4rem;font-weight:900;color:#fff;line-height:1;
+}
+.proof-label{font-size:.75rem;color:var(--muted);line-height:1.4}
+.proof-sep{width:1px;height:32px;background:var(--border)}
+
+/* ─ SECTION BASE ─ */
+.section{padding:100px 48px}
+.section.alt{background:var(--surface)}
+.s-eye{
+  font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--accent-bright);margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.s-eye::before{content:'';width:24px;height:2px;background:var(--accent-bright)}
+.s-h{
+  font-family:'Epilogue',sans-serif;
+  font-size:clamp(2rem,4vw,3.2rem);
+  font-weight:900;color:#fff;line-height:1.05;
+  letter-spacing:-.03em;margin-bottom:16px;
+}
+.s-sub{font-size:1.05rem;color:var(--dim);max-width:540px;line-height:1.75}
+.inner{max-width:1100px;margin:0 auto}
+.inner-narrow{max-width:760px;margin:0 auto}
+
+/* ─ PAIN ─ */
+.pain-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;margin-top:52px;
+}
+.pain-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r);padding:24px;
+  transition:.2s;
+}
+.pain-card:hover{border-color:rgba(255,255,255,.1);transform:translateY(-3px)}
+.pain-card-icon{font-size:1.6rem;margin-bottom:12px}
+.pain-card-title{
+  font-family:'Epilogue',sans-serif;font-size:1rem;
+  font-weight:700;color:#fff;margin-bottom:8px;
+}
+.pain-card-desc{font-size:.88rem;color:var(--dim);line-height:1.65}
+
+/* Overdue mockup */
+.overdue-box{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px;
+  margin-top:36px;max-width:500px;
+}
+.overdue-label{
+  font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted);margin-bottom:12px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.overdue-count{
+  background:rgba(255,107,107,.12);color:#FF8080;
+  font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;
+}
+.overdue-list{list-style:none}
+.overdue-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 0;border-bottom:1px solid var(--border);
+  font-size:.82rem;color:var(--dim);
+}
+.overdue-item:last-child{border-bottom:none}
+.overdue-cb{
+  width:14px;height:14px;border-radius:3px;
+  border:1.5px solid rgba(255,107,107,.4);flex-shrink:0;
+  background:rgba(255,107,107,.06);
+}
+.overdue-days{
+  margin-left:auto;font-size:.7rem;font-weight:700;
+  padding:2px 6px;border-radius:6px;flex-shrink:0;
+}
+.red-tag{background:rgba(255,107,107,.1);color:#FF8080}
+.amber-tag{background:rgba(255,184,108,.1);color:var(--amber)}
+.overdue-more{
+  text-align:center;padding:10px 0 0;
+  font-size:.75rem;color:var(--muted);font-style:italic;
+}
+
+/* ─ TEMPO VIVO ─ */
+.tv-section{
+  padding:100px 48px;
+  background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%);
+}
+.tv-wrap{
+  max-width:900px;margin:52px auto 0;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,.5);
+}
+.tv-titlebar{
+  padding:14px 20px;
+  background:rgba(255,255,255,.03);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.tv-tb-dots{display:flex;gap:5px}
+.tv-tb-dot{width:10px;height:10px;border-radius:50%}
+.tv-tb-title{
+  margin:0 auto;font-size:11px;font-weight:600;
+  color:var(--muted);letter-spacing:.05em;
+}
+.tv-body{display:grid;grid-template-columns:1fr 1fr 1fr}
+.tv-col{
+  padding:20px;
+  border-right:1px solid var(--border);
+  position:relative;
+}
+.tv-col:last-child{border-right:none}
+.tv-col-top{
+  display:flex;align-items:center;gap:8px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:14px;
+}
+.tv-col-icon{font-size:1.2rem}
+.tv-col-info{}
+.tv-col-name{
+  font-family:'Epilogue',sans-serif;
+  font-size:.82rem;font-weight:800;
+}
+.tv-col-time{font-size:.7rem;color:var(--muted)}
+.tv-col-accent-bar{
+  position:absolute;top:0;left:0;right:0;height:3px;
+}
+.tv-col.morning .tv-col-name{color:#FFB86C}
+.tv-col.morning .tv-col-accent-bar{background:#FFB86C}
+.tv-col.afternoon .tv-col-name{color:#50FA7B}
+.tv-col.afternoon .tv-col-accent-bar{background:#50FA7B}
+.tv-col.night .tv-col-name{color:#BD93F9}
+.tv-col.night .tv-col-accent-bar{background:#BD93F9}
+.tv-item{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 8px;border-radius:7px;
+  margin-bottom:4px;
+  background:rgba(255,255,255,.02);
+  font-size:.78rem;color:var(--dim);
+  border:1px solid transparent;
+  transition:.15s;cursor:default;
+}
+.tv-item:hover{background:rgba(255,255,255,.04);border-color:var(--border)}
+.tv-cb{
+  width:13px;height:13px;border-radius:3px;
+  border:1.5px solid;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:900;
+}
+.tv-col.morning .tv-cb{border-color:rgba(255,184,108,.4)}
+.tv-col.afternoon .tv-cb{border-color:rgba(80,250,123,.4)}
+.tv-col.night .tv-cb{border-color:rgba(189,147,249,.4)}
+.tv-item.done{opacity:.45}
+.tv-item.done .tv-cb{background:rgba(80,250,123,.3);border-color:#50FA7B;color:#50FA7B}
+.tv-item.done span{text-decoration:line-through}
+.tv-dot-p{width:5px;height:5px;border-radius:50%;margin-left:auto;flex-shrink:0}
+.tv-footer{
+  padding:14px 20px;
+  background:rgba(80,250,123,.04);
+  border-top:1px solid rgba(80,250,123,.1);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.tv-footer-icon{font-size:.9rem}
+.tv-footer-text{font-size:.78rem;font-weight:600;color:rgba(80,250,123,.7)}
+
+/* ─ FEATURES ─ */
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:14px;margin-top:52px;
+}
+.feat-card{
+  border-radius:var(--r);padding:24px;
+  background:var(--surface2);border:1px solid var(--border);
+  transition:.25s;position:relative;overflow:hidden;
+}
+.feat-card::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-bright));
+  transform:scaleX(0);transform-origin:left;transition:.3s;
+}
+.feat-card:hover{border-color:rgba(87,94,207,.3);transform:translateY(-4px);box-shadow:0 16px 48px rgba(87,94,207,.12)}
+.feat-card:hover::after{transform:scaleX(1)}
+.feat-num{
+  font-family:'Epilogue',sans-serif;font-size:2.5rem;font-weight:900;
+  color:rgba(87,94,207,.15);line-height:1;margin-bottom:12px;
+}
+.feat-title{font-family:'Epilogue',sans-serif;font-size:.95rem;font-weight:800;color:#fff;margin-bottom:8px}
+.feat-desc{font-size:.82rem;color:var(--dim);line-height:1.65}
+
+/* ─ TESTIMONIALS ─ */
+.testi-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:14px;margin-top:52px;
+}
+.testi{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r);padding:22px;position:relative;
+}
+.testi-accent{
+  position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--r) var(--r) 0 0;
+}
+.testi-stars{color:#FFB86C;font-size:.78rem;letter-spacing:2px;margin-bottom:12px}
+.testi-q{
+  font-size:.9rem;color:var(--dim);line-height:1.7;
+  font-style:italic;margin-bottom:16px;
+}
+.testi-q strong{color:var(--text);font-style:normal}
+.testi-person{display:flex;align-items:center;gap:10px}
+.testi-av{
+  width:34px;height:34px;border-radius:50%;
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;
+  background:var(--surface);flex-shrink:0;
+}
+.testi-name{font-weight:600;font-size:.82rem;color:#fff}
+.testi-role{font-size:.72rem;color:var(--muted)}
+
+/* ─ PRICE ─ */
+.price-wrap{max-width:440px;margin:52px auto 0}
+.price-card{
+  background:var(--surface2);
+  border:1px solid rgba(87,94,207,.25);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(87,94,207,.08),0 32px 80px rgba(0,0,0,.4);
+}
+.price-top{
+  padding:28px 32px 24px;
+  background:linear-gradient(135deg,rgba(87,94,207,.2) 0%,rgba(87,94,207,.05) 100%);
+  border-bottom:1px solid rgba(87,94,207,.15);
+  text-align:center;position:relative;overflow:hidden;
+}
+.price-top::before{
+  content:'';position:absolute;
+  top:-60px;right:-60px;
+  width:200px;height:200px;border-radius:50%;
+  background:rgba(87,94,207,.1);
+}
+.price-name{font-family:'Epilogue',sans-serif;font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:4px}
+.price-tagline{font-size:.82rem;color:var(--dim)}
+.price-body{padding:28px 32px 32px}
+.price-main{text-align:center;margin-bottom:22px}
+.price-from{font-size:.75rem;color:var(--muted)}
+.price-val{
+  font-family:'Epilogue',sans-serif;
+  font-size:3rem;font-weight:900;color:#fff;line-height:1;
+}
+.price-val sup{font-size:1.2rem;vertical-align:top;margin-top:8px;display:inline-block}
+.price-val small{font-size:.95rem;color:var(--dim);font-family:'Inter',sans-serif;font-weight:400}
+.price-trial{
+  display:inline-block;
+  background:rgba(80,250,123,.1);border:1px solid rgba(80,250,123,.2);
+  color:var(--green);font-size:.78rem;font-weight:700;
+  padding:5px 12px;border-radius:8px;margin:8px 0 20px;
+}
+.price-items{list-style:none;margin-bottom:22px}
+.price-item{
+  display:flex;gap:9px;align-items:flex-start;
+  padding:8px 0;border-bottom:1px solid var(--border);
+  font-size:.87rem;color:var(--dim);
+}
+.price-item:last-child{border-bottom:none}
+.p-ck{
+  width:17px;height:17px;border-radius:4px;
+  background:var(--accent-dim);border:1px solid var(--accent-mid);
+  color:var(--accent-bright);font-size:9px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+}
+.btn-buy{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;background:var(--accent);color:#fff;
+  font-family:'Inter',sans-serif;font-size:.95rem;font-weight:700;
+  padding:14px;border-radius:10px;border:none;cursor:pointer;
+  box-shadow:0 8px 28px rgba(87,94,207,.4);transition:.2s;
+  text-decoration:none;
+}
+.btn-buy:hover{background:var(--accent-bright);box-shadow:0 12px 36px rgba(87,94,207,.55);transform:translateY(-2px)}
+.price-guarantee{text-align:center;font-size:.72rem;color:var(--muted);margin-top:10px}
+
+/* ─ CTA ─ */
+.cta-section{
+  padding:120px 48px;text-align:center;
+  background:radial-gradient(ellipse 60% 60% at 50% 100%,rgba(87,94,207,.15) 0%,transparent 70%);
+  position:relative;overflow:hidden;
+}
+.cta-h{
+  font-family:'Epilogue',sans-serif;
+  font-size:clamp(2.2rem,5vw,4rem);
+  font-weight:900;color:#fff;line-height:1.05;
+  letter-spacing:-.03em;margin-bottom:16px;
+}
+.cta-h em{font-style:italic;color:var(--green)}
+.cta-p{font-size:1.05rem;color:var(--dim);margin-bottom:36px;max-width:440px;margin-left:auto;margin-right:auto}
+.cta-micro{font-size:.75rem;color:var(--muted);margin-top:12px}
+
+/* ─ FOOTER ─ */
+footer{
+  padding:32px 48px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+.footer-logo{font-family:'Epilogue',sans-serif;font-weight:900;font-size:1rem;color:#fff}
+.footer-logo span{color:var(--accent-bright)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:.78rem;color:var(--muted);transition:.15s}
+.footer-links a:hover{color:var(--dim)}
+.footer-copy{font-size:.72rem;color:var(--muted);width:100%}
+
+/* ─ SCROLL REVEAL ─ */
+[data-r]{opacity:0;transition:opacity .7s ease,transform .7s ease}
+[data-r="u"]{transform:translateY(32px)}
+[data-r="l"]{transform:translateX(-32px)}
+[data-r="r"]{transform:translateX(32px)}
+[data-r="s"]{transform:scale(.94)}
+[data-r].in{opacity:1;transform:none!important}
+
+[data-sg]>*{opacity:0;transform:translateY(24px);transition:opacity .55s ease,transform .55s ease}
+[data-sg].in>*:nth-child(1){opacity:1;transform:none;transition-delay:.0s}
+[data-sg].in>*:nth-child(2){opacity:1;transform:none;transition-delay:.09s}
+[data-sg].in>*:nth-child(3){opacity:1;transform:none;transition-delay:.18s}
+[data-sg].in>*:nth-child(4){opacity:1;transform:none;transition-delay:.27s}
+[data-sg].in>*:nth-child(5){opacity:1;transform:none;transition-delay:.36s}
+[data-sg].in>*:nth-child(6){opacity:1;transform:none;transition-delay:.45s}
+
+/* ─ RESPONSIVE ─ */
+@media(max-width:900px){
+  .hero-mockup{display:none}
+  .pain-grid{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr 1fr}
+  .testi-row{grid-template-columns:1fr}
+  .tv-body{grid-template-columns:1fr}
+  .tv-col{border-right:none;border-bottom:1px solid var(--border)}
+  .tv-col:last-child{border-bottom:none}
+}
+@media(max-width:640px){
+  .section,.tv-section,.cta-section{padding-left:24px;padding-right:24px}
+  .hero-content{padding:0 24px}
+  .proof-strip{padding-left:24px;padding-right:24px;gap:20px}
+  .features-grid{grid-template-columns:1fr}
+  footer{padding:24px}
+  .nav-back{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-logo">
+    <div class="nav-orb"></div>
+    MeuFluxo
+  </div>
+  <a href="index.html" class="nav-back">← Ecossistema</a>
+  <a href="#comecar" class="nav-cta">Testar grátis</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-canvas">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="hero-noise"></div>
+    <div class="hero-grid"></div>
+  </div>
+
+  <!-- App mockup floating -->
+  <div class="hero-mockup">
+    <div class="mockup-frame">
+      <div class="mockup-topbar">
+        <div class="mockup-dot" style="background:#FF5F57"></div>
+        <div class="mockup-dot" style="background:#FEBC2E"></div>
+        <div class="mockup-dot" style="background:#28C840"></div>
+        <div class="mockup-title">Meu Dia — Tarde</div>
+      </div>
+      <div class="mockup-block-label" style="color:#50FA7B">🌤️ Tarde</div>
+      <ul class="mockup-tasks">
+        <li class="mockup-task">
+          <div class="mockup-check" style="border-color:rgba(80,250,123,.5);background:rgba(80,250,123,.2);color:#50FA7B">✓</div>
+          <span style="text-decoration:line-through;opacity:.4">Criar criativos</span>
+          <div class="mockup-dot-project" style="background:#FFB86C"></div>
+        </li>
+        <li class="mockup-task">
+          <div class="mockup-check" style="border-color:rgba(80,250,123,.3)"></div>
+          <span>Analisar métricas</span>
+          <div class="mockup-dot-project" style="background:#6C9CFC"></div>
+        </li>
+        <li class="mockup-task">
+          <div class="mockup-check" style="border-color:rgba(80,250,123,.3)"></div>
+          <span>Enviar relatório</span>
+          <div class="mockup-dot-project" style="background:#BD93F9"></div>
+        </li>
+      </ul>
+      <div class="mockup-block-label" style="color:#BD93F9;margin-top:10px">🌙 Noite</div>
+      <ul class="mockup-tasks">
+        <li class="mockup-task" style="opacity:.5">
+          <div class="mockup-check" style="border-color:rgba(189,147,249,.3)"></div>
+          <span>Estudar copy</span>
+          <div class="mockup-dot-project" style="background:#FF79C6"></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-label" data-r="l">
+      <div class="hero-label-line"></div>
+      App para TDAH · TEA · AuDHD
+    </div>
+    <h1 class="hero-h" data-r="u">
+      Feito pro<br>
+      <span class="line2">seu cérebro.</span><br>
+      <span class="line3">não pro deles.</span>
+    </h1>
+    <p class="hero-desc" data-r="u">
+      Notion, Todoist, Trello foram feitos pra <strong>cérebros neurotípicos</strong>. Ver 87 tarefas atrasadas paralisa — não gera ação. MeuFluxo é diferente.
+    </p>
+    <div class="hero-actions" data-r="u">
+      <a href="#comecar" class="btn-hero primary">⚡ Começar grátis 14 dias</a>
+      <a href="#como-funciona" class="btn-hero ghost">Ver como funciona →</a>
+    </div>
+    <p class="hero-micro" data-r="u">Sem cartão · Cancela quando quiser</p>
+  </div>
+
+  <div class="proof-strip" data-sg>
+    <div class="proof-item">
+      <div class="proof-num">3</div>
+      <div class="proof-label">blocos<br>por dia</div>
+    </div>
+    <div class="proof-sep"></div>
+    <div class="proof-item">
+      <div class="proof-num">0</div>
+      <div class="proof-label">culpa<br>acumulada</div>
+    </div>
+    <div class="proof-sep"></div>
+    <div class="proof-item">
+      <div class="proof-num">R$29</div>
+      <div class="proof-label">por mês<br>tudo incluído</div>
+    </div>
+    <div class="proof-sep"></div>
+    <div class="proof-item">
+      <div class="proof-num">14d</div>
+      <div class="proof-label">grátis<br>sem cartão</div>
+    </div>
+  </div>
+</section>
+
+<!-- DOR -->
+<section class="section" id="dor">
+  <div class="inner-narrow">
+    <div class="s-eye" data-r="l">O Problema</div>
+    <h2 class="s-h" data-r="u">Apps tradicionais te deixam <em style="font-style:italic;color:rgba(255,107,107,.8)">pior</em></h2>
+    <p class="s-sub" data-r="u">Não é falta de força de vontade. É que essas ferramentas assumem um cérebro que consegue olhar uma lista enorme e simplesmente começar.</p>
+
+    <div class="overdue-box" data-r="s">
+      <div class="overdue-label">
+        <span>Todoist — Suas tarefas</span>
+        <span class="overdue-count">87 atrasadas</span>
+      </div>
+      <ul class="overdue-list">
+        <li class="overdue-item">
+          <div class="overdue-cb"></div>
+          <span>Enviar relatório do cliente</span>
+          <span class="overdue-days red-tag">5 dias</span>
+        </li>
+        <li class="overdue-item">
+          <div class="overdue-cb"></div>
+          <span>Responder proposta parceria</span>
+          <span class="overdue-days red-tag">3 dias</span>
+        </li>
+        <li class="overdue-item">
+          <div class="overdue-cb" style="border-color:rgba(255,184,108,.4);background:rgba(255,184,108,.06)"></div>
+          <span>Revisar campanha</span>
+          <span class="overdue-days amber-tag">ontem</span>
+        </li>
+        <li class="overdue-item">
+          <div class="overdue-cb" style="border-color:rgba(255,184,108,.4);background:rgba(255,184,108,.06)"></div>
+          <span>Ligar pro cliente</span>
+          <span class="overdue-days amber-tag">hoje</span>
+        </li>
+      </ul>
+      <p class="overdue-more">+ 83 tarefas a mais...</p>
+    </div>
+  </div>
+  <div class="inner" style="margin-top:0">
+    <div class="pain-grid" data-sg>
+      <div class="pain-card">
+        <div class="pain-card-icon">😶‍🌫️</div>
+        <div class="pain-card-title">Paralisia por excesso</div>
+        <p class="pain-card-desc">Ver 80+ itens vermelhos não ativa ação — ativa o modo de travamento. TDAH interpreta "muito" como "impossível".</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-card-icon">🔔</div>
+        <div class="pain-card-title">Notificação na hora errada</div>
+        <p class="pain-card-desc">Você entrou no fluxo. Plim — alerta de reunião às 14h às 9h da manhã. Fluxo quebrado. Ansiedade. Nada resolvido.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-card-icon">🗂️</div>
+        <div class="pain-card-title">Sobrecarga visual instantânea</div>
+        <p class="pain-card-desc">Colunas, boards, tags, filtros, views aninhadas. Antes de fazer uma tarefa você já esgotou sua energia gerenciando o sistema.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-card-icon">💔</div>
+        <div class="pain-card-title">Culpa que nunca some</div>
+        <p class="pain-card-desc">O app lembra tudo. Cada dia o vermelho aumenta. Sexta à noite você se sente um fracasso — mesmo tendo feito muita coisa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMPO VIVO -->
+<section class="tv-section" id="como-funciona">
+  <div class="inner-narrow">
+    <div class="s-eye" data-r="l">A Solução</div>
+    <h2 class="s-h" data-r="u">Tempo <span style="color:var(--green)">Vivo</span></h2>
+    <p class="s-sub" data-r="u">O dia tem 3 blocos: manhã, tarde e noite. Cada bloco começa do zero. O que não foi feito não vira atraso — você decide o que migra, ou simplesmente segue em frente.</p>
+  </div>
+  <div class="inner">
+    <div class="tv-wrap" data-r="s">
+      <div class="tv-titlebar">
+        <div class="tv-tb-dots">
+          <div class="tv-tb-dot" style="background:#FF5F57"></div>
+          <div class="tv-tb-dot" style="background:#FEBC2E"></div>
+          <div class="tv-tb-dot" style="background:#28C840"></div>
+        </div>
+        <div class="tv-tb-title">MeuFluxo · Meu Dia</div>
+      </div>
+      <div class="tv-body">
+        <div class="tv-col morning">
+          <div class="tv-col-accent-bar"></div>
+          <div class="tv-col-top">
+            <div class="tv-col-icon">☀️</div>
+            <div class="tv-col-info">
+              <div class="tv-col-name">Manhã</div>
+              <div class="tv-col-time">06h – 12h</div>
+            </div>
+          </div>
+          <div class="tv-item done"><div class="tv-cb">✓</div><span>Verificar campanhas</span><div class="tv-dot-p" style="background:#FFB86C"></div></div>
+          <div class="tv-item done"><div class="tv-cb">✓</div><span>Responder urgências</span><div class="tv-dot-p" style="background:#6C9CFC"></div></div>
+          <div class="tv-item"><div class="tv-cb"></div><span>Call com cliente</span><div class="tv-dot-p" style="background:#BD93F9"></div></div>
+        </div>
+        <div class="tv-col afternoon">
+          <div class="tv-col-accent-bar"></div>
+          <div class="tv-col-top">
+            <div class="tv-col-icon">🌤️</div>
+            <div class="tv-col-info">
+              <div class="tv-col-name">Tarde</div>
+              <div class="tv-col-time">12h – 18h</div>
+            </div>
+          </div>
+          <div class="tv-item"><div class="tv-cb"></div><span>Criar criativos</span><div class="tv-dot-p" style="background:#FFB86C"></div></div>
+          <div class="tv-item"><div class="tv-cb"></div><span>Analisar métricas</span><div class="tv-dot-p" style="background:#6C9CFC"></div></div>
+          <div class="tv-item"><div class="tv-cb"></div><span>Enviar relatório</span><div class="tv-dot-p" style="background:#FF79C6"></div></div>
+        </div>
+        <div class="tv-col night">
+          <div class="tv-col-accent-bar"></div>
+          <div class="tv-col-top">
+            <div class="tv-col-icon">🌙</div>
+            <div class="tv-col-info">
+              <div class="tv-col-name">Noite</div>
+              <div class="tv-col-time">18h – 00h</div>
+            </div>
+          </div>
+          <div class="tv-item"><div class="tv-cb"></div><span>Estudar copy</span><div class="tv-dot-p" style="background:#8BE9FD"></div></div>
+          <div class="tv-item"><div class="tv-cb"></div><span>Planejar amanhã</span><div class="tv-dot-p" style="background:#F1FA8C"></div></div>
+        </div>
+      </div>
+      <div class="tv-footer">
+        <div class="tv-footer-icon">♻️</div>
+        <div class="tv-footer-text">Cada bloco reinicia — zero culpa acumulada</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section alt">
+  <div class="inner">
+    <div class="inner-narrow" style="padding:0">
+      <div class="s-eye" data-r="l">Princípios</div>
+      <h2 class="s-h" data-r="u">Baseado em ciência.<br>Não em achismo.</h2>
+      <p class="s-sub" data-r="u">50+ estudos sobre disfunção executiva, time blindness e carga cognitiva por trás de cada decisão de design.</p>
+    </div>
+    <div class="features-grid" data-sg>
+      <div class="feat-card">
+        <div class="feat-num">01</div>
+        <div class="feat-title">Revelação progressiva</div>
+        <p class="feat-desc">Cada nível do funil mostra menos informação. Master List → Semana → Dia → Foco. Você chega ao essencial sem esforço.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-num">02</div>
+        <div class="feat-title">Tom não-punitivo</div>
+        <p class="feat-desc">Atrasos aparecem em âmbar suave — nunca vermelho agressivo. A interface acolhe, nunca acusa. Inspirado no Apple HIG.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-num">03</div>
+        <div class="feat-title">Zero config diária</div>
+        <p class="feat-desc">Funciona sem ação ao abrir. O bloco certo já está ativo pelo horário. Nenhuma decisão obrigatória no começo do dia.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-num">04</div>
+        <div class="feat-title">Modo Foco</div>
+        <p class="feat-desc">Uma tarefa. Tela cheia. Timer opcional. O resto do mundo some. Para quando você finalmente conseguiu começar algo.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-num">05</div>
+        <div class="feat-title">Padrões previsíveis</div>
+        <p class="feat-desc">Consistência cria segurança cognitiva. Tudo sempre no mesmo lugar. Seu cérebro não precisa reaprender nada todo dia.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-num">06</div>
+        <div class="feat-title">Offline-first</div>
+        <p class="feat-desc">Ação local, sync em background. Funciona sem internet. Porque uma task não pode depender do sinal do Wi-Fi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="inner">
+    <div class="inner-narrow" style="padding:0">
+      <div class="s-eye" data-r="l">Quem usa</div>
+      <h2 class="s-h" data-r="u">Pessoas reais. Mudança real.</h2>
+    </div>
+    <div class="testi-row" data-sg>
+      <div class="testi">
+        <div class="testi-accent" style="background:var(--accent-bright)"></div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-q">"Tentei Notion, Todoist, ClickUp. Todos me deixavam pior. O MeuFluxo foi o primeiro que <strong>não me fez sentir um fracasso</strong> quando não terminava tudo."</p>
+        <div class="testi-person">
+          <div class="testi-av">👩</div>
+          <div><div class="testi-name">Carla R.</div><div class="testi-role">Designer freelancer · TDAH</div></div>
+        </div>
+      </div>
+      <div class="testi">
+        <div class="testi-accent" style="background:var(--green)"></div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-q">"O conceito de blocos mudou tudo. Via uma lista com 50 coisas e travava. Agora <strong>começo cada bloco do zero</strong> e consigo trabalhar de verdade."</p>
+        <div class="testi-person">
+          <div class="testi-av">👨</div>
+          <div><div class="testi-name">Lucas M.</div><div class="testi-role">Dev autônomo · diagnóstico tardio</div></div>
+        </div>
+      </div>
+      <div class="testi">
+        <div class="testi-accent" style="background:#BD93F9"></div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-q">"Uso há 3 meses. Minha ansiedade com produtividade caiu muito. <strong>Finalmente um app que entende como meu cérebro funciona</strong>."</p>
+        <div class="testi-person">
+          <div class="testi-av">🧑</div>
+          <div><div class="testi-name">Brenda S.</div><div class="testi-role">Copywriter · TEA + TDAH</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICE -->
+<section class="section alt" id="comecar">
+  <div class="inner-narrow">
+    <div class="s-eye" data-r="l">Preço</div>
+    <h2 class="s-h" data-r="u">Simples. Acessível.<br>Sem pegadinha.</h2>
+    <p class="s-sub" data-r="u">Um plano. Tudo incluído. Menos do que dois cafés por semana.</p>
+    <div class="price-wrap" data-r="s">
+      <div class="price-card">
+        <div class="price-top">
+          <div class="price-name">MeuFluxo</div>
+          <div class="price-tagline">Acesso completo · Todos os recursos</div>
+        </div>
+        <div class="price-body">
+          <div class="price-main">
+            <div class="price-from">depois do período grátis</div>
+            <div class="price-val"><sup>R$</sup>29<small>/mês</small></div>
+            <div style="font-size:.78rem;color:var(--muted);margin-top:4px">ou R$249/ano — economize R$99</div>
+            <div class="price-trial">🎁 14 dias grátis — sem cartão</div>
+          </div>
+          <ul class="price-items">
+            <li class="price-item"><span class="p-ck">✓</span>Tempo Vivo completo (manhã, tarde, noite)</li>
+            <li class="price-item"><span class="p-ck">✓</span>Interface mínima, zero sobrecarga cognitiva</li>
+            <li class="price-item"><span class="p-ck">✓</span>Modo Foco — uma tarefa de cada vez</li>
+            <li class="price-item"><span class="p-ck">✓</span>Notificações inteligentes e não invasivas</li>
+            <li class="price-item"><span class="p-ck">✓</span>App mobile + web sincronizados</li>
+            <li class="price-item"><span class="p-ck">✓</span>Suporte humano (não é bot)</li>
+          </ul>
+          <a href="#" class="btn-buy">⚡ Começar grátis agora</a>
+          <p class="price-guarantee">🔒 7 dias de reembolso · Sem contrato · Cancela quando quiser</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="inner-narrow">
+    <h2 class="cta-h" data-r="u">Pronto pra parar de<br>se sentir <em>culpado</em>?</h2>
+    <p class="cta-p" data-r="u">14 dias grátis. Sem cartão. Sem burocracia. Só você, seus blocos, e o fluxo que você merece ter.</p>
+    <a href="#" class="btn-hero primary" style="font-size:1rem" data-r="u">⚡ Começar grátis agora</a>
+    <p class="cta-micro" data-r="u">Feito por quem tem TDAH · pra quem tem TDAH ❤️</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Meu<span>Fluxo</span></div>
+  <div class="footer-links">
+    <a href="index.html">← Ecossistema MAX</a>
+    <a href="lp-meu-fluxo.html">Versão Dark</a>
+    <a href="lp-meu-fluxo-clara.html">Versão Clara</a>
+    <a href="#">Privacidade</a>
+    <a href="#">Suporte</a>
+  </div>
+  <p class="footer-copy">© 2026 MeuFluxo — feito com 🧠 + ❤️ por Max Munhoz</p>
+</footer>
+
+<script>
+// Reveal
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+  })
+},{threshold:0.1});
+document.querySelectorAll('[data-r],[data-sg]').forEach(el=>io.observe(el));
+
+// Hero animate
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.hero [data-r]').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('in'),80+i*120)
+  });
+  document.querySelectorAll('.hero [data-sg]').forEach(el=>{
+    setTimeout(()=>el.classList.add('in'),350)
+  });
+});
+
+// Nav
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',scrollY>40)
+},{passive:true});
+</script>
+</body>
+</html>

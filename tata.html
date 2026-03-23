@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Tata — Tráfego Pago com IA — Ecossistema Max</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080812;--surface:#0f0f1e;--surface-2:#161628;--surface-3:#1d1d35;
+  --border:#1c1c38;--border-bright:#2a2a4a;
+  --accent:#7c3aed;--accent-glow:rgba(124,58,237,.2);
+  --green:#00d4a0;--orange:#ea8049;--red:#f87171;--amber:#fbbf24;--blue:#60a5fa;
+  --text:#e2e8f0;--text-muted:#94a3b8;--text-dim:#475569;
+  --nav-h:58px;
+  --ring:0 0 0 3px rgba(124,58,237,.35);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(8,8,18,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:20px;overflow-x:auto}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;outline:none}
+.logo:focus-visible{outline:2px solid var(--accent);border-radius:8px}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),#9333ea);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 10px rgba(124,58,237,.4)}
+.logo-text{font-size:14px;color:var(--text);font-weight:600;letter-spacing:-.01em}.logo-text strong{font-weight:900}
+.nav-links{display:flex;gap:2px;margin-left:auto}
+.nl{padding:6px 11px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:background .15s,color .15s;white-space:nowrap;outline:none}
+.nl:hover{background:var(--surface-2);color:var(--text)}
+.nl:focus-visible{box-shadow:var(--ring)}
+.nl.active{background:rgba(124,58,237,.18);color:#a78bfa}
+
+/* MAIN */
+main{max-width:960px;margin:0 auto;padding:48px 24px 100px}
+
+/* HERO */
+.hero{margin-bottom:48px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);color:#a78bfa;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;margin-bottom:18px;letter-spacing:.04em}
+.hero h1{font-size:36px;font-weight:900;color:var(--text);line-height:1.15;letter-spacing:-.5px;margin-bottom:10px}
+.hero h1 em{font-style:normal;color:#a78bfa}
+.hero-sub{font-size:15px;color:var(--text-muted);line-height:1.7;max-width:620px;margin-bottom:24px}
+.hero-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hero-meta-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-dim)}
+.hero-meta-item svg{width:13px;height:13px;stroke:currentColor;fill:none}
+
+/* STATS */
+.stats{display:flex;gap:10px;margin-bottom:36px;flex-wrap:wrap}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;transition:border-color .15s;flex:1;min-width:120px}
+.stat:hover{border-color:var(--border-bright)}
+.stat-num{font-size:22px;font-weight:900;color:var(--text)}
+.stat-num.green{color:var(--green)}.stat-num.purple{color:#a78bfa}.stat-num.amber{color:var(--amber)}
+.stat-label{font-size:11px;font-weight:600;color:var(--text-muted);margin-top:2px}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;align-items:center}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--text-dim);fill:none;pointer-events:none}
+.search{width:100%;background:var(--surface);border:1px solid var(--border-bright);border-radius:10px;padding:9px 12px 9px 34px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s}
+.search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}.search::placeholder{color:var(--text-dim)}
+.filter-btns{display:flex;gap:6px;flex-wrap:wrap}
+.filter-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border-bright);background:var(--surface);color:var(--text-muted);font-family:'Inter',sans-serif;transition:all .15s;outline:none}
+.filter-btn:hover{color:var(--text);background:var(--surface-2)}
+.filter-btn:focus-visible{box-shadow:var(--ring)}
+.filter-btn.active{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.35);color:#a78bfa}
+
+/* SECTION LABELS */
+.section-label{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;margin-top:32px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* MODULE CARDS */
+.modules{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.mod-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .18s}
+.mod-card:hover{border-color:var(--border-bright)}
+.mod-card.installed{border-color:rgba(0,212,160,.2);background:rgba(0,212,160,.03)}
+.mod-card.downloaded{border-color:rgba(251,191,36,.18);background:rgba(251,191,36,.02)}
+.mod-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;transition:background .15s}
+.mod-header:hover{background:rgba(255,255,255,.02)}
+.mod-num{width:28px;height:28px;border-radius:7px;background:var(--surface-2);border:1px solid var(--border-bright);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--text-dim);flex-shrink:0}
+.mod-info{flex:1;min-width:0}
+.mod-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+.mod-desc{font-size:12px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mod-badges{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;letter-spacing:.02em}
+.badge.installed{background:rgba(0,212,160,.12);border:1px solid rgba(0,212,160,.2);color:var(--green)}
+.badge.downloaded{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:var(--amber)}
+.badge.pending{background:rgba(255,255,255,.04);border:1px solid var(--border-bright);color:var(--text-dim)}
+.badge.link{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);color:var(--blue)}
+.badge.skill{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);color:#a78bfa}
+.chevron-icon{width:15px;height:15px;stroke:var(--text-dim);fill:none;transition:transform .22s ease;flex-shrink:0}
+.mod-card.open .chevron-icon{transform:rotate(180deg)}
+
+/* MOD BODY */
+.mod-body{display:none;border-top:1px solid var(--border);padding:16px 18px 18px 18px}
+.mod-card.open .mod-body{display:block}
+.mod-full-desc{font-size:13px;color:var(--text-muted);line-height:1.75;margin-bottom:16px}
+.mod-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap;text-decoration:none;outline:none}
+.btn:focus-visible{box-shadow:var(--ring)}
+.btn-accent{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(124,58,237,.3)}
+.btn-accent:hover{background:#6d28d9;box-shadow:0 4px 14px rgba(124,58,237,.4)}
+.btn-ghost{background:var(--surface-2);color:var(--text-muted);border:1px solid var(--border-bright)}
+.btn-ghost:hover{color:var(--text);background:var(--surface-3)}
+.btn-green{background:rgba(0,212,160,.1);color:var(--green);border:1px solid rgba(0,212,160,.2)}
+.btn-green:hover{background:rgba(0,212,160,.18)}
+.btn-amber{background:rgba(251,191,36,.08);color:var(--amber);border:1px solid rgba(251,191,36,.2)}
+.btn-amber:hover{background:rgba(251,191,36,.15)}
+
+/* NOTION LINK BOX */
+.notion-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:24px;display:flex;align-items:center;gap:16px}
+.notion-icon{width:42px;height:42px;background:var(--surface-2);border:1px solid var(--border-bright);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px}
+.notion-info{flex:1;min-width:0}
+.notion-label{font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.notion-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.notion-url{font-size:11px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:48px 24px;color:var(--text-dim);display:none}
+.empty-state.show{display:block}
+.empty-icon{font-size:32px;margin-bottom:12px;opacity:.4}
+.empty-state p{font-size:14px;color:var(--text-muted)}
+
+/* FOOTER */
+footer{text-align:center;padding:28px 24px;border-top:1px solid var(--border);font-size:12px;color:var(--text-dim);margin-top:40px}
+footer a{color:#a78bfa;text-decoration:none;font-weight:600}
+footer a:hover{text-decoration:underline}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--surface);border:1px solid var(--border-bright);color:var(--green);padding:10px 20px;border-radius:30px;font-size:12px;font-weight:700;opacity:0;transition:all .25s;pointer-events:none;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav{padding:0 16px;gap:12px}
+  .nav-links{gap:1px}
+  .nl{padding:5px 8px;font-size:11px}
+  main{padding:32px 16px 80px}
+  .hero h1{font-size:26px}
+  .stats{flex-direction:row}
+  .stat{min-width:100px}
+  .mod-desc{display:none}
+}
+@media(max-width:480px){
+  .filter-btns{gap:4px}
+  .filter-btn{padding:6px 10px;font-size:11px}
+  .stats{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="logo">
+    <div class="logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    <span class="logo-text">Ecossistema<strong>Max</strong></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nl">Hub</a>
+    <a href="persona.html" class="nl">Persona</a>
+    <a href="criativos.html" class="nl">Criativos</a>
+    <a href="skills.html" class="nl">Skills</a>
+    <a href="resultado.html" class="nl">Resultado</a>
+    <a href="sexy-canvas.html" class="nl">Sexy Canvas</a>
+    <a href="sexy-canvas-tractorpro.html" class="nl">TractorPRO</a>
+    <a href="sexy-canvas-meufluxo.html">MeuFluxo</a>
+    <a href="sexy-canvas-orbitta.html">Orbitta</a>
+    <a href="xquads.html" class="nl">Xquads</a>
+    <a href="tata.html" class="nl active">Tata</a>
+    <a href="terminal.html" class="nl">Terminal</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">
+      <i data-lucide="graduation-cap" style="width:11px;height:11px;stroke:currentColor;fill:none"></i>
+      Curso — Backup Organizado
+    </div>
+    <h1>Tráfego Pago com <em>IA</em><br>— Tata Gonçalves</h1>
+    <p class="hero-sub">Backup completo do curso: módulos, skills, ferramentas e links organizados. Acompanhe o status de instalação de cada skill e acesse os recursos direto daqui.</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">
+        <i data-lucide="user" style="width:13px;height:13px;stroke:currentColor;fill:none"></i>
+        Tata Gonçalves
+      </span>
+      <span class="hero-meta-item">
+        <i data-lucide="external-link" style="width:13px;height:13px;stroke:currentColor;fill:none"></i>
+        <a href="https://tatagoncalves.notion.site/Tr-fego-Pago-com-IA-fc8c610ec94683be8bc3018002e8bc91" target="_blank" style="color:var(--text-dim);text-decoration:none;">Notion original</a>
+      </span>
+      <span class="hero-meta-item">
+        <i data-lucide="calendar" style="width:13px;height:13px;stroke:currentColor;fill:none"></i>
+        Backup: março 2026
+      </span>
+    </div>
+  </div>
+
+  <!-- NOTION LINK BOX -->
+  <div class="notion-box">
+    <div class="notion-icon">📖</div>
+    <div class="notion-info">
+      <div class="notion-label">Página original do curso</div>
+      <div class="notion-title">Tráfego Pago com IA — Tata Gonçalves</div>
+      <div class="notion-url">tatagoncalves.notion.site/Tr-fego-Pago-com-IA-fc8c610ec94683be8bc3018002e8bc91</div>
+    </div>
+    <a href="https://tatagoncalves.notion.site/Tr-fego-Pago-com-IA-fc8c610ec94683be8bc3018002e8bc91" target="_blank" class="btn btn-ghost">
+      <i data-lucide="external-link" style="width:13px;height:13px;stroke:currentColor;fill:none"></i>
+      Abrir Notion
+    </a>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats" id="stats">
+    <div class="stat"><div class="stat-num" id="st-total">—</div><div class="stat-label">Itens no curso</div></div>
+    <div class="stat"><div class="stat-num green" id="st-installed">—</div><div class="stat-label">Skills instaladas</div></div>
+    <div class="stat"><div class="stat-num amber" id="st-downloaded">—</div><div class="stat-label">Baixadas</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--text-dim)" id="st-pending">—</div><div class="stat-label">Pendentes</div></div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search" type="text" id="search" placeholder="Buscar módulo ou skill..." oninput="filterItems()"/>
+    </div>
+    <div class="filter-btns">
+      <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+      <button class="filter-btn" onclick="setFilter('installed',this)">✅ Instaladas</button>
+      <button class="filter-btn" onclick="setFilter('downloaded',this)">📥 Baixadas</button>
+      <button class="filter-btn" onclick="setFilter('pending',this)">⬜ Pendentes</button>
+      <button class="filter-btn" onclick="setFilter('skill',this)">Skills</button>
+      <button class="filter-btn" onclick="setFilter('link',this)">Links</button>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="empty">
+    <div class="empty-icon">🔍</div>
+    <p>Nenhum item encontrado para esse filtro.</p>
+  </div>
+
+  <!-- MÓDULO 0: BOAS-VINDAS -->
+  <div class="section-label">Início do curso</div>
+  <div class="modules" id="modules">
+
+    <div class="mod-card" data-status="link" data-tags="boas-vindas introdução início">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">0</div>
+        <div class="mod-info">
+          <div class="mod-title">Boas-vindas ao curso</div>
+          <div class="mod-desc">Introdução, objetivo do curso e como aproveitar ao máximo</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge link">🔗 Link</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Vídeo de boas-vindas com Tata Gonçalves. Apresentação da metodologia, estrutura do curso e o que você vai aprender sobre Tráfego Pago com IA.</div>
+        <div class="mod-actions">
+          <a href="https://tatagoncalves.notion.site/Tr-fego-Pago-com-IA-fc8c610ec94683be8bc3018002e8bc91" target="_blank" class="btn btn-accent">
+            <i data-lucide="external-link" style="width:12px;height:12px;stroke:#fff;fill:none"></i>
+            Abrir no Notion
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO 1: FUNDAMENTOS -->
+    <div class="section-label-inline" style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:8px 0 4px;display:flex;align-items:center;gap:10px">
+      <span>Módulo 1 — Fundamentos de IA para Tráfego</span>
+      <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="ia fundamentos chatgpt prompts estratégia">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">1</div>
+        <div class="mod-info">
+          <div class="mod-title">Introdução à IA no Tráfego Pago</div>
+          <div class="mod-desc">Como usar IA para otimizar campanhas, economizar tempo e escalar resultados</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Entendendo o papel da IA no tráfego pago moderno. Como o Claude e ChatGPT podem substituir horas de trabalho manual: pesquisa de público, criação de copies, análise de métricas e estrutura de campanhas.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('ai marketing')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: ai-marketing
+          </button>
+          <a href="https://tatagoncalves.notion.site/Tr-fego-Pago-com-IA-fc8c610ec94683be8bc3018002e8bc91" target="_blank" class="btn btn-ghost">
+            <i data-lucide="external-link" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            Ver no Notion
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="persona público avatar ideal cliente">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">2</div>
+        <div class="mod-info">
+          <div class="mod-title">Criando Persona com IA</div>
+          <div class="mod-desc">Gere o avatar do cliente ideal em minutos usando prompts específicos</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Metodologia para criar personas profundas com IA. 30 dimensões psicológicas do cliente: medos, desejos, objeções, gatilhos de compra. Com persona bem definida, todo o restante do tráfego fica mais preciso.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('persona profunda')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: persona-profunda
+          </button>
+          <a href="skills.html" class="btn btn-ghost">
+            <i data-lucide="layers" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            Ver Skills
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO 2: COPY COM IA -->
+    <div class="section-label-inline" style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:8px 0 4px;display:flex;align-items:center;gap:10px">
+      <span>Módulo 2 — Copy com IA</span>
+      <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="copy copywriting texto anuncio headline">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">3</div>
+        <div class="mod-info">
+          <div class="mod-title">Copy de Anúncio com IA</div>
+          <div class="mod-desc">Headlines, copies e CTAs gerados com IA para Meta Ads e Google Ads</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Framework completo para criar copy de alta conversão com IA. Estrutura de headline (dor → benefício → CTA), variações de texto para teste A/B, adaptação por objetivo de campanha (conversão, tráfego, geração de leads).</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('copywriting')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: copywriting
+          </button>
+          <a href="https://tatagoncalves.notion.site/Tr-fego-Pago-com-IA-fc8c610ec94683be8bc3018002e8bc91" target="_blank" class="btn btn-ghost">
+            <i data-lucide="external-link" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            Ver no Notion
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="email sequência nurturing leads follow-up">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">4</div>
+        <div class="mod-info">
+          <div class="mod-title">Sequência de E-mails com IA</div>
+          <div class="mod-desc">Sequências de nurturing e reengajamento geradas automaticamente</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como criar sequências de e-mail completas usando IA: boas-vindas, nurturing, oferta, urgência e reengajamento. Integração com o tráfego pago para maximizar o ROI de cada lead capturado.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('email sequence')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: email-sequence
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO 3: CRIATIVOS COM IA -->
+    <div class="section-label-inline" style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:8px 0 4px;display:flex;align-items:center;gap:10px">
+      <span>Módulo 3 — Criativos com IA</span>
+      <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="criativo anúncio imagem video design canva">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">5</div>
+        <div class="mod-info">
+          <div class="mod-title">Criativo de Anúncio com IA</div>
+          <div class="mod-desc">Briefings, conceitos criativos e direção de arte gerados por IA</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Framework para criar briefings criativos completos usando IA. Conceitos de imagem/vídeo alinhados à persona, referências visuais, textos de overlay, formatos por objetivo (feed, stories, reels). Conecta com Canva para execução.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('ad creative')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: ad-creative
+          </button>
+          <button class="btn btn-ghost" onclick="copyKw('criativo tractorpro')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: criativo-tractorpro
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="canva design template social media">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">6</div>
+        <div class="mod-info">
+          <div class="mod-title">Canva + IA — Templates e Design</div>
+          <div class="mod-desc">Criação de criativos no Canva orientada por IA com feedback e otimização</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como usar IA junto com Canva para criar criativos em escala. Skill canva-branded-presentation gera apresentações profissionais. canva-implement-feedback aplica feedback automaticamente. canva-resize-for-social-media adapta para todos os formatos.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('canva branded presentation')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: canva-branded-presentation
+          </button>
+          <button class="btn btn-ghost" onclick="copyKw('canva resize for social media')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: canva-resize
+          </button>
+          <a href="sexy-canvas.html" class="btn btn-ghost">
+            <i data-lucide="flame" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            Sexy Canvas
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="carrossel instagram conteúdo slides post">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">7</div>
+        <div class="mod-info">
+          <div class="mod-title">Carrossel com IA</div>
+          <div class="mod-desc">Estrutura de carrosseis educativos e de conversão gerados por IA</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Crie carrosseis completos para Instagram com IA: slide de capa (hook), slides de conteúdo, CTA final. Tanto para orgânico quanto para impulso/tráfego pago. Estrutura adaptável para qualquer nicho.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('carrossel')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: carrossel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO 4: META ADS COM IA -->
+    <div class="section-label-inline" style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:8px 0 4px;display:flex;align-items:center;gap:10px">
+      <span>Módulo 4 — Meta Ads com IA</span>
+      <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="meta ads facebook instagram campanha estrutura">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">8</div>
+        <div class="mod-info">
+          <div class="mod-title">Estrutura de Campanha Meta Ads com IA</div>
+          <div class="mod-desc">Monte campanhas completas no Meta Ads usando IA para estrutura e segmentação</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Framework completo para estruturar campanhas no Meta Ads com ajuda da IA: objetivo certo, públicos (interesses, lookalike, retargeting), orçamento, bidding strategy, copy dos anúncios e criativos. Tudo alinhado ao objetivo de negócio.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('paid ads')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: paid-ads
+          </button>
+          <button class="btn btn-ghost" onclick="copyKw('ads')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: ads
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="meta ads análise métricas ROAS CPA otimização">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">9</div>
+        <div class="mod-info">
+          <div class="mod-title">Análise de Métricas Meta Ads com IA</div>
+          <div class="mod-desc">Interprete dados de campanha e tome decisões de otimização com IA</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como usar IA para analisar dados do Meta Ads: ROAS, CPA, CTR, frequência, relevância. A skill meta-ads-analyzer gera diagnósticos e recomendações de otimização em segundos. Também serve para gerar relatórios para clientes.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('meta ads analyzer')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: meta-ads-analyzer
+          </button>
+          <a href="https://tatagoncalves.notion.site/Tr-fego-Pago-com-IA-fc8c610ec94683be8bc3018002e8bc91" target="_blank" class="btn btn-ghost">
+            <i data-lucide="external-link" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            Ver no Notion
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="dashboard relatório cliente resultados">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">10</div>
+        <div class="mod-info">
+          <div class="mod-title">Dashboard de Resultados para Clientes</div>
+          <div class="mod-desc">Gere relatórios e dashboards profissionais com IA em minutos</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como transformar dados brutos do Meta Ads em relatórios visuais que o cliente entende. IA gera o resumo executivo, insights principais e próximas ações recomendadas. Ferramenta que aumenta percepção de valor e reduz churn.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('dash ads')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: dash-ads
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO 5: LANDING PAGES E CRO -->
+    <div class="section-label-inline" style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:8px 0 4px;display:flex;align-items:center;gap:10px">
+      <span>Módulo 5 — Landing Pages e CRO com IA</span>
+      <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="landing page página vendas conversão CRO otimização">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">11</div>
+        <div class="mod-info">
+          <div class="mod-title">Landing Page com IA</div>
+          <div class="mod-desc">Crie páginas de conversão completas com estrutura, copy e design briefing</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Framework para criar landing pages de alta conversão com IA: estrutura de seções (hero, benefícios, prova social, oferta, FAQ, CTA), copy completa por seção, briefing visual. Inclui checklist de CRO e melhores práticas.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('landing page')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: landing-page
+          </button>
+          <button class="btn btn-ghost" onclick="copyKw('pagina vendas')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: pagina-vendas
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="CRO otimização conversão taxa page">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">12</div>
+        <div class="mod-info">
+          <div class="mod-title">CRO com IA — Otimização de Páginas</div>
+          <div class="mod-desc">Diagnóstico e otimização de páginas existentes usando IA</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como auditar e otimizar landing pages existentes com IA. A skill page-cro analisa estrutura, copy, UX e identifica gargalos de conversão. Gera lista priorizada de melhorias com impacto estimado. Essencial antes de escalar orçamento.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('page cro')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: page-cro
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO 6: ESTRATÉGIA DE LANÇAMENTO -->
+    <div class="section-label-inline" style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:8px 0 4px;display:flex;align-items:center;gap:10px">
+      <span>Módulo 6 — Estratégia de Lançamento com IA</span>
+      <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="lançamento estratégia funil PLF produto digital">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">13</div>
+        <div class="mod-info">
+          <div class="mod-title">Estratégia de Lançamento com IA</div>
+          <div class="mod-desc">Planejamento completo de lançamento: funil, cronograma e tráfego</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como usar IA para planejar lançamentos digitais: estratégia de aquecimento, calendário de conteúdo, estrutura de funil (captação → nutrição → oferta → pós-venda), distribuição de orçamento por fase e projeção de resultados.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('launch strategy')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: launch-strategy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="conteúdo social media estratégia orgânico">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">14</div>
+        <div class="mod-info">
+          <div class="mod-title">Estratégia de Conteúdo com IA</div>
+          <div class="mod-desc">Calendário editorial e estratégia de conteúdo para aquecer lançamentos</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como combinar tráfego pago com estratégia de conteúdo orgânico. IA gera calendário editorial alinhado ao funil de lançamento: posts de autoridade, educação, prova social e antecipação. Sinergia entre orgânico e pago que reduz CPA.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('content strategy')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: content-strategy
+          </button>
+          <button class="btn btn-ghost" onclick="copyKw('social content')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: social-content
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO 7: FERRAMENTAS E RECURSOS -->
+    <div class="section-label-inline" style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:8px 0 4px;display:flex;align-items:center;gap:10px">
+      <span>Módulo 7 — Ferramentas e Recursos</span>
+      <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+    </div>
+
+    <div class="mod-card" data-status="link" data-tags="remotion vídeo animação ads programático">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">15</div>
+        <div class="mod-info">
+          <div class="mod-title">Vídeo Ads com IA — Remotion</div>
+          <div class="mod-desc">Criação de vídeos de anúncio automatizados com código e IA</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como usar Remotion (biblioteca React para vídeo) com IA para criar vídeos de anúncio em escala. Gera múltiplas variações de vídeo automaticamente, ideal para testes A/B em volume. A skill remotion-ads estrutura o briefing e o código base.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('remotion ads')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: remotion-ads
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-status="link" data-tags="apresentação pitch deck proposta comercial cliente">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">16</div>
+        <div class="mod-info">
+          <div class="mod-title">Apresentação Comercial com IA</div>
+          <div class="mod-desc">Decks de proposta e apresentação de resultados para clientes</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como criar apresentações profissionais de proposta de serviço e relatório de resultados usando IA. Estrutura de slides, copy de cada seção, dados visuais e argumentação de valor. Fecha mais contratos e reduz churn por clareza.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('apresentacao')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: apresentacao
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO 8: OPERAÇÃO IA NO DIA A DIA -->
+    <div class="section-label-inline" style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:8px 0 4px;display:flex;align-items:center;gap:10px">
+      <span>Módulo 8 — Operação com IA no Dia a Dia</span>
+      <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="claude code ecossistema skills workflow automação">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">17</div>
+        <div class="mod-info">
+          <div class="mod-title">Ecossistema de IA — Claude Code e Skills</div>
+          <div class="mod-desc">Como configurar e usar o Ecossistema Max com Claude Code no dia a dia</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como montar seu ecossistema de IA para tráfego pago: Claude Code instalado, skills ativas por projeto, CLAUDE.md com contexto do cliente, workflow de criação de criativos e copies em minutos. A skill ecosistema-max carrega todo o contexto do TractorPRO.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('ecosistema max')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: ecosistema-max
+          </button>
+          <a href="index.html" class="btn btn-ghost">
+            <i data-lucide="home" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            Ver Hub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="claude md builder contexto projeto briefing">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">18</div>
+        <div class="mod-info">
+          <div class="mod-title">Claude.md Builder — Contexto por Cliente</div>
+          <div class="mod-desc">Crie o arquivo de contexto perfeito para cada cliente ou projeto</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge skill">skill</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Como criar arquivos CLAUDE.md para cada cliente que você atende. O Claude Code lê esse arquivo automaticamente e já sabe: nicho, persona, tom de voz, produtos, concorrentes e histórico. Elimina a necessidade de explicar contexto a cada conversa.</div>
+        <div class="mod-actions">
+          <button class="btn btn-green" onclick="copyKw('claude md builder')">
+            <i data-lucide="copy" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            skill: claude-md-builder
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECURSOS EXTRAS -->
+    <div class="section-label-inline" style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:8px 0 4px;display:flex;align-items:center;gap:10px">
+      <span>Recursos Extras e Bônus</span>
+      <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+    </div>
+
+    <div class="mod-card" data-status="link" data-tags="notion template recursos bônus extras">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">B1</div>
+        <div class="mod-info">
+          <div class="mod-title">Biblioteca de Prompts — Tata Gonçalves</div>
+          <div class="mod-desc">Coleção de prompts prontos para tráfego pago, copy e criativos</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge link">🔗 Notion</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Biblioteca completa de prompts da Tata Gonçalves para usar com Claude e ChatGPT no tráfego pago. Prompts para: criação de público, copy de anúncio por objetivo, análise de métricas, relatório para clientes, e estrutura de campanha completa.</div>
+        <div class="mod-actions">
+          <a href="https://tatagoncalves.notion.site/Tr-fego-Pago-com-IA-fc8c610ec94683be8bc3018002e8bc91" target="_blank" class="btn btn-accent">
+            <i data-lucide="external-link" style="width:12px;height:12px;stroke:#fff;fill:none"></i>
+            Abrir no Notion
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-status="link" data-tags="comunidade grupo suporte dúvidas whatsapp telegram">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">B2</div>
+        <div class="mod-info">
+          <div class="mod-title">Comunidade e Suporte</div>
+          <div class="mod-desc">Acesso ao grupo de alunos e suporte da Tata Gonçalves</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge link">🔗 Link</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Grupo de alunos do curso Tráfego Pago com IA para networking, dúvidas e cases. Acesso ao suporte da Tata e da equipe. Link disponível dentro da plataforma do curso.</div>
+        <div class="mod-actions">
+          <a href="https://tatagoncalves.notion.site/Tr-fego-Pago-com-IA-fc8c610ec94683be8bc3018002e8bc91" target="_blank" class="btn btn-ghost">
+            <i data-lucide="external-link" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            Ver no Notion
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card installed" data-status="installed" data-tags="sexy canvas hooks gatilhos copy engine">
+      <div class="mod-header" onclick="toggleMod(this)">
+        <div class="mod-num">B3</div>
+        <div class="mod-info">
+          <div class="mod-title">Sexy Canvas — Engine de Copy</div>
+          <div class="mod-desc">80 hooks + 8 gatilhos de conversão para anúncios de alta performance</div>
+        </div>
+        <div class="mod-badges">
+          <span class="badge installed">✅ Instalada</span>
+          <span class="badge link">🔗 Página</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mod-body">
+        <div class="mod-full-desc">Ferramenta exclusiva do Ecossistema Max criada para TractorPRO. 8 gatilhos (Medo, Ganância, Identidade, Urgência, Prova, Curiosidade, Novidade, Prazer) × 10 hooks cada = 80 combinações de copy para anúncios. Complemento poderoso ao curso da Tata.</div>
+        <div class="mod-actions">
+          <a href="sexy-canvas.html" class="btn btn-accent">
+            <i data-lucide="flame" style="width:12px;height:12px;stroke:#fff;fill:none"></i>
+            Abrir Sexy Canvas
+          </a>
+          <a href="sexy-canvas-tractorpro.html" class="btn btn-ghost">
+            <i data-lucide="layout" style="width:12px;height:12px;stroke:currentColor;fill:none"></i>
+            TractorPRO Canvas
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /modules -->
+
+</main>
+
+<footer>
+  Ecossistema Max · Backup do curso <a href="https://tatagoncalves.notion.site/Tr-fego-Pago-com-IA-fc8c610ec94683be8bc3018002e8bc91" target="_blank">Tráfego Pago com IA</a> — Tata Gonçalves · Março 2026
+</footer>
+
+<div id="toast"></div>
+
+<script>
+lucide.createIcons();
+
+// Toggle mod open/close
+function toggleMod(header) {
+  const card = header.closest('.mod-card');
+  card.classList.toggle('open');
+}
+
+// Filter state
+let currentFilter = 'all';
+let currentSearch = '';
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function filterItems() {
+  currentSearch = document.getElementById('search').value.toLowerCase();
+  applyFilters();
+}
+
+function applyFilters() {
+  const cards = document.querySelectorAll('.mod-card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    const status = card.dataset.status || '';
+    const tags = card.dataset.tags || '';
+    const title = card.querySelector('.mod-title')?.textContent.toLowerCase() || '';
+    const desc = card.querySelector('.mod-desc')?.textContent.toLowerCase() || '';
+    const fullDesc = card.querySelector('.mod-full-desc')?.textContent.toLowerCase() || '';
+
+    const matchSearch = !currentSearch ||
+      title.includes(currentSearch) ||
+      desc.includes(currentSearch) ||
+      tags.includes(currentSearch) ||
+      fullDesc.includes(currentSearch);
+
+    let matchFilter = true;
+    if (currentFilter === 'installed') matchFilter = status === 'installed';
+    else if (currentFilter === 'downloaded') matchFilter = status === 'downloaded';
+    else if (currentFilter === 'pending') matchFilter = status === 'pending';
+    else if (currentFilter === 'skill') matchFilter = card.querySelector('.badge.skill') !== null;
+    else if (currentFilter === 'link') matchFilter = status === 'link' || card.querySelector('.badge.link') !== null;
+
+    const show = matchSearch && matchFilter;
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+
+  document.getElementById('empty').classList.toggle('show', visible === 0);
+  updateStats();
+}
+
+function updateStats() {
+  const all = document.querySelectorAll('.mod-card');
+  let installed = 0, downloaded = 0, pending = 0;
+  all.forEach(c => {
+    const s = c.dataset.status;
+    if (s === 'installed') installed++;
+    else if (s === 'downloaded') downloaded++;
+    else if (s === 'pending') pending++;
+  });
+  document.getElementById('st-total').textContent = all.length;
+  document.getElementById('st-installed').textContent = installed;
+  document.getElementById('st-downloaded').textContent = downloaded;
+  document.getElementById('st-pending').textContent = pending;
+}
+
+function copyKw(kw) {
+  navigator.clipboard.writeText(kw).then(() => {
+    const t = document.getElementById('toast');
+    t.textContent = '✓ "' + kw + '" copiado!';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  });
+}
+
+// Init
+updateStats();
+</script>
+</body>
+</html>
