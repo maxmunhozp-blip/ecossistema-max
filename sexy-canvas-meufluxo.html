@@ -115,7 +115,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 
 .tele-btn{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;border:none;border-radius:30px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(16,185,129,.35);transition:.2s;font-family:'Inter',sans-serif;z-index:200}
 .tele-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(16,185,129,.45)}
-.hero-lp-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.lp-collapse{margin-top:18px}
+.lp-collapse-trigger{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text-muted);padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
+.lp-collapse-trigger:hover{background:rgba(255,255,255,.1);color:#fff}
+.lp-collapse-trigger .chevron{width:14px;height:14px;transition:transform .25s}
+.lp-collapse-trigger.open .chevron{transform:rotate(180deg)}
+.lp-collapse-body{overflow:hidden;max-height:0;transition:max-height .3s ease,opacity .3s ease;opacity:0}
+.lp-collapse-body.open{max-height:200px;opacity:1}
+.hero-lp-btns{display:flex;gap:10px;flex-wrap:wrap;padding-top:12px}
 .hero-lp-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;transition:.2s;border:1px solid rgba(255,255,255,.15)}
 .hero-lp-btn:hover{transform:translateY(-2px)}
 .hero-lp-btn.dark{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(16,185,129,.35)}
@@ -159,19 +166,28 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
       <div class="hero-meta-item"><i data-lucide="thermometer" style="width:13px;height:13px"></i> Temperatura: <strong>Frio → Morno</strong></div>
       <div class="hero-meta-item"><i data-lucide="link" style="width:13px;height:13px"></i> Destino: <strong>meufluxo.com.br</strong></div>
     </div>
-    <div class="hero-lp-btns">
-      <a href="lp-meu-fluxo.html" target="_blank" class="hero-lp-btn dark">
-        <i data-lucide="moon" style="width:14px;height:14px"></i>
-        LP Dark
-      </a>
-      <a href="lp-meu-fluxo-clara.html" target="_blank" class="hero-lp-btn clara">
-        <i data-lucide="sun" style="width:14px;height:14px"></i>
-        LP Clara
-      </a>
-      <a href="lp-meu-fluxo-premium.html" target="_blank" class="hero-lp-btn premium">
-        <i data-lucide="sparkles" style="width:14px;height:14px"></i>
-        LP Premium
-      </a>
+    <div class="lp-collapse">
+      <button class="lp-collapse-trigger" onclick="toggleLP(this)">
+        <i data-lucide="layout" style="width:14px;height:14px"></i>
+        Landing Pages (3)
+        <i data-lucide="chevron-down" class="chevron"></i>
+      </button>
+      <div class="lp-collapse-body">
+        <div class="hero-lp-btns">
+          <a href="lp-meu-fluxo.html" target="_blank" class="hero-lp-btn dark">
+            <i data-lucide="moon" style="width:14px;height:14px"></i>
+            LP Dark
+          </a>
+          <a href="lp-meu-fluxo-clara.html" target="_blank" class="hero-lp-btn clara">
+            <i data-lucide="sun" style="width:14px;height:14px"></i>
+            LP Clara
+          </a>
+          <a href="lp-meu-fluxo-premium.html" target="_blank" class="hero-lp-btn premium">
+            <i data-lucide="sparkles" style="width:14px;height:14px"></i>
+            LP Premium
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -901,6 +917,12 @@ Se você chegou até aqui, você é esse alguém.</div>
 <button class="tele-btn" onclick="copyAll()"><i data-lucide="radio" style="width:14px;height:14px"></i> Copiar Tudo (Teleprompter)</button>
 
 <script>
+function toggleLP(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
 function showTab(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
