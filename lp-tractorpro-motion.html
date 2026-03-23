@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TractorPRO — Nunca Mais Abra o Gerenciador de Anúncios da Meta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET & ROOT
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#060912;
+  --surface:#0d1426;
+  --surface-2:#111c35;
+  --border:rgba(59,130,246,.15);
+  --border-strong:rgba(59,130,246,.3);
+  --accent:#3B82F6;
+  --accent-2:#8B5CF6;
+  --accent-glow:rgba(59,130,246,.35);
+  --purple-glow:rgba(139,92,246,.25);
+  --grad:linear-gradient(135deg,#3B82F6,#8B5CF6);
+  --text:#F0F4FF;
+  --text-2:#c5d3f0;
+  --muted:#6B7DB3;
+  --red:#EF4444;
+  --green:#22C55E;
+  --yellow:#F59E0B;
+}
+
+html{scroll-behavior:auto}
+body{
+  font-family:'Manrope',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+#cursor{
+  position:fixed;
+  top:0;left:0;
+  width:12px;height:12px;
+  background:var(--accent);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+  mix-blend-mode:difference;
+  transition:width .15s,height .15s,background .15s;
+}
+#cursor-follower{
+  position:fixed;
+  top:0;left:0;
+  width:36px;height:36px;
+  border:1.5px solid rgba(59,130,246,.5);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9998;
+  transform:translate(-50%,-50%);
+  mix-blend-mode:difference;
+}
+body:has(a:hover) #cursor,
+body:has(button:hover) #cursor{
+  width:20px;height:20px;
+  background:var(--accent-2);
+}
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+#scroll-progress{
+  position:fixed;
+  top:0;left:0;
+  height:3px;
+  background:var(--grad);
+  z-index:10000;
+  width:0%;
+  transition:width .1s linear;
+  box-shadow:0 0 10px var(--accent-glow);
+}
+
+/* ============================================================
+   DOT GRID BACKGROUND
+   ============================================================ */
+.dot-grid{
+  position:absolute;
+  inset:0;
+  background-image:radial-gradient(circle,rgba(59,130,246,.18) 1px,transparent 1px);
+  background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,black 20%,transparent 80%);
+  pointer-events:none;
+}
+
+/* ============================================================
+   GLOW ORBS
+   ============================================================ */
+.orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(80px);
+  pointer-events:none;
+  animation:orbFloat 8s ease-in-out infinite;
+}
+.orb-1{width:500px;height:500px;background:rgba(59,130,246,.08);top:-100px;right:-100px;animation-delay:0s}
+.orb-2{width:400px;height:400px;background:rgba(139,92,246,.07);bottom:-50px;left:-80px;animation-delay:3s}
+.orb-3{width:300px;height:300px;background:rgba(59,130,246,.06);top:50%;left:20%;animation-delay:5s}
+@keyframes orbFloat{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-30px) scale(1.05)}
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:1000;
+  height:64px;
+  display:flex;
+  align-items:center;
+  padding:0 32px;
+  justify-content:space-between;
+  transition:background .4s,backdrop-filter .4s,border-bottom .4s;
+}
+.nav.scrolled{
+  background:rgba(6,9,18,.88);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color:var(--text);
+}
+.nav-logo-mark{
+  width:34px;height:34px;
+  background:var(--grad);
+  border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',cursive;
+  font-size:18px;
+  color:#fff;
+  box-shadow:0 4px 16px var(--accent-glow);
+  flex-shrink:0;
+}
+.nav-logo-name{
+  font-family:'Bebas Neue',cursive;
+  font-size:20px;
+  letter-spacing:2px;
+  color:var(--text);
+}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.nav-back{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:600;
+  color:var(--muted);
+  text-decoration:none;
+  padding:7px 14px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  transition:.2s;
+  letter-spacing:.3px;
+}
+.nav-back:hover{color:var(--text);border-color:var(--border-strong)}
+.nav-cta{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:700;
+  color:#fff;
+  background:var(--grad);
+  text-decoration:none;
+  padding:8px 18px;
+  border-radius:8px;
+  transition:.2s;
+  box-shadow:0 4px 14px var(--accent-glow);
+  letter-spacing:.3px;
+}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--accent-glow)}
+
+/* ============================================================
+   HERO — PINNED
+   ============================================================ */
+.hero-outer{
+  position:relative;
+  height:250vh;
+}
+.hero-sticky{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.hero-bg-wrap{position:absolute;inset:0;overflow:hidden}
+.hero-inner{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:1200px;
+  padding:0 32px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;
+  align-items:center;
+}
+
+/* Hero text */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(59,130,246,.1);
+  border:1px solid rgba(59,130,246,.25);
+  color:var(--accent);
+  font-size:12px;font-weight:700;
+  padding:5px 12px;border-radius:100px;
+  margin-bottom:20px;
+  letter-spacing:.6px;text-transform:uppercase;
+  opacity:0;
+}
+.hero-badge-dot{
+  width:7px;height:7px;
+  background:var(--accent);
+  border-radius:50%;
+  animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+
+.hero-headline{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(64px,8vw,100px);
+  line-height:.95;
+  letter-spacing:2px;
+  color:var(--text);
+  margin-bottom:24px;
+  overflow:hidden;
+}
+.hero-headline .char{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(120%) rotateX(-90deg);
+  transform-origin:bottom;
+}
+.hero-headline .word-break{display:block}
+
+.hero-sub{
+  font-size:18px;
+  color:var(--text-2);
+  line-height:1.7;
+  margin-bottom:32px;
+  max-width:440px;
+  opacity:0;transform:translateY(20px);
+}
+.hero-sub strong{color:var(--text)}
+
+.hero-ctas{
+  display:flex;gap:14px;flex-wrap:wrap;
+  margin-bottom:28px;
+  opacity:0;transform:translateY(20px);
+}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--grad);
+  color:#fff;font-weight:800;font-size:15px;
+  padding:15px 28px;border-radius:12px;
+  text-decoration:none;transition:.2s;
+  box-shadow:0 8px 24px var(--accent-glow);
+  letter-spacing:.3px;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 32px var(--accent-glow)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--text-2);
+  font-weight:600;font-size:15px;
+  padding:15px 22px;border-radius:12px;
+  text-decoration:none;border:1px solid var(--border-strong);transition:.2s;
+}
+.btn-secondary:hover{border-color:var(--accent);color:var(--text)}
+
+.hero-proof{
+  display:flex;gap:20px;flex-wrap:wrap;
+  opacity:0;
+}
+.hero-proof-item{
+  display:flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:600;color:var(--muted);
+}
+.hero-proof-item .dot{width:6px;height:6px;background:var(--green);border-radius:50%}
+
+/* ============================================================
+   CSS DASHBOARD MOCKUP
+   ============================================================ */
+.dashboard-wrap{
+  position:relative;
+  opacity:0;transform:translateX(60px) rotateY(-10deg);
+  transform-origin:left center;
+  perspective:1000px;
+}
+.dashboard{
+  background:var(--surface);
+  border:1px solid var(--border-strong);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 0 60px rgba(59,130,246,.18),0 40px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05);
+  position:relative;
+}
+.dash-topbar{
+  background:#070e1f;
+  border-bottom:1px solid var(--border);
+  padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.dash-dots{display:flex;gap:6px}
+.dash-dot{width:10px;height:10px;border-radius:50%}
+.dash-dot-r{background:#EF4444}
+.dash-dot-y{background:#F59E0B}
+.dash-dot-g{background:#22C55E}
+.dash-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.5px}
+.dash-date{font-size:11px;color:var(--muted);opacity:.6}
+
+.dash-body{padding:16px}
+
+/* Metric cards */
+.dash-metrics{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px;margin-bottom:14px;
+}
+.metric-card{
+  background:rgba(13,20,38,.8);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 10px;
+  opacity:0;transform:translateY(10px);
+  transition:.4s ease;
+}
+.metric-card.visible{opacity:1;transform:translateY(0)}
+.metric-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.metric-value{font-size:18px;font-weight:800;color:var(--text);font-family:'Bebas Neue',cursive;letter-spacing:1px}
+.metric-trend{font-size:10px;font-weight:700;margin-top:3px}
+.metric-up{color:var(--green)}
+.metric-down{color:var(--red)}
+
+/* Chart */
+.dash-chart-wrap{margin-bottom:14px}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.chart-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.chart-legend{display:flex;gap:10px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)}
+.legend-dot{width:6px;height:6px;border-radius:50%}
+.chart-bars{
+  display:flex;align-items:flex-end;gap:5px;
+  height:70px;
+}
+.chart-bar-group{
+  flex:1;display:flex;gap:2px;align-items:flex-end;
+}
+.chart-bar{
+  flex:1;border-radius:3px 3px 0 0;
+  width:100%;
+  transform-origin:bottom;
+  transform:scaleY(0);
+  transition:transform .6s cubic-bezier(.34,1.56,.64,1);
+}
+.chart-bar.visible{transform:scaleY(1)}
+.bar-blue{background:var(--accent)}
+.bar-purple{background:var(--accent-2)}
+
+/* Campaign list */
+.dash-campaigns{}
+.camp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.camp-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.camp-badge{font-size:10px;background:rgba(59,130,246,.15);color:var(--accent);padding:2px 8px;border-radius:100px;font-weight:700}
+.camp-item{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 0;
+  border-bottom:1px solid rgba(59,130,246,.06);
+  opacity:0;transform:translateX(-8px);
+  transition:.35s ease;
+}
+.camp-item:last-child{border-bottom:none}
+.camp-item.visible{opacity:1;transform:translateX(0)}
+.camp-status{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.camp-active{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,.5)}
+.camp-paused{background:var(--yellow)}
+.camp-name{font-size:11px;font-weight:600;color:var(--text-2);flex:1}
+.camp-roas{font-size:11px;font-weight:800;color:var(--green)}
+.camp-spend{font-size:10px;color:var(--muted)}
+
+/* Glow border animation */
+.dashboard::before{
+  content:'';
+  position:absolute;
+  inset:-1px;
+  border-radius:17px;
+  background:var(--grad);
+  z-index:-1;
+  opacity:.3;
+  filter:blur(8px);
+  animation:glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse{0%,100%{opacity:.2;filter:blur(8px)}50%{opacity:.5;filter:blur(12px)}}
+
+/* ============================================================
+   PROOF STRIP
+   ============================================================ */
+.proof-strip{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:20px 0;
+  overflow:hidden;
+}
+.proof-track{
+  display:flex;gap:0;
+  animation:scrollStrip 20s linear infinite;
+  width:max-content;
+}
+@keyframes scrollStrip{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+.proof-item{
+  display:flex;align-items:center;gap:10px;
+  padding:0 48px;
+  border-right:1px solid var(--border);
+  white-space:nowrap;
+}
+.proof-icon{font-size:18px}
+.proof-text{font-size:14px;font-weight:700;color:var(--text-2);letter-spacing:.2px}
+.proof-text span{color:var(--accent)}
+
+/* ============================================================
+   COUNTERS
+   ============================================================ */
+.counters-section{
+  padding:100px 32px;
+  max-width:1200px;
+  margin:0 auto;
+  text-align:center;
+}
+.counters-label{
+  font-size:12px;font-weight:700;
+  color:var(--accent);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:16px;
+}
+.counters-title{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(40px,6vw,64px);
+  letter-spacing:2px;margin-bottom:60px;
+}
+.counters-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2px;
+}
+.counter-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:48px 32px;
+  position:relative;
+  overflow:hidden;
+}
+.counter-card:first-child{border-radius:16px 0 0 16px}
+.counter-card:last-child{border-radius:0 16px 16px 0}
+.counter-card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:var(--grad);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .6s ease;
+}
+.counter-card.visible::before{transform:scaleX(1)}
+.counter-num{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(48px,6vw,80px);
+  letter-spacing:2px;
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  line-height:1;
+  margin-bottom:8px;
+}
+.counter-desc{font-size:15px;color:var(--muted);font-weight:500;line-height:1.5}
+.counter-desc strong{color:var(--text-2);display:block}
+
+/* ============================================================
+   DOR SECTION
+   ============================================================ */
+.pain-section{
+  padding:100px 32px;
+  max-width:1200px;
+  margin:0 auto;
+}
+.section-eyebrow{
+  font-size:12px;font-weight:700;
+  color:var(--accent);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:16px;
+  display:block;
+}
+.section-title{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(40px,5vw,60px);
+  letter-spacing:2px;margin-bottom:48px;
+  line-height:1;
+}
+.grad-text{
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.pain-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.pain-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:32px 28px;
+  position:relative;
+  overflow:hidden;
+  opacity:0;transform:translateY(30px);
+  transition:.6s ease;
+}
+.pain-card.visible{opacity:1;transform:translateY(0)}
+.pain-card::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(239,68,68,.05),transparent 50%);
+  pointer-events:none;
+}
+.pain-icon-wrap{
+  width:48px;height:48px;
+  background:rgba(239,68,68,.1);
+  border:1px solid rgba(239,68,68,.2);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:20px;
+}
+.pain-card h3{font-size:20px;font-weight:800;margin-bottom:10px;color:var(--text)}
+.pain-card p{font-size:14px;color:var(--muted);line-height:1.65}
+.pain-card p strong{color:var(--text-2)}
+.pain-quote{
+  font-size:13px;font-style:italic;
+  color:var(--muted);
+  margin-top:16px;padding-top:16px;
+  border-top:1px solid var(--border);
+}
+.pain-quote::before{content:'"';color:var(--red);font-size:20px;font-style:normal;margin-right:4px}
+
+/* ============================================================
+   FEATURE SHOWCASE (PINNED)
+   ============================================================ */
+.feature-outer{
+  position:relative;
+  height:300vh;
+}
+.feature-sticky{
+  position:sticky;
+  top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.feature-inner{
+  max-width:1200px;width:100%;
+  padding:0 32px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;
+}
+.feature-left{}
+.feature-progress{
+  display:flex;flex-direction:column;gap:4px;
+  margin-bottom:40px;
+}
+.feat-prog-item{
+  height:3px;background:var(--border);
+  border-radius:2px;overflow:hidden;
+}
+.feat-prog-fill{
+  height:100%;background:var(--grad);
+  border-radius:2px;
+  width:0%;transition:width .3s linear;
+}
+.feature-tabs{display:flex;flex-direction:column;gap:2px}
+.feat-tab{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 20px;border-radius:12px;
+  cursor:default;transition:.3s;
+  border:1px solid transparent;
+}
+.feat-tab.active{
+  background:rgba(59,130,246,.08);
+  border-color:var(--border);
+}
+.feat-tab-num{
+  font-family:'Bebas Neue',cursive;
+  font-size:24px;color:var(--border-strong);
+  width:32px;flex-shrink:0;
+  transition:.3s;
+}
+.feat-tab.active .feat-tab-num{color:var(--accent)}
+.feat-tab-content{}
+.feat-tab-title{font-size:15px;font-weight:800;color:var(--muted);transition:.3s}
+.feat-tab.active .feat-tab-title{color:var(--text)}
+.feat-tab-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-top:3px;
+  display:none;}
+.feat-tab.active .feat-tab-desc{display:block}
+
+.feature-right{position:relative;height:420px}
+.feat-card{
+  position:absolute;inset:0;
+  background:var(--surface);
+  border:1px solid var(--border-strong);
+  border-radius:20px;
+  padding:32px;
+  opacity:0;transform:translateX(80px) scale(.97);
+  transition:.5s cubic-bezier(.34,1,.64,1);
+  pointer-events:none;
+  box-shadow:0 0 40px rgba(59,130,246,.1),0 30px 60px rgba(0,0,0,.4);
+}
+.feat-card.active{
+  opacity:1;transform:translateX(0) scale(1);
+  pointer-events:auto;
+}
+.feat-card.exit{
+  opacity:0;transform:translateX(-80px) scale(.97);
+}
+.feat-card-icon{
+  width:56px;height:56px;
+  background:var(--grad);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;margin-bottom:24px;
+  box-shadow:0 8px 20px var(--accent-glow);
+}
+.feat-card h3{
+  font-family:'Bebas Neue',cursive;
+  font-size:32px;letter-spacing:1.5px;
+  margin-bottom:12px;
+}
+.feat-card p{font-size:15px;color:var(--text-2);line-height:1.7;margin-bottom:20px}
+.feat-card-detail{
+  background:rgba(59,130,246,.06);
+  border:1px solid var(--border);
+  border-radius:10px;padding:14px 16px;
+}
+.feat-card-detail span{font-size:13px;font-weight:700;color:var(--accent);display:block;margin-bottom:4px}
+.feat-card-detail p{font-size:13px;color:var(--muted);margin:0;line-height:1.5}
+
+/* ============================================================
+   COMPARISON TABLE
+   ============================================================ */
+.comparison-section{
+  padding:100px 32px;
+  max-width:1000px;margin:0 auto;
+}
+.comp-table{
+  border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;
+  margin-top:48px;
+}
+.comp-head{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+.comp-head-cell{
+  padding:20px 24px;
+  font-size:13px;font-weight:800;
+  text-align:center;
+}
+.comp-head-cell:first-child{text-align:left;color:var(--muted)}
+.comp-head-native{color:var(--red)}
+.comp-head-tractor{
+  background:rgba(59,130,246,.08);
+  border-left:1px solid var(--border);
+  border-right:1px solid var(--border);
+}
+.comp-head-tractor span{
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.comp-row{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  border-bottom:1px solid var(--border);
+  opacity:0;transform:translateX(-20px);
+  transition:.4s ease;
+}
+.comp-row:last-child{border-bottom:none}
+.comp-row.visible{opacity:1;transform:translateX(0)}
+.comp-cell{
+  padding:16px 24px;
+  font-size:14px;font-weight:600;
+  display:flex;align-items:center;gap:8px;
+}
+.comp-cell:first-child{color:var(--text-2)}
+.comp-cell-native{justify-content:center;color:var(--red)}
+.comp-cell-tractor{
+  justify-content:center;
+  color:var(--green);
+  background:rgba(59,130,246,.04);
+  border-left:1px solid var(--border);
+  border-right:1px solid var(--border);
+  font-weight:700;
+}
+.comp-x{color:var(--red);font-size:18px;font-weight:900}
+.comp-check{color:var(--green);font-size:18px;font-weight:900}
+
+/* ============================================================
+   HOW IT WORKS
+   ============================================================ */
+.how-section{
+  padding:100px 32px;
+  max-width:1200px;margin:0 auto;
+  text-align:center;
+}
+.steps-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:24px;margin-top:60px;
+  position:relative;
+}
+.steps-grid::before{
+  content:'';
+  position:absolute;
+  top:48px;left:calc(16.66% + 24px);right:calc(16.66% + 24px);
+  height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  opacity:.3;
+}
+.step-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px 28px;
+  text-align:center;
+  position:relative;
+  opacity:0;transform:translateY(20px);
+  transition:.5s ease;
+}
+.step-card.visible{opacity:1;transform:translateY(0)}
+.step-num{
+  width:64px;height:64px;
+  background:var(--grad);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',cursive;font-size:28px;
+  color:#fff;margin:0 auto 24px;
+  box-shadow:0 8px 20px var(--accent-glow);
+  position:relative;z-index:1;
+}
+.step-card h3{font-size:22px;font-weight:800;margin-bottom:10px}
+.step-card p{font-size:14px;color:var(--muted);line-height:1.65}
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+.testi-section{
+  padding:100px 32px;
+  max-width:1200px;margin:0 auto;
+}
+.testi-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;margin-top:60px;
+}
+.testi-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px;
+  position:relative;
+  opacity:0;transform:translateY(30px);
+  transition:.6s ease;
+}
+.testi-card.visible{opacity:1;transform:translateY(0)}
+.testi-stars{display:flex;gap:3px;margin-bottom:16px}
+.star{color:var(--yellow);font-size:14px}
+.testi-quote{
+  font-size:15px;color:var(--text-2);line-height:1.7;
+  margin-bottom:20px;font-style:italic;
+}
+.testi-quote::before{content:'"';color:var(--accent);font-size:24px;font-style:normal;line-height:0;vertical-align:-8px;margin-right:3px}
+.testi-author{
+  display:flex;align-items:center;gap:12px;
+  padding-top:16px;border-top:1px solid var(--border);
+}
+.testi-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:16px;color:#fff;
+  flex-shrink:0;
+}
+.testi-name{font-size:14px;font-weight:800;color:var(--text)}
+.testi-role{font-size:12px;color:var(--muted);margin-top:1px}
+.testi-highlight{
+  position:absolute;top:16px;right:16px;
+  font-size:10px;font-weight:800;
+  background:rgba(34,197,94,.12);
+  color:var(--green);
+  padding:3px 8px;border-radius:100px;
+  letter-spacing:.5px;text-transform:uppercase;
+}
+
+/* ============================================================
+   PRICING
+   ============================================================ */
+.pricing-section{
+  padding:100px 32px;
+  max-width:900px;margin:0 auto;
+  text-align:center;
+}
+.price-card{
+  background:var(--surface);
+  border:1px solid var(--border-strong);
+  border-radius:24px;
+  padding:52px 48px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 80px rgba(59,130,246,.12),0 40px 80px rgba(0,0,0,.3);
+  margin-top:52px;
+}
+.price-card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:4px;
+  background:var(--grad);
+}
+.price-tag{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(64px,10vw,96px);
+  letter-spacing:2px;
+  line-height:1;
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.price-period{font-size:18px;color:var(--muted);margin-bottom:8px}
+.price-note{font-size:14px;color:var(--muted);margin-bottom:40px}
+.price-note strong{color:var(--green)}
+.price-features{
+  display:flex;flex-direction:column;gap:12px;
+  margin-bottom:40px;text-align:left;
+  max-width:440px;margin-left:auto;margin-right:auto;
+}
+.price-feat{
+  display:flex;align-items:center;gap:10px;
+  font-size:15px;font-weight:600;color:var(--text-2);
+}
+.price-feat-check{
+  width:20px;height:20px;
+  background:rgba(34,197,94,.15);
+  border:1px solid rgba(34,197,94,.3);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:var(--green);
+  flex-shrink:0;
+}
+.price-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--grad);
+  color:#fff;font-weight:800;font-size:18px;
+  padding:18px 40px;border-radius:14px;
+  text-decoration:none;transition:.2s;
+  box-shadow:0 12px 32px var(--accent-glow);
+  letter-spacing:.3px;margin-bottom:16px;
+}
+.price-cta:hover{transform:translateY(-3px);box-shadow:0 20px 48px var(--accent-glow)}
+.price-guarantee{
+  font-size:13px;color:var(--muted);
+}
+.price-math{
+  background:rgba(59,130,246,.07);
+  border:1px solid var(--border);
+  border-radius:12px;padding:20px 24px;
+  margin:32px 0;
+  font-size:14px;color:var(--text-2);line-height:1.7;
+}
+.price-math strong{color:var(--text);font-size:15px}
+
+/* ============================================================
+   FINAL CTA
+   ============================================================ */
+.final-cta{
+  min-height:80vh;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  padding:100px 32px;
+  position:relative;
+  overflow:hidden;
+}
+.final-cta-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(59,130,246,.15) 0%,rgba(139,92,246,.12) 100%);
+}
+.final-cta-orb{
+  position:absolute;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(59,130,246,.12),transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  border-radius:50%;
+  animation:orbFloat 6s ease-in-out infinite;
+}
+.final-cta-inner{position:relative;z-index:2;max-width:700px}
+.final-eyebrow{
+  font-size:12px;font-weight:700;
+  color:var(--accent);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:20px;
+  display:block;
+}
+.final-title{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(52px,8vw,88px);
+  letter-spacing:2px;
+  line-height:.95;margin-bottom:24px;
+}
+.final-sub{
+  font-size:18px;color:var(--text-2);
+  margin-bottom:40px;line-height:1.7;
+}
+.final-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.final-disclaimer{font-size:13px;color:var(--muted)}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  padding:40px 32px;
+}
+.footer-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:20px;
+}
+.footer-logo{
+  display:flex;align-items:center;gap:10px;
+  text-decoration:none;color:var(--text);
+}
+.footer-logo-name{
+  font-family:'Bebas Neue',cursive;
+  font-size:18px;letter-spacing:2px;color:var(--muted);
+}
+.footer-copy{font-size:13px;color:var(--muted)}
+.footer-links{display:flex;gap:20px}
+.footer-link{font-size:13px;color:var(--muted);text-decoration:none;transition:.2s}
+.footer-link:hover{color:var(--text)}
+
+/* ============================================================
+   HORIZONTAL SCROLL STRIP (logos)
+   ============================================================ */
+.logos-section{
+  padding:60px 0;
+  overflow:hidden;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.logos-label{text-align:center;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:28px}
+.logos-track-wrap{overflow:hidden}
+.logos-track{
+  display:flex;align-items:center;gap:0;
+  animation:scrollLogos 25s linear infinite;
+  width:max-content;
+}
+@keyframes scrollLogos{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+.logo-item{
+  display:flex;align-items:center;gap:10px;
+  padding:0 40px;
+  border-right:1px solid var(--border);
+  white-space:nowrap;
+}
+.logo-item-name{
+  font-family:'Bebas Neue',cursive;
+  font-size:20px;letter-spacing:2px;
+  color:var(--muted);opacity:.6;
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.text-center{text-align:center}
+.reveal-fade{opacity:0;transform:translateY(24px);transition:.7s ease}
+.reveal-fade.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr}
+  .dashboard-wrap{display:none}
+  .pain-grid{grid-template-columns:1fr}
+  .feature-inner{grid-template-columns:1fr}
+  .feature-right{height:auto;position:relative}
+  .feat-card{position:relative;inset:auto;margin-bottom:16px}
+  .comp-head,.comp-row{grid-template-columns:1fr 1fr 1fr;font-size:12px}
+  .testi-grid{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr;gap:12px}
+  .steps-grid::before{display:none}
+  .counters-grid{grid-template-columns:1fr;gap:12px}
+  .counter-card:first-child,.counter-card:last-child{border-radius:12px}
+  .counter-card{border-radius:12px}
+  .price-card{padding:36px 24px}
+  body{cursor:auto}
+  #cursor,#cursor-follower{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- SCROLL PROGRESS -->
+<div id="scroll-progress"></div>
+
+<!-- CUSTOM CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-follower"></div>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">T</div>
+    <span class="nav-logo-name">TractorPRO</span>
+  </a>
+  <div class="nav-actions">
+    <a href="index.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Ecossistema
+    </a>
+    <a href="#pricing" class="nav-cta">Começar grátis</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO (PINNED)
+     ============================================================ -->
+<section class="hero-outer" id="hero-outer">
+  <div class="hero-sticky">
+    <div class="hero-bg-wrap">
+      <div class="dot-grid"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="hero-inner">
+      <!-- LEFT: TEXT -->
+      <div class="hero-text">
+        <div class="hero-badge" id="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Meta + Google · Dashboard unificado · IA
+        </div>
+
+        <h1 class="hero-headline" id="hero-headline">
+          <span class="word-break">NUNCA MAIS</span>
+          <span class="word-break">ABRA O</span>
+          <span class="word-break">GERENCIADOR</span>
+        </h1>
+
+        <p class="hero-sub" id="hero-sub">
+          Dashboard unificado de Meta + Google Ads, <strong>wizard de campanha com IA</strong> e relatório automático no WhatsApp do seu cliente. Tudo em um lugar.
+        </p>
+
+        <div class="hero-ctas" id="hero-ctas">
+          <a href="#pricing" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Começar trial grátis
+          </a>
+          <a href="#features" class="btn-secondary">
+            Ver como funciona
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div class="hero-proof" id="hero-proof">
+          <div class="hero-proof-item">
+            <span class="dot"></span>
+            Sem cartão de crédito
+          </div>
+          <div class="hero-proof-item">
+            <span class="dot"></span>
+            14 dias grátis
+          </div>
+          <div class="hero-proof-item">
+            <span class="dot"></span>
+            Cancela quando quiser
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: DASHBOARD MOCKUP -->
+      <div class="dashboard-wrap" id="dashboard-wrap">
+        <div class="dashboard">
+          <div class="dash-topbar">
+            <div class="dash-dots">
+              <div class="dash-dot dash-dot-r"></div>
+              <div class="dash-dot dash-dot-y"></div>
+              <div class="dash-dot dash-dot-g"></div>
+            </div>
+            <div class="dash-title">TractorPRO Dashboard</div>
+            <div class="dash-date">Mar 22, 2026</div>
+          </div>
+
+          <div class="dash-body">
+            <!-- Metrics -->
+            <div class="dash-metrics">
+              <div class="metric-card" data-metric="0">
+                <div class="metric-label">ROAS</div>
+                <div class="metric-value">4.8x</div>
+                <div class="metric-trend metric-up">▲ +12%</div>
+              </div>
+              <div class="metric-card" data-metric="1">
+                <div class="metric-label">CPC</div>
+                <div class="metric-value">R$0.87</div>
+                <div class="metric-trend metric-down">▼ -8%</div>
+              </div>
+              <div class="metric-card" data-metric="2">
+                <div class="metric-label">CTR</div>
+                <div class="metric-value">3.2%</div>
+                <div class="metric-trend metric-up">▲ +0.4</div>
+              </div>
+              <div class="metric-card" data-metric="3">
+                <div class="metric-label">Conversões</div>
+                <div class="metric-value">248</div>
+                <div class="metric-trend metric-up">▲ +34</div>
+              </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="dash-chart-wrap">
+              <div class="chart-header">
+                <div class="chart-label">Performance 7 dias</div>
+                <div class="chart-legend">
+                  <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Meta</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:var(--accent-2)"></div>Google</div>
+                </div>
+              </div>
+              <div class="chart-bars" id="chart-bars">
+                <div class="chart-bar-group">
+                  <div class="chart-bar bar-blue" style="height:65%"></div>
+                  <div class="chart-bar bar-purple" style="height:45%"></div>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="chart-bar bar-blue" style="height:80%"></div>
+                  <div class="chart-bar bar-purple" style="height:60%"></div>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="chart-bar bar-blue" style="height:55%"></div>
+                  <div class="chart-bar bar-purple" style="height:70%"></div>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="chart-bar bar-blue" style="height:90%"></div>
+                  <div class="chart-bar bar-purple" style="height:65%"></div>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="chart-bar bar-blue" style="height:70%"></div>
+                  <div class="chart-bar bar-purple" style="height:80%"></div>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="chart-bar bar-blue" style="height:85%"></div>
+                  <div class="chart-bar bar-purple" style="height:55%"></div>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="chart-bar bar-blue" style="height:100%"></div>
+                  <div class="chart-bar bar-purple" style="height:90%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Campaigns -->
+            <div class="dash-campaigns">
+              <div class="camp-header">
+                <div class="camp-title">Campanhas ativas</div>
+                <div class="camp-badge">8 no ar</div>
+              </div>
+              <div class="camp-item" data-camp="0">
+                <div class="camp-status camp-active"></div>
+                <div class="camp-name">E-comm · Verão 2026</div>
+                <div class="camp-spend">R$420/dia</div>
+                <div class="camp-roas">5.2x</div>
+              </div>
+              <div class="camp-item" data-camp="1">
+                <div class="camp-status camp-active"></div>
+                <div class="camp-name">Lead Gen · Imóveis SP</div>
+                <div class="camp-spend">R$180/dia</div>
+                <div class="camp-roas">3.8x</div>
+              </div>
+              <div class="camp-item" data-camp="2">
+                <div class="camp-status camp-paused"></div>
+                <div class="camp-name">Retargeting · Moda</div>
+                <div class="camp-spend">pausada</div>
+                <div class="camp-roas" style="color:var(--yellow)">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROOF STRIP
+     ============================================================ -->
+<div class="proof-strip">
+  <div class="proof-track" id="proof-track">
+    <!-- set 1 -->
+    <div class="proof-item"><span class="proof-icon">📈</span><span class="proof-text">De <span>12 → 40 clientes</span> sem contratar ninguém</span></div>
+    <div class="proof-item"><span class="proof-icon">⏱️</span><span class="proof-text"><span>2h economizadas</span> todo dia</span></div>
+    <div class="proof-item"><span class="proof-icon">🔗</span><span class="proof-text"><span>Meta + Google</span> unificados num único painel</span></div>
+    <div class="proof-item"><span class="proof-icon">🤖</span><span class="proof-text">Campanha criada em <span>4 minutos</span> com IA</span></div>
+    <div class="proof-item"><span class="proof-icon">💬</span><span class="proof-text">Relatório automático no <span>WhatsApp do cliente</span></span></div>
+    <div class="proof-item"><span class="proof-icon">🚫</span><span class="proof-text">Nunca mais abre o <span>gerenciador do Meta</span></span></div>
+    <!-- set 2 (duplicate for infinite) -->
+    <div class="proof-item"><span class="proof-icon">📈</span><span class="proof-text">De <span>12 → 40 clientes</span> sem contratar ninguém</span></div>
+    <div class="proof-item"><span class="proof-icon">⏱️</span><span class="proof-text"><span>2h economizadas</span> todo dia</span></div>
+    <div class="proof-item"><span class="proof-icon">🔗</span><span class="proof-text"><span>Meta + Google</span> unificados num único painel</span></div>
+    <div class="proof-item"><span class="proof-icon">🤖</span><span class="proof-text">Campanha criada em <span>4 minutos</span> com IA</span></div>
+    <div class="proof-item"><span class="proof-icon">💬</span><span class="proof-text">Relatório automático no <span>WhatsApp do cliente</span></span></div>
+    <div class="proof-item"><span class="proof-icon">🚫</span><span class="proof-text">Nunca mais abre o <span>gerenciador do Meta</span></span></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COUNTERS
+     ============================================================ -->
+<section class="counters-section">
+  <div class="counters-label">Impacto real no seu dia a dia</div>
+  <h2 class="counters-title reveal-fade">Os números que você vai <span class="grad-text">sentir na prática</span></h2>
+  <div class="counters-grid">
+    <div class="counter-card" data-target="2" data-suffix="h/dia economizadas">
+      <div class="counter-num" id="cnt-0">0h</div>
+      <div class="counter-desc">
+        <strong>2 horas por dia de volta</strong>
+        Sem montar relatório manual, sem exportar planilha, sem ficar no gerenciador
+      </div>
+    </div>
+    <div class="counter-card" data-target="47" data-from="47" data-to="4" data-label="min">
+      <div class="counter-num" id="cnt-1">47 min</div>
+      <div class="counter-desc">
+        <strong>47 min → 4 min pra criar campanha</strong>
+        O wizard de IA cria a estrutura completa enquanto você toma café
+      </div>
+    </div>
+    <div class="counter-card" data-target="0" data-prefix="R$" data-suffix=" em relatórios">
+      <div class="counter-num" id="cnt-2">R$0</div>
+      <div class="counter-desc">
+        <strong>Zero reais gastos com relatório</strong>
+        O TractorPRO envia automático pelo WhatsApp. O cliente recebe, vê, renova.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     DOR
+     ============================================================ -->
+<section class="pain-section">
+  <div class="text-center">
+    <span class="section-eyebrow">A realidade do gestor de tráfego</span>
+    <h2 class="section-title">Você reconhece <span class="grad-text">esse ciclo?</span></h2>
+  </div>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon-wrap">😤</div>
+      <h3>Abre o gerenciador toda hora</h3>
+      <p>Meta Ads Nativo foi feito por engenheiros que nunca subiram uma campanha. Cada clique é um labirinto. <strong>Você passa metade do dia navegando em abas que não deveriam existir.</strong></p>
+      <div class="pain-quote">Odeio ter que entrar no gerenciador. Aquilo é um pesadelo.</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon-wrap">📊</div>
+      <h3>Relatório que leva tarde inteira</h3>
+      <p>Exporta do Meta, exporta do Google, cola na planilha, colore, formata, salva PDF, envia pro cliente. <strong>Passou a tarde toda nisso. O cliente responde: "tá bom?" e vai dormir.</strong></p>
+      <div class="pain-quote">Perdi a tarde toda montando relatório que o cliente nem entende direito.</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon-wrap">🤯</div>
+      <h3>Cliente não entende os números</h3>
+      <p>Você entrega resultado, mas o cliente não consegue enxergar o valor. CPC, CPM, ROAS — parece idioma estrangeiro. <strong>Aí vem a pergunta temida: "mas valeu a pena mesmo?"</strong></p>
+      <div class="pain-quote">Meu cliente não entende o que estou fazendo por ele.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     LOGOS (clientes integrados)
+     ============================================================ -->
+<div class="logos-section">
+  <div class="logos-label">Integra com as plataformas que você já usa</div>
+  <div class="logos-track-wrap">
+    <div class="logos-track">
+      <!-- set 1 -->
+      <div class="logo-item"><div class="logo-item-name">META ADS</div></div>
+      <div class="logo-item"><div class="logo-item-name">GOOGLE ADS</div></div>
+      <div class="logo-item"><div class="logo-item-name">WHATSAPP</div></div>
+      <div class="logo-item"><div class="logo-item-name">FACEBOOK</div></div>
+      <div class="logo-item"><div class="logo-item-name">INSTAGRAM</div></div>
+      <div class="logo-item"><div class="logo-item-name">YOUTUBE ADS</div></div>
+      <div class="logo-item"><div class="logo-item-name">GOOGLE ANALYTICS</div></div>
+      <!-- set 2 -->
+      <div class="logo-item"><div class="logo-item-name">META ADS</div></div>
+      <div class="logo-item"><div class="logo-item-name">GOOGLE ADS</div></div>
+      <div class="logo-item"><div class="logo-item-name">WHATSAPP</div></div>
+      <div class="logo-item"><div class="logo-item-name">FACEBOOK</div></div>
+      <div class="logo-item"><div class="logo-item-name">INSTAGRAM</div></div>
+      <div class="logo-item"><div class="logo-item-name">YOUTUBE ADS</div></div>
+      <div class="logo-item"><div class="logo-item-name">GOOGLE ANALYTICS</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     FEATURE SHOWCASE (PINNED)
+     ============================================================ -->
+<section class="feature-outer" id="features">
+  <div class="feature-sticky" id="feature-sticky">
+    <div class="feature-inner">
+      <!-- LEFT: tabs -->
+      <div class="feature-left">
+        <span class="section-eyebrow">O que o TractorPRO faz</span>
+        <h2 class="section-title" style="margin-bottom:28px">Quatro diferenciais que <span class="grad-text">mudam tudo</span></h2>
+
+        <div class="feature-progress" id="feature-progress">
+          <div class="feat-prog-item"><div class="feat-prog-fill" id="prog-0"></div></div>
+          <div class="feat-prog-item"><div class="feat-prog-fill" id="prog-1"></div></div>
+          <div class="feat-prog-item"><div class="feat-prog-fill" id="prog-2"></div></div>
+          <div class="feat-prog-item"><div class="feat-prog-fill" id="prog-3"></div></div>
+        </div>
+
+        <div class="feature-tabs" id="feature-tabs">
+          <div class="feat-tab active" data-feat="0">
+            <div class="feat-tab-num">01</div>
+            <div class="feat-tab-content">
+              <div class="feat-tab-title">Dashboard Unificado</div>
+              <div class="feat-tab-desc">Meta e Google num único painel. Sem abrir gerenciador, sem exportar planilha.</div>
+            </div>
+          </div>
+          <div class="feat-tab" data-feat="1">
+            <div class="feat-tab-num">02</div>
+            <div class="feat-tab-content">
+              <div class="feat-tab-title">Wizard de Campanha com IA</div>
+              <div class="feat-tab-desc">Cria estrutura completa de campanha em 4 minutos. A IA faz a parte chata.</div>
+            </div>
+          </div>
+          <div class="feat-tab" data-feat="2">
+            <div class="feat-tab-num">03</div>
+            <div class="feat-tab-content">
+              <div class="feat-tab-title">Relatório Automático no WhatsApp</div>
+              <div class="feat-tab-desc">O TractorPRO manda o relatório pro cliente sozinho. Você fica livre.</div>
+            </div>
+          </div>
+          <div class="feat-tab" data-feat="3">
+            <div class="feat-tab-num">04</div>
+            <div class="feat-tab-content">
+              <div class="feat-tab-title">Multi-clientes sem caos</div>
+              <div class="feat-tab-desc">Um login, todos os clientes. Escale de 12 pra 40 sem contratar ninguém.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: feature cards -->
+      <div class="feature-right">
+        <div class="feat-card active" data-feat-card="0">
+          <div class="feat-card-icon">📊</div>
+          <h3>Dashboard Unificado</h3>
+          <p>Meta Ads e Google Ads num único painel em tempo real. Você vê tudo de uma vez — ROAS, CPC, CTR, conversões — sem precisar abrir o gerenciador do Meta uma única vez.</p>
+          <div class="feat-card-detail">
+            <span>Antes vs. Depois</span>
+            <p>Antes: 3 abas abertas, 2 planilhas, 45 min pra entender o que aconteceu. Agora: 1 tela, tudo claro, em 30 segundos.</p>
+          </div>
+        </div>
+
+        <div class="feat-card" data-feat-card="1">
+          <div class="feat-card-icon">🤖</div>
+          <h3>Wizard de Campanha com IA</h3>
+          <p>Diz o objetivo, o produto e o orçamento. A IA cria toda a estrutura: conjuntos de anúncios, segmentações, copies sugeridas. Você revisa e aprova. Em 4 minutos, não 47.</p>
+          <div class="feat-card-detail">
+            <span>"Criei campanha completa em 4 minutos"</span>
+            <p>Sem tocar no Meta, sem montar estrutura na mão, sem passar hora configurando público. A IA faz a parte chata.</p>
+          </div>
+        </div>
+
+        <div class="feat-card" data-feat-card="2">
+          <div class="feat-card-icon">💬</div>
+          <h3>Relatório Automático no WhatsApp</h3>
+          <p>Todo dia, semana ou mês — você escolhe — o TractorPRO manda um relatório visual pro WhatsApp do seu cliente. Ele vê, entende, renova. Você não moveu um dedo.</p>
+          <div class="feat-card-detail">
+            <span>"Meu cliente viu o dashboard e renovou na hora"</span>
+            <p>Quando o cliente entende o resultado, ele valoriza. Quando valoriza, paga mais e fica mais tempo.</p>
+          </div>
+        </div>
+
+        <div class="feat-card" data-feat-card="3">
+          <div class="feat-card-icon">👥</div>
+          <h3>Multi-clientes sem caos</h3>
+          <p>Um único login pra gerenciar todos os seus clientes. Troca de conta em dois cliques, sem sair, sem logar de novo, sem perder o contexto. Escale de 12 pra 40 clientes sem contratar ninguém.</p>
+          <div class="feat-card-detail">
+            <span>"De 12 clientes para 40 sem contratar ninguém"</span>
+            <p>Feito por gestor de tráfego que também odiava aquilo. Cada detalhe foi pensado pra você trabalhar menos e faturar mais.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     COMPARISON TABLE
+     ============================================================ -->
+<section class="comparison-section">
+  <div class="text-center">
+    <span class="section-eyebrow">A comparação honesta</span>
+    <h2 class="section-title">TractorPRO vs. <span class="grad-text">Meta Ads Nativo</span></h2>
+  </div>
+
+  <div class="comp-table">
+    <div class="comp-head">
+      <div class="comp-head-cell">Funcionalidade</div>
+      <div class="comp-head-cell comp-head-native">Meta Ads Nativo</div>
+      <div class="comp-head-cell comp-head-tractor"><span>TractorPRO</span></div>
+    </div>
+
+    <div class="comp-row">
+      <div class="comp-cell">Meta + Google num único painel</div>
+      <div class="comp-cell comp-cell-native"><span class="comp-x">✕</span></div>
+      <div class="comp-cell comp-cell-tractor"><span class="comp-check">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Relatório automático para o cliente</div>
+      <div class="comp-cell comp-cell-native"><span class="comp-x">✕</span></div>
+      <div class="comp-cell comp-cell-tractor"><span class="comp-check">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Wizard de campanha com IA</div>
+      <div class="comp-cell comp-cell-native"><span class="comp-x">✕</span></div>
+      <div class="comp-cell comp-cell-tractor"><span class="comp-check">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Multi-clientes em 1 login</div>
+      <div class="comp-cell comp-cell-native"><span class="comp-x">✕</span></div>
+      <div class="comp-cell comp-cell-tractor"><span class="comp-check">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Relatório no WhatsApp automático</div>
+      <div class="comp-cell comp-cell-native"><span class="comp-x">✕</span></div>
+      <div class="comp-cell comp-cell-tractor"><span class="comp-check">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Interface simples e rápida</div>
+      <div class="comp-cell comp-cell-native"><span class="comp-x">✕</span></div>
+      <div class="comp-cell comp-cell-tractor"><span class="comp-check">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Feito por gestor de tráfego</div>
+      <div class="comp-cell comp-cell-native"><span class="comp-x">✕</span></div>
+      <div class="comp-cell comp-cell-tractor"><span class="comp-check">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Custo mensal</div>
+      <div class="comp-cell comp-cell-native" style="color:var(--muted)">Grátis (mas caro em tempo)</div>
+      <div class="comp-cell comp-cell-tractor" style="color:var(--accent)">R$147/mês</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     HOW IT WORKS
+     ============================================================ -->
+<section class="how-section">
+  <span class="section-eyebrow">Simples assim</span>
+  <h2 class="section-title reveal-fade">Três passos pra nunca mais <span class="grad-text">abrir o gerenciador</span></h2>
+
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <h3>Conecta</h3>
+      <p>Conecta sua conta do Meta Ads e Google Ads com OAuth. Dois cliques, sem API key, sem configuração técnica. Leva 3 minutos.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <h3>Visualiza</h3>
+      <p>Todos os seus clientes e campanhas aparecem no painel. ROAS, CPC, CTR, orçamento — tudo atualizado em tempo real, num único lugar.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <h3>Automatiza</h3>
+      <p>Ativa o relatório automático por WhatsApp e o wizard de campanha com IA. O TractorPRO trabalha enquanto você fecha novos clientes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+     ============================================================ -->
+<section class="testi-section">
+  <div class="text-center">
+    <span class="section-eyebrow">Gestores que já usam</span>
+    <h2 class="section-title reveal-fade">O que eles <span class="grad-text">estão falando</span></h2>
+  </div>
+
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-highlight">+28 clientes</div>
+      <div class="testi-stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      </div>
+      <p class="testi-quote">Saí de 12 pra 40 clientes em 4 meses sem contratar ninguém. O dashboard do TractorPRO me deu tempo de verdade. Antes eu passava o dia no gerenciador, agora passo o dia fechando cliente novo.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">R</div>
+        <div>
+          <div class="testi-name">Rafael M.</div>
+          <div class="testi-role">Gestor de tráfego · São Paulo, SP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-highlight">Cliente renovou</div>
+      <div class="testi-stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      </div>
+      <p class="testi-quote">Meu cliente recebeu o relatório automático pelo WhatsApp na segunda de manhã e me ligou querendo aumentar o orçamento. Eu nem tinha acordado ainda. Isso não tem preço.</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,#8B5CF6,#3B82F6)">C</div>
+        <div>
+          <div class="testi-name">Camila R.</div>
+          <div class="testi-role">Gestora de tráfego · Curitiba, PR</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-highlight">4 min por campanha</div>
+      <div class="testi-stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      </div>
+      <p class="testi-quote">O wizard de campanha é ridiculamente bom. Botei o objetivo, o produto e o orçamento — a IA fez todo o resto. Em 4 minutos tinha campanha no ar. Antes levava quase uma hora nisso.</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,#22C55E,#3B82F6)">T</div>
+        <div>
+          <div class="testi-name">Thiago L.</div>
+          <div class="testi-role">Dono de micro agência · Belo Horizonte, MG</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRICING
+     ============================================================ -->
+<section class="pricing-section" id="pricing">
+  <span class="section-eyebrow">Preço simples</span>
+  <h2 class="section-title reveal-fade">Menos de <span class="grad-text">1 hora do seu cliente</span></h2>
+
+  <div class="price-card reveal-fade">
+    <div class="price-tag">R$147</div>
+    <div class="price-period">por mês</div>
+    <div class="price-note">14 dias grátis · <strong>Sem cartão de crédito</strong> · Cancela quando quiser</div>
+
+    <div class="price-math">
+      <strong>A matemática que fecha o argumento:</strong><br>
+      Se você cobra R$1.500/mês por cliente — 1 hora do seu serviço vale R$94.<br>
+      O TractorPRO custa R$147/mês e te devolve <strong>2 horas por dia</strong>.<br>
+      <strong>Isso é 40h por mês de volta.</strong> Ou seja: você paga 1,5h pra ganhar 40h. Não faz sentido não ter.
+    </div>
+
+    <div class="price-features">
+      <div class="price-feat"><div class="price-feat-check">✓</div>Dashboard Meta + Google unificado</div>
+      <div class="price-feat"><div class="price-feat-check">✓</div>Wizard de campanha com IA</div>
+      <div class="price-feat"><div class="price-feat-check">✓</div>Relatório automático no WhatsApp</div>
+      <div class="price-feat"><div class="price-feat-check">✓</div>Multi-clientes · clientes ilimitados</div>
+      <div class="price-feat"><div class="price-feat-check">✓</div>Alertas de orçamento e anomalias</div>
+      <div class="price-feat"><div class="price-feat-check">✓</div>Suporte por WhatsApp · feito por gestor</div>
+    </div>
+
+    <a href="#" class="price-cta">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Começar trial grátis agora
+    </a>
+    <br>
+    <span class="price-guarantee">Sem cartão. Sem compromisso. Se não gostar, não paga nada.</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     FINAL CTA
+     ============================================================ -->
+<section class="final-cta">
+  <div class="final-cta-bg"></div>
+  <div class="final-cta-orb"></div>
+  <div class="final-cta-inner">
+    <span class="final-eyebrow">Está esperando o quê?</span>
+    <h2 class="final-title">Chega de tarde no <span class="grad-text">gerenciador do Meta</span></h2>
+    <p class="final-sub">Feito por gestor de tráfego que também odiava aquilo. Começa hoje, sem cartão, sem compromisso. Em 3 minutos seus dados já estão no painel.</p>
+    <div class="final-ctas">
+      <a href="#pricing" class="btn-primary" style="font-size:17px;padding:17px 36px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Começar trial grátis — sem cartão
+      </a>
+    </div>
+    <p class="final-disclaimer">14 dias grátis · Sem cartão · Cancela quando quiser</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      <div class="nav-logo-mark" style="width:28px;height:28px;font-size:15px">T</div>
+      <span class="footer-logo-name">TractorPRO</span>
+    </a>
+    <span class="footer-copy">© 2026 TractorPRO · Parte do Ecossistema MAX</span>
+    <div class="footer-links">
+      <a href="index.html" class="footer-link">Ecossistema MAX</a>
+      <a href="#" class="footer-link">Termos</a>
+      <a href="#" class="footer-link">Privacidade</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     SCRIPTS: LENIS, GSAP, SCROLLTRIGGER
+     ============================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+/* ============================================================
+   LENIS SMOOTH SCROLL
+   ============================================================ */
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  smooth: true
+});
+function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
+requestAnimationFrame(raf);
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(time => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+function updateScrollProgress(){
+  const st = window.pageYOffset || document.documentElement.scrollTop;
+  const dh = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = (st / dh) * 100;
+  document.getElementById('scroll-progress').style.width = pct + '%';
+}
+window.addEventListener('scroll', updateScrollProgress);
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('cursor-follower');
+let mouseX = 0, mouseY = 0;
+let fX = 0, fY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  gsap.to(cursor, {x: mouseX, y: mouseY, duration: 0.1, ease: 'power2.out'});
+});
+
+function animateFollower(){
+  fX += (mouseX - fX) * 0.1;
+  fY += (mouseY - fY) * 0.1;
+  gsap.set(follower, {x: fX, y: fY});
+  requestAnimationFrame(animateFollower);
+}
+animateFollower();
+
+/* ============================================================
+   NAV SCROLL BEHAVIOR
+   ============================================================ */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  if(window.scrollY > 60){nav.classList.add('scrolled')}
+  else{nav.classList.remove('scrolled')}
+});
+
+/* ============================================================
+   GSAP REGISTER
+   ============================================================ */
+gsap.registerPlugin(ScrollTrigger);
+
+/* ============================================================
+   HERO TIMELINE (on load)
+   ============================================================ */
+function splitToChars(el){
+  const html = el.innerHTML;
+  const lines = el.querySelectorAll('.word-break');
+  lines.forEach(line => {
+    const text = line.textContent;
+    line.innerHTML = text.split('').map(c => c === ' ' ? ' ' : `<span class="char">${c}</span>`).join('');
+  });
+}
+
+const headline = document.getElementById('hero-headline');
+splitToChars(headline);
+
+const heroTL = gsap.timeline({defaults:{ease:'power3.out'}});
+
+heroTL
+  .to('#hero-badge', {opacity:1, y:0, duration:.6, delay:.2})
+  .to(headline.querySelectorAll('.char'), {
+    opacity:1,
+    y:0,
+    rotateX:0,
+    duration:.06,
+    stagger:.03,
+    ease:'back.out(1.5)'
+  }, '-=.2')
+  .to('#hero-sub', {opacity:1, y:0, duration:.7}, '-=.3')
+  .to('#hero-ctas', {opacity:1, y:0, duration:.6}, '-=.4')
+  .to('#hero-proof', {opacity:1, duration:.5}, '-=.3')
+  .to('#dashboard-wrap', {
+    opacity:1,
+    x:0,
+    rotateY:0,
+    duration:1,
+    ease:'power3.out'
+  }, '-=.8');
+
+// Dashboard metrics appear one by one
+setTimeout(() => {
+  document.querySelectorAll('.metric-card').forEach((card, i) => {
+    setTimeout(() => card.classList.add('visible'), 800 + i * 150);
+  });
+
+  // Chart bars
+  setTimeout(() => {
+    document.querySelectorAll('.chart-bar').forEach((bar, i) => {
+      setTimeout(() => bar.classList.add('visible'), i * 60);
+    });
+  }, 1200);
+
+  // Campaign items
+  document.querySelectorAll('.camp-item').forEach((item, i) => {
+    setTimeout(() => item.classList.add('visible'), 1600 + i * 200);
+  });
+}, 500);
+
+/* ============================================================
+   HERO PIN — DASHBOARD BUILDS ON SCROLL
+   ============================================================ */
+ScrollTrigger.create({
+  trigger: '#hero-outer',
+  start: 'top top',
+  end: 'bottom bottom',
+  onUpdate: self => {
+    const progress = self.progress; // 0 to 1
+
+    // As you scroll through the hero, intensify dashboard glow
+    const glowIntensity = Math.min(progress * 3, 1);
+    const dashWrap = document.querySelector('.dashboard');
+    if(dashWrap){
+      dashWrap.style.setProperty('--glow-opacity', glowIntensity);
+    }
+
+    // Headline parallax
+    if(progress < 0.5){
+      gsap.set('.hero-text', {y: progress * -40});
+    }
+  }
+});
+
+/* ============================================================
+   COUNTER ANIMATION
+   ============================================================ */
+function animateCounter(el, from, to, suffix, prefix, duration=1800){
+  const start = performance.now();
+  function update(now){
+    const elapsed = now - start;
+    const p = Math.min(elapsed / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const val = Math.round(from + (to - from) * ease);
+    el.textContent = (prefix || '') + val + (suffix || '');
+    if(p < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+const counterCards = document.querySelectorAll('.counter-card');
+counterCards.forEach((card, i) => {
+  ScrollTrigger.create({
+    trigger: card,
+    start: 'top 80%',
+    once: true,
+    onEnter: () => {
+      card.classList.add('visible');
+      const numEl = document.getElementById('cnt-' + i);
+      if(i === 0) animateCounter(numEl, 0, 2, 'h/dia economizadas', '');
+      if(i === 1){
+        // Countdown 47 -> 4
+        const start2 = performance.now();
+        const dur2 = 1800;
+        function upd(now){
+          const elapsed = now - start2;
+          const p = Math.min(elapsed/dur2, 1);
+          const ease = 1 - Math.pow(1-p,3);
+          const val = Math.round(47 + (4 - 47) * ease);
+          numEl.textContent = val + ' min';
+          if(p < 1) requestAnimationFrame(upd);
+        }
+        requestAnimationFrame(upd);
+      }
+      if(i === 2) numEl.textContent = 'R$0';
+    }
+  });
+});
+
+/* ============================================================
+   PAIN CARDS — SCROLL REVEAL
+   ============================================================ */
+document.querySelectorAll('.pain-card').forEach((card, i) => {
+  ScrollTrigger.create({
+    trigger: card,
+    start: 'top 82%',
+    once: true,
+    onEnter: () => {
+      setTimeout(() => card.classList.add('visible'), i * 120);
+    }
+  });
+});
+
+/* ============================================================
+   FEATURE SHOWCASE — PINNED SCROLL CYCLING
+   ============================================================ */
+let currentFeat = 0;
+const featCards = document.querySelectorAll('.feat-card');
+const featTabs = document.querySelectorAll('.feat-tab');
+const progFills = document.querySelectorAll('.feat-prog-fill');
+const numFeats = 4;
+
+function activateFeat(idx){
+  if(idx === currentFeat) return;
+
+  // Exit current
+  featCards[currentFeat].classList.remove('active');
+  featCards[currentFeat].classList.add('exit');
+  setTimeout(() => featCards[currentFeat].classList.remove('exit'), 500);
+
+  featTabs[currentFeat].classList.remove('active');
+  progFills[currentFeat].style.width = '100%';
+
+  currentFeat = idx;
+
+  // Enter new
+  featCards[currentFeat].classList.add('active');
+  featTabs[currentFeat].classList.add('active');
+  progFills[currentFeat].style.width = '0%';
+}
+
+ScrollTrigger.create({
+  trigger: '#features',
+  start: 'top top',
+  end: `+=${numFeats * 100}vh`,
+  pin: true,
+  pinSpacing: true,
+  onUpdate: self => {
+    const pct = self.progress;
+    const step = 1 / numFeats;
+    const newIdx = Math.min(Math.floor(pct / step), numFeats - 1);
+
+    // Progress fill for current step
+    const stepProgress = (pct - newIdx * step) / step;
+    progFills[newIdx].style.width = (stepProgress * 100) + '%';
+
+    if(newIdx !== currentFeat){
+      activateFeat(newIdx);
+    }
+  }
+});
+
+/* ============================================================
+   COMPARISON TABLE — ROW REVEAL
+   ============================================================ */
+document.querySelectorAll('.comp-row').forEach((row, i) => {
+  ScrollTrigger.create({
+    trigger: row,
+    start: 'top 85%',
+    once: true,
+    onEnter: () => {
+      setTimeout(() => row.classList.add('visible'), i * 80);
+    }
+  });
+});
+
+/* ============================================================
+   STEPS — REVEAL
+   ============================================================ */
+document.querySelectorAll('.step-card').forEach((card, i) => {
+  ScrollTrigger.create({
+    trigger: card,
+    start: 'top 82%',
+    once: true,
+    onEnter: () => {
+      setTimeout(() => card.classList.add('visible'), i * 150);
+    }
+  });
+});
+
+/* ============================================================
+   TESTIMONIALS — REVEAL
+   ============================================================ */
+document.querySelectorAll('.testi-card').forEach((card, i) => {
+  ScrollTrigger.create({
+    trigger: card,
+    start: 'top 82%',
+    once: true,
+    onEnter: () => {
+      setTimeout(() => card.classList.add('visible'), i * 120);
+    }
+  });
+});
+
+/* ============================================================
+   GENERIC REVEAL
+   ============================================================ */
+document.querySelectorAll('.reveal-fade').forEach(el => {
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 85%',
+    once: true,
+    onEnter: () => el.classList.add('visible')
+  });
+});
+
+/* ============================================================
+   PRICE CARD — REVEAL + GLOW PULSE
+   ============================================================ */
+ScrollTrigger.create({
+  trigger: '.price-card',
+  start: 'top 80%',
+  once: true,
+  onEnter: () => {
+    gsap.from('.price-card', {
+      opacity:0, y:40, duration:.8, ease:'power3.out'
+    });
+    gsap.from('.price-tag', {
+      scale:.8, opacity:0, duration:1, delay:.3, ease:'back.out(1.5)'
+    });
+  }
+});
+
+/* ============================================================
+   HORIZONTAL LOGOS — GSAP TOUCH (speed var)
+   ============================================================ */
+// The CSS animation handles it; GSAP handles scroll-speed variation
+let logoSpeed = 1;
+window.addEventListener('scroll', () => {
+  logoSpeed = 1.5;
+  clearTimeout(window._logoTimeout);
+  window._logoTimeout = setTimeout(() => {logoSpeed = 1}, 200);
+});
+
+/* ============================================================
+   CTA BUTTON PULSE
+   ============================================================ */
+gsap.to('.price-cta', {
+  boxShadow: '0 20px 60px rgba(59,130,246,.6)',
+  scale: 1.02,
+  duration: 1.5,
+  repeat: -1,
+  yoyo: true,
+  ease: 'sine.inOut'
+});
+
+/* ============================================================
+   COUNTER CARD BORDER TOP REVEAL
+   ============================================================ */
+document.querySelectorAll('.counter-card').forEach(card => {
+  ScrollTrigger.create({
+    trigger: card,
+    start: 'top 80%',
+    once: true,
+    onEnter: () => card.classList.add('visible')
+  });
+});
+
+/* ============================================================
+   FINAL SECTION — TEXT SPLIT REVEAL
+   ============================================================ */
+ScrollTrigger.create({
+  trigger: '.final-cta',
+  start: 'top 70%',
+  once: true,
+  onEnter: () => {
+    gsap.from('.final-title', {opacity:0, y:50, duration:.9, ease:'power3.out'});
+    gsap.from('.final-sub', {opacity:0, y:30, duration:.7, delay:.2, ease:'power3.out'});
+    gsap.from('.final-ctas', {opacity:0, y:20, duration:.6, delay:.4, ease:'power3.out'});
+  }
+});
+
+/* ============================================================
+   CLEANUP ON RESIZE
+   ============================================================ */
+window.addEventListener('resize', () => {
+  ScrollTrigger.refresh();
+});
+
+</script>
+</body>
+</html>
