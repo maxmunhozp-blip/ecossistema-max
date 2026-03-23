@@ -115,6 +115,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 
 .tele-btn{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;border:none;border-radius:30px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(16,185,129,.35);transition:.2s;font-family:'Inter',sans-serif;z-index:200}
 .tele-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(16,185,129,.45)}
+.hero-lp-btn{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:#fff;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(16,185,129,.35);transition:.2s;margin-top:18px;border:1px solid rgba(255,255,255,.1)}
+.hero-lp-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(16,185,129,.5)}
 </style>
 </head>
 <body>
@@ -150,12 +152,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
       <div class="hero-meta-item"><i data-lucide="thermometer" style="width:13px;height:13px"></i> Temperatura: <strong>Frio → Morno</strong></div>
       <div class="hero-meta-item"><i data-lucide="link" style="width:13px;height:13px"></i> Destino: <strong>meufluxo.com.br</strong></div>
     </div>
-    <div style="margin-top:20px">
-      <a href="lp-meu-fluxo.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(16,185,129,.35);transition:.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-        <i data-lucide="layout" style="width:14px;height:14px;stroke:#fff;fill:none"></i>
-        Ver Landing Page
-      </a>
-    </div>
+    <a href="lp-meu-fluxo.html" target="_blank" class="hero-lp-btn">
+      <i data-lucide="layout" style="width:14px;height:14px"></i>
+      Ver Landing Page
+    </a>
   </div>
 </div>
 
