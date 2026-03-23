@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MeuFluxo — O app de tarefas feito pra quem tem TDAH</title>
+<meta name="description" content="O único app de tarefas que não te faz sentir culpado. Conceito Tempo Vivo: manhã, tarde e noite — cada bloco reinicia. Feito por quem tem TDAH, pra quem tem TDAH.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --bg: #F5F0E8;
+  --bg2: #EDE8DF;
+  --surface: #FFFFFF;
+  --surface2: #F8F4EE;
+  --border: rgba(26,26,40,.08);
+  --border-mid: rgba(26,26,40,.14);
+  --accent: #575ECF;
+  --accent-dim: rgba(87,94,207,.08);
+  --accent-mid: rgba(87,94,207,.18);
+  --accent-glow: rgba(87,94,207,.3);
+  --text: #1A1A28;
+  --text-dim: #5A5A78;
+  --text-muted: #9898B8;
+  --amber: #FFB86C;
+  --amber-dim: rgba(255,184,108,.15);
+  --red-soft: #FF6B6B;
+  --green-soft: #50FA7B;
+  /* project dot colors */
+  --dot1: #6C9CFC;
+  --dot2: #FFB86C;
+  --dot3: #FF79C6;
+  --dot4: #50FA7B;
+  --dot5: #BD93F9;
+  --dot6: #8BE9FD;
+  --dot7: #F1FA8C;
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --r: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,.1);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+.container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+.container-wide { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+/* ── NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 56px;
+  display: flex; align-items: center; padding: 0 24px; gap: 12px;
+  background: rgba(245,240,232,.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 16px; color: var(--text);
+}
+.nav-logo-mark {
+  width: 28px; height: 28px;
+  background: var(--accent);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-logo-mark svg { width: 14px; height: 14px; fill: #fff; }
+.nav-back {
+  margin-left: auto; display: flex; align-items: center; gap: 5px;
+  font-size: 13px; color: var(--text-muted);
+  padding: 6px 12px; border-radius: 8px; transition: .15s;
+}
+.nav-back:hover { background: var(--bg2); color: var(--text-dim); }
+.nav-cta {
+  background: var(--accent); color: #fff;
+  font-size: 13px; font-weight: 700;
+  padding: 7px 16px; border-radius: 8px; transition: .15s;
+}
+.nav-cta:hover { background: #4751c4; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 96px 24px 80px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+/* Organic blob bg */
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+.hero-blob-1 {
+  width: 500px; height: 500px;
+  background: rgba(87,94,207,.1);
+  top: -100px; left: -100px;
+  animation: float1 8s ease-in-out infinite;
+}
+.hero-blob-2 {
+  width: 400px; height: 400px;
+  background: rgba(189,147,249,.1);
+  bottom: -80px; right: -80px;
+  animation: float2 10s ease-in-out infinite;
+}
+@keyframes float1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(40px, 30px) scale(1.05); }
+}
+@keyframes float2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(-30px, -20px) scale(1.08); }
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent-dim); border: 1px solid var(--accent-mid);
+  color: var(--accent);
+  font-size: 12px; font-weight: 600; letter-spacing: .04em;
+  padding: 5px 12px; border-radius: 20px;
+  margin: 0 auto 28px;
+}
+.hero-badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  animation: blink 1.6s infinite;
+}
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50% { opacity: .3; }
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 800; line-height: 1.08;
+  color: var(--text); letter-spacing: -.03em;
+  margin-bottom: 20px;
+}
+
+/* STRIKE ANIMATION */
+.strike-wrap {
+  display: inline-block; position: relative;
+  white-space: nowrap;
+}
+.strike-wrap::after {
+  content: '';
+  position: absolute;
+  left: -4px; right: -4px;
+  top: 52%;
+  height: 4px;
+  background: var(--red-soft);
+  border-radius: 2px;
+  transform: rotate(-2.5deg) scaleX(0);
+  transform-origin: left;
+  animation: strike-in 0.5s cubic-bezier(0.22,1,0.36,1) 1.2s forwards;
+}
+@keyframes strike-in {
+  to { transform: rotate(-2.5deg) scaleX(1); }
+}
+.accent-word { color: var(--accent); }
+
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--text-dim); max-width: 520px;
+  margin: 0 auto 36px; line-height: 1.75;
+}
+.hero-sub strong { color: var(--text); font-weight: 600; }
+
+.hero-actions {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+}
+.btn-main {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff;
+  font-family: var(--font-body); font-size: 1rem; font-weight: 700;
+  padding: 14px 28px; border-radius: 10px;
+  box-shadow: 0 6px 24px var(--accent-glow);
+  transition: .2s; border: none; cursor: pointer;
+}
+.btn-main:hover { transform: translateY(-2px); box-shadow: 0 10px 32px var(--accent-glow); background: #4751c4; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface); color: var(--text-dim);
+  font-size: 1rem; font-weight: 500;
+  padding: 14px 24px; border-radius: 10px;
+  border: 1.5px solid var(--border-mid); transition: .2s;
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--accent); background: var(--accent-dim); }
+.hero-note { font-size: .78rem; color: var(--text-muted); margin-top: 12px; }
+
+.hero-proof {
+  display: flex; justify-content: center; gap: 36px; flex-wrap: wrap;
+  margin-top: 60px; padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+.proof-item { text-align: center; }
+.proof-num {
+  font-family: var(--font-display);
+  font-size: 1.8rem; font-weight: 800; color: var(--text); line-height: 1;
+}
+.proof-label { font-size: .78rem; color: var(--text-muted); margin-top: 4px; }
+
+/* ── SECTION BASE ── */
+section { padding: 80px 0; }
+section.tinted { background: var(--bg2); }
+.section-eye {
+  font-size: .72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--accent); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-eye::before { content: ''; width: 20px; height: 2px; background: var(--accent); }
+.section-h {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700; color: var(--text); line-height: 1.15;
+  margin-bottom: 14px; letter-spacing: -.02em;
+}
+.section-sub { font-size: 1.05rem; color: var(--text-dim); max-width: 540px; line-height: 1.75; }
+
+/* ── PAIN ── */
+.pain-visual {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin: 32px 0;
+  box-shadow: var(--shadow);
+}
+.pain-visual-label {
+  font-size: .7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--text-muted); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.pain-visual-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.pain-task-list { list-style: none; }
+.pain-task {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+  font-size: .88rem; color: var(--text-dim);
+}
+.pain-task:last-child { border-bottom: none; }
+.pain-task-box {
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 1.5px solid; flex-shrink: 0;
+}
+.pain-task.late .pain-task-box { border-color: var(--amber); background: var(--amber-dim); }
+.pain-task.very-late .pain-task-box { border-color: var(--red-soft); background: rgba(255,107,107,.1); }
+.late-badge {
+  margin-left: auto; flex-shrink: 0;
+  font-size: .7rem; font-weight: 700;
+  padding: 2px 7px; border-radius: 10px;
+}
+.late-badge.amber { background: var(--amber-dim); color: #c47d0e; }
+.late-badge.red { background: rgba(255,107,107,.1); color: #d94040; }
+.pain-count {
+  margin-top: 12px; text-align: center;
+  font-size: .78rem; color: var(--text-muted);
+  font-style: italic;
+}
+
+.pain-list { list-style: none; margin-top: 28px; }
+.pain-item {
+  display: flex; gap: 14px; padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: .95rem;
+}
+.pain-item:last-child { border-bottom: none; }
+.pain-item strong { display: block; color: var(--text); font-weight: 600; margin-bottom: 3px; }
+.pain-item p { color: var(--text-dim); }
+.pain-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0; margin-top: 2px;
+}
+
+/* ── TEMPO VIVO ── */
+.tv-container {
+  margin: 48px 0;
+  background: var(--text);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  color: #E8E8F0;
+  position: relative;
+  overflow: hidden;
+}
+.tv-container::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--dot2), var(--dot4), var(--dot5));
+}
+.tv-top-label {
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: #555570; margin-bottom: 20px;
+  text-align: center;
+}
+.tv-blocks {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+.tv-block {
+  background: #1A1A28; border: 1px solid rgba(255,255,255,.07);
+  border-radius: 12px; padding: 16px;
+  position: relative; overflow: hidden;
+}
+.tv-block-accent {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.tv-block.morning .tv-block-accent { background: var(--dot2); }
+.tv-block.afternoon .tv-block-accent { background: var(--dot4); }
+.tv-block.night .tv-block-accent { background: var(--dot5); }
+.tv-block-icon { font-size: 1.4rem; margin-bottom: 6px; }
+.tv-block-name {
+  font-family: var(--font-display);
+  font-size: .85rem; font-weight: 700; margin-bottom: 2px;
+}
+.tv-block.morning .tv-block-name { color: var(--dot2); }
+.tv-block.afternoon .tv-block-name { color: var(--dot4); }
+.tv-block.night .tv-block-name { color: var(--dot5); }
+.tv-block-time { font-size: .7rem; color: #555570; margin-bottom: 12px; }
+.tv-tasks { list-style: none; }
+.tv-task {
+  display: flex; align-items: center; gap: 7px;
+  font-size: .76rem; color: #8888A0;
+  padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.tv-task:last-child { border-bottom: none; }
+.tv-task-check {
+  width: 13px; height: 13px; border-radius: 3px;
+  border: 1.5px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; flex-shrink: 0;
+}
+.tv-block.morning .tv-task-check { border-color: var(--dot2); }
+.tv-block.afternoon .tv-task-check { border-color: var(--dot4); }
+.tv-block.night .tv-task-check { border-color: var(--dot5); }
+.tv-task.done .tv-task-check { background: var(--dot4); border-color: var(--dot4); color: #0A0A0C; font-weight: 900; }
+.tv-task.done span { text-decoration: line-through; opacity: .4; }
+
+.tv-footer {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  margin-top: 20px;
+}
+.tv-footer-line { flex: 1; height: 1px; background: rgba(255,255,255,.07); }
+.tv-reset-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(80,250,123,.1); border: 1px solid rgba(80,250,123,.2);
+  color: var(--dot4); font-size: .75rem; font-weight: 700;
+  padding: 6px 12px; border-radius: 20px;
+}
+
+/* ── FUNNEL ── */
+.funnel {
+  margin-top: 40px;
+  display: flex; flex-direction: column; gap: 0;
+}
+.funnel-step {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: var(--shadow);
+  position: relative;
+  transition: .2s;
+}
+.funnel-step:hover { border-color: var(--accent-mid); transform: translateX(4px); }
+.funnel-connector {
+  display: flex; justify-content: center; padding: 4px 0;
+}
+.funnel-connector-line {
+  width: 2px; height: 20px;
+  background: linear-gradient(to bottom, var(--border-mid), transparent);
+}
+.funnel-num {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--accent-dim); border: 1px solid var(--accent-mid);
+  color: var(--accent); font-family: var(--font-display);
+  font-size: .85rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.funnel-info { flex: 1; }
+.funnel-name {
+  font-family: var(--font-display);
+  font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: 2px;
+}
+.funnel-desc { font-size: .82rem; color: var(--text-dim); }
+.funnel-badge {
+  font-size: .7rem; font-weight: 700;
+  padding: 3px 8px; border-radius: 10px;
+  background: var(--accent-dim); color: var(--accent);
+  border: 1px solid var(--accent-mid);
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* ── PRINCIPLES ── */
+.principles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px; margin-top: 40px;
+}
+.principle-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 22px;
+  transition: .2s; position: relative; overflow: hidden;
+}
+.principle-card::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: var(--accent); transform: scaleX(0);
+  transition: transform .3s ease;
+}
+.principle-card:hover::before { transform: scaleX(1); }
+.principle-card:hover { border-color: var(--accent-mid); box-shadow: var(--shadow); }
+.principle-num {
+  font-family: var(--font-display);
+  font-size: 2rem; font-weight: 800;
+  color: var(--accent-mid); line-height: 1; margin-bottom: 10px;
+}
+.principle-title {
+  font-family: var(--font-display);
+  font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: 6px;
+}
+.principle-desc { font-size: .85rem; color: var(--text-dim); line-height: 1.65; }
+
+/* ── TESTIMONIALS ── */
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px; margin-top: 40px;
+}
+.testi-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 22px;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.testi-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  position: absolute; top: 18px; right: 18px;
+}
+.testi-stars { font-size: .8rem; letter-spacing: 2px; color: var(--amber); margin-bottom: 10px; }
+.testi-text {
+  font-size: .9rem; color: var(--text-dim);
+  line-height: 1.7; font-style: italic; margin-bottom: 16px;
+}
+.testi-text strong { color: var(--text); font-style: normal; font-weight: 600; }
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+  background: var(--bg2); border: 1.5px solid var(--border);
+}
+.testi-name { font-weight: 600; font-size: .85rem; color: var(--text); }
+.testi-role { font-size: .73rem; color: var(--text-muted); }
+
+/* ── PRICE ── */
+.price-card {
+  max-width: 440px; margin: 40px auto 0;
+  background: var(--surface);
+  border: 1.5px solid var(--border-mid);
+  border-radius: 20px; overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.price-card-top {
+  background: var(--accent); padding: 28px 32px 24px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.price-card-top::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: rgba(255,255,255,.08);
+}
+.price-card-name {
+  font-family: var(--font-display);
+  font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 6px;
+}
+.price-card-sub { font-size: .85rem; color: rgba(255,255,255,.7); }
+.price-card-body { padding: 28px 32px 32px; }
+.price-amount { text-align: center; margin-bottom: 24px; }
+.price-from { font-size: .78rem; color: var(--text-muted); }
+.price-val {
+  font-family: var(--font-display);
+  font-size: 3.2rem; font-weight: 800; color: var(--text); line-height: 1;
+}
+.price-val sup { font-size: 1.3rem; vertical-align: top; margin-top: 10px; display: inline-block; }
+.price-val span { font-size: .95rem; color: var(--text-dim); font-weight: 400; }
+.price-annual { font-size: .82rem; color: var(--text-muted); margin-top: 6px; }
+.price-trial {
+  display: inline-block;
+  background: rgba(80,250,123,.12); border: 1px solid rgba(80,250,123,.25);
+  color: #0d7a3c; font-size: .82rem; font-weight: 700;
+  padding: 6px 14px; border-radius: 8px; margin-bottom: 22px;
+}
+.price-features { list-style: none; margin-bottom: 24px; }
+.price-feature {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 9px 0; border-bottom: 1px solid var(--border);
+  font-size: .9rem; color: var(--text-dim);
+}
+.price-feature:last-child { border-bottom: none; }
+.pf-check {
+  width: 18px; height: 18px; border-radius: 5px;
+  background: var(--accent-dim); border: 1px solid var(--accent-mid);
+  color: var(--accent); font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.btn-price {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; background: var(--accent); color: #fff;
+  font-family: var(--font-body); font-size: 1rem; font-weight: 700;
+  padding: 14px; border-radius: 10px; border: none; cursor: pointer;
+  box-shadow: 0 6px 24px var(--accent-glow); transition: .2s;
+  text-decoration: none;
+}
+.btn-price:hover { background: #4751c4; box-shadow: 0 10px 32px var(--accent-glow); }
+.price-guarantee { text-align: center; font-size: .75rem; color: var(--text-muted); margin-top: 10px; }
+
+/* ── CTA FINAL ── */
+.cta-section {
+  padding: 96px 24px; text-align: center;
+  background: var(--text); color: #E8E8F0;
+  position: relative; overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(87,94,207,.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 800; color: #fff;
+  line-height: 1.15; margin-bottom: 16px;
+  position: relative;
+}
+.cta-section h2 em { font-style: normal; color: var(--dot4); }
+.cta-section p { font-size: 1.05rem; color: #8888A0; margin-bottom: 36px; position: relative; }
+.btn-cta-light {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff; color: var(--accent);
+  font-family: var(--font-body); font-size: 1rem; font-weight: 700;
+  padding: 14px 32px; border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.25); transition: .2s;
+  position: relative;
+}
+.btn-cta-light:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(0,0,0,.3); }
+.cta-sub { font-size: .78rem; color: #555570; margin-top: 12px; position: relative; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 32px 24px; text-align: center;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 8px;
+}
+.footer-logo span { color: var(--accent); }
+.footer-links {
+  display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.footer-links a { font-size: .8rem; color: var(--text-muted); transition: .15s; }
+.footer-links a:hover { color: var(--text); }
+.footer-copy { font-size: .75rem; color: var(--text-muted); }
+
+/* ── SCROLL REVEAL VARIANTS ── */
+[data-reveal] {
+  opacity: 0;
+  transition: opacity .6s ease, transform .6s ease;
+}
+[data-reveal="up"] { transform: translateY(28px); }
+[data-reveal="left"] { transform: translateX(-28px); }
+[data-reveal="right"] { transform: translateX(28px); }
+[data-reveal="scale"] { transform: scale(.95); }
+[data-reveal="fade"] { transform: none; }
+[data-reveal].visible { opacity: 1; transform: none !important; }
+
+/* stagger children */
+[data-stagger] > * {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+[data-stagger].visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0s; }
+[data-stagger].visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: .08s; }
+[data-stagger].visible > *:nth-child(3) { opacity: 1; transform: none; transition-delay: .16s; }
+[data-stagger].visible > *:nth-child(4) { opacity: 1; transform: none; transition-delay: .24s; }
+[data-stagger].visible > *:nth-child(5) { opacity: 1; transform: none; transition-delay: .32s; }
+[data-stagger].visible > *:nth-child(6) { opacity: 1; transform: none; transition-delay: .4s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .tv-blocks { grid-template-columns: 1fr; }
+  .nav-back { display: none; }
+  .price-card-body { padding: 22px 18px 26px; }
+  .tv-container { padding: 22px 16px; }
+  .hero h1 { font-size: 2.2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 14 14"><path d="M2 7a5 5 0 1010 0A5 5 0 002 7zm5-3v3l2 1.5"/></svg>
+    </div>
+    MeuFluxo
+  </div>
+  <a href="index.html" class="nav-back">← Ecossistema MAX</a>
+  <a href="#comecar" class="nav-cta">Testar grátis</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div class="container" style="position:relative">
+    <div class="hero-badge" data-reveal="fade">
+      <span class="hero-badge-dot"></span>
+      App para TDAH · TEA · AuDHD
+    </div>
+    <h1 data-reveal="up">
+      O único app de tarefas<br>
+      que não te faz sentir<br>
+      <span class="accent-word"><span class="strike-wrap">culpado</span></span>
+    </h1>
+    <p class="hero-sub" data-reveal="up">
+      Notion, Todoist, Trello — foram feitos pra <strong>cérebros neurotípicos</strong>.<br>
+      Ver 87 tarefas atrasadas não gera ação — gera paralisia.<br>
+      MeuFluxo foi desenhado diferente.
+    </p>
+    <div class="hero-actions" data-reveal="up">
+      <a href="#comecar" class="btn-main">⚡ Começar grátis 14 dias</a>
+      <a href="#como-funciona" class="btn-ghost">Ver como funciona →</a>
+    </div>
+    <p class="hero-note" data-reveal="fade">Sem cartão · Sem compromisso · Cancela quando quiser</p>
+
+    <div class="hero-proof" data-stagger>
+      <div class="proof-item">
+        <div class="proof-num">3</div>
+        <div class="proof-label">blocos por dia</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-num">0</div>
+        <div class="proof-label">culpa acumulada</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-num">R$29</div>
+        <div class="proof-label">por mês</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-num">14d</div>
+        <div class="proof-label">grátis pra testar</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOR -->
+<section class="tinted" id="dor">
+  <div class="container">
+    <div class="section-eye" data-reveal="left">O Problema</div>
+    <h2 class="section-h" data-reveal="up">Apps tradicionais foram feitos<br>pra quem NÃO tem TDAH</h2>
+    <p class="section-sub" data-reveal="up">
+      O problema não é você. É que essas ferramentas assumem um cérebro que consegue olhar uma lista enorme e simplesmente... começar.
+    </p>
+
+    <div class="pain-visual" data-reveal="scale">
+      <div class="pain-visual-label">Todoist — Suas tarefas</div>
+      <ul class="pain-task-list">
+        <li class="pain-task very-late">
+          <div class="pain-task-box"></div>
+          <span>Enviar relatório do cliente</span>
+          <span class="late-badge red">5 dias atrasado</span>
+        </li>
+        <li class="pain-task very-late">
+          <div class="pain-task-box"></div>
+          <span>Responder proposta parceria</span>
+          <span class="late-badge red">3 dias atrasado</span>
+        </li>
+        <li class="pain-task late">
+          <div class="pain-task-box"></div>
+          <span>Revisar campanha Meta Ads</span>
+          <span class="late-badge amber">1 dia atrasado</span>
+        </li>
+        <li class="pain-task late">
+          <div class="pain-task-box"></div>
+          <span>Criar post Instagram</span>
+          <span class="late-badge amber">hoje</span>
+        </li>
+        <li class="pain-task late">
+          <div class="pain-task-box"></div>
+          <span>Ligar pro cliente Primus</span>
+          <span class="late-badge amber">hoje</span>
+        </li>
+      </ul>
+      <p class="pain-count">+ 82 tarefas pendentes...</p>
+    </div>
+
+    <ul class="pain-list" data-stagger>
+      <li class="pain-item">
+        <div class="pain-icon" style="background:rgba(255,107,107,.1)">😩</div>
+        <div>
+          <strong>Paralisia por excesso de informação</strong>
+          <p>Ver 80+ tarefas vermelhas não te faz começar — te faz fechar o app e não fazer nada. O TDAH interpreta "muito" como "impossível".</p>
+        </div>
+      </li>
+      <li class="pain-item">
+        <div class="pain-icon" style="background:rgba(255,184,108,.1)">🔔</div>
+        <div>
+          <strong>Notificações no momento errado</strong>
+          <p>Você tá no fluxo. Plim — "Lembrete: reunião às 14h". Mas são 9h. Fluxo quebrado. Ansiedade aumentada. Nada resolvido.</p>
+        </div>
+      </li>
+      <li class="pain-item">
+        <div class="pain-icon" style="background:rgba(87,94,207,.08)">🗂️</div>
+        <div>
+          <strong>Sobrecarga cognitiva desde a tela de início</strong>
+          <p>Colunas, boards, tags, filtros, views, projetos aninhados... Antes de fazer uma tarefa você já gastou toda sua energia gerenciando o sistema.</p>
+        </div>
+      </li>
+      <li class="pain-item">
+        <div class="pain-icon" style="background:rgba(189,147,249,.1)">💔</div>
+        <div>
+          <strong>Culpa que acumula e nunca some</strong>
+          <p>O app lembra tudo que você não fez. Cada dia o número aumenta. No fim da semana você se sente um fracasso — mesmo tendo feito muita coisa.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- TEMPO VIVO -->
+<section id="tempo-vivo">
+  <div class="container-wide">
+    <div class="container" style="padding:0">
+      <div class="section-eye" data-reveal="left">A Solução</div>
+      <h2 class="section-h" data-reveal="up">
+        Conheça o <span style="color:var(--accent)">Tempo Vivo</span>
+      </h2>
+      <p class="section-sub" data-reveal="up">
+        O dia tem 3 blocos: manhã, tarde e noite. Cada bloco começa do zero. O que não foi feito <strong>não vira atraso</strong> — você decide o que migra ou simplesmente deixa pra trás.
+      </p>
+    </div>
+    <div class="tv-container" data-reveal="scale">
+      <div class="tv-top-label">MeuFluxo — Segunda-feira</div>
+      <div class="tv-blocks">
+        <div class="tv-block morning">
+          <div class="tv-block-accent"></div>
+          <div class="tv-block-icon">☀️</div>
+          <div class="tv-block-name">Manhã</div>
+          <div class="tv-block-time">06h – 12h</div>
+          <ul class="tv-tasks">
+            <li class="tv-task done"><span class="tv-task-check">✓</span><span>Verificar campanhas</span></li>
+            <li class="tv-task done"><span class="tv-task-check">✓</span><span>Responder urgências</span></li>
+            <li class="tv-task"><span class="tv-task-check"></span><span>Call com cliente</span></li>
+          </ul>
+        </div>
+        <div class="tv-block afternoon">
+          <div class="tv-block-accent"></div>
+          <div class="tv-block-icon">🌤️</div>
+          <div class="tv-block-name">Tarde</div>
+          <div class="tv-block-time">12h – 18h</div>
+          <ul class="tv-tasks">
+            <li class="tv-task"><span class="tv-task-check"></span><span>Criar criativos</span></li>
+            <li class="tv-task"><span class="tv-task-check"></span><span>Analisar métricas</span></li>
+            <li class="tv-task"><span class="tv-task-check"></span><span>Enviar relatório</span></li>
+          </ul>
+        </div>
+        <div class="tv-block night">
+          <div class="tv-block-accent"></div>
+          <div class="tv-block-icon">🌙</div>
+          <div class="tv-block-name">Noite</div>
+          <div class="tv-block-time">18h – 00h</div>
+          <ul class="tv-tasks">
+            <li class="tv-task"><span class="tv-task-check"></span><span>Estudar copy</span></li>
+            <li class="tv-task"><span class="tv-task-check"></span><span>Planejar amanhã</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="tv-footer">
+        <div class="tv-footer-line"></div>
+        <div class="tv-reset-badge">♻️ Cada bloco reinicia — zero culpa acumulada</div>
+        <div class="tv-footer-line"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="tinted" id="como-funciona">
+  <div class="container">
+    <div class="section-eye" data-reveal="left">Como Funciona</div>
+    <h2 class="section-h" data-reveal="up">Cada nível reduz informação</h2>
+    <p class="section-sub" data-reveal="up">
+      O funil de foco do MeuFluxo foi desenhado para combater paralisia por excesso de opções. Você sempre sabe onde está e o que fazer.
+    </p>
+    <div class="funnel" data-stagger>
+      <div class="funnel-step">
+        <div class="funnel-num">1</div>
+        <div class="funnel-info">
+          <div class="funnel-name">Master List</div>
+          <div class="funnel-desc">Todas as tarefas organizadas por projeto/cliente — a "gaveta" completa</div>
+        </div>
+        <div class="funnel-badge">visão geral</div>
+      </div>
+      <div class="funnel-connector"><div class="funnel-connector-line"></div></div>
+      <div class="funnel-step">
+        <div class="funnel-num">2</div>
+        <div class="funnel-info">
+          <div class="funnel-name">Minha Semana</div>
+          <div class="funnel-desc">3 dias visíveis: ontem, hoje e amanhã — só o que importa agora</div>
+        </div>
+        <div class="funnel-badge">3 dias</div>
+      </div>
+      <div class="funnel-connector"><div class="funnel-connector-line"></div></div>
+      <div class="funnel-step">
+        <div class="funnel-num">3</div>
+        <div class="funnel-info">
+          <div class="funnel-name">Meu Dia</div>
+          <div class="funnel-desc">Manhã / Tarde / Noite — destaque automático pelo horário atual</div>
+        </div>
+        <div class="funnel-badge">Tempo Vivo</div>
+      </div>
+      <div class="funnel-connector"><div class="funnel-connector-line"></div></div>
+      <div class="funnel-step">
+        <div class="funnel-num">4</div>
+        <div class="funnel-info">
+          <div class="funnel-name">Modo Foco</div>
+          <div class="funnel-desc">Uma tarefa. Tela cheia. Timer opcional. O resto do mundo desaparece.</div>
+        </div>
+        <div class="funnel-badge" style="background:var(--accent);color:#fff;border-color:var(--accent)">foco total</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRINCÍPIOS -->
+<section>
+  <div class="container-wide">
+    <div class="container" style="padding:0">
+      <div class="section-eye" data-reveal="left">Design Neuro-Inclusivo</div>
+      <h2 class="section-h" data-reveal="up">Baseado em ciência, não em achismo</h2>
+      <p class="section-sub" data-reveal="up">50+ estudos sobre disfunção executiva, time blindness e carga cognitiva. Cada detalhe tem um motivo.</p>
+    </div>
+    <div class="principles-grid" data-stagger>
+      <div class="principle-card">
+        <div class="principle-num">01</div>
+        <div class="principle-title">Revelação progressiva</div>
+        <p class="principle-desc">Só mostra o que você precisa ver agora. Informação revelada aos poucos — cada nível do funil tem menos.</p>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">02</div>
+        <div class="principle-title">Tom não-punitivo</div>
+        <p class="principle-desc">Tarefas com atraso ficam em âmbar suave, nunca em vermelho agressivo. A interface nunca acusa — ela acolhe.</p>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">03</div>
+        <div class="principle-title">Zero configuração diária</div>
+        <p class="principle-desc">Funciona sem ação do usuário ao abrir. O bloco certo já está ativo pelo horário. Nenhuma decisão obrigatória.</p>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">04</div>
+        <div class="principle-title">Padrões previsíveis</div>
+        <p class="principle-desc">Consistência cria segurança cognitiva. Você sabe onde cada coisa está — sempre no mesmo lugar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="tinted">
+  <div class="container-wide">
+    <div class="container" style="padding:0">
+      <div class="section-eye" data-reveal="left">Quem Usa</div>
+      <h2 class="section-h" data-reveal="up">Pessoas reais. Mudança real.</h2>
+    </div>
+    <div class="testi-grid" data-stagger>
+      <div class="testi-card">
+        <div class="testi-dot" style="background:var(--dot1)"></div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Tentei Notion, Todoist, ClickUp. Todos me deixavam pior. O MeuFluxo foi o primeiro que <strong>não me fez sentir um fracasso</strong> quando não terminava tudo no dia."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">👩</div>
+          <div>
+            <div class="testi-name">Carla R.</div>
+            <div class="testi-role">Designer freelancer · TDAH</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-dot" style="background:var(--dot5)"></div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"O conceito de blocos mudou tudo. Antes via uma lista com 50 coisas e travava. Agora <strong>começo cada bloco do zero</strong> e consigo trabalhar de verdade."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">👨</div>
+          <div>
+            <div class="testi-name">Lucas M.</div>
+            <div class="testi-role">Dev autônomo · diagnóstico tardio</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-dot" style="background:var(--dot3)"></div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Uso há 3 meses. Minha ansiedade com produtividade caiu muito. <strong>Finalmente um app que entende como meu cérebro funciona</strong>, não tenta me mudar."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">🧑</div>
+          <div>
+            <div class="testi-name">Brenda S.</div>
+            <div class="testi-role">Copywriter · TEA + TDAH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREÇO -->
+<section id="comecar">
+  <div class="container">
+    <div class="section-eye" data-reveal="left">Preço</div>
+    <h2 class="section-h" data-reveal="up">Simples. Acessível. Sem pegadinha.</h2>
+    <p class="section-sub" data-reveal="up">Um plano. Tudo incluído. Menos do que um almoço.</p>
+
+    <div class="price-card" data-reveal="scale">
+      <div class="price-card-top">
+        <div class="price-card-name">MeuFluxo</div>
+        <div class="price-card-sub">Acesso completo a tudo</div>
+      </div>
+      <div class="price-card-body">
+        <div class="price-amount">
+          <div class="price-from">depois do período grátis</div>
+          <div class="price-val"><sup>R$</sup>29<span>/mês</span></div>
+          <div class="price-annual">ou R$249/ano — economize R$99</div>
+          <br>
+          <div class="price-trial">🎁 14 dias grátis — sem cartão de crédito</div>
+        </div>
+        <ul class="price-features">
+          <li class="price-feature"><span class="pf-check">✓</span>Tempo Vivo completo (manhã, tarde, noite)</li>
+          <li class="price-feature"><span class="pf-check">✓</span>Interface mínima, zero sobrecarga cognitiva</li>
+          <li class="price-feature"><span class="pf-check">✓</span>Notificações inteligentes alinhadas ao seu ritmo</li>
+          <li class="price-feature"><span class="pf-check">✓</span>Modo Foco — uma tarefa de cada vez</li>
+          <li class="price-feature"><span class="pf-check">✓</span>App mobile + web sincronizados</li>
+          <li class="price-feature"><span class="pf-check">✓</span>Suporte humano (não é bot)</li>
+          <li class="price-feature"><span class="pf-check">✓</span>Cancela quando quiser</li>
+        </ul>
+        <a href="#" class="btn-price">⚡ Começar grátis agora</a>
+        <p class="price-guarantee">🔒 7 dias de reembolso · Sem contrato · Funciona do celular</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Pronto pra parar de se sentir<br><em>culpado</em>?</h2>
+    <p>14 dias grátis. Sem cartão. Sem burocracia.<br>Só você, seus blocos, e o fluxo que você merece ter.</p>
+    <a href="#" class="btn-cta-light">⚡ Começar grátis agora</a>
+    <p class="cta-sub">Feito por quem tem TDAH · pra quem tem TDAH ❤️</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Meu<span>Fluxo</span></div>
+  <div class="footer-links">
+    <a href="index.html">← Ecossistema MAX</a>
+    <a href="lp-meu-fluxo.html">Versão Dark</a>
+    <a href="#">Privacidade</a>
+    <a href="#">Suporte</a>
+  </div>
+  <p class="footer-copy">© 2026 MeuFluxo — feito com 🧠 + ❤️ por Max Munhoz</p>
+</footer>
+
+<script>
+// Scroll reveal — múltiplas variantes
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('[data-reveal], [data-stagger]').forEach(el => obs.observe(el));
+
+// Nav on scroll
+const nav = document.querySelector('.nav');
+window.addEventListener('scroll', () => {
+  nav.style.boxShadow = window.scrollY > 30 ? '0 2px 20px rgba(0,0,0,.08)' : 'none';
+}, { passive: true });
+
+// Hero elements animate in on load
+window.addEventListener('load', () => {
+  document.querySelectorAll('.hero [data-reveal]').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 100 + i * 120);
+  });
+  document.querySelectorAll('.hero [data-stagger]').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 400);
+  });
+});
+</script>
+</body>
+</html>
