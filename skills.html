@@ -9,71 +9,83 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0a0a12;--surface:#111120;--surface-2:#1a1a2e;--surface-3:#20203a;
-  --border:#1e1e3a;--border-bright:#2d2d50;
-  --accent:#7c3aed;--green:#00d4a0;--orange:#ea8049;--red:#f87171;--amber:#fbbf24;
+  --bg:#080812;--surface:#0f0f1e;--surface-2:#161628;--surface-3:#1d1d35;
+  --border:#1c1c38;--border-bright:#2a2a4a;
+  --accent:#7c3aed;--accent-glow:rgba(124,58,237,.2);
+  --green:#00d4a0;--orange:#ea8049;--red:#f87171;--amber:#fbbf24;
   --text:#e2e8f0;--text-muted:#94a3b8;--text-dim:#475569;
-  --nav-h:56px;
+  --nav-h:58px;
+  --ring:0 0 0 3px rgba(124,58,237,.35);
 }
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(10,10,18,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:20px;overflow-x:auto}
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
-.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-text{font-size:14px;color:var(--text);font-weight:600}.logo-text strong{font-weight:900}
-.nav-links{display:flex;gap:4px;margin-left:auto}
-.nl{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:all .15s;white-space:nowrap}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(8,8,18,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:20px;overflow-x:auto}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;outline:none}
+.logo:focus-visible{outline:2px solid var(--accent);border-radius:8px}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),#9333ea);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 10px rgba(124,58,237,.4)}
+.logo-text{font-size:14px;color:var(--text);font-weight:600;letter-spacing:-.01em}.logo-text strong{font-weight:900}
+.nav-links{display:flex;gap:2px;margin-left:auto}
+.nl{padding:6px 11px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:background .15s,color .15s;white-space:nowrap;outline:none}
 .nl:hover{background:var(--surface-2);color:var(--text)}
+.nl:focus-visible{box-shadow:var(--ring)}
 .nl.active{background:rgba(124,58,237,.18);color:#a78bfa}
-main{max-width:900px;margin:0 auto;padding:40px 24px 80px}
-.page-title{font-size:26px;font-weight:900;letter-spacing:-.3px;margin-bottom:4px}
-.page-sub{font-size:14px;color:var(--text-muted);margin-bottom:24px}
-.stats{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px}
-.stat-num{font-size:22px;font-weight:900;color:var(--text)}
+main{max-width:920px;margin:0 auto;padding:40px 24px 100px}
+.page-title{font-size:28px;font-weight:900;letter-spacing:-.4px;margin-bottom:4px}
+.page-sub{font-size:14px;color:var(--text-muted);margin-bottom:24px;line-height:1.5}
+.stats{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 22px;transition:border-color .15s}
+.stat:hover{border-color:var(--border-bright)}
+.stat-num{font-size:24px;font-weight:900;color:var(--text)}
 .stat-num.green{color:var(--green)}.stat-num.purple{color:#a78bfa}
-.stat-label{font-size:11px;font-weight:600;color:var(--text-muted)}
+.stat-label{font-size:11px;font-weight:600;color:var(--text-muted);margin-top:1px}
 .toolbar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-.search-wrap{flex:1;min-width:180px;position:relative}
-.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--text-dim);fill:none;pointer-events:none}
-.search{width:100%;background:var(--surface);border:1px solid var(--border-bright);border-radius:9px;padding:9px 12px 9px 32px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border .15s}
-.search:focus{border-color:var(--accent)}.search::placeholder{color:var(--text-dim)}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--text-dim);fill:none;pointer-events:none}
+.search{width:100%;background:var(--surface);border:1px solid var(--border-bright);border-radius:10px;padding:9px 12px 9px 34px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s}
+.search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}.search::placeholder{color:var(--text-dim)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap;outline:none}
+.btn:focus-visible{box-shadow:var(--ring)}
 .btn-ghost{background:var(--surface);color:var(--text-muted);border:1px solid var(--border-bright)}
 .btn-ghost:hover{color:var(--text);background:var(--surface-2)}
 .btn-red{background:rgba(248,113,113,.08);color:var(--red);border:1px solid rgba(248,113,113,.2)}
 .btn-red:hover{background:rgba(248,113,113,.15)}
-.btn-accent{background:var(--accent);color:#fff}
-.btn-accent:hover{background:#6d28d9}
+.btn-accent{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(124,58,237,.3)}
+.btn-accent:hover{background:#6d28d9;box-shadow:0 4px 14px rgba(124,58,237,.4)}
 /* Groups */
-.group{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden}
-.gh{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;transition:background .15s;user-select:none}
+.group{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color .15s}
+.group:hover{border-color:var(--border-bright)}
+.gh{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;transition:background .15s;user-select:none;outline:none}
 .gh:hover{background:var(--surface-2)}
-.gi{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.gn{font-size:14px;font-weight:700;flex:1}
-.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--surface-3);color:var(--text-muted)}
-.badge.on{background:rgba(0,212,160,.1);color:var(--green);display:none}
-.chevron{width:15px;height:15px;stroke:var(--text-dim);fill:none;transition:transform .2s;flex-shrink:0}
+.gh:focus-visible{background:var(--surface-2);outline:2px solid var(--accent);outline-offset:-2px}
+.gi{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.gn{font-size:14px;font-weight:700;flex:1;letter-spacing:-.01em}
+.badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--surface-3);color:var(--text-muted)}
+.badge.on{background:rgba(0,212,160,.12);color:var(--green);display:none;border:1px solid rgba(0,212,160,.2)}
+.chevron{width:15px;height:15px;stroke:var(--text-dim);fill:none;transition:transform .25s ease;flex-shrink:0}
 .group.open .chevron{transform:rotate(180deg)}
 .gb{display:none;border-top:1px solid var(--border)}
 .group.open .gb{display:block}
 /* Skill rows */
-.sr{border-bottom:1px solid var(--border);transition:background .1s}
+.sr{border-bottom:1px solid var(--border);transition:background .12s}
 .sr:last-child{border-bottom:none}
-.sr:hover{background:rgba(255,255,255,.015)}
-.sm{display:flex;align-items:center;gap:12px;padding:11px 18px;cursor:pointer}
+.sr:hover{background:rgba(255,255,255,.018)}
+.sm{display:flex;align-items:center;gap:12px;padding:11px 18px;cursor:pointer;outline:none}
+.sm:focus-visible{background:rgba(255,255,255,.018);outline:2px solid var(--accent);outline-offset:-2px}
 .si{flex:1;min-width:0}
 .sn{font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px}
-.sd{font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
-.sx{width:15px;height:15px;stroke:var(--text-dim);fill:none;flex-shrink:0;transition:transform .2s}
+.sd{font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:540px}
+.sx{width:15px;height:15px;stroke:var(--text-dim);fill:none;flex-shrink:0;transition:transform .22s ease}
 .sr.open .sx{transform:rotate(180deg)}
-.detail{display:none;padding:0 18px 14px 62px}
+.detail{display:none;padding:0 18px 16px 62px;border-top:1px solid rgba(255,255,255,.04)}
 .sr.open .detail{display:block}
-.dfull{font-size:12px;color:var(--text-muted);line-height:1.65;margin-bottom:10px}
-.kw-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:#a78bfa;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
-.kw-btn:hover{background:rgba(124,58,237,.2)}
-.dl-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.04);border:1px solid var(--border-bright);color:var(--text-dim);flex-shrink:0;transition:all .15s;text-decoration:none}
-.dl-btn:hover{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.3);color:#a78bfa}
-.avail-tag{font-size:10px;font-weight:700;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:var(--amber);padding:2px 7px;border-radius:4px}
+.dfull{font-size:12px;color:var(--text-muted);line-height:1.7;margin-bottom:12px;padding-top:12px}
+.kw-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);color:#a78bfa;padding:5px 11px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;outline:none}
+.kw-btn:hover{background:rgba(124,58,237,.25);border-color:rgba(124,58,237,.4)}
+.kw-btn:focus-visible{box-shadow:var(--ring)}
+.dl-btn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border-bright);color:var(--text-dim);flex-shrink:0;transition:all .15s;text-decoration:none;outline:none}
+.dl-btn:hover{background:rgba(124,58,237,.12);border-color:rgba(124,58,237,.3);color:#a78bfa}
+.dl-btn:focus-visible{box-shadow:var(--ring)}
+.avail-tag{font-size:10px;font-weight:700;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:var(--amber);padding:2px 8px;border-radius:5px;letter-spacing:.02em}
 /* Switch */
 .sw{position:relative;display:inline-block;width:38px;height:20px;flex-shrink:0}
 .sw input{opacity:0;width:0;height:0}
@@ -87,20 +99,28 @@ main{max-width:900px;margin:0 auto;padding:40px 24px 80px}
 .core-skill-card{border-color:rgba(234,128,73,.35) !important;background:rgba(234,128,73,.06) !important}
 .core-skill-card .sk-name{color:#ea8049}
 /* Install section */
-.install-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:20px}
-.ib-title{font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
-.ib-sub{font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.5}
+.install-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;margin-top:24px;transition:border-color .15s}
+.install-box:hover{border-color:var(--border-bright)}
+.ib-title{font-size:15px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.ib-sub{font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6}
 .ib-row{display:flex;gap:8px;flex-wrap:wrap}
-.ib-input{background:var(--surface-2);border:1px solid var(--border-bright);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border .15s;min-width:150px}
-.ib-input:focus{border-color:var(--accent)}.ib-input::placeholder{color:var(--text-dim)}
+.ib-input{background:var(--surface-2);border:1px solid var(--border-bright);border-radius:9px;padding:9px 12px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s;min-width:150px}
+.ib-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}.ib-input::placeholder{color:var(--text-dim)}
 /* Toasts */
 #toasts{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:8px;z-index:9999}
-.toast{display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:10px;font-size:13px;font-weight:600;animation:tin .2s ease;pointer-events:none;min-width:200px}
+.toast{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:600;animation:tin .2s ease;pointer-events:none;min-width:200px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
 @keyframes tin{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
-.toast.s{background:#0c2418;border:1px solid rgba(0,212,160,.25);color:var(--green)}
-.toast.e{background:#200c0c;border:1px solid rgba(248,113,113,.25);color:var(--red)}
+.toast.s{background:#081a10;border:1px solid rgba(0,212,160,.3);color:var(--green)}
+.toast.e{background:#1a0808;border:1px solid rgba(248,113,113,.3);color:var(--red)}
 .toast.i{background:var(--surface-2);border:1px solid var(--border-bright);color:var(--text-muted)}
-@media(max-width:600px){.nl{padding:5px 8px;font-size:11px}.sd{max-width:180px}}
+/* Smooth group collapse */
+.gb{transition:none}
+/* Empty state */
+.empty-state{text-align:center;padding:48px 24px;color:var(--text-muted)}
+.empty-state-icon{font-size:40px;margin-bottom:12px;opacity:.4}
+.empty-state p{font-size:14px}
+@media(max-width:768px){.nl{padding:5px 9px;font-size:11px}}
+@media(max-width:600px){.sd{max-width:180px}.stat{padding:10px 16px}}
 </style>
 </head>
 <body>
@@ -117,7 +137,11 @@ main{max-width:900px;margin:0 auto;padding:40px 24px 80px}
     <a href="resultado.html" class="nl">Resultado</a>
     <a href="sexy-canvas.html" class="nl">Sexy Canvas</a>
     <a href="sexy-canvas-tractorpro.html" class="nl">TractorPRO</a>
+    <a href="sexy-canvas-meufluxo.html">MeuFluxo</a>
+    <a href="sexy-canvas-orbitta.html">Orbitta</a>
     <a href="xquads.html" class="nl">Xquads</a>
+    <a href="como-funciona.html" class="nl">Como Funciona</a>
+    <a href="tata.html" class="nl">Tata</a>
     <a href="terminal.html" class="nl">Terminal</a>
   </div>
 </nav>
@@ -127,7 +151,7 @@ main{max-width:900px;margin:0 auto;padding:40px 24px 80px}
   <div class="stats">
     <div class="stat"><div class="stat-num" id="sttotal">—</div><div class="stat-label">Skills disponíveis</div></div>
     <div class="stat"><div class="stat-num green" id="ston">—</div><div class="stat-label">Habilitadas no VPS</div></div>
-    <div class="stat"><div class="stat-num purple">8</div><div class="stat-label">Grupos</div></div>
+    <div class="stat"><div class="stat-num purple" id="stgroups">9</div><div class="stat-label">Grupos</div></div>
   </div>
   <div class="toolbar">
     <div class="search-wrap">
@@ -189,6 +213,11 @@ const G=[
   {id:'persona',name:'Persona & Estratégia',icon:'brain',c:'#00d4a0',s:[
     {id:'skill-persona-profunda',n:'Persona Profunda',d:'30 dimensões · Buyer Persona · ICP · Mapa de Empatia',k:'persona profunda',f:'Personas com 30 dimensões psicológicas profundas + Buyer Persona + ICP + Mapa de Empatia + Anti-Persona. 10 elementos por dimensão para uso em copy e estratégia.'},
   ]},
+  {id:'personas',name:'Personas por Produto',icon:'user-check',c:'#06b6d4',s:[
+    {id:'skill-persona-tractorpro',n:'Persona TractorPRO',d:'Rafael Mendes · Gestor de tráfego · 30 dimensões · Hooks de copy',k:'persona tractorpro',f:'Perfil psicológico completo de Rafael Mendes — o cliente ideal do TractorPRO. Gestor de tráfego freelancer, 26-38 anos, SP. 30 dimensões psicológicas com 10 elementos cada, ICP (3 perfis), anti-persona, frases que a persona usa e hooks de alta conversão. Use para criar qualquer material do TractorPRO.'},
+    {id:'skill-persona-meufluxo',n:'Persona MeuFluxo',d:'Lucas Ferreira · TDAH/TEA · Tempo Vivo · Copy sem julgamento',k:'persona meufluxo',f:'Perfil psicológico completo de Lucas Ferreira — adulto com TDAH, 25-40 anos, freelancer ou funcionário híbrido. 30 dimensões psicológicas, ICP (3 perfis), anti-persona, conceito Tempo Vivo explicado, frases da persona e hooks de copy específicos. Tom: sem julgamento, celebração do micro. Use para qualquer material do MeuFluxo.'},
+    {id:'skill-persona-orbitta',n:'Persona Orbitta',d:'Roberto Silva · Dono de PME · WhatsApp · ROI direto',k:'persona orbitta',f:'Perfil psicológico completo de Roberto Silva — dono de PME (oficina, ótica, salão, restaurante), 35-55 anos, escravo do WhatsApp pessoal. 30 dimensões psicológicas, ICP multi-nicho (5 perfis), anti-persona, argumento de venda principal, objections playbook e hooks de copy B2B. Tom: ROI direto, sem enrolação. Use para qualquer material do Orbitta Messenger.'},
+  ]},
   {id:'design',name:'Design & Canva',icon:'palette',c:'#8b5cf6',s:[
     {id:'skill-canva-connect',n:'Canva Connect',d:'Integração API · Lista designs · Exporta artes',k:'canva list designs',f:'Integração com Canva Connect API. Lista designs, exporta em múltiplos formatos (PDF, PNG, JPG, MP4), acessa assets do brand.'},
     {id:'skill-canva-branded-presentation',n:'Canva Presentation',d:'Apresentações on-brand a partir de outline ou brief',k:'canva presentation',f:'Cria apresentações on-brand no Canva a partir de outline ou brief. Aceita texto, referência a doc ou link de design.'},
@@ -205,16 +234,16 @@ const G=[
   ]},
   {id:'xq',name:'Xquads',icon:'users',c:'#ea8049',s:[
     {id:'xquads-design-squad',n:'Design Squad',d:'Identidade visual, UI/UX, branding e sistemas de design',k:'design squad',f:'Squad especializado em design: identidade visual, UI/UX, branding, criativos e sistemas de design. Do logo ao sistema de componentes.'},
-    {id:'xquads-copy-squad',n:'Copy Squad',d:'Equipe de copy para todos os formatos',k:'copy squad',f:'Squad de copywriting: ads, emails, landing pages, social, scripts de vídeo e blog.',av:true},
-    {id:'xquads-traffic-masters',n:'Traffic Masters',d:'Especialistas em tráfego pago e orgânico',k:'traffic masters',f:'Especialistas em aquisição de tráfego — Google Ads, Meta Ads, SEO e crescimento.',av:true},
-    {id:'xquads-brand-squad',n:'Brand Squad',d:'Posicionamento, identidade e estratégia de marca',k:'brand squad',f:'Construção e gestão de marca: posicionamento, tom de voz, identidade visual.',av:true},
-    {id:'xquads-hormozi-squad',n:'Hormozi Squad',d:'Frameworks de oferta e escala de negócio',k:'hormozi squad',f:'Frameworks de Alex Hormozi: ofertas irresistíveis, precificação e escala.',av:true},
-    {id:'xquads-c-level',n:'C-Level',d:'Estratégia executiva e tomada de decisão',k:'c-level squad',f:'Perspectivas CEO/CMO/CFO/CTO para decisões estratégicas e liderança.',av:true},
-    {id:'xquads-data-squad',n:'Data Squad',d:'Análise de dados, métricas e BI',k:'data squad',f:'Dados: métricas, dashboards, BI, análise de funil e otimização.',av:true},
-    {id:'xquads-storytelling-squad',n:'Storytelling Squad',d:'Narrativas e frameworks de storytelling',k:'storytelling squad',f:'Storytelling para marcas — vídeos, apresentações e conteúdo.',av:true},
-    {id:'xquads-advisory-board',n:'Advisory Board',d:'Conselho estratégico para decisões de negócio',k:'advisory board',f:'Board de advisors para suporte em decisões de negócio, produto e crescimento.',av:true},
-    {id:'xquads-movement-squad',n:'Movement Squad',d:'Comunidade e movimento de marca',k:'movement squad',f:'Construção de comunidade: engajamento, cultura e movimento.',av:true},
-    {id:'xquads-cybersecurity',n:'Cybersecurity',d:'Segurança, compliance e proteção digital',k:'cybersecurity squad',f:'Auditoria de segurança, compliance e proteção de dados.',av:true},
+    {id:'xquads-copy-squad',n:'Copy Squad',d:'Equipe de copy para todos os formatos',k:'copy squad',f:'Squad de copywriting: ads, emails, landing pages, social, scripts de vídeo e blog.'},
+    {id:'xquads-traffic-masters',n:'Traffic Masters',d:'Especialistas em tráfego pago e orgânico',k:'traffic masters',f:'Especialistas em aquisição de tráfego — Google Ads, Meta Ads, SEO e crescimento.'},
+    {id:'xquads-brand-squad',n:'Brand Squad',d:'Posicionamento, identidade e estratégia de marca',k:'brand squad',f:'Construção e gestão de marca: posicionamento, tom de voz, identidade visual.'},
+    {id:'xquads-hormozi-squad',n:'Hormozi Squad',d:'Frameworks de oferta e escala de negócio',k:'hormozi squad',f:'Frameworks de Alex Hormozi: ofertas irresistíveis, precificação e escala.'},
+    {id:'xquads-c-level',n:'C-Level',d:'Estratégia executiva e tomada de decisão',k:'c-level squad',f:'Perspectivas CEO/CMO/CFO/CTO para decisões estratégicas e liderança.'},
+    {id:'xquads-data-squad',n:'Data Squad',d:'Análise de dados, métricas e BI',k:'data squad',f:'Dados: métricas, dashboards, BI, análise de funil e otimização.'},
+    {id:'xquads-storytelling-squad',n:'Storytelling Squad',d:'Narrativas e frameworks de storytelling',k:'storytelling squad',f:'Storytelling para marcas — vídeos, apresentações e conteúdo.'},
+    {id:'xquads-advisory-board',n:'Advisory Board',d:'Conselho estratégico para decisões de negócio',k:'advisory board',f:'Board de advisors para suporte em decisões de negócio, produto e crescimento.'},
+    {id:'xquads-movement-squad',n:'Movement Squad',d:'Comunidade e movimento de marca',k:'movement squad',f:'Construção de comunidade: engajamento, cultura e movimento.'},
+    {id:'xquads-cybersecurity',n:'Cybersecurity',d:'Segurança, compliance e proteção digital',k:'cybersecurity squad',f:'Auditoria de segurança, compliance e proteção de dados.'},
   ]},
 ];
 
@@ -222,6 +251,7 @@ function render(){
   let total=0;
   G.forEach(g=>total+=g.s.length);
   document.getElementById('sttotal').textContent=total;
+  if(document.getElementById('stgroups')) document.getElementById('stgroups').textContent=G.length;
   const gc=document.getElementById('gc');
   gc.innerHTML='';
   G.forEach(g=>{
@@ -291,7 +321,8 @@ async function tog(id){
   sw.classList.add('busy');
   try{
     if(enable){
-      await fetch(`${API}/${id}/install`,{method:'POST'});
+      const r=await fetch(`${API}/${id}/install`,{method:'POST'});
+      if(!r.ok){chk.checked=false;toast('e','Skill não disponível ainda');sw.classList.remove('busy');updStats();updBadges();return;}
       installed.add(id);
       toast('s',`${id.replace('skill-','').replace('xquads-','')} habilitada`);
     }else{
@@ -358,18 +389,34 @@ async function installCustom(){
 
 function filter(q){
   q=q.toLowerCase();
+  let anyVisible=false;
   G.forEach(g=>{
     let vis=false;
     g.s.forEach(s=>{
       const r=document.getElementById('r-'+s.id);
       if(!r)return;
-      const m=!q||s.n.toLowerCase().includes(q)||s.d.toLowerCase().includes(q)||s.id.includes(q);
+      const m=!q||s.n.toLowerCase().includes(q)||s.d.toLowerCase().includes(q)||s.id.includes(q)||s.k.toLowerCase().includes(q)||s.f.toLowerCase().includes(q);
       r.style.display=m?'':'none';
       if(m)vis=true;
     });
     const grp=document.getElementById('g-'+g.id);
     if(grp){grp.style.display=vis||!q?'':'none';if(q&&vis)grp.classList.add('open');}
+    if(vis)anyVisible=true;
   });
+  // Empty state
+  let es=document.getElementById('empty-state');
+  if(q&&!anyVisible){
+    if(!es){
+      es=document.createElement('div');
+      es.id='empty-state';
+      es.className='empty-state';
+      es.innerHTML='<div class="empty-state-icon">🔍</div><p>Nenhuma skill encontrada para "<strong>'+q+'</strong>"</p>';
+      document.getElementById('gc').appendChild(es);
+    } else {
+      es.querySelector('p').innerHTML='Nenhuma skill encontrada para "<strong>'+q+'</strong>"';
+      es.style.display='';
+    }
+  } else if(es){es.style.display='none';}
   lucide.createIcons();
 }
 
