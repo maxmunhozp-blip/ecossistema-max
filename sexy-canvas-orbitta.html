@@ -37,6 +37,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .hero-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
 .hero-meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted)}
 .hero-meta-item strong{color:var(--text-dark)}
+.lp-collapse{margin-top:18px}
+.lp-collapse-trigger{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text-muted);padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
+.lp-collapse-trigger:hover{background:rgba(255,255,255,.1);color:var(--text-dark)}
+.lp-collapse-trigger .chevron{width:14px;height:14px;transition:transform .25s}
+.lp-collapse-trigger.open .chevron{transform:rotate(180deg)}
+.lp-collapse-body{overflow:hidden;max-height:0;transition:max-height .3s ease,opacity .3s ease;opacity:0}
+.lp-collapse-body.open{max-height:200px;opacity:1}
+.hero-lp-btns{display:flex;gap:10px;flex-wrap:wrap;padding-top:12px}
+.hero-lp-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;transition:.2s;border:1px solid rgba(255,255,255,.15)}
+.hero-lp-btn:hover{transform:translateY(-2px)}
+.lp-empty{padding-top:12px;font-size:13px;color:var(--text-muted)}
 
 .tabs-wrap{background:rgba(26,15,0,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:var(--nav-h);z-index:90}
 .tabs{display:flex;padding:0 24px;overflow-x:auto;scrollbar-width:none;max-width:1100px;margin:0 auto}
@@ -149,6 +160,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
       <div class="hero-meta-item"><i data-lucide="search" style="width:13px;height:13px"></i> Plataforma: <strong>Google Ads + Cold Outreach</strong></div>
       <div class="hero-meta-item"><i data-lucide="thermometer" style="width:13px;height:13px"></i> Temperatura: <strong>Frio → Morno</strong></div>
       <div class="hero-meta-item"><i data-lucide="link" style="width:13px;height:13px"></i> Destino: <strong>orbitta.com.br</strong></div>
+    </div>
+    <div class="lp-collapse">
+      <button class="lp-collapse-trigger" onclick="toggleLP(this)">
+        <i data-lucide="layout" style="width:14px;height:14px"></i>
+        Landing Pages (0)
+        <i data-lucide="chevron-down" class="chevron"></i>
+      </button>
+      <div class="lp-collapse-body">
+        <p class="lp-empty">Nenhuma LP criada ainda para o Orbitta.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -887,6 +908,11 @@ Você construiu algo que vale mais do que isso.</div>
 <button class="tele-btn" onclick="copyAll()"><i data-lucide="radio" style="width:14px;height:14px"></i> Copiar Tudo (Teleprompter)</button>
 
 <script>
+function toggleLP(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
 function showTab(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
