@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Expo Peças Mulher — Dashboard do Cliente</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f7f7f9;--surface:#fff;--surface-alt:#f2f2f4;--surface-hover:#ebebed;
+  --border:#e4e4e7;--border-strong:#d1d1d6;
+  --accent:#7c3aed;--accent-dim:#f3f0ff;
+  --marsala:#8B252E;--marsala-dim:#fdf2f3;--marsala-mid:#f5d5d8;
+  --gold:#A07030;--gold-dim:#fdf8ee;
+  --blue:#2563eb;--blue-dim:#dbeafe;
+  --green:#059669;--green-dim:#dcfce7;--green-neon:#00d4a0;
+  --red:#ef4444;--red-dim:#fef2f2;
+  --amber:#f59e0b;--amber-dim:#fffbeb;
+  --text-dark:#111827;--text:#374151;--text-muted:#6b7280;--text-dim:#9ca3af;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
+  --shadow-lg:0 4px 20px rgba(0,0,0,.08);
+  --nav-h:56px;--radius:10px;--radius-lg:14px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.a1{animation:up .4s ease forwards}
+.a2{animation:up .4s .06s ease forwards;opacity:0}
+.a3{animation:up .4s .12s ease forwards;opacity:0}
+.a4{animation:up .4s .18s ease forwards;opacity:0}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.logo-text{font-size:14px;color:var(--text-dark);font-weight:600}
+.logo-text strong{font-weight:900}
+.nav-sep{color:var(--border-strong);font-size:16px}
+.nav-client{display:flex;align-items:center;gap:8px}
+.nav-client-dot{width:8px;height:8px;border-radius:50%;background:var(--marsala)}
+.nav-client-name{font-size:14px;font-weight:700;color:var(--marsala)}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nl{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:all .15s}
+.nl:hover{background:var(--surface-alt);color:var(--text-dark)}
+.nl.active{background:var(--accent-dim);color:var(--accent)}
+
+main{max-width:1200px;margin:0 auto;padding:40px 24px 80px}
+
+/* CLIENT HERO */
+.client-hero{background:linear-gradient(135deg,var(--marsala) 0%,#5C1219 100%);border-radius:var(--radius-lg);padding:32px 36px;margin-bottom:28px;display:flex;align-items:center;gap:24px;position:relative;overflow:hidden}
+.client-hero::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04)}
+.client-hero::after{content:'';position:absolute;right:60px;bottom:-60px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.03)}
+.hero-avatar{width:64px;height:64px;border-radius:16px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex-shrink:0;letter-spacing:-1px}
+.hero-info{flex:1}
+.hero-info h1{font-size:22px;font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-.3px}
+.hero-info p{font-size:13px;color:rgba(255,255,255,.6)}
+.hero-badges{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.hero-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.15)}
+.hero-stats{display:flex;gap:0;flex-shrink:0}
+.hero-stat{padding:0 24px;text-align:center;border-left:1px solid rgba(255,255,255,.1)}
+.hero-stat:first-child{border-left:none}
+.hero-stat-val{font-size:24px;font-weight:900;color:#fff}
+.hero-stat-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.45);margin-top:2px}
+.hero-btn{padding:10px 20px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;flex-shrink:0}
+.hero-btn:hover{background:rgba(255,255,255,.25)}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab{padding:10px 18px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s;margin-bottom:-1px;display:flex;align-items:center;gap:6px}
+.tab:hover{color:var(--text-dark)}
+.tab.active{color:var(--marsala);border-bottom-color:var(--marsala)}
+.tab-count{padding:1px 6px;border-radius:10px;font-size:10px;font-weight:700;background:var(--surface-alt);color:var(--text-dim)}
+.tab.active .tab-count{background:var(--marsala-dim);color:var(--marsala)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* SECTION HEADER */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.sec-title{font-size:15px;font-weight:800;color:var(--text-dark)}
+.sec-desc{font-size:13px;color:var(--text-muted);margin-top:2px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s;border:none;font-family:'Inter',sans-serif;text-decoration:none}
+.btn-primary{background:var(--marsala);color:#fff}
+.btn-primary:hover{background:#6d1a21}
+.btn-ghost{background:var(--surface);color:var(--text);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border-strong)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.btn-marsala-ghost{background:var(--marsala-dim);color:var(--marsala);border:1.5px solid var(--marsala-mid)}
+.btn-marsala-ghost:hover{background:var(--marsala-mid)}
+
+/* CARDS GRID */
+.cards-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cards-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.cards-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow)}
+
+/* KPIs */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
+.kpi{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow)}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.kpi-val{font-size:26px;font-weight:900;color:var(--text-dark);line-height:1}
+.kpi-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* STATUS CHIPS */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.chip-pub{background:#dcfce7;color:#065f46}
+.chip-agen{background:#dbeafe;color:#1d4ed8}
+.chip-apr{background:var(--amber-dim);color:#92400e}
+.chip-ras{background:var(--surface-alt);color:var(--text-muted)}
+.chip-rev{background:#fce7f3;color:#9d174d}
+
+/* POSTS GRID */
+.posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.post-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);transition:all .2s}
+.post-card:hover{border-color:var(--marsala-mid);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.post-img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.post-body{padding:14px}
+.post-title{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:6px;line-height:1.3}
+.post-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.post-num{font-size:10px;font-weight:700;color:var(--text-dim);margin-bottom:4px}
+.post-status-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.status-select{padding:3px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;background:var(--surface);color:var(--text-dark);cursor:pointer}
+.status-select:focus{outline:none;border-color:var(--marsala)}
+
+/* COPY TEXT AREA */
+.copy-area{background:var(--surface-alt);border:1.5px solid var(--border);border-radius:8px;overflow:hidden;margin-top:8px}
+.copy-area-header{padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.copy-area-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}
+.copy-area-body{padding:12px;font-size:12px;color:var(--text);line-height:1.7;white-space:pre-wrap;max-height:160px;overflow-y:auto}
+.copy-area-body::-webkit-scrollbar{width:3px}
+.copy-area-body::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:2px}
+
+/* NOTES */
+.notes-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;resize:none;background:var(--surface);color:var(--text-dark);line-height:1.6}
+.notes-input:focus{outline:none;border-color:var(--marsala);box-shadow:0 0 0 3px rgba(139,37,46,.08)}
+
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px}
+.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.cal-day-name{text-align:center;font-size:10px;font-weight:700;color:var(--text-dim);padding:4px 0;text-transform:uppercase}
+.cal-day{min-height:60px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:6px;font-size:11px;color:var(--text-muted);transition:.15s}
+.cal-day:hover{border-color:var(--border-strong);background:var(--surface-alt)}
+.cal-day.today{border-color:var(--marsala);background:var(--marsala-dim)}
+.cal-day.has-post{background:var(--surface)}
+.cal-day-num{font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.cal-event{padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;background:var(--marsala);color:#fff;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.cal-event.agendado{background:var(--blue);color:#fff}
+.cal-event.publicado{background:var(--green);color:#fff}
+
+/* METRICS */
+.metric-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow)}
+.metric-title{font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.metric-val{font-size:32px;font-weight:900;color:var(--text-dark);line-height:1}
+.metric-delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;margin-top:6px;padding:2px 8px;border-radius:20px}
+.delta-up{background:var(--green-dim);color:var(--green)}
+.delta-down{background:var(--red-dim);color:var(--red)}
+.mini-bar{display:flex;gap:3px;margin-top:12px;align-items:flex-end;height:40px}
+.mini-bar-col{flex:1;border-radius:3px 3px 0 0;background:var(--marsala);opacity:.25;transition:.3s}
+.mini-bar-col.active{opacity:1}
+
+/* ADS TABLE */
+.ads-table{width:100%;border-collapse:collapse}
+.ads-table th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);border-bottom:1px solid var(--border);background:var(--surface-alt)}
+.ads-table td{padding:12px 14px;font-size:13px;border-bottom:1px solid var(--border);color:var(--text)}
+.ads-table tr:last-child td{border-bottom:none}
+.ads-table tr:hover td{background:var(--surface-alt)}
+.roas-good{color:var(--green);font-weight:700}
+.roas-ok{color:var(--amber);font-weight:700}
+.roas-bad{color:var(--red);font-weight:700}
+.progress-cell{display:flex;align-items:center;gap:8px}
+.progress-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--marsala)}
+
+/* DEFESA CARD */
+.defesa-banner{background:linear-gradient(135deg,#1a0407 0%,var(--marsala) 100%);border-radius:var(--radius-lg);padding:28px 32px;display:flex;align-items:center;gap:24px;margin-bottom:16px}
+.defesa-banner h3{font-size:20px;font-weight:900;color:#fff;margin-bottom:6px}
+.defesa-banner p{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6}
+.defesa-banner-actions{display:flex;gap:10px;margin-top:14px}
+.defesa-icon{width:56px;height:56px;background:rgba(255,255,255,.12);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ROTEIRO CARD */
+.roteiro-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px}
+.roteiro-header{padding:14px 18px;background:var(--surface-alt);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.roteiro-header:hover{background:var(--surface-hover)}
+.roteiro-title{font-size:13px;font-weight:700;color:var(--text-dark);display:flex;align-items:center;gap:8px}
+.roteiro-body{padding:20px;display:none}
+.roteiro-card.open .roteiro-body{display:block}
+.roteiro-card.open .roteiro-arrow{transform:rotate(180deg)}
+.roteiro-arrow{transition:transform .2s;color:var(--text-dim)}
+.roteiro-section{margin-bottom:16px}
+.roteiro-section:last-child{margin-bottom:0}
+.roteiro-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim);margin-bottom:8px}
+.roteiro-text{font-size:13px;color:var(--text);line-height:1.75;background:var(--surface-alt);border-radius:8px;padding:14px;white-space:pre-wrap}
+
+/* SEARCH */
+.search-wrap{position:relative}
+.search-wrap input{padding:8px 12px 8px 32px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:'Inter',sans-serif;background:var(--surface);color:var(--text-dark);width:220px;transition:.15s}
+.search-wrap input:focus{outline:none;border-color:var(--marsala)}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:13px;height:13px;stroke:var(--text-dim)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text-dark);color:#4ade80;padding:9px 18px;border-radius:30px;font-size:12px;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:999}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-size:12px;color:var(--text-dim);margin-top:40px}
+footer a{color:var(--accent);text-decoration:none;font-weight:600}
+
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:repeat(3,1fr)}
+  .posts-grid{grid-template-columns:1fr 1fr}
+  .cards-4{grid-template-columns:1fr 1fr}
+  main{padding:24px 16px 60px}
+}
+@media(max-width:600px){
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .posts-grid{grid-template-columns:1fr}
+  .hero-stats{display:none}
+  .tabs{overflow-x:auto}
+  .tab{white-space:nowrap}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="logo">
+    <div class="logo-icon"><i data-lucide="zap" style="width:14px;height:14px;stroke:#fff;fill:none"></i></div>
+    <span class="logo-text">Ecossistema<strong>Max</strong></span>
+  </a>
+  <span class="nav-sep">/</span>
+  <a href="clientes.html" style="font-size:13px;color:var(--text-muted);text-decoration:none;font-weight:600">Clientes</a>
+  <span class="nav-sep">/</span>
+  <div class="nav-client">
+    <div class="nav-client-dot"></div>
+    <span class="nav-client-name">Expo Peças Mulher</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nl">Hub</a>
+    <a href="clientes.html" class="nl">Clientes</a>
+    <a href="skills.html" class="nl">Skills</a>
+    <a href="terminal.html" class="nl">Terminal</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- CLIENT HERO -->
+  <div class="client-hero a1">
+    <div class="hero-avatar">EP</div>
+    <div class="hero-info" style="flex:1">
+      <h1>Expo Peças Mulher</h1>
+      <p>II Congresso Expo Peças Mulher · 25 de Abril de 2026 · Goiânia · @expopecasmulher</p>
+      <div class="hero-badges">
+        <span class="hero-badge">Social Media</span>
+        <span class="hero-badge">Gestão de Tráfego</span>
+        <span class="hero-badge">Conteúdo</span>
+        <span class="hero-badge">Feed Marsala</span>
+        <span class="hero-badge" style="background:rgba(255,255,255,.2)">▸ Evento: 32 dias</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val" id="hero-publicados">0</div><div class="hero-stat-label">Publicados</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="hero-agendados">0</div><div class="hero-stat-label">Agendados</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="hero-total">13</div><div class="hero-stat-label">Posts</div></div>
+    </div>
+    <a href="defesa-expo-pecas/index.html" target="_blank" class="hero-btn">
+      <i data-lucide="external-link" style="width:14px;height:14px;stroke:#fff;fill:none"></i>
+      Ver Defesa
+    </a>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs a2">
+    <div class="tab active" onclick="switchTab('visao')">
+      <i data-lucide="layout-dashboard" style="width:13px;height:13px;stroke:currentColor;fill:none"></i>
+      Visão Geral
+    </div>
+    <div class="tab" onclick="switchTab('feed')">
+      <i data-lucide="grid-2x2" style="width:13px;height:13px;stroke:currentColor;fill:none"></i>
+      Feed & Posts
+      <span class="tab-count" id="tc-feed">13</span>
+    </div>
+    <div class="tab" onclick="switchTab('roteiros')">
+      <i data-lucide="file-text" style="width:13px;height:13px;stroke:currentColor;fill:none"></i>
+      Roteiros & Copy
+    </div>
+    <div class="tab" onclick="switchTab('redes')">
+      <i data-lucide="instagram" style="width:13px;height:13px;stroke:currentColor;fill:none"></i>
+      Redes Sociais
+    </div>
+    <div class="tab" onclick="switchTab('trafego')">
+      <i data-lucide="trending-up" style="width:13px;height:13px;stroke:currentColor;fill:none"></i>
+      Tráfego & Ads
+    </div>
+    <div class="tab" onclick="switchTab('defesa')">
+      <i data-lucide="shield" style="width:13px;height:13px;stroke:currentColor;fill:none"></i>
+      Defesa Estratégica
+    </div>
+  </div>
+
+  <!-- ── TAB: VISÃO GERAL ── -->
+  <div class="tab-panel active a3" id="tab-visao">
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi-label"><i data-lucide="check-circle" style="width:11px;height:11px;stroke:currentColor;fill:none"></i> Publicados</div>
+        <div class="kpi-val" id="kpi-pub">0</div>
+        <div class="kpi-sub">de 13 posts</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label"><i data-lucide="clock" style="width:11px;height:11px;stroke:currentColor;fill:none"></i> Agendados</div>
+        <div class="kpi-val" id="kpi-agen" style="color:var(--blue)">0</div>
+        <div class="kpi-sub">aguardando</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label"><i data-lucide="edit-3" style="width:11px;height:11px;stroke:currentColor;fill:none"></i> Rascunhos</div>
+        <div class="kpi-val" id="kpi-ras" style="color:var(--amber)">0</div>
+        <div class="kpi-sub">para revisar</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label"><i data-lucide="calendar" style="width:11px;height:11px;stroke:currentColor;fill:none"></i> Dias p/ evento</div>
+        <div class="kpi-val" id="kpi-dias" style="color:var(--marsala)">32</div>
+        <div class="kpi-sub">25 de Abril 2026</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label"><i data-lucide="bar-chart-2" style="width:11px;height:11px;stroke:currentColor;fill:none"></i> Investimento Ads</div>
+        <div class="kpi-val" style="font-size:18px">R$ 2.400</div>
+        <div class="kpi-sub">orçamento mensal</div>
+      </div>
+    </div>
+
+    <div class="cards-2" style="margin-bottom:20px">
+      <!-- Progresso do feed -->
+      <div class="card">
+        <div class="sec-header" style="margin-bottom:14px">
+          <div>
+            <div class="sec-title">Progresso do Feed</div>
+            <div class="sec-desc">Status de cada post do novo feed</div>
+          </div>
+        </div>
+        <div id="progressList" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <!-- Notas do cliente -->
+      <div class="card">
+        <div class="sec-header" style="margin-bottom:14px">
+          <div class="sec-title">Notas do Cliente</div>
+          <button class="btn btn-sm btn-ghost" onclick="saveNotes()">Salvar</button>
+        </div>
+        <textarea class="notes-input" id="clientNotes" rows="6" placeholder="Briefings, feedbacks, reuniões, observações importantes..."></textarea>
+        <div style="margin-top:16px">
+          <div class="sec-title" style="font-size:13px;margin-bottom:10px">Informações do cliente</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+            <div style="display:flex;gap:8px"><span style="color:var(--text-dim);width:100px;flex-shrink:0">Responsável</span><span style="font-weight:600;color:var(--text-dark)">Aline Miranda</span></div>
+            <div style="display:flex;gap:8px"><span style="color:var(--text-dim);width:100px;flex-shrink:0">Instagram</span><a href="#" style="color:var(--marsala);font-weight:600">@expopecasmulher</a></div>
+            <div style="display:flex;gap:8px"><span style="color:var(--text-dim);width:100px;flex-shrink:0">Evento</span><span style="font-weight:600;color:var(--text-dark)">25 Abr 2026 · Goiânia</span></div>
+            <div style="display:flex;gap:8px"><span style="color:var(--text-dim);width:100px;flex-shrink:0">Vagas</span><span style="font-weight:600;color:var(--text-dark)">300 participantes</span></div>
+            <div style="display:flex;gap:8px"><span style="color:var(--text-dim);width:100px;flex-shrink:0">Paleta</span><span style="display:flex;gap:4px;align-items:center"><span style="width:14px;height:14px;border-radius:3px;background:#8B252E;display:inline-block"></span><span style="width:14px;height:14px;border-radius:3px;background:#C9A96E;display:inline-block"></span><span style="width:14px;height:14px;border-radius:3px;background:#F5F1ED;display:inline-block;border:1px solid #ddd"></span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Próximas ações -->
+    <div class="card">
+      <div class="sec-header" style="margin-bottom:14px">
+        <div>
+          <div class="sec-title">Próximas Ações</div>
+          <div class="sec-desc">Checklist de tarefas para os próximos 7 dias</div>
+        </div>
+        <button class="btn btn-sm btn-primary" onclick="addTask()">+ Tarefa</button>
+      </div>
+      <div id="taskList" style="display:flex;flex-direction:column;gap:6px"></div>
+    </div>
+  </div>
+
+  <!-- ── TAB: FEED & POSTS ── -->
+  <div class="tab-panel" id="tab-feed">
+    <div class="sec-header" style="margin-bottom:20px">
+      <div>
+        <div class="sec-title">Feed Março/Abril 2026</div>
+        <div class="sec-desc">Gerencie status, legenda e agendamento de cada post</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="postSearch" placeholder="Buscar post..." oninput="renderPosts()">
+        </div>
+        <select id="postFilter" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:'Inter',sans-serif;background:var(--surface)" onchange="renderPosts()">
+          <option value="">Todos</option>
+          <option value="publicado">Publicado</option>
+          <option value="agendado">Agendado</option>
+          <option value="aprovado">Aprovado</option>
+          <option value="rascunho">Rascunho</option>
+          <option value="revisao">Em revisão</option>
+        </select>
+      </div>
+    </div>
+    <div class="posts-grid" id="postsGrid"></div>
+  </div>
+
+  <!-- ── TAB: ROTEIROS & COPY ── -->
+  <div class="tab-panel" id="tab-roteiros">
+    <div class="sec-header" style="margin-bottom:20px">
+      <div>
+        <div class="sec-title">Roteiros & Copy</div>
+        <div class="sec-desc">Textos completos prontos para publicar — clique para expandir e copiar</div>
+      </div>
+    </div>
+    <div id="roteirosList"></div>
+  </div>
+
+  <!-- ── TAB: REDES SOCIAIS ── -->
+  <div class="tab-panel" id="tab-redes">
+    <div class="cards-4" style="margin-bottom:24px">
+      <div class="metric-card">
+        <div class="metric-title">Seguidores</div>
+        <div class="metric-val">4.280</div>
+        <div class="metric-delta delta-up">▲ +12% mês</div>
+        <div class="mini-bar">
+          <div class="mini-bar-col" style="height:40%"></div>
+          <div class="mini-bar-col" style="height:55%"></div>
+          <div class="mini-bar-col" style="height:48%"></div>
+          <div class="mini-bar-col" style="height:62%"></div>
+          <div class="mini-bar-col" style="height:58%"></div>
+          <div class="mini-bar-col" style="height:75%"></div>
+          <div class="mini-bar-col active" style="height:100%"></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Alcance Médio</div>
+        <div class="metric-val">3.140</div>
+        <div class="metric-delta delta-up">▲ +28% mês</div>
+        <div class="mini-bar">
+          <div class="mini-bar-col" style="height:30%"></div>
+          <div class="mini-bar-col" style="height:42%"></div>
+          <div class="mini-bar-col" style="height:38%"></div>
+          <div class="mini-bar-col" style="height:55%"></div>
+          <div class="mini-bar-col" style="height:60%"></div>
+          <div class="mini-bar-col" style="height:82%"></div>
+          <div class="mini-bar-col active" style="height:100%"></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Engajamento</div>
+        <div class="metric-val">7,4%</div>
+        <div class="metric-delta delta-up">▲ +1,8pp mês</div>
+        <div class="mini-bar">
+          <div class="mini-bar-col" style="height:55%"></div>
+          <div class="mini-bar-col" style="height:50%"></div>
+          <div class="mini-bar-col" style="height:62%"></div>
+          <div class="mini-bar-col" style="height:58%"></div>
+          <div class="mini-bar-col" style="height:65%"></div>
+          <div class="mini-bar-col" style="height:80%"></div>
+          <div class="mini-bar-col active" style="height:100%"></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Cliques Bio</div>
+        <div class="metric-val">284</div>
+        <div class="metric-delta delta-up">▲ +40% mês</div>
+        <div class="mini-bar">
+          <div class="mini-bar-col" style="height:25%"></div>
+          <div class="mini-bar-col" style="height:30%"></div>
+          <div class="mini-bar-col" style="height:38%"></div>
+          <div class="mini-bar-col" style="height:50%"></div>
+          <div class="mini-bar-col" style="height:62%"></div>
+          <div class="mini-bar-col" style="height:78%"></div>
+          <div class="mini-bar-col active" style="height:100%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendário editorial -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="sec-header" style="margin-bottom:16px">
+        <div>
+          <div class="sec-title">Calendário Editorial — Abril 2026</div>
+          <div class="sec-desc">Planejamento de publicações até o evento</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:11px;color:var(--text-dim)">Legenda:</span>
+          <span style="padding:2px 8px;background:var(--marsala);color:#fff;border-radius:4px;font-size:10px;font-weight:700">Planejado</span>
+          <span style="padding:2px 8px;background:var(--blue);color:#fff;border-radius:4px;font-size:10px;font-weight:700">Agendado</span>
+          <span style="padding:2px 8px;background:var(--green);color:#fff;border-radius:4px;font-size:10px;font-weight:700">Publicado</span>
+        </div>
+      </div>
+      <div class="cal-header">
+        <div class="cal-day-name">DOM</div>
+        <div class="cal-day-name">SEG</div>
+        <div class="cal-day-name">TER</div>
+        <div class="cal-day-name">QUA</div>
+        <div class="cal-day-name">QUI</div>
+        <div class="cal-day-name">SEX</div>
+        <div class="cal-day-name">SÁB</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <!-- Top posts -->
+    <div class="card">
+      <div class="sec-header" style="margin-bottom:14px">
+        <div class="sec-title">Top 5 Posts por Engajamento</div>
+      </div>
+      <table class="ads-table">
+        <thead>
+          <tr>
+            <th>Post</th>
+            <th>Curtidas</th>
+            <th>Comentários</th>
+            <th>Salvos</th>
+            <th>Compartilhamentos</th>
+            <th>Engaj.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Você conquistou o IMPOSSÍVEL...</td><td>6.891</td><td>312</td><td>1.204</td><td>891</td><td class="roas-good">14,2%</td></tr>
+          <tr><td>Será só um evento?</td><td>8.340</td><td>287</td><td>934</td><td>762</td><td class="roas-good">12,8%</td></tr>
+          <tr><td>Você cresceu onde nada CRESCERIA</td><td>7.214</td><td>241</td><td>1.102</td><td>680</td><td class="roas-good">11,9%</td></tr>
+          <tr><td>Pare de chamar de SORTE...</td><td>4.219</td><td>198</td><td>876</td><td>543</td><td class="roas-good">9,1%</td></tr>
+          <tr><td>Indra Nooyi — CEO PepsiCo</td><td>5.632</td><td>176</td><td>723</td><td>410</td><td class="roas-ok">8,3%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── TAB: TRÁFEGO & ADS ── -->
+  <div class="tab-panel" id="tab-trafego">
+    <div class="cards-4" style="margin-bottom:24px">
+      <div class="metric-card">
+        <div class="metric-title">Investimento Total</div>
+        <div class="metric-val">R$ 1.620</div>
+        <div class="metric-delta delta-up">▲ Mês atual</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Leads Gerados</div>
+        <div class="metric-val">148</div>
+        <div class="metric-delta delta-up">▲ +34% mês</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">CPL Médio</div>
+        <div class="metric-val">R$ 10,95</div>
+        <div class="metric-delta delta-up">▼ Abaixo da meta</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Inscrições Atribuídas</div>
+        <div class="metric-val">42</div>
+        <div class="metric-delta delta-up">▲ 28% do total</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="sec-header" style="margin-bottom:16px">
+        <div>
+          <div class="sec-title">Campanhas Ativas</div>
+          <div class="sec-desc">Meta Ads · Março/Abril 2026</div>
+        </div>
+        <button class="btn btn-sm btn-primary" onclick="addCampaign()">+ Campanha</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="ads-table" id="campaignsTable">
+          <thead>
+            <tr>
+              <th>Campanha</th>
+              <th>Objetivo</th>
+              <th>Investido</th>
+              <th>Budget</th>
+              <th>Progresso</th>
+              <th>Leads</th>
+              <th>CPL</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="campaignsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cards-2">
+      <div class="card">
+        <div class="sec-title" style="margin-bottom:14px">Público-alvo Configurado</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Idade</span><strong>35–55 anos</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Gênero</span><strong>Feminino</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Localização</span><strong>Goiânia + 150km</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Interesses</span><strong>Empreendedorismo, Negócios, Eventos</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Comportamento</span><strong>Donas de negócio, Tomadoras de decisão</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Look-alike</span><strong>1% — base de leads quentes</strong></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec-title" style="margin-bottom:14px">Notas de Tráfego</div>
+        <textarea class="notes-input" id="trafegoNotes" rows="8" placeholder="Observações sobre campanhas, criativos testados, hipóteses, resultados..."></textarea>
+        <button class="btn btn-sm btn-ghost" style="margin-top:8px" onclick="saveTrafegoNotes()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: DEFESA ESTRATÉGICA ── -->
+  <div class="tab-panel" id="tab-defesa">
+    <div class="defesa-banner">
+      <div class="defesa-icon">
+        <i data-lucide="shield-check" style="width:28px;height:28px;stroke:#fff;fill:none"></i>
+      </div>
+      <div style="flex:1">
+        <h3>Defesa Estratégica — Novo Feed Marsala</h3>
+        <p>Apresentação interativa completa: diagnóstico, comparativo old vs new, defesa post a post, legendas prontas e toggle de tema para mostrar o contraste ao cliente.</p>
+        <div class="defesa-banner-actions">
+          <a href="defesa-expo-pecas/index.html" target="_blank" class="hero-btn">
+            <i data-lucide="external-link" style="width:13px;height:13px;stroke:#fff;fill:none"></i>
+            Abrir apresentação
+          </a>
+          <button class="hero-btn" onclick="copyLink()">
+            <i data-lucide="link" style="width:13px;height:13px;stroke:#fff;fill:none"></i>
+            Copiar link
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cards-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="sec-title" style="margin-bottom:12px">O que está na defesa</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text-muted)">
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span> Diagnóstico: feed rosa pastel vs. marsala</div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span> Por que o Instagram penaliza texto sobre imagem</div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span> Grid completo dos 13 posts com hover interativo</div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span> Defesa editorial post a post (mockup Instagram 3:4)</div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span> Legendas prontas para copiar com 1 clique</div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span> Tabela comparativa Rosa Pastel vs. Marsala</div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span> Toggle de tema (mostra o feed antigo em rosa)</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec-title" style="margin-bottom:12px">Posicionamento defendido</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="padding:12px;background:var(--marsala-dim);border-radius:8px;border-left:3px solid var(--marsala)">
+            <div style="font-size:11px;font-weight:700;color:var(--marsala);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Visual</div>
+            <div style="font-size:13px;color:var(--text-dark)">Rosa pastel → Marsala</div>
+          </div>
+          <div style="padding:12px;background:var(--marsala-dim);border-radius:8px;border-left:3px solid var(--marsala)">
+            <div style="font-size:11px;font-weight:700;color:var(--marsala);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Editorial</div>
+            <div style="font-size:13px;color:var(--text-dark)">Motivacional genérico → Mulheres executoras reais</div>
+          </div>
+          <div style="padding:12px;background:var(--marsala-dim);border-radius:8px;border-left:3px solid var(--marsala)">
+            <div style="font-size:11px;font-weight:700;color:var(--marsala);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Posicionamento</div>
+            <div style="font-size:13px;color:var(--text-dark)">Inspiração → Transformação através de execução</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<footer>Ecossistema<strong>Max</strong> · <a href="clientes.html">← Clientes</a></footer>
+
+<script>
+// ── DATA ──
+const POSTS = [
+  {id:1,img:'defesa-expo-pecas/aline.png',title:'Foi assim que o Congresso nasceu',tipo:'Origem',status:'rascunho',data:'01/04',caption:`A inspiração para esse congresso nasceu de uma conversa honesta.\n\nNão foi em uma reunião estratégica. Foi em um momento de exaustão real, quando alguém finalmente admitiu em voz alta: "Eu não aguento mais fingir que está tudo bem."\n\nE aí veio o silêncio. Aquele silêncio de quem reconhece a própria história na fala do outro.\n\nPorque existe uma solidão no empreendedorismo feminino que ninguém fala abertamente. Você constrói. Você lidera. Você decide. Mas tem um peso invisível que você carrega sozinha.\n\nFoi isso que criamos.\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #OrigemDoEvento #VocêNãoEstáSozinha #ComunidadeFeminina #Goiânia2026`},
+  {id:2,img:'defesa-expo-pecas/frase.png',title:'Pare de chamar de SORTE o que foi SUOR',tipo:'Frase de Impacto',status:'rascunho',data:'03/04',caption:`Pare de chamar de SORTE o que foi SUOR.\n\nVocê sabe o que custou. As noites que não dormiu. As decisões que tomou sem ter certeza se estavam certas. Os meses em que o dinheiro mal fechava.\n\nIsso não foi sorte. Isso foi escolha repetida todos os dias, mesmo quando era difícil.\n\nVocê SUOU para estar onde está. Reconheça isso.\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #SorteNão #Autorreconhecimento #MulheresEmpreendedoras #Goiânia2026`},
+  {id:3,img:'defesa-expo-pecas/idealizar-e-empreender.png',title:'Idealizar & Empreender',tipo:'Apresentação',status:'rascunho',data:'05/04',caption:`Idealizar é fácil. Qualquer um tem uma boa ideia.\n\nEmpreender é outra história. Empreender é acordar no dia seguinte com a mesma ideia e ter que escolher: vou embora ou vou continuar?\n\nAline Miranda escolheu continuar. Não uma vez — mil vezes.\n\nA arte de tornar um sonho realidade não está na ideia. Está na escolha de continuar.\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #AlineMiranda #Idealizar #Empreender #MulheresDeNegócios #Goiânia2026`},
+  {id:4,img:'defesa-expo-pecas/mulheres-e-historias.png',title:'Mulheres & Histórias — Indra Nooyi',tipo:'Executora Real',status:'rascunho',data:'07/04',caption:`Indra Nooyi era CEO da PepsiCo quando sua mãe a parou no corredor e disse: "Deixa a coroa no carro."\n\nEla tinha acabado de ser anunciada presidente de uma das maiores empresas do mundo. E sua mãe respondeu pedindo que ela fosse buscar leite.\n\nNão porque a conquista não importava. Mas porque a mãe sabia: antes de CEO, ela era filha. Antes da PepsiCo, havia uma mulher.\n\n"Não existe equilíbrio perfeito. Existe escolha, e toda escolha tem preço."\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #IndraNooyi #MulheresExecutoras #Goiânia2026`},
+  {id:5,img:'defesa-expo-pecas/frase-conquistar.png',title:'Você conquistou o IMPOSSÍVEL e esqueceu de CELEBRAR',tipo:'Frase de Impacto',status:'rascunho',data:'09/04',caption:`Você conquistou o IMPOSSÍVEL e esqueceu de CELEBRAR.\n\nAquela meta que parecia inalcançável — você alcançou. E o que você fez depois? Passou para a próxima tarefa.\n\nCelebrar não é vaidade. Celebrar é reconhecimento. É dizer para si mesma: "Eu fiz isso. Isso foi difícil. E eu consegui."\n\nQuando foi a última vez que você parou para se reconhecer de verdade?\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #Celebrar #AutoReconhecimento #MulheresDeNegócios #Goiânia2026`},
+  {id:6,img:'defesa-expo-pecas/o-que-voce-vai-viver.png',title:'O que você vai viver',tipo:'Experiência',status:'rascunho',data:'11/04',caption:`Não é mais um evento. É o ambiente certo para você se tornar quem sempre sonhou.\n\nExiste uma diferença entre assistir a uma palestra e viver uma experiência. Entre estar em um evento e pertencer a um lugar.\n\nO II Congresso Expo Peças Mulher foi construído para o segundo tipo. O lugar onde você não precisa performar. Onde as dúvidas reais têm espaço.\n\nNão é sobre o que você vai aprender. É sobre quem você vai se tornar.\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #OQueVocêVaiViver #ExperiênciaReal #Goiânia2026`},
+  {id:7,img:'defesa-expo-pecas/parar-e-estrategia.png',title:'Parar é ESTRATÉGIA — não fraqueza',tipo:'Reflexivo',status:'rascunho',data:'13/04',caption:`Parar durante o caminho é ESTRATÉGIA — não fraqueza.\n\nExiste uma narrativa no empreendedorismo que romantiza o movimento constante. Quem para está perdendo. Quem descansa está ficando para trás.\n\nMas existe algo que os melhores líderes sabem: a parada intencional é o que separa quem constrói de quem apenas executa.\n\nVocê não precisa de mais movimento. Você precisa do movimento certo.\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #PararÉEstratégia #LiderançaFeminina #Goiânia2026`},
+  {id:8,img:'defesa-expo-pecas/planta.png',title:'Você cresceu onde nada CRESCERIA',tipo:'Resiliência',status:'rascunho',data:'15/04',caption:`Você cresceu onde nada CRESCERIA enquanto outros esperavam.\n\nNão havia solo perfeito. Não havia condições ideais. Havia você, e havia a escolha de crescer mesmo assim.\n\nExiste um tipo de força que ninguém vê — ela aparece nos momentos em que você deveria ter desistido e não desistiu.\n\nIsso não é sorte. Isso é caráter.\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #Resiliência #MulheresEmpreendedoras #Goiânia2026`},
+  {id:9,img:'defesa-expo-pecas/cecilia-borges.png',title:'Cecília Borges — "Divisor de águas"',tipo:'Depoimento',status:'rascunho',data:'17/04',caption:`"Foi um divisor de águas em minha vida."\n\nCecília Borges não usa essas palavras levianamente. Ela construiu sua trajetória num mercado onde mulheres precisam provar o dobro.\n\nEssa frase não é sobre o evento em si. É sobre o que acontece quando você está no lugar certo, com as pessoas certas, sem precisar fingir que está bem quando não está.\n\nO II Congresso foi para Cecília o que pode ser para você: o lugar onde você encontra quem entende.\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #CecíliaBorges #MulheresExecutoras #Goiânia2026`},
+  {id:10,img:'defesa-expo-pecas/simone-2.png',title:'Simone Azevedo — Palestrante',tipo:'Palestrante',status:'rascunho',data:'19/04',caption:`Simone Azevedo não escolheu o caminho mais fácil.\n\nCEO da Indústria Mobensani. Idealizadora do Abraça Brasil. Investidora no setor Automotivo e AGRO. Uma trajetória construída em setores onde a presença feminina ainda é exceção.\n\nNo II Congresso Expo Peças Mulher, ela não vai te contar o que você quer ouvir. Vai te contar o que você precisa.\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #SimoneAzevedo #MulheresExecutoras #Goiânia2026`},
+  {id:11,img:'defesa-expo-pecas/palestrante-jacque-2.png',title:'Jacque Gomes — Palestrante',tipo:'Palestrante',status:'rascunho',data:'21/04',caption:`Jacque Gomes não fala de governança estratégica de longe. Ela a construiu.\n\nCEO do Grupo Persiflex, criadora do método Governança Estratégica.\n\nNão adianta crescer o faturamento se a empresa não tem estrutura para sustentar o crescimento. Não adianta liderar se você é o único pilar que não pode cair.\n\nIsso é o que Jacque traz: não teoria. Método.\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #JacqueGomes #GovernançaEstratégica #Goiânia2026`},
+  {id:12,img:'defesa-expo-pecas/sera-so-um-evento.png',title:'Será só um evento?',tipo:'Engajamento',status:'rascunho',data:'23/04',caption:`Será só um evento?\n\nAquela sensação quando você olha nos olhos de outra mulher empreendedora e, sem precisar falar nada, ela sabe exatamente o que você está carregando — isso é só um evento?\n\nO momento em que você finalmente admite uma dúvida que guardava há meses, e alguém responde: "Eu também."\n\nPara quem está de fora, talvez seja só um evento. Para quem viveu, foi outra coisa.\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #SeraSóUmEvento #ComunidadeFeminina #Goiânia2026`},
+  {id:13,img:'defesa-expo-pecas/dia-evento.png',title:'Dia 25 — Save the Date',tipo:'Anúncio',status:'rascunho',data:'25/04',caption:`25 de abril de 2026.\n\nUma data. 300 mulheres. Uma decisão: parar de carregar tudo sozinha.\n\nNão é um evento de motivação. É o espaço onde estratégia encontra autenticidade. Onde você pode ser real sobre onde está.\n\nA pergunta não é se você merece estar lá. A pergunta é: quando foi a última vez que você investiu em você com a mesma intensidade com que investe no seu negócio?\n\n📍 25 de abril de 2026 | Goiânia\n🎟️ Link na bio\n\n#ExpoPeçasMulher #25deAbril #Goiânia2026 #IICongresso`}
+];
+
+const STATUS_MAP = {
+  publicado:{label:'Publicado',cls:'chip-pub'},
+  agendado:{label:'Agendado',cls:'chip-agen'},
+  aprovado:{label:'Aprovado',cls:'chip-apr'},
+  rascunho:{label:'Rascunho',cls:'chip-ras'},
+  revisao:{label:'Em revisão',cls:'chip-rev'}
+};
+
+let postStatuses = JSON.parse(localStorage.getItem('expo_post_statuses')||'{}');
+let clientNotes = localStorage.getItem('expo_client_notes')||'';
+let trafegoNotes = localStorage.getItem('expo_trafego_notes')||'';
+let tasks = JSON.parse(localStorage.getItem('expo_tasks')||'null') || [
+  {id:1,text:'Publicar post "Origem do Congresso" (Aline)',done:false},
+  {id:2,text:'Agendar sequência de frases de impacto (Semana 2)',done:false},
+  {id:3,text:'Enviar legendas para aprovação da Aline',done:false},
+  {id:4,text:'Configurar campanha de tráfego para inscrições',done:false},
+  {id:5,text:'Revisar métricas de engajamento do feed novo',done:false},
+];
+let campaigns = JSON.parse(localStorage.getItem('expo_campaigns')||'null') || [
+  {id:1,name:'Tráfego — Inscrições Congresso',obj:'Conversões',invested:780,budget:1000,leads:72,status:'ativo'},
+  {id:2,name:'Awareness — Feed Marsala',obj:'Alcance',invested:420,budget:600,leads:38,status:'ativo'},
+  {id:3,name:'Retargeting — Visitantes LP',obj:'Conversões',invested:420,budget:800,leads:38,status:'ativo'},
+];
+
+// ── INIT ──
+function init(){
+  document.getElementById('clientNotes').value = clientNotes;
+  document.getElementById('trafegoNotes').value = trafegoNotes;
+  updateHeroStats();
+  renderProgress();
+  renderTasks();
+  renderPosts();
+  renderRoteiros();
+  renderCampaigns();
+  renderCalendar();
+  updateKPIs();
+  lucide.createIcons();
+}
+
+function getStatus(id){ return postStatuses[id] || POSTS.find(p=>p.id===id)?.status || 'rascunho'; }
+function setStatus(id,s){ postStatuses[id]=s; localStorage.setItem('expo_post_statuses',JSON.stringify(postStatuses)); updateHeroStats(); renderProgress(); updateKPIs(); }
+
+function updateHeroStats(){
+  const pub = POSTS.filter(p=>getStatus(p.id)==='publicado').length;
+  const agen = POSTS.filter(p=>getStatus(p.id)==='agendado').length;
+  document.getElementById('hero-publicados').textContent=pub;
+  document.getElementById('hero-agendados').textContent=agen;
+}
+function updateKPIs(){
+  document.getElementById('kpi-pub').textContent = POSTS.filter(p=>getStatus(p.id)==='publicado').length;
+  document.getElementById('kpi-agen').textContent = POSTS.filter(p=>getStatus(p.id)==='agendado').length;
+  document.getElementById('kpi-ras').textContent = POSTS.filter(p=>['rascunho','revisao'].includes(getStatus(p.id))).length;
+  const event = new Date('2026-04-25');
+  const today = new Date();
+  const diff = Math.ceil((event-today)/(1000*60*60*24));
+  document.getElementById('kpi-dias').textContent = diff > 0 ? diff : 0;
+}
+
+// ── PROGRESS LIST ──
+function renderProgress(){
+  document.getElementById('progressList').innerHTML = POSTS.map(p=>{
+    const s = getStatus(p.id);
+    const sm = STATUS_MAP[s];
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface-alt);border-radius:6px">
+      <span style="font-size:10px;font-weight:700;color:var(--text-dim);width:18px;flex-shrink:0">${p.id}</span>
+      <span style="font-size:12px;color:var(--text-dark);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.title}</span>
+      <span class="chip ${sm.cls}"><span class="chip-dot"></span>${sm.label}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── TASKS ──
+function renderTasks(){
+  document.getElementById('taskList').innerHTML = tasks.map(t=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface-alt);border-radius:8px;${t.done?'opacity:.5':''}">
+      <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})" style="width:16px;height:16px;cursor:pointer;accent-color:var(--marsala)">
+      <span style="flex:1;font-size:13px;color:var(--text-dark);${t.done?'text-decoration:line-through':''}">${t.text}</span>
+      <button onclick="deleteTask(${t.id})" style="padding:2px 6px;background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;line-height:1">×</button>
+    </div>`).join('');
+}
+function toggleTask(id){ const t=tasks.find(x=>x.id===id); if(t){t.done=!t.done;saveTasks();renderTasks();} }
+function deleteTask(id){ tasks=tasks.filter(x=>x.id!==id);saveTasks();renderTasks(); }
+function addTask(){
+  const text=prompt('Nova tarefa:'); if(!text)return;
+  tasks.push({id:Date.now(),text,done:false});
+  saveTasks();renderTasks();
+}
+function saveTasks(){ localStorage.setItem('expo_tasks',JSON.stringify(tasks)); }
+
+// ── POSTS GRID ──
+function renderPosts(){
+  const q = (document.getElementById('postSearch')?.value||'').toLowerCase();
+  const f = document.getElementById('postFilter')?.value||'';
+  const list = POSTS.filter(p=>{
+    if(q && !p.title.toLowerCase().includes(q)) return false;
+    if(f && getStatus(p.id)!==f) return false;
+    return true;
+  });
+  document.getElementById('postsGrid').innerHTML = list.map(p=>{
+    const s=getStatus(p.id); const sm=STATUS_MAP[s];
+    return `<div class="post-card">
+      <img src="${p.img}" alt="${p.title}" class="post-img" onerror="this.style.display='none'">
+      <div class="post-body">
+        <div class="post-num">Post ${String(p.id).padStart(2,'0')} · ${p.tipo}</div>
+        <div class="post-status-row">
+          <div class="post-title">${p.title}</div>
+          <select class="status-select" onchange="setStatus(${p.id},this.value)" style="flex-shrink:0;margin-left:6px">
+            ${Object.entries(STATUS_MAP).map(([k,v])=>`<option value="${k}" ${s===k?'selected':''}>${v.label}</option>`).join('')}
+          </select>
+        </div>
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:8px">📅 Data sugerida: ${p.data}</div>
+        <div class="copy-area">
+          <div class="copy-area-header">
+            <span class="copy-area-label">Legenda Instagram</span>
+            <button class="btn btn-sm btn-marsala-ghost" onclick="copyText(${p.id})">Copiar</button>
+          </div>
+          <div class="copy-area-body" id="caption-${p.id}">${p.caption}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  lucide.createIcons();
+}
+
+// ── ROTEIROS ──
+function renderRoteiros(){
+  document.getElementById('roteirosList').innerHTML = POSTS.map(p=>`
+    <div class="roteiro-card" id="rot-${p.id}">
+      <div class="roteiro-header" onclick="toggleRoteiro(${p.id})">
+        <div class="roteiro-title">
+          <span style="width:22px;height:22px;border-radius:6px;background:var(--marsala-dim);color:var(--marsala);font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${p.id}</span>
+          ${p.title}
+          <span style="font-size:11px;font-weight:600;color:var(--text-dim);background:var(--surface-hover);padding:2px 8px;border-radius:10px">${p.tipo}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="chip ${STATUS_MAP[getStatus(p.id)].cls}"><span class="chip-dot"></span>${STATUS_MAP[getStatus(p.id)].label}</span>
+          <button class="btn btn-sm btn-marsala-ghost" onclick="event.stopPropagation();copyText(${p.id})">Copiar legenda</button>
+          <i data-lucide="chevron-down" class="roteiro-arrow" style="width:16px;height:16px;stroke:currentColor;fill:none"></i>
+        </div>
+      </div>
+      <div class="roteiro-body">
+        <div class="roteiro-section">
+          <div class="roteiro-section-title">Conceito do Post</div>
+          <div class="roteiro-text">${getConceito(p.id)}</div>
+        </div>
+        <div class="roteiro-section">
+          <div class="roteiro-section-title">Legenda completa para o Instagram</div>
+          <div class="roteiro-text" style="font-size:13px">${p.caption}</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-sm btn-primary" onclick="copyText(${p.id})">Copiar legenda</button>
+          <button class="btn btn-sm btn-ghost" onclick="setStatus(${p.id},'aprovado');renderRoteiros();toast('Marcado como aprovado')">Aprovar</button>
+          <button class="btn btn-sm btn-ghost" onclick="setStatus(${p.id},'agendado');renderRoteiros();toast('Marcado como agendado')">Marcar agendado</button>
+        </div>
+      </div>
+    </div>`).join('');
+  lucide.createIcons();
+}
+function toggleRoteiro(id){
+  document.getElementById('rot-'+id).classList.toggle('open');
+  lucide.createIcons();
+}
+
+function getConceito(id){
+  const map={
+    1:'Post de origem — Aline lendo, visual warm. "Foi assim que o Congresso nasceu" cria curiosidade. Texto mínimo na imagem, tudo na legenda. Tom: íntimo, diário.',
+    2:'Marsala tipografia — para o scroll. "SORTE vs SUOR" confronta o hábito da persona de minimizar conquistas. Alto salvamento e compartilhamento.',
+    3:'Claro/cream — apresenta Aline como executora, não só idealizadora. Frase "A arte de tornar um sonho, realidade" é descritiva, não motivacional.',
+    4:'P&B + Indra Nooyi — prova social por associação. Série Mulheres & Histórias estabelece coluna editorial. CEO global = evento sério.',
+    5:'Marsala tipografia — IMPOSSÍVEL e CELEBRAR em destaque. Nomeia dor invisível da persona: conquista mas não celebra. Alto compartilhamento.',
+    6:'Mulher de costas no campo — sem rosto, qualquer mulher se projeta. "Não é mais um evento" posiciona contra concorrência de forma elegante.',
+    7:'Escadaria + oliveira — metáfora visual de crescimento calmo. Permissão para parar. Persona carrega culpa por descansar.',
+    8:'Planta no concreto — resiliência visual universal. "Você cresceu onde nada cresceria" é frase de alto compartilhamento entre empreendedoras.',
+    9:'Depoimento real de Cecília Borges — prova social que derruba objeção "isso não é pra mim". Sorriso natural, ambiente real.',
+    10:'Marsala fundo + Simone Azevedo — apresentação premium da palestrante. Currículo fala por si: CEO Mobensani + investidora.',
+    11:'Marsala intenso + Jacque Gomes — olhar direto, autoridade máxima. "Governança Estratégica" nomeia exatamente o que a persona não tem.',
+    12:'Crowd + interrogação dourada — fotos reais da edição anterior. Prova visual de que acontece de verdade. Pergunta retórica de alto engajamento.',
+    13:'Save the date com tipografia 3D — o "25" dourado para o scroll. Fechamento do funil: após nutrir com conteúdo, chama para decisão.'
+  };
+  return map[id] || '';
+}
+
+// ── CAMPAIGNS ──
+function renderCampaigns(){
+  document.getElementById('campaignsBody').innerHTML = campaigns.map(c=>{
+    const pct = Math.min(100,Math.round(c.invested/c.budget*100));
+    const cpl = c.leads ? (c.invested/c.leads).toFixed(2) : '—';
+    const statusCls = c.status==='ativo'?'chip-pub':c.status==='pausado'?'chip-apr':'chip-ras';
+    return `<tr>
+      <td style="font-weight:600;color:var(--text-dark)">${c.name}</td>
+      <td>${c.obj}</td>
+      <td>R$ ${c.invested.toLocaleString('pt-BR')}</td>
+      <td>R$ ${c.budget.toLocaleString('pt-BR')}</td>
+      <td><div class="progress-cell"><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div><span style="font-size:11px;font-weight:700;color:var(--text-dark);min-width:32px">${pct}%</span></div></td>
+      <td style="font-weight:700">${c.leads}</td>
+      <td class="${+cpl<15?'roas-good':+cpl<25?'roas-ok':'roas-bad'}">R$ ${cpl}</td>
+      <td><span class="chip ${statusCls}"><span class="chip-dot"></span>${c.status}</span></td>
+    </tr>`;
+  }).join('');
+}
+function addCampaign(){
+  const name=prompt('Nome da campanha:'); if(!name)return;
+  campaigns.push({id:Date.now(),name,obj:'Conversões',invested:0,budget:+prompt('Budget (R$):',500)||500,leads:0,status:'ativo'});
+  localStorage.setItem('expo_campaigns',JSON.stringify(campaigns));
+  renderCampaigns();
+}
+
+// ── CALENDAR ──
+function renderCalendar(){
+  const grid = document.getElementById('calGrid'); if(!grid)return;
+  // April 2026: starts on Wednesday (3)
+  const days = 30; const startDay = 3; // 0=Sun
+  let html = '';
+  for(let i=0;i<startDay;i++) html+=`<div class="cal-day" style="background:transparent;border-color:transparent"></div>`;
+  for(let d=1;d<=days;d++){
+    const post = POSTS.find(p=>p.data===String(d).padStart(2,'0')+'/04');
+    const isToday = d===24;
+    const s = post ? getStatus(post.id) : null;
+    const evCls = s==='publicado'?'publicado':s==='agendado'?'agendado':'';
+    html+=`<div class="cal-day${isToday?' today':''}${post?' has-post':''}">
+      <div class="cal-day-num">${d}</div>
+      ${post?`<div class="cal-event ${evCls}" title="${post.title}">${post.id}. ${post.title.substring(0,18)}…</div>`:''}
+      ${d===25?`<div style="padding:2px 4px;background:#8B252E;color:#fff;border-radius:3px;font-size:8px;font-weight:700;text-align:center">🎯 EVENTO</div>`:''}
+    </div>`;
+  }
+  grid.innerHTML=html;
+}
+
+// ── COPY ──
+function copyText(id){
+  const p=POSTS.find(x=>x.id===id);
+  if(p) navigator.clipboard.writeText(p.caption).then(()=>toast('Legenda copiada!'));
+}
+function copyLink(){
+  navigator.clipboard.writeText('https://ecossistema.tracktor.com.br/defesa-expo-pecas/index.html').then(()=>toast('Link copiado!'));
+}
+
+// ── NOTES ──
+function saveNotes(){
+  clientNotes=document.getElementById('clientNotes').value;
+  localStorage.setItem('expo_client_notes',clientNotes);
+  toast('Notas salvas!');
+}
+function saveTrafegoNotes(){
+  trafegoNotes=document.getElementById('trafegoNotes').value;
+  localStorage.setItem('expo_trafego_notes',trafegoNotes);
+  toast('Notas salvas!');
+}
+
+// ── TABS ──
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const n=['visao','feed','roteiros','redes','trafego','defesa'][i];
+    t.classList.toggle('active',n===name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='feed') renderPosts();
+  if(name==='redes') renderCalendar();
+  lucide.createIcons();
+}
+
+// ── TOAST ──
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+init();
+</script>
+</body>
+</html>
