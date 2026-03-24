@@ -37,16 +37,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .hero-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
 .hero-meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted)}
 .hero-meta-item strong{color:var(--text-dark)}
-.lp-collapse{margin-top:18px}
-.lp-collapse-trigger{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text-muted);padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
-.lp-collapse-trigger:hover{background:rgba(255,255,255,.1);color:var(--text-dark)}
-.lp-collapse-trigger .chevron{width:14px;height:14px;transition:transform .25s}
-.lp-collapse-trigger.open .chevron{transform:rotate(180deg)}
-.lp-collapse-body{overflow:hidden;max-height:0;transition:max-height .3s ease,opacity .3s ease;opacity:0}
-.lp-collapse-body.open{max-height:200px;opacity:1}
-.hero-lp-btns{display:flex;gap:10px;flex-wrap:wrap;padding-top:12px}
-.hero-lp-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;transition:.2s;border:1px solid rgba(255,255,255,.15)}
-.hero-lp-btn:hover{transform:translateY(-2px)}
 
 .tabs-wrap{background:rgba(13,13,26,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:var(--nav-h);z-index:90}
 .tabs{display:flex;padding:0 24px;overflow-x:auto;scrollbar-width:none;max-width:1100px;margin:0 auto}
@@ -148,10 +138,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <a href="resultado.html">Resultado</a>
     <a href="sexy-canvas.html">Sexy Canvas</a>
     <a href="sexy-canvas-tractorpro.html" class="active">TractorPRO</a>
-    <a href="sexy-canvas-meufluxo.html">MeuFluxo</a>
-    <a href="sexy-canvas-orbitta.html">Orbitta</a>
     <a href="xquads.html">Xquads</a>
-    <a href="tata.html">Tata</a>
+    <a href="clientes.html">Clientes</a>
     <a href="terminal.html">Terminal</a>
   </div>
 </nav>
@@ -166,21 +154,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
       <div class="hero-meta-item"><i data-lucide="monitor" style="width:13px;height:13px"></i> Plataforma: <strong>Meta Ads</strong></div>
       <div class="hero-meta-item"><i data-lucide="thermometer" style="width:13px;height:13px"></i> Temperatura: <strong>Frio → Morno</strong></div>
       <div class="hero-meta-item"><i data-lucide="link" style="width:13px;height:13px"></i> Destino: <strong>tractorpro.com.br</strong></div>
-    </div>
-    <div class="lp-collapse">
-      <button class="lp-collapse-trigger" onclick="toggleLP(this)">
-        <i data-lucide="layout" style="width:14px;height:14px"></i>
-        Landing Pages (1)
-        <i data-lucide="chevron-down" class="chevron"></i>
-      </button>
-      <div class="lp-collapse-body">
-        <div class="hero-lp-btns">
-          <a href="lp-tractorpro-motion.html" target="_blank" class="hero-lp-btn" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;box-shadow:0 4px 16px rgba(139,92,246,.4)">
-            <i data-lucide="zap" style="width:14px;height:14px"></i>
-            LP Motion
-          </a>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -901,11 +874,6 @@ Se você leva a carreira a sério, o próximo passo é óbvio.</div>
 <button class="tele-btn" onclick="copyAll()"><i data-lucide="radio" style="width:14px;height:14px"></i> Copiar Tudo (Teleprompter)</button>
 
 <script>
-function toggleLP(btn) {
-  btn.classList.toggle('open');
-  btn.nextElementSibling.classList.toggle('open');
-}
-
 function showTab(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
