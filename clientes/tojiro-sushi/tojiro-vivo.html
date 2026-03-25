@@ -550,8 +550,8 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
 /* PHONE MOCKUP */
 .phone-mockup{
   position:relative;
-  width:220px;
-  height:440px;
+  width:230px;
+  height:460px;
   margin:0 auto;
   flex-shrink:0;
 }
@@ -559,12 +559,12 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
 .phone-frame{
   position:absolute;
   inset:0;
-  border-radius:36px;
-  border:2px solid rgba(255,255,255,.15);
-  background:var(--black2);
+  border-radius:38px;
+  border:2px solid rgba(255,255,255,.13);
+  background:#000;
   box-shadow:
-    0 0 0 1px rgba(0,0,0,.5),
-    0 40px 80px rgba(0,0,0,.6),
+    0 0 0 1px rgba(0,0,0,.6),
+    0 48px 96px rgba(0,0,0,.7),
     inset 0 0 0 1px rgba(255,255,255,.04);
   overflow:hidden;
 }
@@ -572,96 +572,112 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
 .phone-notch{
   position:absolute;
   top:12px;left:50%;transform:translateX(-50%);
-  width:80px;height:24px;
-  background:var(--black);
-  border-radius:12px;
+  width:72px;height:22px;
+  background:#000;
+  border-radius:11px;
   z-index:10;
 }
 
 .phone-screen{
   position:absolute;
   inset:0;
-  border-radius:35px;
+  border-radius:37px;
   overflow:hidden;
-  background:var(--black3);
-}
-
-.phone-content{
-  position:absolute;
-  inset:0;
+  background:#000;
   display:flex;flex-direction:column;
-  padding:48px 0 0;
 }
 
-/* Fake Instagram stories bar */
-.phone-stories{
-  display:flex;gap:6px;padding:8px 10px;
-}
-
-.story-circle{
-  width:36px;height:36px;border-radius:50%;
-  border:2px solid var(--red);
+/* Status bar */
+.phone-statusbar{
+  height:44px;display:flex;align-items:flex-end;
+  justify-content:space-between;padding:0 18px 8px;
   flex-shrink:0;
-  position:relative;
-  overflow:hidden;
-  background:var(--black3);
+}
+.phone-time{font-size:12px;font-weight:600;color:rgba(255,255,255,.6)}
+.phone-icons{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1px}
+
+/* Instagram top bar */
+.phone-ig-header{
+  display:flex;align-items:center;
+  padding:8px 12px;
+  flex-shrink:0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.phone-ig-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
   display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:600;color:var(--gold);
+  font-size:10px;font-weight:700;color:#fff;flex-shrink:0;
 }
+.phone-ig-info{flex:1;margin-left:8px}
+.phone-ig-name{font-size:11px;font-weight:700;color:rgba(255,255,255,.9)}
+.phone-ig-sponsored{font-size:9px;color:rgba(255,255,255,.35)}
+.phone-ig-more{color:rgba(255,255,255,.4);font-size:18px;line-height:1;letter-spacing:.5px}
 
-.phone-post{
+/* Vídeo area */
+.phone-video-area{
   flex:1;
-  background:linear-gradient(160deg, #1a0a08 0%, #2d1008 40%, #1a0a08 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
   position:relative;
   overflow:hidden;
+  background:linear-gradient(160deg,#1e0a06 0%,#2d1008 50%,#0d0503 100%);
+  cursor:pointer;
 }
-
-.phone-post::before{
-  content:'TOJIRO\ASUSHI\AMOOCA';
-  white-space:pre;
-  position:absolute;
-  inset:0;
+.phone-video-bg-text{
+  position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
   font-family:'Cormorant Garamond',serif;
-  font-size:11px;letter-spacing:6px;color:rgba(212,168,83,.08);
-  text-align:center;line-height:3;
+  font-size:10px;letter-spacing:6px;text-transform:uppercase;
+  color:rgba(212,168,83,.07);text-align:center;line-height:2.5;
   padding:20px;
 }
-
-.phone-sushi-emoji{font-size:40px;margin-bottom:8px;position:relative;z-index:1;filter:drop-shadow(0 4px 16px rgba(0,0,0,.6))}
-.phone-post-text{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,168,83,.5);position:relative;z-index:1}
-
-/* Play button */
-.play-btn{
-  position:absolute;
-  width:44px;height:44px;border-radius:50%;
+.phone-video-area video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;z-index:2;
+}
+.phone-video-area video::-webkit-media-controls{display:none}
+.phone-play-btn{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:48px;height:48px;border-radius:50%;
   background:rgba(193,39,45,.9);
   display:flex;align-items:center;justify-content:center;
-  z-index:2;
-  cursor:pointer;
-  box-shadow:0 4px 20px rgba(193,39,45,.4);
+  z-index:3;
+  box-shadow:0 6px 24px rgba(193,39,45,.45);
+  transition:transform .2s,box-shadow .2s;
+}
+.phone-video-area:hover .phone-play-btn{transform:translate(-50%,-50%) scale(1.08)}
+.phone-play-icon{
+  width:0;height:0;
+  border-top:9px solid transparent;
+  border-bottom:9px solid transparent;
+  border-left:16px solid #fff;
+  margin-left:4px;
 }
 
-.play-icon{
-  width:0;height:0;
-  border-top:8px solid transparent;
-  border-bottom:8px solid transparent;
-  border-left:14px solid white;
-  margin-left:3px;
+/* Bottom bar */
+.phone-ig-bottom{
+  padding:8px 12px 6px;
+  flex-shrink:0;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(6px);
 }
+.phone-actions{display:flex;gap:12px;margin-bottom:5px}
+.phone-act{font-size:17px;line-height:1;opacity:.7;cursor:pointer}
+.phone-act:hover{opacity:1}
+.phone-act-save{margin-left:auto}
+.phone-likes{font-size:10px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:3px}
+.phone-caption{font-size:9px;color:rgba(255,255,255,.4);line-height:1.4}
+.phone-caption strong{color:rgba(255,255,255,.65)}
 
 /* Phone metrics bar */
 .phone-metrics{
-  background:rgba(0,0,0,.7);
-  padding:8px 12px;
+  background:rgba(0,0,0,.85);
+  padding:7px 12px;
   display:flex;justify-content:space-around;
   border-top:1px solid rgba(255,255,255,.06);
-  backdrop-filter:blur(4px);
 }
-
 .pm-item{text-align:center}
-.pm-val{font-size:13px;font-weight:600;color:var(--gold);font-family:'Cormorant Garamond',serif}
+.pm-val{font-size:13px;font-weight:700;color:var(--gold);font-family:'DM Sans',sans-serif}
 .pm-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 
 /* Phone shine effect */
@@ -1073,31 +1089,51 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
       <div class="phone-frame">
         <div class="phone-notch"></div>
         <div class="phone-screen">
-          <div class="phone-content">
-            <div class="phone-stories">
-              <div class="story-circle">TJ</div>
-              <div class="story-circle" style="border-color:var(--muted2);font-size:8px;color:var(--muted)">+12</div>
+          <!-- Status bar -->
+          <div class="phone-statusbar">
+            <span class="phone-time" id="phoneTime">09:41</span>
+            <span class="phone-icons">▲ ▲ ▼</span>
+          </div>
+          <!-- Instagram header -->
+          <div class="phone-ig-header">
+            <div class="phone-ig-avatar">TJ</div>
+            <div class="phone-ig-info">
+              <div class="phone-ig-name">tojirosushimooca</div>
+              <div class="phone-ig-sponsored">Patrocinado</div>
             </div>
-            <div class="phone-post">
-              <div class="phone-sushi-emoji">🍣</div>
-              <div class="phone-post-text">Tojiro Sushi Mooca</div>
+            <div class="phone-ig-more">···</div>
+          </div>
+          <!-- Vídeo -->
+          <div class="phone-video-area" id="phoneVideoArea" onclick="togglePlay()">
+            <div class="phone-video-bg-text">TOJIRO&#10;SUSHI&#10;MOOCA</div>
+            <div class="phone-play-btn" id="phonePlayBtn">
+              <div class="phone-play-icon"></div>
             </div>
-            <div class="play-btn">
-              <div class="play-icon"></div>
+          </div>
+          <!-- Bottom actions -->
+          <div class="phone-ig-bottom">
+            <div class="phone-actions">
+              <span class="phone-act">♡</span>
+              <span class="phone-act">💬</span>
+              <span class="phone-act">↗</span>
+              <span class="phone-act phone-act-save">🔖</span>
             </div>
-            <div class="phone-metrics">
-              <div class="pm-item">
-                <div class="pm-val">3,70%</div>
-                <div class="pm-lbl">CTR</div>
-              </div>
-              <div class="pm-item">
-                <div class="pm-val">R$3,65</div>
-                <div class="pm-lbl">Conv.</div>
-              </div>
-              <div class="pm-item">
-                <div class="pm-val">232</div>
-                <div class="pm-lbl">Msgs</div>
-              </div>
+            <div class="phone-likes">2.341 curtidas</div>
+            <div class="phone-caption"><strong>tojirosushimooca</strong> Chamada ao Ambiente — venha descobrir o Tojiro</div>
+          </div>
+          <!-- Métricas reais -->
+          <div class="phone-metrics">
+            <div class="pm-item">
+              <div class="pm-val">3,70%</div>
+              <div class="pm-lbl">Taxa de clique</div>
+            </div>
+            <div class="pm-item">
+              <div class="pm-val">R$3,65</div>
+              <div class="pm-lbl">Por conversa</div>
+            </div>
+            <div class="pm-item">
+              <div class="pm-val">45.357</div>
+              <div class="pm-lbl">Visualizações</div>
             </div>
           </div>
         </div>
@@ -1284,6 +1320,28 @@ function changeMonth(dir) {
 }
 
 renderMes();
+
+// Relógio em tempo real no mockup
+function updatePhoneClock() {
+  const el = document.getElementById('phoneTime');
+  if (!el) return;
+  const t = new Date();
+  el.textContent = t.getHours().toString().padStart(2,'0') + ':' + t.getMinutes().toString().padStart(2,'0');
+}
+updatePhoneClock();
+setInterval(updatePhoneClock, 30000);
+
+// Play/pause do vídeo (se existir) ou abre Instagram
+function togglePlay() {
+  const vid = document.querySelector('#phoneVideoArea video');
+  const btn = document.getElementById('phonePlayBtn');
+  if (vid) {
+    if (vid.paused) { vid.play(); btn.style.opacity = '0'; }
+    else { vid.pause(); btn.style.opacity = '1'; }
+    return;
+  }
+  window.open('https://www.instagram.com/tojirosushimooca/', '_blank');
+}
 </script>
 </body>
 </html>

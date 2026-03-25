@@ -150,13 +150,19 @@ tbody td:first-child{width:32px;padding-right:0}
 .notes-area{padding:14px;background:var(--surface-alt);border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);line-height:1.7;width:100%;resize:none;font-family:'Inter',sans-serif;min-height:80px}
 .notes-area:focus{outline:none;border-color:var(--accent)}
 .detail-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin-bottom:10px}
-.history-list{display:flex;flex-direction:column;gap:8px}
-.history-item{display:flex;gap:12px;align-items:flex-start;font-size:12px;color:var(--text-muted)}
-.history-dot{width:8px;height:8px;border-radius:50%;background:var(--green);margin-top:4px;flex-shrink:0}
-.history-dot.warn{background:var(--amber)}
-.history-dot.info{background:var(--blue)}
-.history-text{line-height:1.5}
-.history-text strong{color:var(--text-dark);font-weight:600}
+.history-list{display:flex;flex-direction:column;position:relative;padding-left:36px;margin-top:4px}
+.history-list::before{content:'';position:absolute;left:13px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--border),transparent)}
+.history-item{position:relative;margin-bottom:18px;display:flex;flex-direction:column;gap:3px}
+.history-item:last-child{margin-bottom:0}
+.history-ico{position:absolute;left:-36px;top:1px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid;flex-shrink:0;background:var(--bg-card)}
+.history-ico.success{border-color:var(--green);color:var(--green)}
+.history-ico.warn{border-color:var(--amber);color:var(--amber)}
+.history-ico.info{border-color:var(--blue);color:var(--blue)}
+.history-ico.alert{border-color:#f87171;color:#f87171}
+.history-ico.pending{border-color:var(--border);color:var(--text-muted);border-style:dashed}
+.history-when{font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--text-muted);text-transform:uppercase}
+.history-title{font-size:13px;font-weight:600;color:var(--text-dark)}
+.history-desc{font-size:12px;color:var(--text-muted);line-height:1.55}
 
 /* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text-dark);color:var(--green-neon);padding:9px 18px;border-radius:30px;font-size:12px;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:999;border:1px solid rgba(0,212,160,.3)}
@@ -423,7 +429,13 @@ const PRODUCTS = {
 const COLORS = ['#7c3aed','#2563eb','#059669','#f59e0b','#ef4444','#ec4899','#0891b2','#7c3aed'];
 
 let clients = JSON.parse(localStorage.getItem('eco_clients') || 'null') || [
-  {id:1,name:'Tojiro Sushi',email:'contato@tojirosushi.com.br',whatsapp:'',segment:'Restaurante Japonês',products:['Meta Ads','Social Media'],mrr:0,status:'ativo',health:80,created:'2025-10-01',renewal:'-',clientName:'Verlaine',metricas:['conversas_iniciadas','custo_por_mensagem','custo_por_conversa','visualizacoes_video'],notes:'3 campanhas canibalização resolvidas em mar/26. Nova estrutura remarketing + prospecção criada. Alerta: atendimento falho.',dashboard:'clientes/tojiro-sushi/tojiro-vivo.html',pages:[{title:'Tojiro Vivo — Método Marca Viva',url:'clientes/tojiro-sushi/tojiro-vivo.html',type:'relatorio',date:'Mar 2026',desc:'Relatório premium com timeline, time e criativos'}],history:[{type:'success',text:'Nova estrutura de campanhas criada (remarketing + prospecção fria)','date':'Mar 2026'},{type:'info',text:'2 campanhas duplicadas pausadas — canibalização eliminada','date':'Mar 2026'},{type:'warn',text:'232 conversas iniciadas, apenas 7 respondidas — atendimento crítico','date':'Mar 2026'}]},
+  {id:1,name:'Tojiro Sushi',email:'contato@tojirosushi.com.br',whatsapp:'',segment:'Restaurante Japonês',products:['Meta Ads','Social Media'],mrr:0,status:'ativo',health:80,created:'2025-10-01',renewal:'-',clientName:'Verlaine',metricas:['conversas_iniciadas','custo_por_mensagem','custo_por_conversa','visualizacoes_video'],notes:'3 campanhas canibalização resolvidas em mar/26. Nova estrutura remarketing + prospecção criada. Alerta: atendimento falho.',dashboard:'clientes/tojiro-sushi/tojiro-vivo.html',pages:[{title:'Tojiro Vivo — Método Marca Viva',url:'clientes/tojiro-sushi/tojiro-vivo.html',type:'relatorio',date:'Mar 2026',desc:'Relatório premium com timeline, time e criativos'}],history:[
+  {type:'success',tag:'criado',when:'25 mar · 14h00',text:'Nova estrutura de campanhas criada',desc:'Alexandre montou 2 conjuntos de público: remarketing (365D engajamento) e prospecção fria (Advantage+). Budget R$60/dia CBO. Campanha pausada aguardando recarga de R$300.'},
+  {type:'info',tag:'ajuste',when:'25 mar · 11h00',text:'Budget ajustado para R$9/dia',desc:'Saldo era R$18,02. Com 3 campanhas a R$30/dia o orçamento zeraria em horas. Alexandre reduziu para garantir cobertura até sexta.'},
+  {type:'info',tag:'pausado',when:'25 mar · 10h00',text:'2 campanhas pausadas — canibalização eliminada',desc:'Campanhas Otimização 2 e 3 pausadas. Disputavam a mesma audiência causando CPM alto (~R$23). Mantida só a Campanha Original com o criativo campeão.'},
+  {type:'warn',tag:'diagnostico',when:'25 mar · 09h00',text:'Diagnóstico completo — 3 problemas identificados',desc:'(1) Canibalização: 3 campanhas, mesma audiência. (2) Objetivo errado: ENGAGEMENT em vez de MESSAGES. (3) Zero prospecção — 100% remarketing. Taxa de resposta no WhatsApp: menos de 3%.'},
+  {type:'alert',tag:'alert',when:'25 mar · 09h00',text:'232 conversas, apenas 7 respondidas',desc:'Camila identificou que o gargalo não está no anúncio — está no atendimento. Recomendação: mensagem automática no WhatsApp Business.'}
+]},
   {id:2,name:'Óticas JB',email:'contato@oticasjb.com.br',whatsapp:'',segment:'Ótica',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
   {id:3,name:'Expo Peças',email:'contato@exopecas.com.br',whatsapp:'',segment:'Autopeças',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
   {id:4,name:'Expo Peças Mulher',email:'contato@expopecasmulher.com.br',whatsapp:'',segment:'Evento / Autopeças',products:['Social Media','Feed','Defesa'],mrr:0,status:'ativo',health:90,created:'2026-01-01',renewal:'-',notes:'Novo feed Marsala em andamento. Defesa estratégica apresentada.',dashboard:'cliente-expo-pecas.html',pages:[{title:'Dashboard Expo Peças Mulher',url:'cliente-expo-pecas.html',type:'dashboard',date:'Mar 2026',desc:'Painel com feed Marsala e defesa estratégica'}],history:[{type:'success',text:'Defesa estratégica do feed Marsala apresentada','date':'Mar 2026'},{type:'info',text:'Transição para identidade visual Marsala iniciada','date':'Mar 2026'}]},
@@ -564,11 +576,19 @@ function openDetail(id){
   const color=COLORS[idx%COLORS.length];
   const initials=c.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
 
-  const historyHtml = (c.history||[]).map(h=>`
+  const HIST_ICO = {success:'✓',info:'→',warn:'⚠',alert:'!',pending:'○',diagnostico:'🔍',pausado:'⏸',criado:'✦',ajuste:'↻'};
+  const historyHtml = (c.history||[]).map(h=>{
+    const icoKey = h.tag || h.type || 'info';
+    const ico = HIST_ICO[icoKey] || HIST_ICO[h.type] || '·';
+    const cls = h.type === 'warn' ? 'warn' : h.type === 'alert' ? 'alert' : h.type === 'pending' ? 'pending' : h.type === 'info' ? 'info' : 'success';
+    return `
     <div class="history-item">
-      <div class="history-dot ${h.type==='warn'?'warn':h.type==='info'?'info':''}"></div>
-      <div class="history-text"><strong>${h.date}</strong> — ${h.text}</div>
-    </div>`).join('');
+      <div class="history-ico ${cls}">${ico}</div>
+      ${h.when ? `<div class="history-when">${h.when}</div>` : ''}
+      <div class="history-title">${h.text}</div>
+      ${h.desc ? `<div class="history-desc">${h.desc}</div>` : ''}
+    </div>`;
+  }).join('');
 
   const typeIcon = {relatorio:'📋',dashboard:'📊',landing:'🚀',crm:'🗂️'};
   const pagesHtml = (c.pages||[]).length
