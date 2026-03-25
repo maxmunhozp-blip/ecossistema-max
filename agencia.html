@@ -5,19 +5,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Agência — Ecossistema Max</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#0a0a12;--surface:#111120;--surface-2:#1a1a2e;--surface-3:#20203a;
   --border:#1e1e3a;--border-bright:#2d2d50;
-  --purple:#7c3aed;--blue:#3b82f6;--teal:#00d4a0;--orange:#ea8049;--red:#f87171;
+  --purple:#7c3aed;--blue:#3b82f6;--teal:#00d4a0;--orange:#f59e0b;--red:#ef4444;--pink:#ec4899;
   --text:#e2e8f0;--muted:#94a3b8;--dim:#475569;
   --nav-h:56px;
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-/* ── NAV ── */
 .nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(10,10,18,.95);
   backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
   display:flex;align-items:center;padding:0 24px;gap:20px}
@@ -29,82 +27,133 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .nl:hover{background:var(--surface-2);color:var(--text)}
 .nl.active{background:rgba(124,58,237,.18);color:#a78bfa}
 
-/* ── LAYOUT ── */
-.agency-wrap{display:grid;grid-template-columns:1fr 300px;height:calc(100vh - var(--nav-h));overflow:hidden}
+.agency-wrap{display:grid;grid-template-columns:1fr 320px;height:calc(100vh - var(--nav-h));overflow:hidden}
 @media(max-width:900px){.agency-wrap{grid-template-columns:1fr;grid-template-rows:1fr auto}}
 
-/* ── OFFICE AREA ── */
 .office-area{display:flex;flex-direction:column;overflow:hidden;position:relative}
-.office-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.office-header{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
 .office-title{font-size:14px;font-weight:700}
 .office-subtitle{font-size:12px;color:var(--muted)}
 .status-dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background .3s}
 .status-dot.online{background:var(--teal);box-shadow:0 0 6px var(--teal)}
-.status-dot.activity{background:var(--purple);box-shadow:0 0 8px var(--purple);animation:pulse-dot .8s ease-in-out infinite}
-@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+.status-dot.ativo{background:var(--purple);box-shadow:0 0 8px var(--purple);animation:pulsar .8s ease-in-out infinite}
+@keyframes pulsar{0%,100%{opacity:1}50%{opacity:.4}}
 .ms-auto{margin-left:auto}
 
-.canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;background:var(--bg);padding:16px}
-#office-canvas{
-  image-rendering:pixelated;
-  image-rendering:crisp-edges;
-  cursor:default;
-  max-width:100%;max-height:100%;
+.canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;background:var(--bg);padding:12px}
+#escritorio-canvas{
+  image-rendering:pixelated;image-rendering:crisp-edges;
+  cursor:default;max-width:100%;max-height:100%;
   border-radius:4px;
   box-shadow:0 0 60px rgba(124,58,237,.12),0 0 120px rgba(0,0,0,.6);
 }
 
-/* ── AGENT CARDS ── */
-.agent-row{display:flex;gap:8px;padding:10px 16px;border-top:1px solid var(--border);flex-shrink:0;overflow-x:auto}
-.agent-card{
+.equipe-row{display:flex;gap:8px;padding:10px 16px;border-top:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+.equipe-card{
   display:flex;align-items:center;gap:8px;
   background:var(--surface);border:1px solid var(--border);
   border-radius:10px;padding:8px 12px;flex-shrink:0;
-  transition:border-color .3s;min-width:150px;
+  transition:border-color .3s;min-width:140px;cursor:pointer;
 }
-.agent-card.active{border-color:rgba(124,58,237,.4);background:rgba(124,58,237,.06)}
-.agent-card.idle-wander{border-color:rgba(148,163,184,.15)}
-.agent-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.agent-name{font-size:11px;font-weight:700}
-.agent-state{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px}
-.agent-tool{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--dim);margin-top:1px}
+.equipe-card:hover{border-color:var(--border-bright)}
+.equipe-card.ativo{border-color:rgba(124,58,237,.4);background:rgba(124,58,237,.06)}
+.equipe-card.ocioso{border-color:rgba(148,163,184,.12)}
+.equipe-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.equipe-nome{font-size:11px;font-weight:700}
+.equipe-cargo{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.equipe-status{font-size:10px;color:var(--muted)}
 
-/* ── ACTIVITY FEED ── */
-.feed-panel{
-  border-left:1px solid var(--border);
-  display:flex;flex-direction:column;
-  overflow:hidden;
-  background:var(--surface);
-}
-.feed-header{padding:14px 16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;flex-shrink:0;display:flex;align-items:center;gap:8px}
-.feed-count{font-size:11px;font-weight:700;background:rgba(124,58,237,.15);color:#a78bfa;padding:2px 8px;border-radius:20px}
-.feed-list{flex:1;overflow-y:auto;padding:8px}
-.feed-list::-webkit-scrollbar{width:4px}
-.feed-list::-webkit-scrollbar-track{background:transparent}
-.feed-list::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:4px}
-.feed-item{
-  padding:8px 10px;border-radius:8px;margin-bottom:4px;
-  border:1px solid transparent;
-  animation:feed-in .25s ease;
-}
-@keyframes feed-in{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
-.feed-item:hover{background:var(--surface-2)}
-.feed-top{display:flex;align-items:center;gap:6px;margin-bottom:2px}
-.feed-agent{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.feed-tool{font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
-.feed-detail{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:14px}
-.feed-time{font-size:9px;color:var(--dim);margin-left:auto;white-space:nowrap}
-.feed-empty{text-align:center;padding:40px 16px;color:var(--dim);font-size:12px}
-.feed-empty svg{margin-bottom:8px;opacity:.3}
-
-/* ── SSE BADGE ── */
 .sse-badge{
   display:inline-flex;align-items:center;gap:5px;
   font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;
   background:rgba(71,85,105,.2);color:var(--dim);border:1px solid rgba(71,85,105,.2);
 }
-.sse-badge.connected{background:rgba(0,212,160,.08);color:var(--teal);border-color:rgba(0,212,160,.2)}
-.sse-badge.error{background:rgba(248,113,113,.08);color:var(--red);border-color:rgba(248,113,113,.2)}
+.sse-badge.conectado{background:rgba(0,212,160,.08);color:var(--teal);border-color:rgba(0,212,160,.2)}
+.sse-badge.erro{background:rgba(248,113,113,.08);color:var(--red);border-color:rgba(248,113,113,.2)}
+
+/* ── CHAT ── */
+.chat-panel{border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:var(--surface)}
+
+.chat-header{padding:12px 14px 0;border-bottom:1px solid var(--border);flex-shrink:0}
+.chat-header-titulo{font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.chat-header-titulo::before{content:'💬';font-size:11px}
+.chat-abas{display:flex;gap:4px;overflow-x:auto;padding-bottom:10px}
+.chat-abas::-webkit-scrollbar{height:2px}
+.chat-abas::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:2px}
+.chat-aba{
+  display:flex;align-items:center;gap:5px;
+  background:transparent;border:1px solid var(--border);color:var(--muted);
+  font-size:11px;font-weight:600;padding:5px 10px;border-radius:6px;
+  cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0;
+  font-family:'Inter',sans-serif;
+}
+.chat-aba:hover{background:var(--surface-2);color:var(--text);border-color:var(--border-bright)}
+.chat-aba.ativa{font-weight:700}
+.chat-aba-ponto{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+.chat-contexto{
+  padding:10px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;min-height:52px;
+}
+.chat-ctx-avatar{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;flex-shrink:0;font-family:'Inter',sans-serif;
+}
+.chat-ctx-info{flex:1;min-width:0}
+.chat-ctx-nome{font-size:12px;font-weight:700;color:var(--text)}
+.chat-ctx-cargo{font-size:10px;color:var(--muted)}
+.chat-ctx-skills{font-size:9px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;font-family:'JetBrains Mono',monospace}
+.chat-status-luz{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 5px var(--teal);flex-shrink:0}
+
+.chat-mensagens{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.chat-mensagens::-webkit-scrollbar{width:3px}
+.chat-mensagens::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:3px}
+
+.boas-vindas{text-align:center;padding:24px 12px;color:var(--dim);font-size:12px;line-height:1.6;border:1px dashed var(--border);border-radius:10px}
+.boas-vindas strong{color:var(--muted);display:block;margin-bottom:6px;font-size:13px}
+
+.msg{display:flex;gap:8px;animation:msg-entrar .2s ease}
+@keyframes msg-entrar{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.usuario{flex-direction:row-reverse}
+.msg-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;align-self:flex-end;font-family:'Inter',sans-serif}
+.msg-balao{max-width:82%;border-radius:10px;padding:8px 11px;font-size:12px;line-height:1.55}
+.msg.usuario .msg-balao{background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.3);color:var(--text);border-radius:10px 10px 2px 10px}
+.msg.agente .msg-balao{background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:10px 10px 10px 2px}
+.msg-meta{font-size:9px;color:var(--dim);margin-top:4px;display:flex;align-items:center;gap:4px}
+.msg-remetente{font-weight:700}
+.msg-skills{margin-top:6px;display:flex;flex-wrap:wrap;gap:3px}
+.msg-skill-tag{font-size:9px;font-family:'JetBrains Mono',monospace;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:#a78bfa;padding:1px 6px;border-radius:3px}
+.msg-acao{
+  display:inline-flex;align-items:center;gap:4px;margin-top:8px;
+  background:rgba(0,212,160,.08);border:1px solid rgba(0,212,160,.2);
+  color:var(--teal);font-size:10px;font-weight:600;
+  padding:4px 10px;border-radius:5px;text-decoration:none;transition:all .15s;cursor:pointer;
+}
+.msg-acao:hover{background:rgba(0,212,160,.15)}
+.msg-digitando{display:flex;align-items:center;gap:3px;padding:6px 0 2px}
+.ponto-digitando{width:5px;height:5px;border-radius:50%;animation:pulsar-ponto .8s ease infinite}
+.ponto-digitando:nth-child(2){animation-delay:.15s}
+.ponto-digitando:nth-child(3){animation-delay:.3s}
+@keyframes pulsar-ponto{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-4px);opacity:1}}
+
+.chat-entrada-wrap{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:flex-end}
+.chat-entrada{
+  flex:1;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:10px;padding:9px 12px;font-size:12px;color:var(--text);
+  font-family:'Inter',sans-serif;resize:none;max-height:100px;line-height:1.45;outline:none;
+  transition:border-color .15s;
+}
+.chat-entrada:focus{border-color:rgba(124,58,237,.4)}
+.chat-entrada::placeholder{color:var(--dim)}
+.chat-enviar{
+  width:34px;height:34px;border-radius:8px;border:none;background:var(--purple);
+  color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .15s;flex-shrink:0;font-size:14px;
+}
+.chat-enviar:hover{background:#6d28d9;transform:scale(1.05)}
+.chat-enviar:active{transform:scale(.95)}
+.chat-enviar:disabled{background:var(--dim);cursor:not-allowed;transform:none}
 </style>
 </head>
 <body>
@@ -127,8 +176,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 </nav>
 
 <div class="agency-wrap">
-
-  <!-- OFFICE CANVAS -->
   <div class="office-area">
     <div class="office-header">
       <div class="status-dot" id="status-dot"></div>
@@ -143,587 +190,885 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         </span>
       </div>
     </div>
-
     <div class="canvas-wrap">
-      <canvas id="office-canvas"></canvas>
+      <canvas id="escritorio-canvas"></canvas>
     </div>
-
-    <div class="agent-row" id="agent-row">
-      <!-- Agent cards injected by JS -->
-    </div>
+    <div class="equipe-row" id="equipe-row"></div>
   </div>
 
-  <!-- ACTIVITY FEED -->
-  <aside class="feed-panel">
-    <div class="feed-header">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-      Atividade
-      <span class="feed-count" id="feed-count">0</span>
-    </div>
-    <div class="feed-list" id="feed-list">
-      <div class="feed-empty" id="feed-empty">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        <p>Nenhuma atividade ainda</p>
-        <p style="margin-top:4px;font-size:10px">Execute uma tarefa no terminal ou<br>no Claude Code local</p>
+  <aside class="chat-panel">
+    <div class="chat-header">
+      <div class="chat-header-titulo">Fale com a equipe</div>
+      <div class="chat-abas" id="chat-abas">
+        <button class="chat-aba ativa" data-agente="todos" style="background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);color:#a78bfa" onclick="selecionarAgente('todos',this)">
+          Todos
+        </button>
       </div>
     </div>
+    <div class="chat-contexto" id="chat-contexto">
+      <div class="chat-ctx-avatar" style="background:rgba(124,58,237,.2);color:#a78bfa">⚡</div>
+      <div class="chat-ctx-info">
+        <div class="chat-ctx-nome">Broadcast</div>
+        <div class="chat-ctx-cargo">Mensagem para toda a equipe</div>
+        <div class="chat-ctx-skills">lucas · camila · rafael · juliana · bruno · fernanda</div>
+      </div>
+      <div class="chat-status-luz"></div>
+    </div>
+    <div class="chat-mensagens" id="chat-mensagens">
+      <div class="boas-vindas">
+        <strong>👋 Olá, Max.</strong>
+        Sua equipe está online e pronta.<br>
+        Selecione um agente ou envie para todos.
+      </div>
+    </div>
+    <div class="chat-entrada-wrap">
+      <textarea class="chat-entrada" id="chat-entrada" placeholder="Digite sua solicitação…" rows="1" onkeydown="aoPresionarTecla(event)" oninput="ajustarAltura(this)"></textarea>
+      <button class="chat-enviar" id="chat-enviar" onclick="enviarMensagem()">↑</button>
+    </div>
   </aside>
-
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// CONFIGURATION
-// ═══════════════════════════════════════════════════════
-const SSE_URL = 'https://terminal.tracktor.com.br/api/agents/stream';
-
-const AGENT_DEFS = [
-  {id:'alpha', name:'Alpha',  color:'#7c3aed', dark:'#5b21b6', x:5,  y:4,  desk:{x:4, y:3}},
-  {id:'beta',  name:'Beta',   color:'#3b82f6', dark:'#1d4ed8', x:13, y:4,  desk:{x:12,y:3}},
-  {id:'gamma', name:'Gamma',  color:'#00d4a0', dark:'#059669', x:5,  y:12, desk:{x:4, y:11}},
-  {id:'delta', name:'Delta',  color:'#ea8049', dark:'#c2410c', x:13, y:12, desk:{x:12,y:11}},
+'use strict';
+// ═══════════════════════════════════════════
+// DEFINIÇÕES DOS AGENTES
+// ═══════════════════════════════════════════
+const DEFS_AGENTES = [
+  {id:'lucas',    nome:'Lucas',    cargo:'Dev & Deploy',    cor:'#7c3aed', corEscura:'#5b21b6'},
+  {id:'camila',   nome:'Camila',   cargo:'Design Visual',   cor:'#ec4899', corEscura:'#be185d'},
+  {id:'rafael',   nome:'Rafael',   cargo:'Infra & VPS',     cor:'#3b82f6', corEscura:'#1d4ed8'},
+  {id:'juliana',  nome:'Juliana',  cargo:'Conteúdo & Copy', cor:'#f59e0b', corEscura:'#b45309'},
+  {id:'bruno',    nome:'Bruno',    cargo:'Pesquisa & Ads',  cor:'#00d4a0', corEscura:'#059669'},
+  {id:'fernanda', nome:'Fernanda', cargo:'Integrações',     cor:'#ef4444', corEscura:'#b91c1c'},
 ];
 
-// ═══════════════════════════════════════════════════════
-// OFFICE LAYOUT (22 cols × 17 rows, each tile = 32px)
-// ═══════════════════════════════════════════════════════
-const COLS = 22, ROWS = 17, TS = 32; // tile size
-
-// Tile types
-const T = {FL:0, WL:1, DS:2, SC:3, PL:4, TB:5, CP:6, CH:7};
-const TILE_COLORS = {
-  [T.FL]: '#13131f',
-  [T.WL]: '#08080f',
-  [T.DS]: '#1e1208',
-  [T.SC]: '#001428',
-  [T.PL]: '#0a1f0a',
-  [T.TB]: '#161626',
-  [T.CP]: '#10102a',
-  [T.CH]: '#181828',
+const PERSONAS = {
+  lucas:    {sigla:'LU', cabelo:'#3a2010', pele:'#e8b88a', calca:'#1e3a5a',
+             intro:'Dev & Deploy. Crio páginas, componentes e faço deploy direto no servidor.',
+             skills:['landing-page','pagina-vendas','page-cro','ui-design-system','ux-dashboard'],
+             respostas:['Entendido. Vou estruturar o código e subir pra produção.','Ok, deixa comigo. Já visualizei a estrutura.','Roger. Código sendo preparado, deploy em seguida.','Pode deixar. Faço isso agora.']},
+  camila:   {sigla:'CA', cabelo:'#7a1515', pele:'#f0c8a0', calca:'#0a0a0a',
+             intro:'Design Visual. Cuido de criativos, identidade de marca e Canva.',
+             skills:['sexy-canvas','canva-branded-presentation','canva-design-translation','canva-resize'],
+             respostas:['Perfeito. Vou cuidar da parte visual com a identidade da marca.','Entendido. Já sei o direcionamento estético.','Ok, criando os conceitos visuais agora.','Deixa aqui. Vou fazer algo incrível.']},
+  rafael:   {sigla:'RA', cabelo:'#0a0a0a', pele:'#c87850', calca:'#202030',
+             intro:'Infra & VPS. Servidor, deploys, EasyPanel e estabilidade do ecossistema.',
+             skills:['ecosistema-max','claude-md-builder','project-management'],
+             respostas:['Ok, acesso o VPS e resolvo isso agora.','Certo. Verificando logs e configurações.','Entendido. Mexendo na infra.','Roger. Acesso o EasyPanel e ajusto.']},
+  juliana:  {sigla:'JU', cabelo:'#c09000', pele:'#e8c890', calca:'#0a1a0a',
+             intro:'Conteúdo & Copy. Textos, posts, e-mails, headlines e estratégia de conteúdo.',
+             skills:['copywriting','social-content','content-strategy','email-sequence','carrossel'],
+             respostas:['Certo. Já tenho o ângulo do texto na cabeça.','Entendido. Escrevendo com a persona em mente.','Ok, copy sendo preparado com o tom certo.','Deixa comigo. Conteúdo que converte.']},
+  bruno:    {sigla:'BR', cabelo:'#5a3010', pele:'#c09060', calca:'#0a0a1a',
+             intro:'Pesquisa & Ads. Análise de persona, concorrentes e métricas de anúncios.',
+             skills:['persona-profunda','meta-ads-analyzer','ai-marketing','paid-ads'],
+             respostas:['Entendido. Pesquisando e mapeando os dados.','Ok, análise profunda em andamento.','Certo. Começo pelos dados e cruzo com a persona.','Roger. Levantando os números.']},
+  fernanda: {sigla:'FE', cabelo:'#100508', pele:'#d4906a', calca:'#050515',
+             intro:'Integrações & Ads. APIs, webhooks, automações e criativos de anúncios.',
+             skills:['canva-connect','remotion-ads','dash-ads','ad-creative'],
+             respostas:['Entendido. Verificando as integrações necessárias.','Ok, conectando os sistemas.','Certo. Configurando a automação.','Roger. Criativos de ads sendo montados.']},
 };
 
-// L = layout string  W=wall F=floor D=desk S=screen P=plant T=table C=carpet H=chair
-const LAYOUT_STR = [
-  'WWWWWWWWWWWWWWWWWWWWWW',
-  'WFFFFFFFFFFFFFFFFFFFW',
-  'WPFDDSSFFDDSSFFFFFFPFW',
-  'WFFFFFFFFFFFFFFFFFFFW',
-  'WFFDDSSFFDDSSFFFFFFFW',
-  'WFFFFFFFFFFFFFFFFFFFW',
-  'WFFFFCCCCCCCCCFFFFFFW',
-  'WFFFFCTTTTTTCFFFFFFFPW',//  removed extra P as it made col 22
-  'WFFFFCTTTTTTCFFFFFFFW',
-  'WFFFFCCCCCCCCCFFFFFFW',
-  'WFFFFFFFFFFFFFFFFFFFW',
-  'WFFDDSSFFDDSSFFFFFFFW',
-  'WFFFFFFFFFFFFFFFFFFFW',
-  'WPFDDSSFFDDSSFFFFFFPFW',
-  'WFFFFFFFFFFFFFFFFFFFW',
-  'WFFFFFFFFFFFFFFFFFFFW',
-  'WWWWWWWWWWWWWWWWWWWWWW',
-];
+const ROTEAMENTO = {
+  lucas:    ['landing page','lp','código','html','css','deploy','componente','página','frontend','site'],
+  camila:   ['design','visual','canva','criativo','logo','cor','layout','imagem','banner','arte'],
+  rafael:   ['servidor','vps','deploy','infra','easypanel','configuração','nginx','docker'],
+  juliana:  ['texto','copy','conteúdo','post','email','headline','caption','instagram','carrossel'],
+  bruno:    ['persona','análise','pesquisa','métricas','anúncio','ads','meta','google','tráfego'],
+  fernanda: ['integração','api','webhook','whatsapp','automação','crm','remotion','criativo'],
+};
 
-const MAP = LAYOUT_STR.map(row => {
-  // pad/trim to COLS
-  const r = (row + 'F'.repeat(COLS)).slice(0, COLS);
-  return r.split('').map(c => {
-    switch(c){
-      case 'W': return T.WL;
-      case 'D': return T.DS;
-      case 'S': return T.SC;
-      case 'P': return T.PL;
-      case 'T': return T.TB;
-      case 'C': return T.CP;
-      case 'H': return T.CH;
-      default:  return T.FL;
-    }
+// ═══════════════════════════════════════════
+// MAPA DO ESCRITÓRIO
+// ═══════════════════════════════════════════
+const COLS = 24, LINHAS = 18, TS = 30; // tiles
+
+// Tipos de tile
+const T = {PISO:0, PAREDE:1, MESA:2, IMAC:3, PLANTA:4, MESA_REUNIAO:5,
+           SOFA:6, RECEPCAO:7, ESTANTE:8, CAFE:9, TAPETE:10, JANELA:11, CAPACHO:12};
+
+function construirMapa() {
+  const m = Array.from({length:LINHAS}, () => Array(COLS).fill(T.PISO));
+  const set = (r,c,t) => { if(r>=0&&r<LINHAS&&c>=0&&c<COLS) m[r][c]=t; };
+
+  // Paredes externas
+  for(let c=0;c<COLS;c++){m[0][c]=T.PAREDE;m[LINHAS-1][c]=T.PAREDE;}
+  for(let r=0;r<LINHAS;r++){m[r][0]=T.PAREDE;m[r][COLS-1]=T.PAREDE;}
+
+  // Janelas na parede de cima
+  for(let c=4;c<=7;c++) m[0][c]=T.JANELA;
+  for(let c=10;c<=13;c++) m[0][c]=T.JANELA;
+  for(let c=16;c<=19;c++) m[0][c]=T.JANELA;
+
+  // Recepção (área de entrada — topo)
+  // Tapete de entrada
+  set(2,10,T.CAPACHO); set(2,11,T.CAPACHO); set(2,12,T.CAPACHO);
+  // Balcão de recepção
+  for(let c=4;c<=8;c++) set(2,c,T.RECEPCAO);
+  set(3,4,T.RECEPCAO);
+  // Sofás da recepção
+  set(3,13,T.SOFA); set(3,14,T.SOFA); set(3,15,T.SOFA);
+  set(4,13,T.SOFA);
+  // Plantas na entrada
+  set(2,2,T.PLANTA); set(2,21,T.PLANTA); set(4,2,T.PLANTA);
+  // Estante
+  for(let r=2;r<=4;r++) set(r,20,T.ESTANTE);
+
+  // Área de trabalho — 6 mesas com iMac (coluna 3-4-5)
+  const linhasMesas = [6, 8, 10, 12, 14, 16];
+  linhasMesas.forEach(r => {
+    set(r, 2, T.MESA);
+    set(r, 3, T.MESA);
+    set(r, 4, T.IMAC);
   });
-});
 
-// ═══════════════════════════════════════════════════════
-// AGENT STATE MACHINE
-// ═══════════════════════════════════════════════════════
-const STATE = {IDLE:'idle', TYPING:'typing', READING:'reading', THINKING:'thinking', WALKING:'walking', DONE:'done'};
+  // Plantas entre as mesas
+  set(7,1,T.PLANTA); set(11,1,T.PLANTA); set(15,1,T.PLANTA);
 
-const TOOL_STATES = {
-  Write:'typing', Edit:'typing', NotebookEdit:'typing',
-  Read:'reading', Glob:'reading', Grep:'reading',
-  Bash:'typing', WebFetch:'reading', WebSearch:'reading',
-  Agent:'thinking', Task:'thinking',
+  // Mesa de reunião (centro, linhas 7-12)
+  for(let r=7;r<=12;r++) for(let c=9;c<=14;c++) set(r,c,T.MESA_REUNIAO);
+
+  // Tapete under meeting table
+  for(let r=6;r<=13;r++) for(let c=8;c<=15;c++) {
+    if(m[r][c]===T.PISO) set(r,c,T.TAPETE);
+  }
+
+  // Máquina de café (canto direito)
+  set(6,21,T.CAFE);
+  set(8,21,T.CAFE);
+
+  // Estantes (parede direita)
+  for(let r=10;r<=13;r++) set(r,21,T.ESTANTE);
+  for(let r=15;r<=16;r++) set(r,21,T.ESTANTE);
+
+  // Sofá de descanso (canto inferior direito)
+  set(14,17,T.SOFA); set(14,18,T.SOFA); set(14,19,T.SOFA);
+  set(15,17,T.SOFA); set(15,18,T.SOFA);
+
+  // Plantas espalhadas
+  set(6,22,T.PLANTA); set(13,22,T.PLANTA);
+  set(16,7,T.PLANTA); set(16,15,T.PLANTA);
+
+  return m;
+}
+const MAPA = construirMapa();
+
+// Posições dos agentes no mapa
+const POS_AGENTES = {
+  lucas:    {x:3, y:6,  mesa:{x:4, y:6}},
+  camila:   {x:3, y:8,  mesa:{x:4, y:8}},
+  rafael:   {x:3, y:10, mesa:{x:4, y:10}},
+  juliana:  {x:3, y:12, mesa:{x:4, y:12}},
+  bruno:    {x:3, y:14, mesa:{x:4, y:14}},
+  fernanda: {x:3, y:16, mesa:{x:4, y:16}},
 };
 
-class Agent {
+// ═══════════════════════════════════════════
+// MÁQUINA DE ESTADOS DOS AGENTES
+// ═══════════════════════════════════════════
+const ESTADO = {OCIOSO:'ocioso', DIGITANDO:'digitando', LENDO:'lendo', PENSANDO:'pensando', ANDANDO:'andando', PRONTO:'pronto'};
+
+const FERRAMENTAS_ESTADO = {
+  Write:ESTADO.DIGITANDO, Edit:ESTADO.DIGITANDO, NotebookEdit:ESTADO.DIGITANDO,
+  Read:ESTADO.LENDO, Glob:ESTADO.LENDO, Grep:ESTADO.LENDO,
+  Bash:ESTADO.DIGITANDO, WebFetch:ESTADO.LENDO, WebSearch:ESTADO.LENDO,
+  Agent:ESTADO.PENSANDO, Task:ESTADO.PENSANDO,
+};
+
+class Agente {
   constructor(def) {
     Object.assign(this, def);
-    this.state = STATE.IDLE;
-    this.tool = null;
-    this.px = def.x * TS + TS/2; // pixel x (center)
-    this.py = def.y * TS + TS/2;
-    this.targetX = this.px;
-    this.targetY = this.py;
-    this.bobPhase = Math.random() * Math.PI * 2;
-    this.frame = 0;
-    this.lastTool = null;
-    this.doneTimer = 0;
-    this.wanderTimer = Math.random() * 180;
-    this.session = null;
+    const pos = POS_AGENTES[def.id];
+    this.estado = ESTADO.OCIOSO;
+    this.ferramenta = null;
+    this.px = pos.x * TS + TS/2;
+    this.py = pos.y * TS + TS/2;
+    this.alvoX = this.px;
+    this.alvoY = this.py;
+    this.faseBalanco = Math.random() * Math.PI * 2;
+    this.quadro = 0;
+    this.ultimaFerramenta = null;
+    this.timerPronto = 0;
+    this.timerPerambular = Math.random() * 180;
+    this.sessao = null;
+    this.mesa = pos.mesa;
+    this.posInicial = {x: pos.x, y: pos.y};
   }
-
-  goToDesk() {
-    this.targetX = this.desk.x * TS + TS/2;
-    this.targetY = this.desk.y * TS + TS/2;
-    this.state = STATE.WALKING;
+  irParaMesa() {
+    this.alvoX = this.mesa.x * TS + TS/2;
+    this.alvoY = this.mesa.y * TS + TS/2;
+    this.estado = ESTADO.ANDANDO;
   }
-
-  goToIdle() {
-    // wander to random floor tile near start
-    const ox = (this.x + (Math.random()*3-1.5)|0);
-    const oy = (this.y + (Math.random()*3-1.5)|0);
-    const cx = Math.max(1, Math.min(COLS-2, ox));
-    const cy = Math.max(1, Math.min(ROWS-2, oy));
-    this.targetX = cx * TS + TS/2;
-    this.targetY = cy * TS + TS/2;
-    this.state = STATE.WALKING;
+  irPerambular() {
+    const ox = Math.max(1, Math.min(COLS-2, this.posInicial.x + ((Math.random()*4-2)|0)));
+    const oy = Math.max(5, Math.min(LINHAS-2, this.posInicial.y + ((Math.random()*3-1.5)|0)));
+    this.alvoX = ox * TS + TS/2;
+    this.alvoY = oy * TS + TS/2;
+    this.estado = ESTADO.ANDANDO;
   }
-
-  setActive(toolName) {
-    this.tool = toolName;
-    this.lastTool = toolName;
-    this.doneTimer = 0;
-    const s = TOOL_STATES[toolName] || STATE.TYPING;
-    if (Math.abs(this.px - this.targetX) > 4 || Math.abs(this.py - this.targetY) > 4) {
-      this.goToDesk();
-    } else {
-      this.state = s;
-    }
+  ativar(nomeFerramenta) {
+    this.ferramenta = nomeFerramenta;
+    this.ultimaFerramenta = nomeFerramenta;
+    this.timerPronto = 0;
+    this.irParaMesa();
   }
-
-  setDone() {
-    this.doneTimer = 120; // frames before going idle
-    this.state = STATE.DONE;
-    this.tool = null;
+  finalizarTarefa() {
+    this.timerPronto = 140;
+    this.estado = ESTADO.PRONTO;
+    this.ferramenta = null;
   }
-
-  update(dt) {
-    this.frame++;
-    this.bobPhase += 0.04;
-
-    // movement
-    const dx = this.targetX - this.px;
-    const dy = this.targetY - this.py;
+  atualizar() {
+    this.quadro++;
+    this.faseBalanco += 0.04;
+    const dx = this.alvoX - this.px, dy = this.alvoY - this.py;
     const dist = Math.sqrt(dx*dx + dy*dy);
-    const speed = this.state === STATE.WALKING ? 1.8 : 0;
-    if (dist > 1) {
-      this.px += (dx/dist) * speed;
-      this.py += (dy/dist) * speed;
-    } else {
-      this.px = this.targetX;
-      this.py = this.targetY;
-      if (this.state === STATE.WALKING) {
-        this.state = this.lastTool ? (TOOL_STATES[this.lastTool]||STATE.TYPING) : STATE.IDLE;
+    const vel = this.estado === ESTADO.ANDANDO ? 1.6 : 0;
+    if (dist > 1) { this.px += (dx/dist)*vel; this.py += (dy/dist)*vel; }
+    else {
+      this.px = this.alvoX; this.py = this.alvoY;
+      if (this.estado === ESTADO.ANDANDO) {
+        this.estado = this.ultimaFerramenta ? (FERRAMENTAS_ESTADO[this.ultimaFerramenta]||ESTADO.DIGITANDO) : ESTADO.OCIOSO;
       }
     }
-
-    // done timer
-    if (this.state === STATE.DONE) {
-      this.doneTimer--;
-      if (this.doneTimer <= 0) {
-        this.state = STATE.IDLE;
-        this.lastTool = null;
-        this.goToIdle();
-      }
+    if (this.estado === ESTADO.PRONTO) {
+      this.timerPronto--;
+      if (this.timerPronto <= 0) { this.estado = ESTADO.OCIOSO; this.ultimaFerramenta = null; this.irPerambular(); }
     }
-
-    // idle wander
-    if (this.state === STATE.IDLE) {
-      this.wanderTimer--;
-      if (this.wanderTimer <= 0) {
-        this.wanderTimer = 180 + Math.random()*240;
-        this.goToIdle();
-      }
+    if (this.estado === ESTADO.OCIOSO) {
+      this.timerPerambular--;
+      if (this.timerPerambular <= 0) { this.timerPerambular = 200+Math.random()*280; this.irPerambular(); }
     }
   }
 }
 
-// ═══════════════════════════════════════════════════════
-// CANVAS RENDERING
-// ═══════════════════════════════════════════════════════
-const canvas = document.getElementById('office-canvas');
+// ═══════════════════════════════════════════
+// RENDERIZAÇÃO DO CANVAS
+// ═══════════════════════════════════════════
+const canvas = document.getElementById('escritorio-canvas');
 const ctx = canvas.getContext('2d');
 canvas.width  = COLS * TS;
-canvas.height = ROWS * TS;
+canvas.height = LINHAS * TS;
 
-// Pre-compute screen glow positions
-const screenGlows = [];
-MAP.forEach((row, r) => row.forEach((tile, c) => {
-  if (tile === T.SC) screenGlows.push({c, r});
-}));
-
-function drawTile(c, r, tile) {
-  const x = c * TS, y = r * TS;
-  ctx.fillStyle = TILE_COLORS[tile] || '#13131f';
-  ctx.fillRect(x, y, TS, TS);
-
-  if (tile === T.FL || tile === T.CP) {
-    // subtle grid lines
-    ctx.strokeStyle = tile === T.CP ? 'rgba(124,58,237,.06)' : 'rgba(255,255,255,.018)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(x+.5, y+.5, TS-1, TS-1);
-  }
-  if (tile === T.DS) {
-    // desk surface sheen
-    ctx.fillStyle = 'rgba(255,200,100,.04)';
-    ctx.fillRect(x+2, y+2, TS-4, TS*0.4);
-    // desk edge
-    ctx.fillStyle = 'rgba(255,200,100,.12)';
-    ctx.fillRect(x, y+TS-3, TS, 3);
-  }
-  if (tile === T.SC) {
-    // monitor screen glow
-    const grd = ctx.createRadialGradient(x+TS/2, y+TS/2, 0, x+TS/2, y+TS/2, TS*0.9);
-    grd.addColorStop(0,'rgba(56,189,248,.35)');
-    grd.addColorStop(1,'transparent');
-    ctx.fillStyle = grd;
-    ctx.fillRect(x, y, TS, TS);
-    // screen bezel
-    ctx.fillStyle = '#0d2840';
-    ctx.fillRect(x+4, y+5, TS-8, TS-12);
-    ctx.fillStyle = 'rgba(56,189,248,.7)';
-    ctx.fillRect(x+6, y+7, TS-12, TS-16);
-    // scan line
-    ctx.fillStyle = 'rgba(56,189,248,.15)';
-    const sl = ((Date.now()/40)%( TS-16)|0);
-    ctx.fillRect(x+6, y+7+sl, TS-12, 1);
-  }
-  if (tile === T.PL) {
-    // plant pot + leaves
-    ctx.fillStyle = '#2d1a0a';
-    ctx.beginPath(); ctx.ellipse(x+TS/2, y+TS-6, 7, 5, 0, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#0f4a0f';
-    ctx.beginPath(); ctx.arc(x+TS/2, y+TS/2-2, 8, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#166b16';
-    ctx.beginPath(); ctx.arc(x+TS/2-3, y+TS/2-5, 5, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(x+TS/2+3, y+TS/2-6, 5, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#1a7a1a';
-    ctx.beginPath(); ctx.arc(x+TS/2, y+TS/2-9, 4, 0, Math.PI*2); ctx.fill();
-  }
-  if (tile === T.TB) {
-    // meeting table surface
-    ctx.fillStyle = 'rgba(148,163,184,.04)';
-    ctx.fillRect(x, y, TS, TS);
-    ctx.strokeStyle = 'rgba(148,163,184,.15)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(x+.5, y+.5, TS-1, TS-1);
-  }
-  if (tile === T.WL) {
-    // wall pattern
-    ctx.fillStyle = 'rgba(255,255,255,.015)';
-    ctx.fillRect(x+2, y+2, TS-4, 4);
-  }
-}
-
-function drawAgent(agent) {
-  const {px, py, color, dark, state, bobPhase, frame} = agent;
-  const bob = state===STATE.IDLE ? Math.sin(bobPhase)*1.5 : 0;
-  const ay = py + bob;
-  const R = 11; // body radius
-
-  // shadow
-  ctx.fillStyle = 'rgba(0,0,0,.4)';
-  ctx.beginPath();
-  ctx.ellipse(px, py+R*0.8, R*0.7, R*0.3, 0, 0, Math.PI*2);
-  ctx.fill();
-
-  // glow halo
-  const grd = ctx.createRadialGradient(px, ay, 0, px, ay, R*2.5);
-  grd.addColorStop(0, color+'44');
-  grd.addColorStop(1, 'transparent');
-  ctx.fillStyle = grd;
-  ctx.beginPath(); ctx.arc(px, ay, R*2.5, 0, Math.PI*2); ctx.fill();
-
-  // body
-  ctx.fillStyle = color;
-  ctx.beginPath(); ctx.arc(px, ay, R, 0, Math.PI*2); ctx.fill();
-
-  // inner gradient
-  const bodyGrd = ctx.createRadialGradient(px-3, ay-3, 0, px, ay, R);
-  bodyGrd.addColorStop(0, 'rgba(255,255,255,.3)');
-  bodyGrd.addColorStop(1, 'rgba(0,0,0,.2)');
-  ctx.fillStyle = bodyGrd;
-  ctx.beginPath(); ctx.arc(px, ay, R, 0, Math.PI*2); ctx.fill();
-
-  // dark ring
-  ctx.strokeStyle = dark;
-  ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.arc(px, ay, R, 0, Math.PI*2); ctx.stroke();
-
-  // face dot
-  ctx.fillStyle = 'rgba(255,255,255,.7)';
-  ctx.beginPath(); ctx.arc(px-3, ay-3, 2.5, 0, Math.PI*2); ctx.fill();
-
-  // state indicator
-  drawStateIndicator(agent, px, ay - R - 8);
-}
-
-function drawStateIndicator(agent, x, y) {
-  const {state, color, frame, tool} = agent;
-  if (state === STATE.IDLE || state === STATE.WALKING) return;
-
-  if (state === STATE.TYPING) {
-    // keyboard dots
-    const blink = Math.floor(frame/6) % 2;
-    ctx.fillStyle = blink ? color : 'rgba(255,255,255,.3)';
-    ctx.beginPath(); ctx.arc(x-5, y, 2.5, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = blink ? 'rgba(255,255,255,.3)' : color;
-    ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = blink ? color : 'rgba(255,255,255,.3)';
-    ctx.beginPath(); ctx.arc(x+5, y, 2.5, 0, Math.PI*2); ctx.fill();
-  }
-  else if (state === STATE.READING) {
-    // eye icon
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI*2); ctx.stroke();
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.arc(x, y, 1.8, 0, Math.PI*2); ctx.fill();
-  }
-  else if (state === STATE.THINKING) {
-    // spinning arc
-    const a = (frame * 0.08) % (Math.PI*2);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(x, y, 5, a, a+Math.PI*1.2); ctx.stroke();
-  }
-  else if (state === STATE.DONE) {
-    // checkmark pulse
-    const alpha = Math.min(1, agent.doneTimer/30);
-    ctx.strokeStyle = `rgba(0,212,160,${alpha})`;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(x-4, y); ctx.lineTo(x-1, y+3); ctx.lineTo(x+4, y-3);
-    ctx.stroke();
-  }
-}
-
-function drawOffice() {
-  // clear
-  ctx.fillStyle = '#0a0a12';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // tiles
-  MAP.forEach((row, r) => row.forEach((tile, c) => drawTile(c, r, tile)));
-
-  // agents sorted by Y (painter's algorithm)
-  const sorted = [...agents].sort((a,b) => a.py - b.py);
-  sorted.forEach(drawAgent);
-}
-
-// ═══════════════════════════════════════════════════════
-// AGENTS
-// ═══════════════════════════════════════════════════════
-const agents = AGENT_DEFS.map(d => new Agent(d));
-
-function getAgentForSession(session) {
-  // round-robin assignment
-  const existing = agents.find(a => a.session === session);
-  if (existing) return existing;
-  const free = agents.find(a => !a.session || a.state === STATE.IDLE);
-  if (free) { free.session = session; return free; }
-  return agents[Math.floor(Math.random()*agents.length)];
-}
-
-// ═══════════════════════════════════════════════════════
-// ACTIVITY FEED
-// ═══════════════════════════════════════════════════════
-let eventCount = 0;
-const feedList = document.getElementById('feed-list');
-const feedCount = document.getElementById('feed-count');
-const feedEmpty = document.getElementById('feed-empty');
-
-const TOOL_ICONS = {
-  Write:'✏️', Edit:'✏️', Read:'📖', Bash:'⚡', Glob:'🔍',
-  Grep:'🔍', WebFetch:'🌐', WebSearch:'🌐', Agent:'🤖',
-  Task:'🤖', NotebookEdit:'📓', Default:'⚙️'
+// Paleta de cores dos tiles
+const COR_TILES = {
+  [T.PISO]:        '#1a1a2e',
+  [T.PAREDE]:      '#08080f',
+  [T.MESA]:        '#2d1c0e',
+  [T.IMAC]:        '#f0f0f0',
+  [T.PLANTA]:      '#0a2a0a',
+  [T.MESA_REUNIAO]:'#1e1208',
+  [T.SOFA]:        '#2a3040',
+  [T.RECEPCAO]:    '#3a2010',
+  [T.ESTANTE]:     '#1e0e04',
+  [T.CAFE]:        '#1a1a1a',
+  [T.TAPETE]:      '#14142a',
+  [T.JANELA]:      '#08080f',
+  [T.CAPACHO]:     '#1a0a04',
 };
 
-function addFeedItem(event) {
-  feedEmpty && feedEmpty.remove();
-  eventCount++;
-  feedCount.textContent = eventCount;
+function desenharTile(c, r, tipo) {
+  const x = c*TS, y = r*TS;
+  ctx.fillStyle = COR_TILES[tipo] ?? '#1a1a2e';
+  ctx.fillRect(x, y, TS, TS);
 
-  const agent = event.agent ? agents.find(a => a.id === event.agent) : null;
-  const color = agent ? agent.color : '#94a3b8';
-  const tool = event.tool || event.type || 'event';
-  const icon = TOOL_ICONS[tool] || TOOL_ICONS.Default;
-  const detail = event.file || event.detail || event.session || '';
-  const time = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  switch(tipo) {
 
-  const item = document.createElement('div');
-  item.className = 'feed-item';
-  item.innerHTML = `
-    <div class="feed-top">
-      <div class="feed-agent" style="background:${color}"></div>
-      <span class="feed-tool">${icon} ${tool}</span>
-      <span class="feed-time">${time}</span>
-    </div>
-    ${detail ? `<div class="feed-detail">${detail.split('/').slice(-2).join('/')}</div>` : ''}
-  `;
-  feedList.insertBefore(item, feedList.firstChild);
+    case T.PISO:
+      // Grade suave no piso
+      ctx.strokeStyle = 'rgba(255,255,255,.025)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x+.5, y+.5, TS-1, TS-1);
+      break;
 
-  // Keep max 80 items
-  while(feedList.children.length > 80) feedList.removeChild(feedList.lastChild);
+    case T.TAPETE:
+      // Tapete com padrão sutil
+      ctx.fillStyle = '#16163a';
+      ctx.fillRect(x+1, y+1, TS-2, TS-2);
+      ctx.strokeStyle = 'rgba(124,58,237,.08)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x+3, y+3, TS-6, TS-6);
+      break;
+
+    case T.PAREDE:
+      // Parede com baseboard
+      ctx.fillStyle = 'rgba(255,255,255,.02)';
+      ctx.fillRect(x+1, y+2, TS-2, 3);
+      ctx.fillStyle = '#0f0f1a';
+      ctx.fillRect(x, y+TS-3, TS, 3);
+      break;
+
+    case T.JANELA:
+      // Janela na parede
+      ctx.fillStyle = '#0e0e1e';
+      ctx.fillRect(x, y, TS, TS);
+      // Moldura da janela
+      ctx.fillStyle = '#2a2a3a';
+      ctx.fillRect(x+2, y+2, TS-4, TS-4);
+      // Vidro com céu
+      const grad = ctx.createLinearGradient(x+3, y+3, x+3, y+TS-3);
+      grad.addColorStop(0,'#1a3a6a'); grad.addColorStop(1,'#2a5a9a');
+      ctx.fillStyle = grad;
+      ctx.fillRect(x+3, y+3, TS-6, TS-6);
+      // Reflexo na janela
+      ctx.fillStyle = 'rgba(255,255,255,.12)';
+      ctx.fillRect(x+4, y+4, 4, TS-8);
+      // Divisor central
+      ctx.fillStyle = '#2a2a3a';
+      ctx.fillRect(x+TS/2-1, y+3, 2, TS-6);
+      break;
+
+    case T.MESA:
+      // Mesa de trabalho — madeira quente
+      ctx.fillStyle = '#3a2212'; ctx.fillRect(x, y, TS, TS);
+      ctx.fillStyle = '#4a2e18'; ctx.fillRect(x+1, y+1, TS-2, TS*0.55);
+      // Reflexo superfície
+      ctx.fillStyle = 'rgba(255,200,140,.08)'; ctx.fillRect(x+2, y+2, TS-4, 4);
+      // Borda frontal
+      ctx.fillStyle = '#2a1608'; ctx.fillRect(x, y+TS-3, TS, 3);
+      // Grão da madeira
+      ctx.strokeStyle = 'rgba(0,0,0,.06)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(x+6,y+2); ctx.lineTo(x+5,y+TS-3); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x+TS-8,y+2); ctx.lineTo(x+TS-7,y+TS-3); ctx.stroke();
+      break;
+
+    case T.IMAC: {
+      // iMac visto de cima — monitor branco/prata
+      // Base/suporte
+      ctx.fillStyle = '#b0b0b0';
+      ctx.fillRect(x+TS/2-4, y+TS-7, 8, 4);
+      ctx.fillRect(x+TS/2-6, y+TS-4, 12, 3);
+      // Corpo do monitor (prata)
+      ctx.fillStyle = '#c8c8c8';
+      ctx.fillRect(x+3, y+2, TS-6, TS-10);
+      // Moldura interna (branca)
+      ctx.fillStyle = '#e8e8e8';
+      ctx.fillRect(x+4, y+3, TS-8, TS-13);
+      // Tela ativa (colorida)
+      const gradTela = ctx.createLinearGradient(x+5,y+4, x+TS-5,y+TS-10);
+      gradTela.addColorStop(0,'#4c1d95'); gradTela.addColorStop(.4,'#1e40af');
+      gradTela.addColorStop(.7,'#065f46'); gradTela.addColorStop(1,'#92400e');
+      ctx.fillStyle = gradTela;
+      ctx.fillRect(x+5, y+4, TS-10, TS-15);
+      // Reflexo na tela
+      ctx.fillStyle = 'rgba(255,255,255,.2)';
+      ctx.fillRect(x+5, y+4, TS-10, 3);
+      // Linha de scanline
+      ctx.fillStyle = 'rgba(255,255,255,.05)';
+      const sl = ((Date.now()/60) % (TS-16))|0;
+      ctx.fillRect(x+5, y+4+sl, TS-10, 1);
+      break;
+    }
+
+    case T.PLANTA: {
+      // Vaso com planta — bonita
+      // Sombra
+      ctx.fillStyle = 'rgba(0,0,0,.3)';
+      ctx.beginPath(); ctx.ellipse(x+TS/2, y+TS-4, 6, 3, 0, 0, Math.PI*2); ctx.fill();
+      // Vaso
+      ctx.fillStyle = '#6b3a1a';
+      ctx.beginPath(); ctx.ellipse(x+TS/2, y+TS-5, 7, 5, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#8b5a2a';
+      ctx.beginPath(); ctx.ellipse(x+TS/2, y+TS-7, 5, 3, 0, 0, Math.PI*2); ctx.fill();
+      // Terra
+      ctx.fillStyle = '#2a1208';
+      ctx.beginPath(); ctx.ellipse(x+TS/2, y+TS-8, 4, 2, 0, 0, Math.PI*2); ctx.fill();
+      // Folhas
+      const cores = ['#0a4a12','#0d5a16','#126e1a'];
+      const folhas = [{dx:-4,dy:-3,r:6},{dx:3,dy:-5,r:5},{dx:0,dy:-8,r:5},{dx:-2,dy:-6,r:4},{dx:4,dy:-2,r:4}];
+      folhas.forEach((f,i) => {
+        ctx.fillStyle = cores[i%cores.length];
+        ctx.beginPath(); ctx.arc(x+TS/2+f.dx, y+TS/2+f.dy, f.r, 0, Math.PI*2); ctx.fill();
+      });
+      // Destaque folhas
+      ctx.fillStyle = 'rgba(100,200,80,.15)';
+      ctx.beginPath(); ctx.arc(x+TS/2-1, y+TS/2-6, 4, 0, Math.PI*2); ctx.fill();
+      break;
+    }
+
+    case T.MESA_REUNIAO:
+      // Mesa de reunião — madeira escura
+      ctx.fillStyle = '#2a1a08'; ctx.fillRect(x,y,TS,TS);
+      ctx.fillStyle = '#362210'; ctx.fillRect(x+1,y+1,TS-2,TS-2);
+      ctx.strokeStyle='rgba(255,255,255,.04)'; ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(x+3,y);ctx.lineTo(x+3,y+TS);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x+TS-3,y);ctx.lineTo(x+TS-3,y+TS);ctx.stroke();
+      break;
+
+    case T.SOFA: {
+      // Sofá / poltrona visto de cima
+      ctx.fillStyle = '#2a3a50'; ctx.fillRect(x,y,TS,TS);
+      // Almofada esquerda
+      ctx.fillStyle = '#3a4a60'; ctx.fillRect(x+2,y+2,TS/2-3,TS-4);
+      ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.fillRect(x+2,y+2,TS/2-3,4);
+      // Almofada direita
+      ctx.fillStyle = '#3a4a60'; ctx.fillRect(x+TS/2+1,y+2,TS/2-3,TS-4);
+      ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.fillRect(x+TS/2+1,y+2,TS/2-3,4);
+      // Encosto
+      ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(x,y,TS,3);
+      break;
+    }
+
+    case T.RECEPCAO: {
+      // Balcão de recepção — madeira clara
+      ctx.fillStyle = '#7a4a20'; ctx.fillRect(x,y,TS,TS);
+      ctx.fillStyle = '#9a6030'; ctx.fillRect(x+1,y+1,TS-2,TS*.5);
+      // Reflexo
+      ctx.fillStyle = 'rgba(255,210,160,.1)'; ctx.fillRect(x+2,y+2,TS-4,3);
+      // Painel frontal
+      ctx.fillStyle = '#5a3010'; ctx.fillRect(x,y+TS*.6,TS,TS*.4);
+      // Detalhes
+      ctx.strokeStyle='rgba(0,0,0,.08)'; ctx.lineWidth=1;
+      for(let i=0;i<3;i++){
+        ctx.beginPath();ctx.moveTo(x+4+i*8,y+3);ctx.lineTo(x+4+i*8,y+TS-3);ctx.stroke();
+      }
+      break;
+    }
+
+    case T.ESTANTE: {
+      // Estante com livros
+      ctx.fillStyle = '#2a1408'; ctx.fillRect(x,y,TS,TS);
+      ctx.fillStyle = '#3a2010'; ctx.fillRect(x+1,y+1,TS-2,TS-2);
+      const coresLivros = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#e91e63'];
+      const lw=3, lh=TS-6;
+      for(let b=0;b<7;b++){
+        ctx.fillStyle = coresLivros[b%coresLivros.length];
+        ctx.fillRect(x+2+b*(lw+1),y+3,lw,lh);
+        ctx.fillStyle='rgba(255,255,255,.15)';
+        ctx.fillRect(x+2+b*(lw+1),y+3,1,lh);
+      }
+      // Prateleira
+      ctx.fillStyle='rgba(0,0,0,.3)';
+      ctx.fillRect(x,y+TS-4,TS,2);
+      break;
+    }
+
+    case T.CAFE: {
+      // Máquina de café
+      ctx.fillStyle = '#1e1e1e'; ctx.fillRect(x,y,TS,TS);
+      // Corpo prata
+      ctx.fillStyle = '#c0c0c0'; ctx.fillRect(x+3,y+2,TS-6,TS-4);
+      // Display
+      ctx.fillStyle = '#0a0a18'; ctx.fillRect(x+5,y+4,TS-10,7);
+      ctx.fillStyle = '#00d4a0'; ctx.fillRect(x+6,y+5,TS-12,5);
+      // Saída de café
+      ctx.fillStyle = '#8a6030'; ctx.fillRect(x+TS/2-4,y+14,8,4);
+      // Xícara
+      ctx.fillStyle = '#f0f0f0'; ctx.beginPath();
+      ctx.arc(x+TS/2, y+TS-5, 5, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#3a1a0a'; ctx.beginPath();
+      ctx.arc(x+TS/2, y+TS-5, 3, 0, Math.PI*2); ctx.fill();
+      // Vapor animado
+      ctx.strokeStyle = `rgba(200,200,200,${0.3+Math.sin(Date.now()/400)*.2})`;
+      ctx.lineWidth=1.5;
+      ctx.beginPath();
+      ctx.moveTo(x+TS/2-2, y+TS-12);
+      ctx.bezierCurveTo(x+TS/2-4,y+TS-16, x+TS/2,y+TS-16, x+TS/2-2,y+TS-20);
+      ctx.stroke();
+      break;
+    }
+
+    case T.CAPACHO: {
+      // Tapete de entrada
+      ctx.fillStyle = '#2a1a08'; ctx.fillRect(x,y,TS,TS);
+      ctx.fillStyle = '#3a2a10'; ctx.fillRect(x+2,y+2,TS-4,TS-4);
+      // Padrão geométrico
+      ctx.fillStyle = '#5a3a18';
+      ctx.fillRect(x+4,y+4,TS-8,2);
+      ctx.fillRect(x+4,y+TS-6,TS-8,2);
+      ctx.fillRect(x+4,y+4,2,TS-8);
+      ctx.fillRect(x+TS-6,y+4,2,TS-8);
+      break;
+    }
+  }
 }
 
-// ═══════════════════════════════════════════════════════
-// AGENT CARDS
-// ═══════════════════════════════════════════════════════
-const agentRow = document.getElementById('agent-row');
-const cardEls = {};
+// ═══════════════════════════════════════════
+// DESENHO DE PESSOAS (pixel art)
+// ═══════════════════════════════════════════
+function desenharPessoa(agente) {
+  const {px, py, id, estado, faseBalanco, quadro, cor} = agente;
+  const p = PERSONAS[id];
+  if(!p) return;
 
-agents.forEach(agent => {
+  const balanco = estado===ESTADO.OCIOSO ? Math.sin(faseBalanco)*1.5 : 0;
+  const ay = py + balanco;
+  const ax = px;
+
+  // Sombra no chão
+  ctx.save(); ctx.globalAlpha=0.28;
+  ctx.fillStyle='#000';
+  ctx.beginPath(); ctx.ellipse(ax, py+12, 8, 3, 0, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  // CALÇAS / PERNAS
+  ctx.fillStyle = p.calca;
+  ctx.fillRect(Math.round(ax-4), Math.round(ay+5), 3, 7);   // perna esq
+  ctx.fillRect(Math.round(ax+1), Math.round(ay+5), 3, 7);   // perna dir
+
+  // SAPATOS
+  ctx.fillStyle = '#0a0505';
+  ctx.fillRect(Math.round(ax-5), Math.round(ay+11), 4, 2);  // sapato esq
+  ctx.fillRect(Math.round(ax+1), Math.round(ay+11), 4, 2);  // sapato dir
+  // Brilho do sapato
+  ctx.fillStyle='rgba(255,255,255,.15)';
+  ctx.fillRect(Math.round(ax-5), Math.round(ay+11), 2, 1);
+
+  // CAMISA / TRONCO (cor do cargo)
+  ctx.fillStyle = cor;
+  ctx.fillRect(Math.round(ax-5), Math.round(ay-4), 10, 10);
+  // Highlight
+  ctx.fillStyle = 'rgba(255,255,255,.16)';
+  ctx.fillRect(Math.round(ax-4), Math.round(ay-3), 4, 3);
+  // Sombra embaixo
+  ctx.fillStyle = 'rgba(0,0,0,.2)';
+  ctx.fillRect(Math.round(ax-5), Math.round(ay+5), 10, 1);
+  // Gola
+  ctx.fillStyle = 'rgba(255,255,255,.2)';
+  ctx.fillRect(Math.round(ax-1), Math.round(ay-4), 2, 2);
+
+  // BRAÇOS (animam ao digitar)
+  const bracoMov = estado===ESTADO.DIGITANDO ? Math.sin(quadro*0.28)*1.5 : 0;
+  ctx.fillStyle = p.pele;
+  ctx.fillRect(Math.round(ax-7), Math.round(ay-1+bracoMov), 2, 5);   // esq
+  ctx.fillRect(Math.round(ax+5), Math.round(ay-1-bracoMov), 2, 5);   // dir
+
+  // PESCOÇO
+  ctx.fillStyle = p.pele;
+  ctx.fillRect(Math.round(ax-1), Math.round(ay-6), 3, 3);
+
+  // CABEÇA
+  ctx.fillStyle = p.pele;
+  ctx.beginPath(); ctx.arc(ax, ay-11, 7, 0, Math.PI*2); ctx.fill();
+
+  // Bochechas
+  ctx.fillStyle = 'rgba(220,120,100,.18)';
+  ctx.beginPath(); ctx.arc(ax-3.5, ay-10, 2.5, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(ax+3.5, ay-10, 2.5, 0, Math.PI*2); ctx.fill();
+
+  // OLHOS
+  ctx.fillStyle = '#1a0a05';
+  ctx.fillRect(Math.round(ax-3), Math.round(ay-13), 2, 2);
+  ctx.fillRect(Math.round(ax+1), Math.round(ay-13), 2, 2);
+  // Brilho dos olhos
+  ctx.fillStyle = 'rgba(255,255,255,.55)';
+  ctx.fillRect(Math.round(ax-3), Math.round(ay-13), 1, 1);
+  ctx.fillRect(Math.round(ax+1), Math.round(ay-13), 1, 1);
+
+  // BOCA
+  if (estado===ESTADO.DIGITANDO && Math.floor(quadro/8)%3===0) {
+    // Boca aberta digitando
+    ctx.fillStyle = 'rgba(150,60,50,.8)';
+    ctx.fillRect(Math.round(ax-2), Math.round(ay-9), 4, 2);
+    ctx.fillStyle='rgba(80,0,0,.6)'; ctx.fillRect(Math.round(ax-1), Math.round(ay-9), 2, 1);
+  } else {
+    ctx.fillStyle = 'rgba(160,70,60,.7)';
+    ctx.fillRect(Math.round(ax-2), Math.round(ay-9), 4, 1);
+  }
+
+  // CABELO (arco superior)
+  ctx.fillStyle = p.cabelo;
+  ctx.beginPath(); ctx.arc(ax, ay-12, 7, Math.PI+0.15, -0.15); ctx.fill();
+  // Laterais do cabelo
+  ctx.fillRect(Math.round(ax-7), Math.round(ay-14), 2, 5);
+  ctx.fillRect(Math.round(ax+5), Math.round(ay-14), 2, 5);
+  // Franja
+  ctx.fillRect(Math.round(ax-4), Math.round(ay-17), 8, 3);
+
+  // PLAQUINHA COM NOME
+  const nomeLabel = agente.nome;
+  const lw2 = nomeLabel.length * 5 + 8;
+  ctx.fillStyle = 'rgba(0,0,0,.65)';
+  ctx.fillRect(Math.round(ax - lw2/2), Math.round(ay-28), lw2, 11);
+  ctx.fillStyle = cor;
+  ctx.font = 'bold 7px Inter,sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(nomeLabel, ax, ay-22.5);
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
+  // INDICADOR DE ESTADO
+  desenharIndicadorEstado(agente, ax, ay - 34);
+}
+
+function desenharIndicadorEstado(agente, x, y) {
+  const {estado, cor, quadro, timerPronto} = agente;
+  if (estado===ESTADO.OCIOSO || estado===ESTADO.ANDANDO) return;
+
+  if (estado===ESTADO.DIGITANDO) {
+    const piscar = Math.floor(quadro/6)%2;
+    ctx.fillStyle = piscar ? cor : 'rgba(255,255,255,.3)';
+    ctx.beginPath(); ctx.arc(x-5,y,2.5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = piscar ? 'rgba(255,255,255,.3)' : cor;
+    ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = piscar ? cor : 'rgba(255,255,255,.3)';
+    ctx.beginPath(); ctx.arc(x+5,y,2.5,0,Math.PI*2); ctx.fill();
+  }
+  else if (estado===ESTADO.LENDO) {
+    ctx.strokeStyle = cor; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle = cor; ctx.beginPath(); ctx.arc(x,y,1.8,0,Math.PI*2); ctx.fill();
+  }
+  else if (estado===ESTADO.PENSANDO) {
+    const a = (quadro*0.08)%(Math.PI*2);
+    ctx.strokeStyle = cor; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(x,y,5,a,a+Math.PI*1.2); ctx.stroke();
+  }
+  else if (estado===ESTADO.PRONTO) {
+    const alpha = Math.min(1, timerPronto/30);
+    ctx.strokeStyle = `rgba(0,212,160,${alpha})`; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(x-4,y); ctx.lineTo(x-1,y+3); ctx.lineTo(x+4,y-3); ctx.stroke();
+  }
+}
+
+function desenharEscritorio() {
+  ctx.fillStyle = '#0a0a12'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  MAPA.forEach((linha,r) => linha.forEach((tile,c) => desenharTile(c,r,tile)));
+  [...agentes].sort((a,b)=>a.py-b.py).forEach(desenharPessoa);
+}
+
+// ═══════════════════════════════════════════
+// AGENTES
+// ═══════════════════════════════════════════
+const agentes = DEFS_AGENTES.map(d => new Agente(d));
+
+// Criar cards da equipe
+const filhaEquipe = document.getElementById('equipe-row');
+const elsCards = {};
+agentes.forEach(ag => {
   const card = document.createElement('div');
-  card.className = 'agent-card';
-  card.id = `card-${agent.id}`;
+  card.className = 'equipe-card';
+  card.id = `card-${ag.id}`;
   card.innerHTML = `
-    <div class="agent-dot" style="background:${agent.color}"></div>
+    <div class="equipe-dot" style="background:${ag.cor}"></div>
     <div style="flex:1;min-width:0">
-      <div class="agent-name">${agent.name}</div>
-      <div class="agent-state" id="state-${agent.id}">idle</div>
-      <div class="agent-tool" id="tool-${agent.id}"></div>
+      <div class="equipe-nome">${ag.nome}</div>
+      <div class="equipe-cargo" style="color:${ag.cor}">${ag.cargo}</div>
+      <div class="equipe-status" id="status-${ag.id}">em espera</div>
     </div>
   `;
-  agentRow.appendChild(card);
-  cardEls[agent.id] = card;
+  card.onclick = () => { const btn=document.querySelector(`.chat-aba[data-agente="${ag.id}"]`); if(btn) selecionarAgente(ag.id,btn); };
+  filhaEquipe.appendChild(card);
+  elsCards[ag.id] = card;
 });
 
-function updateCards() {
-  agents.forEach(agent => {
-    const card = cardEls[agent.id];
-    const stateEl = document.getElementById(`state-${agent.id}`);
-    const toolEl = document.getElementById(`tool-${agent.id}`);
-    card.className = `agent-card ${agent.state === STATE.IDLE ? 'idle-wander' : 'active'}`;
-    const labels = {typing:'digitando…',reading:'lendo…',thinking:'pensando…',walking:'se movendo…',idle:'em espera',done:'concluído ✓'};
-    stateEl.textContent = labels[agent.state] || agent.state;
-    toolEl.textContent = agent.tool || agent.lastTool || '';
+function atualizarCards() {
+  agentes.forEach(ag => {
+    const card = elsCards[ag.id];
+    const elStatus = document.getElementById(`status-${ag.id}`);
+    const labels = {digitando:'digitando…',lendo:'lendo…',pensando:'pensando…',andando:'se movendo…',ocioso:'em espera',pronto:'concluído ✓'};
+    card.className = `equipe-card ${ag.estado===ESTADO.OCIOSO?'ocioso':'ativo'}`;
+    elStatus.textContent = labels[ag.estado]||ag.estado;
   });
 }
 
-// ═══════════════════════════════════════════════════════
-// PROCESS EVENTS
-// ═══════════════════════════════════════════════════════
-const statusDot = document.getElementById('status-dot');
-const subtitle = document.getElementById('office-subtitle');
+// ═══════════════════════════════════════════
+// CHAT
+// ═══════════════════════════════════════════
+let agenteAtivo = 'todos';
+const elsMensagens = document.getElementById('chat-mensagens');
+const elEntrada = document.getElementById('chat-entrada');
+const elEnviar = document.getElementById('chat-enviar');
 
-function processEvent(event) {
-  const {type, tool, session, agent: agentId} = event;
-  let targetAgent;
+// Abas dos agentes
+const elAbas = document.getElementById('chat-abas');
+agentes.forEach(ag => {
+  const btn = document.createElement('button');
+  btn.className = 'chat-aba'; btn.dataset.agente = ag.id;
+  btn.onclick = () => selecionarAgente(ag.id, btn);
+  btn.innerHTML = `<div class="chat-aba-ponto" style="background:${ag.cor}"></div>${ag.nome}`;
+  elAbas.appendChild(btn);
+});
 
-  if (agentId) {
-    targetAgent = agents.find(a => a.id === agentId);
-  } else if (session) {
-    targetAgent = getAgentForSession(session);
+function selecionarAgente(id, btn) {
+  agenteAtivo = id;
+  document.querySelectorAll('.chat-aba').forEach(b=>{
+    b.classList.remove('ativa');
+    b.style.background=''; b.style.borderColor=''; b.style.color='';
+  });
+  btn.classList.add('ativa');
+
+  const ctx2 = document.getElementById('chat-contexto');
+  if(id==='todos'){
+    btn.style.background='rgba(124,58,237,.2)'; btn.style.borderColor='rgba(124,58,237,.4)'; btn.style.color='#a78bfa';
+    ctx2.innerHTML=`<div class="chat-ctx-avatar" style="background:rgba(124,58,237,.2);color:#a78bfa">⚡</div>
+      <div class="chat-ctx-info"><div class="chat-ctx-nome">Broadcast</div><div class="chat-ctx-cargo">Mensagem para toda a equipe</div><div class="chat-ctx-skills">lucas · camila · rafael · juliana · bruno · fernanda</div></div>
+      <div class="chat-status-luz"></div>`;
   } else {
-    targetAgent = agents[Math.floor(Math.random()*agents.length)];
+    const def = DEFS_AGENTES.find(a=>a.id===id);
+    const ps = PERSONAS[id];
+    const c = def.cor;
+    btn.style.background=c+'28'; btn.style.borderColor=c+'60'; btn.style.color=c;
+    ctx2.innerHTML=`<div class="chat-ctx-avatar" style="background:${c}28;color:${c}">${ps.sigla}</div>
+      <div class="chat-ctx-info"><div class="chat-ctx-nome">${def.nome}</div><div class="chat-ctx-cargo">${def.cargo}</div><div class="chat-ctx-skills">${ps.skills.join(' · ')}</div></div>
+      <div class="chat-status-luz" style="background:${c};box-shadow:0 0 5px ${c}"></div>`;
+    if(!document.querySelector(`[data-intro="${id}"]`)) adicionarIntro(id);
   }
+  elEntrada.focus();
+}
 
-  if (!targetAgent) return;
+function adicionarIntro(agId) {
+  const def=DEFS_AGENTES.find(a=>a.id===agId), ps=PERSONAS[agId];
+  const el=document.createElement('div');
+  el.className='msg agente'; el.dataset.intro=agId;
+  el.innerHTML=`<div class="msg-avatar" style="background:${def.cor}28;color:${def.cor}">${ps.sigla}</div>
+    <div><div class="msg-balao">${ps.intro}<div class="msg-skills">${ps.skills.map(s=>`<span class="msg-skill-tag">${s}</span>`).join('')}</div></div>
+    <div class="msg-meta"><span class="msg-remetente" style="color:${def.cor}">${def.nome}</span> · agora</div></div>`;
+  elsMensagens.appendChild(el); rolarChat();
+}
 
-  if (type === 'tool_start') {
-    targetAgent.setActive(tool || 'Bash');
-    subtitle.textContent = `${targetAgent.name} executando ${tool || 'tarefa'}…`;
-    statusDot.className = 'status-dot activity';
-    addFeedItem({...event, agent: targetAgent.id});
-  } else if (type === 'tool_end' || type === 'done') {
-    targetAgent.setDone();
-    addFeedItem({...event, agent: targetAgent.id, tool: tool || '✓ concluído'});
-  } else {
-    addFeedItem(event);
+function adicionarMsg(de, texto, ehUsuario=false) {
+  const def=ehUsuario?null:DEFS_AGENTES.find(a=>a.id===de);
+  const ps=ehUsuario?null:PERSONAS[de];
+  const el=document.createElement('div');
+  el.className=`msg ${ehUsuario?'usuario':'agente'}`;
+  const hora=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  el.innerHTML=ehUsuario
+    ?`<div class="msg-avatar" style="background:rgba(124,58,237,.3);color:#a78bfa">MX</div>
+       <div><div class="msg-balao">${escaparHtml(texto)}</div><div class="msg-meta" style="justify-content:flex-end">${hora}</div></div>`
+    :`<div class="msg-avatar" style="background:${def.cor}28;color:${def.cor}">${ps.sigla}</div>
+       <div><div class="msg-balao">${texto}</div><div class="msg-meta"><span class="msg-remetente" style="color:${def.cor}">${def.nome}</span> · ${hora}</div></div>`;
+  elsMensagens.appendChild(el); rolarChat();
+}
+
+function adicionarDigitando(agId) {
+  const def=DEFS_AGENTES.find(a=>a.id===agId), ps=PERSONAS[agId];
+  const el=document.createElement('div');
+  el.className='msg agente'; el.id=`digitando-${agId}`;
+  el.innerHTML=`<div class="msg-avatar" style="background:${def.cor}28;color:${def.cor}">${ps.sigla}</div>
+    <div><div class="msg-balao"><div class="msg-digitando">
+      <div class="ponto-digitando" style="background:${def.cor}"></div>
+      <div class="ponto-digitando" style="background:${def.cor}"></div>
+      <div class="ponto-digitando" style="background:${def.cor}"></div>
+    </div></div></div>`;
+  elsMensagens.appendChild(el); rolarChat();
+}
+
+function removerDigitando(agId) {
+  const el=document.getElementById(`digitando-${agId}`); if(el)el.remove();
+}
+
+function rolarChat() { elsMensagens.scrollTop=elsMensagens.scrollHeight; }
+
+function escaparHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+function rotearMensagem(texto) {
+  const lower=texto.toLowerCase();
+  const pontuacao={};
+  Object.entries(ROTEAMENTO).forEach(([id,kws])=>{ pontuacao[id]=kws.filter(kw=>lower.includes(kw)).length; });
+  const melhor=Object.entries(pontuacao).sort((a,b)=>b[1]-a[1])[0];
+  return melhor[1]>0?melhor[0]:null;
+}
+
+function construirResposta(agId, texto) {
+  const ps=PERSONAS[agId];
+  const resp=ps.respostas[Math.floor(Math.random()*ps.respostas.length)];
+  const skills=ps.skills.slice(0,3);
+  return `${escaparHtml(resp)}<div class="msg-skills">${skills.map(s=>`<span class="msg-skill-tag">${s}</span>`).join('')}</div>
+    <a class="msg-acao" href="terminal.html" target="_blank">▶ Abrir Terminal</a>`;
+}
+
+function enviarMensagem() {
+  const texto=elEntrada.value.trim(); if(!texto)return;
+  const bv=elsMensagens.querySelector('.boas-vindas'); if(bv)bv.remove();
+  adicionarMsg('usuario',texto,true);
+  elEntrada.value=''; ajustarAltura(elEntrada); elEnviar.disabled=true;
+
+  let respondentes=[];
+  if(agenteAtivo==='todos'){
+    const sug=rotearMensagem(texto);
+    respondentes=[sug||DEFS_AGENTES[Math.floor(Math.random()*DEFS_AGENTES.length)].id];
+  } else { respondentes=[agenteAtivo]; }
+
+  respondentes.forEach((agId,i)=>{
+    const agObj=agentes.find(a=>a.id===agId);
+    const atraso=600+i*400;
+    setTimeout(()=>{ agObj.ativar('Write'); const s=document.getElementById('office-subtitle'); if(s)s.textContent=`${agObj.nome} está trabalhando…`; document.getElementById('status-dot').className='status-dot ativo'; },atraso-200);
+    setTimeout(()=>adicionarDigitando(agId),atraso);
+    setTimeout(()=>{
+      removerDigitando(agId);
+      adicionarMsg(agId,construirResposta(agId,texto));
+      agObj.finalizarTarefa(); elEnviar.disabled=false;
+    },atraso+900+Math.random()*600);
+  });
+}
+
+function aoPresionarTecla(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();enviarMensagem();} }
+function ajustarAltura(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
+
+// ═══════════════════════════════════════════
+// SSE — EVENTOS EM TEMPO REAL
+// ═══════════════════════════════════════════
+const SSE_URL='https://terminal.tracktor.com.br/api/agents/stream';
+const elSseBadge=document.getElementById('sse-badge');
+let tentativasSse=0;
+
+function agenteParaSessao(sessao) {
+  const ex=agentes.find(a=>a.sessao===sessao); if(ex)return ex;
+  const livre=agentes.find(a=>!a.sessao||a.estado===ESTADO.OCIOSO);
+  if(livre){livre.sessao=sessao;return livre;}
+  return agentes[Math.floor(Math.random()*agentes.length)];
+}
+
+function processarEvento(evento) {
+  const {type,tool,session,agent:agId}=evento;
+  let alvo;
+  if(agId) alvo=agentes.find(a=>a.id===agId);
+  else if(session) alvo=agenteParaSessao(session);
+  else alvo=agentes[Math.floor(Math.random()*agentes.length)];
+  if(!alvo)return;
+  if(type==='tool_start'){
+    alvo.ativar(tool||'Bash');
+    document.getElementById('office-subtitle').textContent=`${alvo.nome} executando ${traduzirFerramenta(tool)}…`;
+    document.getElementById('status-dot').className='status-dot ativo';
+  } else if(type==='tool_end'||type==='done'){
+    alvo.finalizarTarefa();
+    if(agentes.every(a=>a.estado===ESTADO.OCIOSO||a.estado===ESTADO.ANDANDO||a.estado===ESTADO.PRONTO)){
+      document.getElementById('office-subtitle').textContent='Aguardando atividade…';
+      document.getElementById('status-dot').className='status-dot online';
+    }
   }
 }
 
-// ═══════════════════════════════════════════════════════
-// SSE CONNECTION
-// ═══════════════════════════════════════════════════════
-const sseBadge = document.getElementById('sse-badge');
-let sseRetries = 0;
+function traduzirFerramenta(nome) {
+  const trad={Write:'Escrita',Edit:'Edição',Read:'Leitura',Bash:'Terminal',Glob:'Busca de Arquivos',
+    Grep:'Busca de Conteúdo',WebFetch:'Navegação Web',WebSearch:'Pesquisa Web',Agent:'Sub-Agente',Task:'Tarefa'};
+  return trad[nome]||nome||'tarefa';
+}
 
-function connectSSE() {
+function conectarSse() {
   try {
-    const es = new EventSource(SSE_URL);
-    es.onopen = () => {
-      sseBadge.className = 'sse-badge connected';
-      sseBadge.innerHTML = '<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Conectado';
-      statusDot.className = 'status-dot online';
-      sseRetries = 0;
+    const es=new EventSource(SSE_URL);
+    es.onopen=()=>{
+      elSseBadge.className='sse-badge conectado';
+      elSseBadge.innerHTML='<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Conectado';
+      document.getElementById('status-dot').className='status-dot online';
+      tentativasSse=0;
     };
-    es.onmessage = (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        if (data.type === 'connected' && data.events) {
-          data.events.slice(0,10).reverse().forEach(ev => addFeedItem(ev));
-        } else {
-          processEvent(data);
-        }
-      } catch(_) {}
-    };
-    es.onerror = () => {
+    es.onmessage=(e)=>{ try{ const d=JSON.parse(e.data); if(d.type!=='connected')processarEvento(d); }catch(_){} };
+    es.onerror=()=>{
       es.close();
-      sseBadge.className = 'sse-badge error';
-      sseBadge.innerHTML = '<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Reconectando…';
-      const delay = Math.min(30000, 2000 * Math.pow(1.5, sseRetries++));
-      setTimeout(connectSSE, delay);
+      elSseBadge.className='sse-badge erro';
+      elSseBadge.innerHTML='<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Reconectando…';
+      setTimeout(conectarSse, Math.min(30000, 2000*Math.pow(1.5,tentativasSse++)));
     };
   } catch(e) {
-    sseBadge.className = 'sse-badge error';
-    sseBadge.innerHTML = '<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Offline';
+    elSseBadge.className='sse-badge erro';
+    elSseBadge.innerHTML='<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Offline';
   }
 }
 
-// ═══════════════════════════════════════════════════════
-// DEMO MODE — simulate activity when no SSE events
-// ═══════════════════════════════════════════════════════
-const DEMO_TOOLS = ['Read','Write','Bash','Grep','Glob','Edit','WebSearch','Agent'];
-const DEMO_FILES = ['index.html','server.js','SKILL.md','settings.json','styles.css','main.py'];
-let demoActive = false;
-let demoTimer = 0;
-
-function runDemo() {
-  if (demoActive) return;
-  demoActive = true;
-  demoTimer = setInterval(() => {
-    const agent = agents[Math.floor(Math.random()*agents.length)];
-    if (agent.state !== STATE.IDLE && agent.state !== STATE.WALKING) return;
-    const tool = DEMO_TOOLS[Math.floor(Math.random()*DEMO_TOOLS.length)];
-    const file = DEMO_FILES[Math.floor(Math.random()*DEMO_FILES.length)];
-    agent.setActive(tool);
-    subtitle.textContent = `${agent.name} executando ${tool}…`;
-    statusDot.className = 'status-dot activity';
-    addFeedItem({type:'tool_start', tool, file, agent: agent.id, detail: file});
-    setTimeout(() => {
-      agent.setDone();
-      addFeedItem({type:'tool_end', tool:'✓', agent: agent.id});
-      if (agents.every(a => a.state===STATE.IDLE||a.state===STATE.WALKING||a.state===STATE.DONE)) {
-        subtitle.textContent = 'Aguardando atividade…';
-        statusDot.className = 'status-dot online';
-      }
-    }, 3000 + Math.random()*5000);
-  }, 4000 + Math.random()*3000);
-}
-
-// Start demo after 3s if no SSE
-setTimeout(() => { if (!document.querySelector('.sse-badge.connected')) runDemo(); }, 3000);
-
-// ═══════════════════════════════════════════════════════
-// MAIN LOOP
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// LOOP PRINCIPAL
+// ═══════════════════════════════════════════
 function loop() {
-  agents.forEach(a => a.update());
-  drawOffice();
-  updateCards();
+  agentes.forEach(a=>a.atualizar());
+  desenharEscritorio();
+  atualizarCards();
   requestAnimationFrame(loop);
 }
 
-connectSSE();
+conectarSse();
 loop();
 </script>
 </body>
