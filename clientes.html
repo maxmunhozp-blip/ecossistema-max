@@ -164,6 +164,25 @@ tbody td:first-child{width:32px;padding-right:0}
 
 footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-size:12px;color:var(--text-dim);margin-top:40px}
 footer a{color:var(--purple);text-decoration:none;font-weight:600}
+/* PAGES LIST */
+.pages-list{display:flex;flex-direction:column;gap:6px;margin-top:0}
+.page-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;text-decoration:none;transition:all .15s;background:var(--surface)}
+.page-link:hover{border-color:var(--accent);background:var(--accent-dim)}
+.page-link-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+.page-link-icon.relatorio{background:#fef3c7;color:#92400e}
+.page-link-icon.dashboard{background:var(--accent-dim);color:var(--accent)}
+.page-link-icon.landing{background:var(--green-dim);color:var(--green)}
+.page-link-icon.crm{background:var(--blue-dim);color:var(--blue)}
+.page-link-body{flex:1;min-width:0}
+.page-link-title{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.page-link-desc{font-size:11px;color:var(--text-muted)}
+.page-link-meta{font-size:11px;color:var(--text-dim);flex-shrink:0}
+.pages-empty{font-size:13px;color:var(--text-dim);padding:8px 0}
+.type-badge{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.type-badge.relatorio{background:#fef3c7;color:#92400e}
+.type-badge.dashboard{background:var(--accent-dim);color:var(--accent)}
+.type-badge.landing{background:var(--green-dim);color:var(--green)}
+.type-badge.crm{background:var(--blue-dim);color:var(--blue)}
 @media(max-width:900px){
   .kpi-grid{grid-template-columns:repeat(3,1fr)}
   main{padding:32px 16px 60px}
@@ -404,15 +423,15 @@ const PRODUCTS = {
 const COLORS = ['#7c3aed','#2563eb','#059669','#f59e0b','#ef4444','#ec4899','#0891b2','#7c3aed'];
 
 let clients = JSON.parse(localStorage.getItem('eco_clients') || 'null') || [
-  {id:1,name:'Tojiro Sushi',email:'contato@tojirosushi.com.br',whatsapp:'',segment:'Restaurante Japonês',products:['Meta Ads','Social Media'],mrr:0,status:'ativo',health:80,created:'2025-10-01',renewal:'-',notes:'3 campanhas canibalização resolvidas em mar/26. Nova estrutura remarketing + prospecção criada. Alerta: atendimento falho.',dashboard:'clientes/tojiro-sushi/tojiro-vivo.html',history:[{type:'success',text:'Nova estrutura de campanhas criada (remarketing + prospecção fria)','date':'Mar 2026'},{type:'info',text:'2 campanhas duplicadas pausadas — canibalização eliminada','date':'Mar 2026'},{type:'warn',text:'232 conversas iniciadas, apenas 7 respondidas — atendimento crítico','date':'Mar 2026'}]},
-  {id:2,name:'Óticas JB',email:'contato@oticasjb.com.br',whatsapp:'',segment:'Ótica',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',history:[]},
-  {id:3,name:'Expo Peças',email:'contato@exopecas.com.br',whatsapp:'',segment:'Autopeças',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',history:[]},
-  {id:4,name:'Expo Peças Mulher',email:'contato@expopecasmulher.com.br',whatsapp:'',segment:'Evento / Autopeças',products:['Social Media','Feed','Defesa'],mrr:0,status:'ativo',health:90,created:'2026-01-01',renewal:'-',notes:'Novo feed Marsala em andamento. Defesa estratégica apresentada.',dashboard:'cliente-expo-pecas.html',history:[{type:'success',text:'Defesa estratégica do feed Marsala apresentada','date':'Mar 2026'},{type:'info',text:'Transição para identidade visual Marsala iniciada','date':'Mar 2026'}]},
-  {id:5,name:'Expo Play',email:'contato@expoplay.com.br',whatsapp:'',segment:'Entretenimento',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',history:[]},
-  {id:6,name:'Officina APP',email:'contato@officinaapp.com.br',whatsapp:'',segment:'SaaS / App',products:['Social Media','Tráfego'],mrr:0,status:'ativo',health:75,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',history:[]},
-  {id:7,name:'Grupo PMS',email:'contato@grupopms.com.br',whatsapp:'',segment:'Grupo Empresarial',products:['Social Media','Tráfego'],mrr:0,status:'ativo',health:75,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',history:[]},
-  {id:8,name:'Perfil Aline Miranda',email:'aline@alinemiranda.com.br',whatsapp:'',segment:'Perfil Pessoal',products:['Social Media','Copy'],mrr:0,status:'ativo',health:85,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',history:[]},
-  {id:9,name:'Perfil Paulo Miranda',email:'paulo@paulomiranda.com.br',whatsapp:'',segment:'Perfil Pessoal',products:['Social Media','Copy'],mrr:0,status:'ativo',health:85,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',history:[]}
+  {id:1,name:'Tojiro Sushi',email:'contato@tojirosushi.com.br',whatsapp:'',segment:'Restaurante Japonês',products:['Meta Ads','Social Media'],mrr:0,status:'ativo',health:80,created:'2025-10-01',renewal:'-',notes:'3 campanhas canibalização resolvidas em mar/26. Nova estrutura remarketing + prospecção criada. Alerta: atendimento falho.',dashboard:'clientes/tojiro-sushi/tojiro-vivo.html',pages:[{title:'Tojiro Vivo — Método Marca Viva',url:'clientes/tojiro-sushi/tojiro-vivo.html',type:'relatorio',date:'Mar 2026',desc:'Relatório premium com timeline, time e criativos'}],history:[{type:'success',text:'Nova estrutura de campanhas criada (remarketing + prospecção fria)','date':'Mar 2026'},{type:'info',text:'2 campanhas duplicadas pausadas — canibalização eliminada','date':'Mar 2026'},{type:'warn',text:'232 conversas iniciadas, apenas 7 respondidas — atendimento crítico','date':'Mar 2026'}]},
+  {id:2,name:'Óticas JB',email:'contato@oticasjb.com.br',whatsapp:'',segment:'Ótica',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
+  {id:3,name:'Expo Peças',email:'contato@exopecas.com.br',whatsapp:'',segment:'Autopeças',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
+  {id:4,name:'Expo Peças Mulher',email:'contato@expopecasmulher.com.br',whatsapp:'',segment:'Evento / Autopeças',products:['Social Media','Feed','Defesa'],mrr:0,status:'ativo',health:90,created:'2026-01-01',renewal:'-',notes:'Novo feed Marsala em andamento. Defesa estratégica apresentada.',dashboard:'cliente-expo-pecas.html',pages:[{title:'Dashboard Expo Peças Mulher',url:'cliente-expo-pecas.html',type:'dashboard',date:'Mar 2026',desc:'Painel com feed Marsala e defesa estratégica'}],history:[{type:'success',text:'Defesa estratégica do feed Marsala apresentada','date':'Mar 2026'},{type:'info',text:'Transição para identidade visual Marsala iniciada','date':'Mar 2026'}]},
+  {id:5,name:'Expo Play',email:'contato@expoplay.com.br',whatsapp:'',segment:'Entretenimento',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[{title:'Landing Page ExpoPlay',url:'lp-expoplay.html',type:'landing',date:'Mar 2026',desc:'LP com hero, stats, benefícios, plano premium'}],history:[]},
+  {id:6,name:'Officina APP',email:'contato@officinaapp.com.br',whatsapp:'',segment:'SaaS / App',products:['Social Media','Tráfego'],mrr:0,status:'ativo',health:75,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[{title:'Landing Page Officina',url:'lp-officina.html',type:'landing',date:'Mar 2026',desc:'LP institucional do app'}],history:[]},
+  {id:7,name:'Grupo PMS',email:'contato@grupopms.com.br',whatsapp:'',segment:'Grupo Empresarial',products:['Social Media','Tráfego'],mrr:0,status:'ativo',health:75,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
+  {id:8,name:'Perfil Aline Miranda',email:'aline@alinemiranda.com.br',whatsapp:'',segment:'Perfil Pessoal',products:['Social Media','Copy'],mrr:0,status:'ativo',health:85,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
+  {id:9,name:'Perfil Paulo Miranda',email:'paulo@paulomiranda.com.br',whatsapp:'',segment:'Perfil Pessoal',products:['Social Media','Copy'],mrr:0,status:'ativo',health:85,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]}
 ];
 
 let currentPage = 1;
@@ -551,16 +570,31 @@ function openDetail(id){
       <div class="history-text"><strong>${h.date}</strong> — ${h.text}</div>
     </div>`).join('');
 
+  const typeIcon = {relatorio:'📋',dashboard:'📊',landing:'🚀',crm:'🗂️'};
+  const pagesHtml = (c.pages||[]).length
+    ? (c.pages||[]).map(p=>`
+      <a class="page-link" href="${p.url}" target="_blank">
+        <div class="page-link-icon ${p.type}">${typeIcon[p.type]||'📄'}</div>
+        <div class="page-link-body">
+          <div class="page-link-title">${p.title}</div>
+          <div class="page-link-desc">${p.desc||''}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+          <span class="type-badge ${p.type}">${p.type}</span>
+          <span class="page-link-meta">${p.date}</span>
+        </div>
+      </a>`).join('')
+    : '<div class="pages-empty">Nenhuma página criada ainda.</div>';
+
   document.getElementById('detailPanel').innerHTML = `
     <div class="detail-top">
       <div class="detail-avatar" style="background:${color}20;color:${color};font-size:20px;font-weight:800">${initials}</div>
       <div style="flex:1">
         <div class="detail-name">${c.name}</div>
-        <div class="detail-meta">${c.email} · ${c.whatsapp} · ${c.segment}</div>
-        <div style="margin-top:8px;display:flex;gap:6px">${statusBadge(c.status)}<div class="product-tags">${productTags(c.products)}</div></div>
+        <div class="detail-meta">${c.email} · ${c.segment}</div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${statusBadge(c.status)}<div class="product-tags">${productTags(c.products)}</div></div>
       </div>
       <div class="detail-actions">
-        ${c.dashboard?`<a class="btn btn-primary" href="${c.dashboard}"><i data-lucide="layout-dashboard" style="width:14px;height:14px;stroke:#fff;fill:none"></i>Ver Dashboard</a>`:''}
         <button class="btn btn-ghost" onclick="contactWhatsApp('${c.whatsapp}','${c.name}')">
           <i data-lucide="message-circle" style="width:14px;height:14px;stroke:currentColor;fill:none"></i>WhatsApp
         </button>
@@ -573,6 +607,10 @@ function openDetail(id){
       <div class="detail-stat"><div class="detail-stat-label">MRR</div><div class="detail-stat-val">${c.mrr?'R$ '+c.mrr:'—'}</div><div class="detail-stat-sub">${c.status==='trial'?'trial ativo':'/mês'}</div></div>
       <div class="detail-stat"><div class="detail-stat-label">Health Score</div><div class="detail-stat-val" style="color:${c.health>=75?'var(--green)':c.health>=50?'var(--amber)':'var(--red)'}">${c.health}</div><div class="detail-stat-sub">/100</div></div>
       <div class="detail-stat"><div class="detail-stat-label">Cliente desde</div><div class="detail-stat-val" style="font-size:16px">${formatDate(c.created)}</div><div class="detail-stat-sub">próx. renov: ${formatDate(c.renewal)}</div></div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div class="detail-label">Páginas do Cliente <span style="font-size:11px;color:var(--text-dim);font-weight:400;margin-left:4px">${(c.pages||[]).length} entrega${(c.pages||[]).length!==1?'s':''}</span></div>
+      <div class="pages-list">${pagesHtml}</div>
     </div>
     <div style="margin-bottom:16px">
       <div class="detail-label">Observações</div>
