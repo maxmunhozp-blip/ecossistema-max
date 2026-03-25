@@ -12,33 +12,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Sync arquivos HTML e assets para VPS
+      - name: Sync completo para VPS via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: 76.13.172.151
           username: root
           password: ${{ secrets.VPS_PASSWORD }}
-          source: "*.html,criativos/,CLAUDE.md"
+          source: "*.html,clientes/,criativos/,scripts/,CLAUDE.md"
           target: /opt/ecosistema-max/
           rm: false
 
-      - name: Atualiza skills no VPS via GitHub
+      - name: Atualiza skills no VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 76.13.172.151
           username: root
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            git config --global --add safe.directory /opt/ecosistema-max
-            cd /opt/ecosistema-max
-            git init
-            git remote remove origin 2>/dev/null || true
-            git remote add origin https://github.com/maxmunhozp-blip/ecossistema-max.git
+            git config --global --add safe.directory /opt/ecosistema-max-repo
+            cd /opt/ecosistema-max-repo 2>/dev/null || exit 0
             git fetch origin main
             git checkout -f origin/main -- skills/
-            # Sincroniza SKILL.md de cada skill para /opt/skill-data/ (usado pela API)
             mkdir -p /opt/skill-data
-            for dir in /opt/ecosistema-max/skills/skill-*/; do
+            for dir in /opt/ecosistema-max-repo/skills/skill-*/; do
               id=$(basename "$dir")
               [ -f "$dir/SKILL.md" ] && cp "$dir/SKILL.md" "/opt/skill-data/${id}.md"
             done
