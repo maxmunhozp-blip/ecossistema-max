@@ -25,6 +25,33 @@
   --border2:rgba(255,255,255,.06);
 }
 
+/* ── TEMA CLARO ── */
+.tema-claro{
+  --black:#F8F4EE;
+  --black2:#EDE8E0;
+  --black3:#E4DDD3;
+  --white:#1A0E06;
+  --cream:#3A2010;
+  --muted:#7A6050;
+  --muted2:#A89080;
+  --border:rgba(193,39,45,.2);
+  --border2:rgba(0,0,0,.07);
+}
+.tema-claro body{background:var(--black);color:var(--white)}
+
+/* ── BOTÃO DE TEMA ── */
+.theme-btn{
+  position:fixed;top:16px;right:16px;z-index:500;
+  display:flex;align-items:center;gap:7px;
+  background:var(--black2);border:1px solid var(--border);
+  border-radius:100px;padding:7px 16px;
+  cursor:pointer;font-size:11px;font-weight:700;
+  letter-spacing:.5px;color:var(--muted);
+  font-family:'DM Sans',sans-serif;
+  transition:all .2s;box-shadow:0 2px 12px rgba(0,0,0,.3);
+}
+.theme-btn:hover{border-color:var(--gold);color:var(--cream)}
+
 html{scroll-behavior:smooth}
 
 body{
@@ -826,6 +853,7 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
 </style>
 </head>
 <body>
+<button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀ Tema claro</button>
 
 <!-- ══ HERO ══ -->
 <div class="hero">
@@ -1320,6 +1348,23 @@ function changeMonth(dir) {
 }
 
 renderMes();
+
+// Tema claro/escuro
+let isClaro = new URLSearchParams(location.search).get('tema') === 'claro';
+function applyThemeState() {
+  document.documentElement.classList.toggle('tema-claro', isClaro);
+  document.body.classList.toggle('tema-claro', isClaro);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = isClaro ? '🌙 Tema escuro' : '☀ Tema claro';
+}
+function toggleTheme() {
+  isClaro = !isClaro;
+  applyThemeState();
+  const u = new URL(location);
+  isClaro ? u.searchParams.set('tema','claro') : u.searchParams.delete('tema');
+  history.replaceState(null,'',u);
+}
+applyThemeState();
 
 // Relógio em tempo real no mockup
 function updatePhoneClock() {
