@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Marca Viva — Tracktor</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet"/>
+<style>
+/* ── RESET ── */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+/* ── TOKENS ── */
+:root{
+  /* Brand (overridden via JS) */
+  --p:#C1272D; --p-rgb:193,39,45;
+  --s:#D4A853; --s-rgb:212,168,83;
+  /* Dark theme (default) */
+  --bg:#0D0D0D; --bg2:#141414; --bg3:#1C1610;
+  --text:#FAFAF8; --text2:#D1C4B8; --text3:#8A7060;
+  --border:rgba(255,255,255,.07); --border2:rgba(255,255,255,.04);
+  --green:#4ADE80; --amber:#FBBF24;
+  /* Typography */
+  --font-display:'Instrument Serif',Georgia,serif;
+  --font-ui:'DM Sans',-apple-system,sans-serif;
+  /* Spacing */
+  --section-pad:80px 24px;
+  --max-w:900px;
+}
+
+/* ── LIGHT THEME ── */
+.tema-claro{
+  --bg:#FAFAF8; --bg2:#F2EFE9; --bg3:#EAE5DC;
+  --text:#1A1008; --text2:#4A3828; --text3:#8A7060;
+  --border:rgba(0,0,0,.08); --border2:rgba(0,0,0,.05);
+}
+
+/* ── BASE ── */
+body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* Grain overlay */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:.022;pointer-events:none;z-index:9999}
+
+/* ── ANIMATIONS ── */
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ── LOADING ── */
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:12px;transition:opacity .4s}
+.loading-ring{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:500}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle{position:fixed;top:16px;right:16px;z-index:200;display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:6px 14px;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--text3);transition:all .2s}
+.theme-toggle:hover{border-color:var(--p);color:var(--text)}
+
+/* ── HERO ── */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 50% 15%,rgba(var(--p-rgb),.09) 0%,transparent 65%),radial-gradient(ellipse 35% 40% at 80% 85%,rgba(var(--s-rgb),.06) 0%,transparent 60%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(var(--s-rgb),.25);padding:5px 14px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--s);margin-bottom:40px;animation:up .8s ease both;backdrop-filter:blur(8px);background:rgba(var(--s-rgb),.05)}
+.hero-pulse{width:5px;height:5px;border-radius:50%;background:var(--p);animation:pulse 2s infinite}
+.hero-eyebrow{font-family:var(--font-ui);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:14px;animation:up .8s .1s both}
+.hero-title{font-family:var(--font-display);font-size:clamp(52px,9vw,88px);font-weight:400;line-height:1;letter-spacing:-1.5px;color:var(--text);margin-bottom:8px;animation:up .9s .2s both}
+.hero-title em{color:var(--p);font-style:italic}
+.hero-sub{font-family:var(--font-display);font-size:clamp(17px,2.5vw,22px);font-style:italic;color:var(--text3);letter-spacing:.5px;margin-bottom:44px;animation:up .9s .3s both}
+.hero-chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;animation:up .9s .4s both}
+.chip{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--text2)}
+
+/* ── LAYOUT ── */
+.sec{padding:var(--section-pad);max-width:var(--max-w);margin:0 auto}
+.sec-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--p);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';width:18px;height:1.5px;background:var(--p);border-radius:1px}
+.sec-title{font-family:var(--font-display);font-size:clamp(28px,4.5vw,42px);font-weight:400;color:var(--text);line-height:1.2;margin-bottom:6px}
+.sec-title em{color:var(--p);font-style:italic}
+.sec-sub{font-size:14px;color:var(--text3);line-height:1.7;max-width:480px}
+.divider{display:flex;align-items:center;max-width:var(--max-w);margin:0 auto;padding:44px 24px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider-dot{margin:0 18px;color:var(--border);font-size:14px}
+
+/* ── MÊS SELETOR ── */
+.month-block{margin:28px 0 36px}
+.month-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.month-picker{display:inline-flex;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.mpbtn{width:48px;height:64px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;transition:all .15s;font-family:var(--font-ui)}
+.mpbtn:hover{background:var(--border);color:var(--text)}
+.mpcenter{padding:0 28px;height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-left:1px solid var(--border2);border-right:1px solid var(--border2);min-width:180px}
+.mpmonth{font-family:var(--font-ui);font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.3px;line-height:1}
+.mpyear{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px}
+
+/* ── NÚMEROS ── */
+.nums-grid{display:grid;grid-template-columns:repeat(2,1fr);border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg2);position:relative}
+.num-cell{padding:28px 24px;position:relative;transition:background .2s}
+.num-cell:hover{background:rgba(var(--s-rgb),.03)}
+.num-cell:nth-child(odd){border-right:1px solid var(--border2)}
+.num-cell:nth-child(1),.num-cell:nth-child(2){border-bottom:1px solid var(--border2)}
+.num-val{font-family:var(--font-ui);font-size:clamp(32px,5vw,44px);font-weight:800;line-height:1;letter-spacing:-1px;margin-bottom:8px;display:block}
+.num-val.gold{color:var(--s)}
+.num-val.green{color:var(--green)}
+.num-val.white{color:var(--text)}
+.num-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:3px}
+.num-desc{font-size:12px;color:var(--text3);line-height:1.4}
+.num-empty{grid-column:1/-1;padding:48px;text-align:center;color:var(--text3);font-size:14px}
+
+/* ── CRIATIVO / INSTAGRAM MOCKUP ── */
+.criativo-wrap{display:grid;grid-template-columns:1fr 260px;gap:52px;align-items:center;margin-top:40px}
+.criativo-stats{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.cs{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:10px}
+.cs-val{font-family:var(--font-ui);font-size:24px;font-weight:800;color:var(--text);min-width:90px;letter-spacing:-.5px}
+.cs-val.green{color:var(--green)}
+.cs-body{flex:1}
+.cs-label{font-size:13px;font-weight:600;color:var(--text2)}
+.cs-desc{font-size:11px;color:var(--text3)}
+
+/* INSTAGRAM PHONE */
+.phone-wrap{position:relative;width:240px;height:480px;margin:0 auto;flex-shrink:0}
+.phone-frame{position:absolute;inset:0;border-radius:38px;border:2px solid rgba(255,255,255,.12);background:var(--bg3);box-shadow:0 48px 100px rgba(0,0,0,.5),0 0 0 1px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.04);overflow:hidden}
+.phone-notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:72px;height:22px;background:var(--bg3);border-radius:11px;z-index:10}
+.phone-screen{position:absolute;inset:0;border-radius:37px;overflow:hidden;background:#000;display:flex;flex-direction:column}
+.phone-statusbar{height:44px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 18px 8px;flex-shrink:0;z-index:5;position:relative}
+.phone-time{font-size:12px;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:.2px}
+.phone-icons{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px}
+.phone-ig-top{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.06)}
+.phone-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.phone-username{font-size:11px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.2px;flex:1;margin-left:8px}
+.phone-sponsored{font-size:9px;color:rgba(255,255,255,.35);font-weight:400}
+.phone-more{color:rgba(255,255,255,.4);font-size:16px;line-height:1}
+.phone-video{flex:1;position:relative;overflow:hidden;background:#1a0a06;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.phone-video-bg{position:absolute;inset:0;background:linear-gradient(160deg,#2d1008 0%,#1a0a06 60%,#0d0503 100%);display:flex;align-items:center;justify-content:center}
+.phone-video-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:1}
+.phone-video-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,168,83,.5);text-align:center;padding:0 16px}
+.phone-play{width:52px;height:52px;border-radius:50%;background:rgba(var(--p-rgb),.9);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(var(--p-rgb),.4);z-index:2;transition:transform .2s,box-shadow .2s}
+.phone-video:hover .phone-play{transform:scale(1.08);box-shadow:0 8px 32px rgba(var(--p-rgb),.5)}
+.play-tri{width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:18px solid #fff;margin-left:4px}
+.phone-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3}
+.phone-video video::-webkit-media-controls{display:none}
+.phone-ig-bottom{padding:10px 14px;flex-shrink:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px)}
+.phone-actions{display:flex;gap:14px;margin-bottom:6px}
+.phone-act{font-size:18px;line-height:1;cursor:pointer;opacity:.7;transition:opacity .15s}
+.phone-act:hover{opacity:1}
+.phone-act.bookmark{margin-left:auto}
+.phone-likes{font-size:10px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:4px}
+.phone-caption{font-size:9px;color:rgba(255,255,255,.45);line-height:1.4}
+.phone-caption strong{color:rgba(255,255,255,.7)}
+.phone-shine{position:absolute;top:0;left:-40%;width:25%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.03),transparent);transform:skewX(-12deg);pointer-events:none;animation:shine 5s 2s infinite}
+@keyframes shine{0%,80%,100%{opacity:0;transform:skewX(-12deg) translateX(0)}10%{opacity:1;transform:skewX(-12deg) translateX(500px)}}
+
+/* ── TEAM ── */
+.team-list{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:40px}
+.team-row{display:grid;grid-template-columns:200px 1fr;border-bottom:1px solid var(--border2);background:var(--bg2);transition:background .2s}
+.team-row:last-child{border-bottom:none}
+.team-row:hover{background:rgba(var(--s-rgb),.03)}
+.team-left{padding:22px 18px;border-right:1px solid var(--border2);display:flex;align-items:flex-start;gap:12px;flex-shrink:0}
+.t-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:var(--font-ui);flex-shrink:0;border:1px solid}
+.t-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;line-height:1.3}
+.t-role{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)}
+.team-analysis{padding:22px 24px;font-size:14px;color:var(--text2);line-height:1.85}
+.team-analysis .hl{background:rgba(var(--s-rgb),.18);color:var(--text);padding:1px 5px;border-radius:3px;font-weight:600;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.tema-claro .team-analysis .hl{background:rgba(var(--s-rgb),.22);color:var(--text)}
+
+/* ── TIMELINE ── */
+.tl-wrap{position:relative;padding-left:44px;margin-top:44px}
+.tl-line{position:absolute;left:13px;top:8px;bottom:0;width:2px;background:linear-gradient(var(--p),transparent)}
+.tl-item{position:relative;margin-bottom:24px}
+.tl-dot{position:absolute;left:-38px;top:7px;width:14px;height:14px;border-radius:50%;background:var(--bg2);border:2px solid var(--p);z-index:2}
+.tl-dot.done{background:var(--p)}
+.tl-dot.pending{border-color:var(--text3);border-style:dashed}
+.tl-when{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.tl-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;transition:border-color .2s}
+.tl-card:hover{border-color:rgba(var(--s-rgb),.2)}
+.tl-card.pending{background:transparent;border-style:dashed;opacity:.55}
+.tl-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.tl-ttl{font-size:14px;font-weight:600;color:var(--text)}
+.tl-tag{padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+.tag-diagnostico{background:rgba(var(--s-rgb),.12);color:var(--s)}
+.tag-pausado{background:rgba(251,191,36,.1);color:var(--amber)}
+.tag-criado{background:rgba(74,222,128,.1);color:var(--green)}
+.tag-ajuste{background:rgba(147,197,253,.1);color:#93C5FD}
+.tag-alerta,.tag-urgente{background:rgba(var(--p-rgb),.1);color:var(--p)}
+.tag-previsto{background:rgba(255,255,255,.05);color:var(--text3)}
+.tl-desc{font-size:13px;color:var(--text3);line-height:1.65}
+.tl-by{font-size:11px;color:var(--text3);margin-top:8px;display:flex;align-items:center;gap:4px;opacity:.7}
+.tl-by::before{content:'→';font-size:10px}
+.tl-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tl-chip{background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:6px;padding:3px 9px;font-size:11px;color:var(--text3)}
+.tl-chip b{color:var(--text);font-weight:600}
+
+/* ── ALERTA ── */
+.alert-card{background:var(--bg2);border:1px solid rgba(var(--s-rgb),.25);border-radius:12px;padding:24px 28px;display:flex;gap:18px;align-items:flex-start;margin-top:36px;position:relative;overflow:hidden}
+.alert-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--s)}
+.alert-ico{font-size:24px;flex-shrink:0}
+.alert-ttl{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.alert-body{font-size:13px;color:var(--text3);line-height:1.75}
+.alert-body strong{color:var(--text)}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:72px 24px 48px}
+.ft-brand{font-family:var(--font-display);font-size:11px;font-style:italic;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+.ft-quote{font-family:var(--font-display);font-size:clamp(18px,3vw,26px);font-weight:400;color:var(--text);opacity:.35;margin-bottom:32px;line-height:1.5;font-style:italic}
+.ft-pill{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--border);padding:9px 22px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--s)}
+.ft-dot{width:4px;height:4px;border-radius:50%;background:var(--p)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px){
+  :root{--section-pad:52px 18px}
+
+  /* Hero */
+  .hero{padding:52px 18px 40px}
+  .hero-title{font-size:clamp(40px,12vw,64px);letter-spacing:-1px}
+  .hero-sub{font-size:16px;margin-bottom:32px}
+  .hero-badge{font-size:9px;padding:4px 12px;margin-bottom:28px}
+
+  /* Seletor de mês */
+  .mpcenter{min-width:110px;padding:0 14px}
+  .mpmonth{font-size:18px}
+  .mpbtn{width:40px}
+
+  /* Números */
+  .nums-grid{grid-template-columns:1fr}
+  .num-cell:nth-child(odd){border-right:none}
+  .num-cell:nth-child(1),.num-cell:nth-child(2){border-bottom:1px solid var(--border2)}
+  .num-cell{border-bottom:1px solid var(--border2)}
+  .num-cell:last-child{border-bottom:none}
+  .num-val{font-size:clamp(28px,9vw,38px)}
+
+  /* Criativo */
+  .criativo-wrap{grid-template-columns:1fr;gap:24px}
+  .phone-wrap{order:-1;width:200px;height:400px}
+  .phone-frame{border-radius:30px}
+  .phone-screen{border-radius:29px}
+
+  /* Team */
+  .team-row{grid-template-columns:1fr}
+  .team-left{border-right:none;border-bottom:1px solid var(--border2);padding:18px 16px}
+  .team-analysis{padding:16px 18px;font-size:13px}
+
+  /* Timeline */
+  .tl-wrap{padding-left:32px}
+  .tl-dot{left:-26px}
+  .tl-card{padding:12px 14px}
+  .tl-desc{font-size:12px}
+
+  /* Geral */
+  .sec-title{font-size:clamp(22px,6vw,32px)}
+  .sec-sub{font-size:13px}
+  .divider{padding:28px 18px}
+
+  /* Tema toggle — menor no mobile */
+  .theme-toggle{padding:5px 10px;font-size:10px}
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="loading-ring"></div>
+  <div class="loading-label">Carregando</div>
+</div>
+
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">☀ Tema claro</button>
+
+<div id="app" style="display:none">
+
+  <!-- HERO -->
+  <div class="hero" id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-badge"><span class="hero-pulse"></span>Método Marca Viva</div>
+    <div class="hero-eyebrow" id="heroEyebrow">Relatório mensal</div>
+    <h1 class="hero-title" id="heroTitle">...</h1>
+    <p class="hero-sub">Sua marca não dorme.</p>
+    <div class="hero-chips" id="heroChips"></div>
+  </div>
+
+  <!-- NÚMEROS -->
+  <section class="sec reveal">
+    <div class="sec-label">Resultados</div>
+    <h2 class="sec-title" id="numerosTitle">Números que importam</h2>
+    <div class="month-block">
+      <div class="month-label">Período analisado</div>
+      <div class="month-picker">
+        <button class="mpbtn" onclick="changeMonth(-1)">‹</button>
+        <div class="mpcenter">
+          <span class="mpmonth" id="mpmonth">—</span>
+          <span class="mpyear" id="mpyear">—</span>
+        </div>
+        <button class="mpbtn" onclick="changeMonth(1)">›</button>
+      </div>
+    </div>
+    <div class="nums-grid" id="numsGrid"></div>
+  </section>
+
+  <div class="divider"><span class="divider-dot">◆</span></div>
+
+  <!-- CRIATIVO EM DESTAQUE -->
+  <section class="sec reveal" id="secCriativo">
+    <div class="sec-label">Criativo em destaque</div>
+    <h2 class="sec-title">O anúncio que mais converte</h2>
+    <p class="sec-sub" style="margin-bottom:0">Entre todos os vídeos ativos, esse teve o melhor resultado. É ele que está na nova estrutura de campanha.</p>
+    <div class="criativo-wrap">
+      <div class="criativo-left">
+        <div class="criativo-stats" id="criativoStats"></div>
+      </div>
+      <!-- MOCKUP INSTAGRAM -->
+      <div class="phone-wrap">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-statusbar">
+              <span class="phone-time" id="phoneTime">09:41</span>
+              <span class="phone-icons">▲ ▲ ▼</span>
+            </div>
+            <div class="phone-ig-top">
+              <div class="phone-avatar" id="phoneAvatar">TS</div>
+              <div style="flex:1;margin-left:8px">
+                <div class="phone-username" id="phoneUser">@tojirosushimooca</div>
+                <div class="phone-sponsored">Patrocinado</div>
+              </div>
+              <div class="phone-more">···</div>
+            </div>
+            <div class="phone-video" id="phoneVideo" onclick="playVideo()">
+              <div class="phone-video-bg"></div>
+              <div class="phone-video-text">
+                <div class="phone-video-title" id="phoneVideoTitle">TOJIRO SUSHI MOOCA</div>
+                <div class="phone-play" id="playBtn">
+                  <div class="play-tri"></div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-ig-bottom">
+              <div class="phone-actions">
+                <span class="phone-act">♡</span>
+                <span class="phone-act">💬</span>
+                <span class="phone-act">↗</span>
+                <span class="phone-act bookmark">🔖</span>
+              </div>
+              <div class="phone-likes">2.341 curtidas</div>
+              <div class="phone-caption"><strong id="capUser">tojirosushimooca</strong> <span id="capTitle">Venha saborear a autêntica culinária japonesa</span></div>
+            </div>
+          </div>
+          <div class="phone-shine"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span class="divider-dot">◆</span></div>
+
+  <!-- TEAM -->
+  <section class="sec reveal">
+    <div class="sec-label">Time dedicado</div>
+    <h2 class="sec-title">Quem trabalhou no seu projeto</h2>
+    <p class="sec-sub">Não é automação. São especialistas reais — cada um responsável por uma parte da estratégia.</p>
+    <div class="team-list" id="teamList"></div>
+  </section>
+
+  <div class="divider"><span class="divider-dot">◆</span></div>
+
+  <!-- TIMELINE -->
+  <section class="sec reveal">
+    <div class="sec-label">Atividade registrada</div>
+    <h2 class="sec-title">Linha do tempo</h2>
+    <p class="sec-sub">Cada ação executada — registrada em tempo real, explicada sem jargão.</p>
+    <div class="tl-wrap">
+      <div class="tl-line"></div>
+      <div id="tlItems"></div>
+    </div>
+  </section>
+
+  <!-- ALERTAS (dinâmico) -->
+  <section class="sec reveal" id="secAlertas" style="display:none">
+    <div class="sec-label">Atenção</div>
+    <h2 class="sec-title">Pontos que precisam de ação</h2>
+    <div id="alertasConteudo"></div>
+  </section>
+
+  <footer>
+    <div class="ft-brand">Método Marca Viva</div>
+    <p class="ft-quote">"Sua marca merece mais do que números.<br>Merece uma história."</p>
+    <div class="ft-pill">
+      <span class="ft-dot"></span>
+      Gerado pela Tracktor
+      <span class="ft-dot"></span>
+    </div>
+  </footer>
+
+</div><!-- /#app -->
+
+<script>
+// ════════════════════════════════════════════════
+//  CONSTANTES
+// ════════════════════════════════════════════════
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const TAG_LABELS = { diagnostico:'Análise', pausado:'Pausado', criado:'Criado', ajuste:'Ajuste', alerta:'Alerta', previsto:'Previsto', urgente:'Urgente' };
+const METRIC_MAP = {
+  conversas_iniciadas:'conversas', custo_por_mensagem:'custo_conversa',
+  custo_por_conversa:'custo_conversa', visualizacoes_video:'visualizacoes',
+  alcance:'alcance', investimento:'gasto_30d',
+};
+const METRIC_LOG_LABELS = {
+  gasto_30d:['Investimento','moeda'], conversas:['Conversas iniciadas','numero'],
+  custo_conversa:['Custo por conversa','moeda'], alcance:['Pessoas alcançadas','numero'],
+  cpm:['Custo por mil vis.','moeda'], visualizacoes:['Visualizações de vídeo','numero'],
+  ctr_melhor:['Taxa de clique','porcento'], budget_novo:['Novo budget/dia','moeda'],
+  saldo_conta:['Saldo da conta','moeda'], campanhas_pausadas:['Campanhas pausadas','numero'],
+};
+const NUM_COLORS = ['gold','green','green','gold','white','gold'];
+
+// ════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════
+let CONFIG = null, LOG = null;
+let now = new Date();
+let mesIdx = now.getMonth(), anoAtual = now.getFullYear();
+let isClaro = new URLSearchParams(location.search).get('tema') === 'claro';
+
+// ════════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════════
+function slug() { return new URLSearchParams(location.search).get('c') || 'tojiro-sushi'; }
+
+function hexRgb(h) {
+  return [1,3,5].map(i=>parseInt(h.slice(i,i+2),16)).join(',');
+}
+
+function fmt(v, tipo) {
+  if (v === undefined || v === null) return '—';
+  if (tipo === 'moeda') return 'R$' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  if (tipo === 'porcento') return Number(v).toFixed(2).replace('.',',') + '%';
+  return Number(v).toLocaleString('pt-BR');
+}
+
+function fmtDate(iso) {
+  const d = new Date(iso);
+  const dia = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long'});
+  const hr = d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  return `${dia} · ${hr}h`;
+}
+
+// ════════════════════════════════════════════════
+//  LOAD
+// ════════════════════════════════════════════════
+async function loadData() {
+  const s = slug();
+  try {
+    const [cr, lr] = await Promise.all([
+      fetch(`./${s}/config.json`),
+      fetch(`./${s}/log.json`)
+    ]);
+    if (!cr.ok || !lr.ok) throw new Error('404');
+    CONFIG = await cr.json();
+    LOG    = await lr.json();
+    return true;
+  } catch(e) {
+    document.getElementById('loading').innerHTML =
+      `<div style="font-size:13px;color:#ef4444;text-align:center;padding:24px">Não foi possível carregar o cliente <strong>${s}</strong>.<br><small style="color:#6b7280">Verifique se ${s}/config.json e ${s}/log.json existem.</small></div>`;
+    return false;
+  }
+}
+
+// ════════════════════════════════════════════════
+//  THEME
+// ════════════════════════════════════════════════
+function applyTheme() {
+  const c = CONFIG.cores;
+  const root = document.documentElement;
+  // Só aplica cores de marca (--p, --s) via JS — bg/text ficam com CSS vars dark/light
+  root.style.setProperty('--p', c.primaria);
+  root.style.setProperty('--s', c.secundaria);
+  root.style.setProperty('--p-rgb', hexRgb(c.primaria));
+  root.style.setProperty('--s-rgb', hexRgb(c.secundaria));
+  // Dark theme defaults vêm do config, mas não sobrescrevem .tema-claro
+  if (!isClaro) {
+    root.style.setProperty('--bg',  c.fundo      || '#0D0D0D');
+    root.style.setProperty('--bg2', c.superficie || '#141414');
+    root.style.setProperty('--text', c.texto     || '#FAFAF8');
+  }
+  document.title = `${CONFIG.nome} Vivo — Tracktor`;
+  document.body.classList.toggle('tema-claro', isClaro);
+  const btn = document.getElementById('themeToggle');
+  btn.textContent = isClaro ? '🌙 Escuro' : '☀ Claro';
+}
+
+function toggleTheme() {
+  isClaro = !isClaro;
+  document.body.classList.toggle('tema-claro', isClaro);
+  document.getElementById('themeToggle').textContent = isClaro ? '🌙 Tema escuro' : '☀ Tema claro';
+  const u = new URL(location);
+  isClaro ? u.searchParams.set('tema','claro') : u.searchParams.delete('tema');
+  history.replaceState(null,'',u);
+}
+
+// ════════════════════════════════════════════════
+//  HERO
+// ════════════════════════════════════════════════
+function renderHero() {
+  document.getElementById('heroEyebrow').textContent = `Relatório mensal · ${CONFIG.segmento}`;
+  const nome = CONFIG.nome.split(' ');
+  document.getElementById('heroTitle').innerHTML = `${nome[0]} <em>${nome.slice(1).join(' ')||'Vivo'}</em>`;
+  const chips = [CONFIG.cidade, `${MESES[mesIdx]} ${anoAtual}`, `Gestor: ${CONFIG.gestor}`];
+  document.getElementById('heroChips').innerHTML = chips.map(c=>`<div class="chip">${c}</div>`).join('');
+}
+
+// ════════════════════════════════════════════════
+//  MÊS
+// ════════════════════════════════════════════════
+function renderMes() {
+  document.getElementById('mpmonth').textContent = MESES[mesIdx];
+  document.getElementById('mpyear').textContent = anoAtual;
+  document.getElementById('numerosTitle').innerHTML =
+    `Números que importam para <em>${CONFIG.clientName || CONFIG.nome}</em>`;
+  renderNumeros();
+}
+
+function changeMonth(d) {
+  mesIdx += d;
+  if (mesIdx < 0) { mesIdx = 11; anoAtual--; }
+  if (mesIdx > 11) { mesIdx = 0; anoAtual++; }
+  renderMes();
+}
+
+// ════════════════════════════════════════════════
+//  NÚMEROS
+// ════════════════════════════════════════════════
+function getMetricasMes() {
+  const entries = (LOG.entries||[]).filter(e => {
+    const d = new Date(e.data);
+    return d.getMonth() === mesIdx && d.getFullYear() === anoAtual;
+  });
+  const agg = {};
+  entries.forEach(e => e.metricas && Object.assign(agg, e.metricas));
+  return { dados: agg, temDados: Object.keys(agg).length > 0 };
+}
+
+function renderNumeros() {
+  const grid = document.getElementById('numsGrid');
+  const { dados, temDados } = getMetricasMes();
+  const cfgMetricas = CONFIG.metricas || [];
+  if (!cfgMetricas.length) { grid.innerHTML = '<div class="num-empty">Nenhuma métrica configurada.</div>'; return; }
+
+  // Sem dados para o mês selecionado
+  if (!temDados) {
+    const mesNome = MESES[mesIdx];
+    grid.innerHTML = `<div class="num-empty" style="padding:52px 24px">
+      <div style="font-size:28px;margin-bottom:12px;opacity:.3">📊</div>
+      <div style="font-weight:600;color:var(--text2);margin-bottom:6px">Sem dados para ${mesNome} ${anoAtual}</div>
+      <div style="font-size:12px">Nenhuma ação foi registrada neste período.</div>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = cfgMetricas.map((m, i) => {
+    const key = METRIC_MAP[m.id] || m.id;
+    const val = dados[key];
+    return `
+      <div class="num-cell">
+        <span class="num-val ${NUM_COLORS[i%NUM_COLORS.length]}">${fmt(val, m.formato)}</span>
+        <div class="num-title">${m.label}</div>
+        <div class="num-desc">${m.desc}</div>
+      </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+//  CRIATIVO
+// ════════════════════════════════════════════════
+function renderCriativo() {
+  const cr = CONFIG.criativo;
+  if (!cr) { document.getElementById('secCriativo').style.display='none'; return; }
+
+  // Stats
+  const statsHtml = (cr.stats||[]).map(s=>`
+    <div class="cs">
+      <div class="cs-val ${s.cor==='green'?'green':''}">${s.valor}</div>
+      <div class="cs-body">
+        <div class="cs-label">${s.label}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('criativoStats').innerHTML = statsHtml;
+
+  // Mockup
+  const ig = CONFIG.instagram || '';
+  document.getElementById('phoneUser').textContent = `@${ig}`;
+  document.getElementById('phoneAvatar').textContent = ig.slice(0,2).toUpperCase();
+  document.getElementById('phoneVideoTitle').textContent = CONFIG.nome.toUpperCase();
+  document.getElementById('capUser').textContent = ig;
+  document.getElementById('capTitle').textContent = cr.titulo || 'Anúncio em destaque';
+
+  // Update real time
+  const t = new Date();
+  document.getElementById('phoneTime').textContent =
+    t.getHours().toString().padStart(2,'0') + ':' + t.getMinutes().toString().padStart(2,'0');
+
+  // Se tiver vídeo real
+  if (cr.video_url) {
+    const vid = document.createElement('video');
+    vid.src = cr.video_url;
+    vid.loop = true;
+    vid.muted = true;
+    vid.playsInline = true;
+    vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3';
+    document.getElementById('phoneVideo').appendChild(vid);
+    document.getElementById('playBtn').style.zIndex = '4';
+  }
+}
+
+function playVideo() {
+  const cr = CONFIG.criativo;
+  const vid = document.querySelector('#phoneVideo video');
+  if (vid) {
+    const btn = document.getElementById('playBtn');
+    if (vid.paused) { vid.play(); btn.style.opacity='0'; }
+    else { vid.pause(); btn.style.opacity='1'; }
+    return;
+  }
+  // Sem vídeo — abre Instagram se disponível
+  if (CONFIG.instagram) window.open(`https://www.instagram.com/${CONFIG.instagram}/`, '_blank');
+}
+
+// ════════════════════════════════════════════════
+//  TEAM
+// ════════════════════════════════════════════════
+function renderTeam() {
+  document.getElementById('teamList').innerHTML = CONFIG.time.map(m => {
+    const ini = m.nome.split(' ').slice(0,2).map(w=>w[0]).join('');
+    return `
+      <div class="team-row reveal">
+        <div class="team-left">
+          <div class="t-av" style="background:${m.cor}1A;color:${m.cor};border-color:${m.cor}44">${ini}</div>
+          <div>
+            <div class="t-name">${m.nome}</div>
+            <div class="t-role">${m.cargo}</div>
+          </div>
+        </div>
+        <div class="team-analysis">${m.analise}</div>
+      </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+//  TIMELINE
+// ════════════════════════════════════════════════
+function renderTimeline() {
+  const items = [...(LOG.entries||[])].sort((a,b)=>new Date(b.data)-new Date(a.data));
+  document.getElementById('tlItems').innerHTML = items.map(e => {
+    const pending = e.tag === 'previsto';
+    const chipsHtml = e.metricas && Object.keys(e.metricas).length
+      ? `<div class="tl-chips">${Object.entries(e.metricas).slice(0,4).map(([k,v])=>{
+          if (!METRIC_LOG_LABELS[k]) return '';
+          const [lbl,tipo] = METRIC_LOG_LABELS[k];
+          return `<div class="tl-chip"><b>${lbl}:</b> ${fmt(v,tipo)}</div>`;
+        }).filter(Boolean).join('')}</div>` : '';
+    return `
+      <div class="tl-item reveal">
+        <div class="tl-dot ${pending?'pending':'done'}"></div>
+        <div class="tl-when">${fmtDate(e.data)}</div>
+        <div class="tl-card ${pending?'pending':''}">
+          <div class="tl-head">
+            <span class="tl-ttl">${e.titulo}</span>
+            <span class="tl-tag tag-${e.tag}">${TAG_LABELS[e.tag]||e.tag}</span>
+          </div>
+          <p class="tl-desc">${e.descricao}</p>
+          ${chipsHtml}
+          <div class="tl-by">${e.autor} · ${e.plataforma}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+//  ALERTAS
+// ════════════════════════════════════════════════
+function renderAlertas() {
+  const alertas = CONFIG.alertas || [];
+  if (!alertas.length) return;
+  document.getElementById('secAlertas').style.display = 'block';
+  document.getElementById('alertasConteudo').innerHTML = alertas.map(a=>`
+    <div class="alert-card">
+      <div class="alert-ico">⚠️</div>
+      <div>
+        <div class="alert-ttl">${a.titulo}</div>
+        <div class="alert-body">${a.descricao}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════════
+//  INTERSECTION OBSERVER
+// ════════════════════════════════════════════════
+function initReveal() {
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){
+        e.target.style.transitionDelay = (i * 0.05) + 's';
+        e.target.classList.add('in');
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:.06,rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+}
+
+// ════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════
+async function init() {
+  const ok = await loadData();
+  if(!ok) return;
+  applyTheme();
+  renderHero();
+  renderMes();
+  renderCriativo();
+  renderTeam();
+  renderTimeline();
+  renderAlertas();
+  document.getElementById('loading').style.opacity = '0';
+  setTimeout(()=>{
+    document.getElementById('loading').style.display='none';
+    document.getElementById('app').style.display='block';
+    setTimeout(initReveal, 80);
+  }, 350);
+}
+
+init();
+</script>
+</body>
+</html>

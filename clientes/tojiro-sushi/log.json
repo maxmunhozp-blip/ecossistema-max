@@ -1,0 +1,49 @@
+{
+  "slug": "tojiro-sushi",
+  "entries": [
+    {
+      "id": "2026-03-25-004",
+      "data": "2026-03-25T14:00:00",
+      "titulo": "Nova estrutura de campanhas criada",
+      "descricao": "Criada campanha TOJIRO / 2026 / MAX - Estrutura Nova com 2 conjuntos de público: Remarketing (365D engajamento, raio 8-10km) e Prospecção (público frio Advantage+, raio 10km). Criativo campeão aplicado em ambos. Budget R$60/dia por CBO. Campanha pausada — aguardando recarga de R$300 na sexta.",
+      "tag": "criado",
+      "autor": "Alexandre Albino",
+      "plataforma": "Meta Ads",
+      "metricas": {},
+      "ids": { "campanha": "120241543105920760", "adset_remarketing": "120241543177530760", "adset_prospeccao": "120241543186020760" }
+    },
+    {
+      "id": "2026-03-25-003",
+      "data": "2026-03-25T11:00:00",
+      "titulo": "Budget da campanha reduzido para R$9/dia",
+      "descricao": "Saldo da conta estava em R$18,02. Com 3 campanhas a R$30/dia cada, o orçamento esgotaria em horas. Budget da Campanha Original reduzido para R$9/dia para garantir cobertura até sexta-feira, quando R$300 de recarga entram na conta.",
+      "tag": "ajuste",
+      "autor": "Alexandre Albino",
+      "plataforma": "Meta Ads",
+      "metricas": { "budget_anterior": 30, "budget_novo": 9, "saldo_conta": 18.02 },
+      "ids": { "campanha": "120234959881500760" }
+    },
+    {
+      "id": "2026-03-25-002",
+      "data": "2026-03-25T10:00:00",
+      "titulo": "2 campanhas pausadas — canibalização eliminada",
+      "descricao": "Pausadas as campanhas Otimização 2 (LEADS) e Otimização 3 (INTERAÇÃO). Ambas disputavam a mesma audiência 365D ENGAJ SUSHI MOCCA, causando concorrência interna no leilão e CPM artificialmente alto (~R$23). Mantida apenas a Campanha Original com o melhor criativo da conta.",
+      "tag": "pausado",
+      "autor": "Alexandre Albino",
+      "plataforma": "Meta Ads",
+      "metricas": { "cpm_antes": 23.39, "campanhas_pausadas": 2 },
+      "ids": { "pausada_1": "120240479348260760", "pausada_2": "120240365748820760" }
+    },
+    {
+      "id": "2026-03-25-001",
+      "data": "2026-03-25T09:00:00",
+      "titulo": "Diagnóstico completo da conta",
+      "descricao": "Análise via Meta Graph API identificou 3 problemas principais: (1) Canibalização interna — 3 campanhas com mesma audiência brigando no leilão. (2) Objetivo errado — OUTCOME_ENGAGEMENT em vez de OUTCOME_MESSAGES. (3) Zero prospecção — 100% remarketing sem entrada de público frio. Adicionalmente, taxa de resposta no WhatsApp abaixo de 3% (232 conversas, 7 respondidas).",
+      "tag": "diagnostico",
+      "autor": "Camila Rocha",
+      "plataforma": "Meta Ads",
+      "metricas": { "gasto_30d": 1816.74, "conversas": 232, "custo_conversa": 4.52, "cpm": 23.12, "ctr_melhor": 3.70, "alcance": 25122, "visualizacoes": 45357 },
+      "ids": {}
+    }
+  ]
+}

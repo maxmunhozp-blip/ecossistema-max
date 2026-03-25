@@ -1,0 +1,45 @@
+{
+  "slug": "tojiro-sushi",
+  "nome": "Tojiro Sushi",
+  "clientName": "Verlaine",
+  "segmento": "Restaurante Japonês",
+  "cidade": "São Paulo, SP — Mooca",
+  "gestor": "Tracktor",
+  "instagram": "tojirosushimooca",
+  "cores": {
+    "primaria": "#C1272D",
+    "secundaria": "#D4A853",
+    "fundo": "#0D0D0D",
+    "superficie": "#141414",
+    "texto": "#FAFAF8",
+    "muted": "#8A7060"
+  },
+  "metricas": [
+    { "id": "conversas_iniciadas", "label": "Conversas iniciadas", "desc": "pessoas que mandaram mensagem pelo anúncio", "formato": "numero" },
+    { "id": "custo_por_mensagem", "label": "Custo por mensagem", "desc": "quanto custou cada pessoa que entrou em contato", "formato": "moeda" },
+    { "id": "custo_por_conversa", "label": "Menor custo por conversa", "desc": "no melhor anúncio do mês", "formato": "moeda" },
+    { "id": "visualizacoes_video", "label": "Visualizações de vídeo", "desc": "pessoas que assistiram o anúncio", "formato": "numero" }
+  ],
+  "criativo": {
+    "titulo": "Chamada ao Ambiente",
+    "video_url": "",
+    "thumbnail_url": "",
+    "stats": [
+      { "label": "Taxa de visualização", "valor": "3,70%", "cor": "green" },
+      { "label": "Custo por conversa", "valor": "R$3,65", "cor": "green" },
+      { "label": "Visualizações", "valor": "45.357", "cor": "default" }
+    ]
+  },
+  "alertas": [
+    {
+      "titulo": "Atendimento precisa de atenção",
+      "descricao": "232 pessoas entraram em contato pelo anúncio no último mês. Apenas 7 receberam resposta nos últimos 7 dias — uma taxa de menos de 3%. O anúncio está funcionando e trazendo pessoas. O próximo passo é garantir que elas sejam respondidas rapidamente. Recomendamos configurar uma mensagem automática no WhatsApp Business com cardápio e horário de atendimento."
+    }
+  ],
+  "time": [
+    { "nome": "Lucas Ferreira", "cargo": "Estrategista", "cor": "#C1272D", "analise": "Ao entrar na conta, identifiquei imediatamente o problema central: <span class=\"hl\">3 campanhas brigando pela mesma audiência ao mesmo tempo</span>. Isso cria um leilão interno — o Meta cobra mais caro porque você está competindo com você mesmo. A decisão foi consolidar: pausar o que performa menos, manter o campeão, e montar uma estrutura nova com dois públicos distintos." },
+    { "nome": "Camila Rocha", "cargo": "Analista de Dados", "cor": "#D4A853", "analise": "Os números contavam uma história diferente do que parecia. <span class=\"hl\">232 pessoas enviaram mensagem pelo anúncio — mas apenas 7 receberam resposta</span>. O anúncio funcionava. O problema era o atendimento. Também mapeei que o custo por conversa caiu para R$3,65 no melhor anúncio — um indicador muito saudável que estava sendo desperdiçado." },
+    { "nome": "Alexandre Albino", "cargo": "Gestor de Tráfego", "cor": "#9CA3AF", "analise": "Executei três movimentos em sequência: pausei as campanhas que drenavam orçamento sem resultado, ajustei o budget para durar até a recarga de sexta, e <span class=\"hl\">criei uma estrutura nova com remarketing (quem já conhece o Tojiro) e prospecção (público frio que ainda não conhece)</span>. A nova campanha está pronta, pausada e aguarda a recarga de R$300 para ativar." },
+    { "nome": "Bruno Mendes", "cargo": "Criativo", "cor": "#E87070", "analise": "O vídeo 'Chamada ao Ambiente' foi o criativo com melhor performance — <span class=\"hl\">CTR de 3,70% e R$3,65 por conversa</span>, acima da média de restaurantes no Meta. Colocamos esse criativo campeão em ambos os conjuntos da nova estrutura. Quando o vídeo que já prova resultado entra em um público novo, o custo tende a cair ainda mais." }
+  ]
+}

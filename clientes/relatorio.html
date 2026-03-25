@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Relatório Técnico — Tracktor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+:root{
+  --p:#C1272D; --p-rgb:193,39,45;
+  --s:#D4A853; --s-rgb:212,168,83;
+  --bg:#0A0A0A; --bg2:#111111; --bg3:#181818;
+  --text:#F0EDE8; --text2:#B8AFA8; --text3:#6B6258;
+  --border:rgba(255,255,255,.06); --border2:rgba(255,255,255,.04);
+  --green:#4ADE80; --amber:#FBBF24; --blue:#60A5FA;
+  --font:'DM Sans',-apple-system,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;font-size:14px}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100;gap:10px;flex-direction:column}
+.spin{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--p);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
+
+/* SIDEBAR LAYOUT */
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;border-right:1px solid var(--border);padding:24px 0;display:flex;flex-direction:column;gap:4px;background:var(--bg2)}
+.sb-header{padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.sb-slug{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.sb-nome{font-size:15px;font-weight:700;color:var(--text)}
+.sb-badge{display:inline-block;margin-top:6px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;background:rgba(var(--p-rgb),.12);color:var(--p)}
+
+.sb-section{padding:8px 20px 4px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+.sb-link{display:flex;align-items:center;gap:8px;padding:7px 20px;font-size:13px;font-weight:500;color:var(--text3);text-decoration:none;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.sb-link:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.sb-link.active{color:var(--text);background:rgba(var(--p-rgb),.08);border-right:2px solid var(--p)}
+.sb-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0}
+.sb-link.active .sb-dot{background:var(--p)}
+
+.sb-footer{margin-top:auto;padding:16px 20px 0;border-top:1px solid var(--border)}
+.sb-meta{font-size:10px;color:var(--text3);line-height:1.6}
+
+/* MAIN */
+.main{padding:48px 52px;max-width:820px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}.main{padding:24px 20px}}
+
+/* SECTION */
+.sec{margin-bottom:64px;scroll-margin-top:32px}
+.sec-head{margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.sec-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--p);margin-bottom:8px}
+.sec-title{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.sec-sub{font-size:13px;color:var(--text3);margin-top:6px;line-height:1.6}
+
+/* DIÁRIO DO TIME — por autor */
+.diario-member{margin-bottom:36px}
+.dm-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.dm-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;border:1px solid}
+.dm-name{font-size:14px;font-weight:700;color:var(--text)}
+.dm-role{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3)}
+.dm-entries{display:flex;flex-direction:column;gap:10px;padding-left:48px}
+.dm-entry{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 18px;position:relative}
+.dm-entry::before{content:'';position:absolute;left:-24px;top:20px;width:12px;height:1px;background:var(--border)}
+.dm-entry-time{font-size:10px;font-weight:500;color:var(--text3);font-family:var(--mono);margin-bottom:6px}
+.dm-entry-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:5px}
+.dm-entry-body{font-size:13px;color:var(--text2);line-height:1.7}
+.dm-entry-tag{display:inline-flex;align-items:center;margin-top:8px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.dm-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.dm-chip{background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:4px;padding:2px 8px;font-size:11px;font-family:var(--mono);color:var(--text3)}
+.dm-chip b{color:var(--text);font-weight:500}
+.dm-empty{padding:16px;font-size:13px;color:var(--text3);font-style:italic;padding-left:48px}
+
+/* AGENDA DE REVISÕES */
+.agenda-grid{display:flex;flex-direction:column;gap:8px}
+.agenda-item{display:grid;grid-template-columns:160px 1fr auto;align-items:center;gap:16px;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px}
+.ag-when{font-size:12px;font-weight:600;font-family:var(--mono);color:var(--text2)}
+.ag-desc{font-size:13px;color:var(--text)}
+.ag-membro{font-size:11px;color:var(--text3);text-align:right}
+.ag-status{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.ag-status.pending{color:var(--amber)}
+.ag-status.done{color:var(--green)}
+.ag-status.next{color:var(--blue)}
+.status-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* CAMPANHAS ATIVAS */
+.camp-list{display:flex;flex-direction:column;gap:8px}
+.camp-item{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:8px}
+.camp-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.camp-id{font-size:10px;font-family:var(--mono);color:var(--text3)}
+.camp-desc{font-size:12px;color:var(--text3);margin-top:5px;line-height:1.5}
+.camp-badge{padding:3px 10px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+.badge-ativo{background:rgba(74,222,128,.1);color:var(--green)}
+.badge-pausado{background:rgba(251,191,36,.1);color:var(--amber)}
+.badge-aguardando{background:rgba(96,165,250,.1);color:var(--blue)}
+
+/* LOG TÉCNICO */
+.log-list{display:flex;flex-direction:column;gap:6px}
+.log-item{font-size:12px;font-family:var(--mono);padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;display:grid;grid-template-columns:160px 80px 1fr;gap:12px;align-items:baseline}
+.log-ts{color:var(--text3)}
+.log-tag{font-weight:500}
+.log-msg{color:var(--text2)}
+.tag-diagnostico{color:var(--s)}
+.tag-pausado{color:var(--amber)}
+.tag-criado{color:var(--green)}
+.tag-ajuste{color:var(--blue)}
+.tag-alerta,.tag-urgente{color:var(--p)}
+.tag-previsto{color:var(--text3)}
+
+/* ALERTAS */
+.alerta-card{display:flex;gap:14px;padding:16px 20px;background:rgba(var(--s-rgb),.05);border:1px solid rgba(var(--s-rgb),.2);border-left:3px solid var(--s);border-radius:8px;margin-bottom:10px}
+.alerta-ico{font-size:18px;flex-shrink:0}
+.alerta-ttl{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.alerta-body{font-size:13px;color:var(--text2);line-height:1.7}
+
+/* EMPTY */
+.empty{padding:24px;text-align:center;color:var(--text3);font-size:13px;border:1px dashed var(--border);border-radius:8px}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spin"></div>
+  <div class="spin-label">Carregando</div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sb-header">
+        <div class="sb-slug" id="sbSlug">—</div>
+        <div class="sb-nome" id="sbNome">—</div>
+        <div class="sb-badge">Relatório Técnico</div>
+      </div>
+
+      <div class="sb-section">Navegação</div>
+      <a class="sb-link active" onclick="scrollTo('secDiario')"><span class="sb-dot"></span>Diário do Time</a>
+      <a class="sb-link" onclick="scrollTo('secAgenda')"><span class="sb-dot"></span>Agenda de Revisões</a>
+      <a class="sb-link" onclick="scrollTo('secCampanhas')"><span class="sb-dot"></span>Campanhas Ativas</a>
+      <a class="sb-link" onclick="scrollTo('secAlertas')"><span class="sb-dot"></span>Alertas</a>
+      <a class="sb-link" onclick="scrollTo('secLog')"><span class="sb-dot"></span>Log Técnico Completo</a>
+
+      <div class="sb-section" style="margin-top:12px">Links</div>
+      <a class="sb-link" id="linkVivo" href="#"><span class="sb-dot"></span>Ver Cliente Vivo</a>
+
+      <div class="sb-footer">
+        <div class="sb-meta" id="sbMeta">—</div>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main" id="mainContent">
+
+      <!-- DIÁRIO DO TIME -->
+      <section class="sec" id="secDiario">
+        <div class="sec-head">
+          <div class="sec-label">Time dedicado</div>
+          <div class="sec-title">Diário do Time</div>
+          <div class="sec-sub">O que cada especialista fez — registrado em ordem cronológica, em primeira pessoa.</div>
+        </div>
+        <div id="diarioConteudo"></div>
+      </section>
+
+      <!-- AGENDA -->
+      <section class="sec" id="secAgenda">
+        <div class="sec-head">
+          <div class="sec-label">Próximas revisões</div>
+          <div class="sec-title">Agenda de Otimizações</div>
+          <div class="sec-sub">A cada 48h o time revisa as campanhas, propõe ajustes e registra aqui.</div>
+        </div>
+        <div class="agenda-grid" id="agendaConteudo"></div>
+      </section>
+
+      <!-- CAMPANHAS -->
+      <section class="sec" id="secCampanhas">
+        <div class="sec-head">
+          <div class="sec-label">Meta Ads</div>
+          <div class="sec-title">Campanhas Ativas</div>
+          <div class="sec-sub">Status atual de cada campanha na conta.</div>
+        </div>
+        <div class="camp-list" id="campanhasConteudo"></div>
+      </section>
+
+      <!-- ALERTAS -->
+      <section class="sec" id="secAlertas">
+        <div class="sec-head">
+          <div class="sec-label">Pontos de atenção</div>
+          <div class="sec-title">Alertas</div>
+        </div>
+        <div id="alertasConteudo"></div>
+      </section>
+
+      <!-- LOG TÉCNICO -->
+      <section class="sec" id="secLog">
+        <div class="sec-head">
+          <div class="sec-label">Histórico completo</div>
+          <div class="sec-title">Log Técnico</div>
+          <div class="sec-sub">Todos os registros desta conta — timestamps, IDs de campanha, métricas brutas.</div>
+        </div>
+        <div class="log-list" id="logConteudo"></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const TAG_LABELS = { diagnostico:'diagnóstico', pausado:'pausado', criado:'criado', ajuste:'ajuste', alerta:'alerta', previsto:'previsto', urgente:'urgente' };
+const METRIC_LABELS = {
+  gasto_30d:'Investimento 30d', conversas:'Conversas', custo_conversa:'Custo/conversa',
+  alcance:'Alcance', cpm:'CPM', visualizacoes:'Visualizações', ctr_melhor:'Melhor CTR',
+  budget_novo:'Novo budget/dia', budget_anterior:'Budget anterior', saldo_conta:'Saldo conta',
+  campanhas_pausadas:'Campanhas pausadas',
+};
+
+let CONFIG = null, LOG = null;
+
+function slug() { return new URLSearchParams(location.search).get('c') || 'tojiro-sushi'; }
+
+function fmt(v, tipo) {
+  if (v === undefined || v === null) return '—';
+  if (tipo === 'moeda') return 'R$' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  if (tipo === 'porcento') return Number(v).toFixed(2).replace('.',',') + '%';
+  return Number(v).toLocaleString('pt-BR');
+}
+
+function fmtTs(iso) {
+  const d = new Date(iso);
+  return `${d.toLocaleDateString('pt-BR')} ${d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}h`;
+}
+
+function fmtRelativo(iso) {
+  const d = new Date(iso), now = new Date();
+  const diff = now - d;
+  const h = Math.floor(diff / 3600000);
+  if (h < 1) return 'agora há pouco';
+  if (h < 24) return `há ${h}h`;
+  const dias = Math.floor(h / 24);
+  if (dias === 1) return 'ontem';
+  return `há ${dias} dias`;
+}
+
+async function loadData() {
+  const s = slug();
+  try {
+    const [cr, lr] = await Promise.all([
+      fetch(`./${s}/config.json`),
+      fetch(`./${s}/log.json`)
+    ]);
+    if (!cr.ok || !lr.ok) throw new Error('404');
+    CONFIG = await cr.json();
+    LOG    = await lr.json();
+    return true;
+  } catch(e) {
+    document.getElementById('loading').innerHTML =
+      `<div style="color:#ef4444;text-align:center;padding:24px;font-size:13px">Não foi possível carregar o cliente <strong>${s}</strong>.</div>`;
+    return false;
+  }
+}
+
+function renderSidebar() {
+  const s = slug();
+  document.getElementById('sbSlug').textContent = s;
+  document.getElementById('sbNome').textContent = CONFIG.nome;
+  document.getElementById('linkVivo').href = `vivo.html?c=${s}`;
+  const last = (LOG.entries||[])[0];
+  document.getElementById('sbMeta').innerHTML =
+    `Gestor: <strong style="color:var(--text2)">${CONFIG.gestor||'—'}</strong><br>` +
+    (last ? `Última ação: ${fmtRelativo(last.data)}` : '');
+  document.title = `Relatório · ${CONFIG.nome}`;
+
+  // Aplica cor primária
+  document.documentElement.style.setProperty('--p', CONFIG.cores?.primaria || '#C1272D');
+  const rgb = (CONFIG.cores?.primaria||'#C1272D').slice(1).match(/.{2}/g).map(h=>parseInt(h,16)).join(',');
+  document.documentElement.style.setProperty('--p-rgb', rgb);
+}
+
+function renderDiario() {
+  const time = CONFIG.time || [];
+  const entries = (LOG.entries || []).sort((a,b) => new Date(b.data) - new Date(a.data));
+  const container = document.getElementById('diarioConteudo');
+
+  if (!time.length) { container.innerHTML = '<div class="empty">Time não configurado.</div>'; return; }
+
+  container.innerHTML = time.map(m => {
+    const ini = m.nome.split(' ').slice(0,2).map(w=>w[0]).join('');
+    const minhas = entries.filter(e => e.autor === m.nome);
+
+    const entriesHtml = minhas.length ? minhas.map(e => {
+      const metricas = e.metricas || {};
+      const chipsHtml = Object.entries(metricas).slice(0,5).map(([k,v]) => {
+        const label = METRIC_LABELS[k] || k;
+        const tipo = (k.includes('custo')||k.includes('gasto')||k.includes('budget')||k.includes('saldo')) ? 'moeda'
+                   : (k.includes('ctr')) ? 'porcento' : 'numero';
+        return `<div class="dm-chip"><b>${label}:</b> ${fmt(v, tipo)}</div>`;
+      }).join('');
+
+      const idsHtml = e.ids && Object.keys(e.ids).length
+        ? `<div style="margin-top:8px;font-size:10px;font-family:var(--mono);color:var(--text3)">${
+            Object.entries(e.ids).map(([k,v])=>`${k}: ${v}`).join(' · ')
+          }</div>` : '';
+
+      return `
+        <div class="dm-entry">
+          <div class="dm-entry-time">${fmtTs(e.data)} · ${fmtRelativo(e.data)}</div>
+          <div class="dm-entry-title">${e.titulo}</div>
+          <div class="dm-entry-body">${e.descricao}</div>
+          ${chipsHtml ? `<div class="dm-chips">${chipsHtml}</div>` : ''}
+          ${idsHtml}
+          <span class="dm-entry-tag tag-${e.tag}" style="background:rgba(var(--p-rgb),.08)">${TAG_LABELS[e.tag]||e.tag}</span>
+        </div>`;
+    }).join('') : `<div class="dm-empty">Nenhuma ação registrada por ${m.nome.split(' ')[0]} ainda.</div>`;
+
+    return `
+      <div class="diario-member">
+        <div class="dm-header">
+          <div class="dm-av" style="background:${m.cor}18;color:${m.cor};border-color:${m.cor}33">${ini}</div>
+          <div>
+            <div class="dm-name">${m.nome}</div>
+            <div class="dm-role">${m.cargo}</div>
+          </div>
+        </div>
+        <div class="dm-entries">${entriesHtml}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderAgenda() {
+  const time = CONFIG.time || [];
+  const now = new Date();
+
+  // Gera próximas revisões (4 ciclos de 48h)
+  const revisoes = [];
+  for (let i = 0; i < 4; i++) {
+    const dt = new Date(now.getTime() + (i * 48 + 1) * 60 * 60 * 1000);
+    const membro = time[i % time.length] || { nome: '—', cargo: '—' };
+    const isNext = i === 0;
+    revisoes.push({
+      dt,
+      membro,
+      status: isNext ? 'next' : 'pending',
+      label: isNext ? 'próxima' : 'prevista',
+    });
+  }
+
+  // Últimas revisões (do log)
+  const feitas = (LOG.entries||[])
+    .sort((a,b) => new Date(b.data) - new Date(a.data))
+    .slice(0, 3);
+
+  const container = document.getElementById('agendaConteudo');
+  const Feitas = feitas.map(e => `
+    <div class="agenda-item">
+      <div class="ag-when">${fmtTs(e.data)}</div>
+      <div>
+        <div class="ag-desc">${e.titulo}</div>
+      </div>
+      <div>
+        <div class="ag-membro">${e.autor}</div>
+        <div class="ag-status done"><span class="status-dot"></span>concluído</div>
+      </div>
+    </div>`).join('');
+
+  const Proximas = revisoes.map(r => `
+    <div class="agenda-item">
+      <div class="ag-when">${r.dt.toLocaleDateString('pt-BR')} ${r.dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}h</div>
+      <div>
+        <div class="ag-desc">Revisão de campanhas — ${r.membro.cargo}</div>
+      </div>
+      <div>
+        <div class="ag-membro">${r.membro.nome}</div>
+        <div class="ag-status ${r.status}"><span class="status-dot"></span>${r.label}</div>
+      </div>
+    </div>`).join('');
+
+  container.innerHTML = `
+    <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);padding:4px 0 10px">Já realizadas</div>
+    ${Feitas || '<div class="empty">Nenhuma revisão registrada ainda.</div>'}
+    <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);padding:16px 0 10px">Próximas 8 dias</div>
+    ${Proximas}`;
+}
+
+function renderCampanhas() {
+  // Extrai campanhas do log (IDs únicos)
+  const campMap = {};
+  (LOG.entries||[]).forEach(e => {
+    if (!e.ids) return;
+    Object.entries(e.ids).forEach(([tipo, id]) => {
+      if (tipo.includes('campanha') && !campMap[id]) {
+        campMap[id] = { id, titulo: e.titulo, descricao: e.descricao, tag: e.tag, data: e.data };
+      }
+    });
+  });
+
+  const camps = Object.values(campMap);
+  const container = document.getElementById('campanhasConteudo');
+
+  if (!camps.length) { container.innerHTML = '<div class="empty">Nenhuma campanha registrada no log.</div>'; return; }
+
+  // Determina status baseado no log mais recente
+  const entries = (LOG.entries||[]).sort((a,b) => new Date(b.data)-new Date(a.data));
+  const getStatus = (id) => {
+    for (const e of entries) {
+      if (!e.ids) continue;
+      const ids = Object.values(e.ids);
+      if (ids.includes(id)) {
+        if (e.tag === 'pausado') return { label:'Pausado', cls:'badge-pausado' };
+        if (e.tag === 'criado')  return { label:'Aguardando ativação', cls:'badge-aguardando' };
+        if (e.tag === 'ajuste')  return { label:'Ativo', cls:'badge-ativo' };
+      }
+    }
+    return { label:'Ativo', cls:'badge-ativo' };
+  };
+
+  // Campanha nova (da última entrada "criado") fica em destaque
+  container.innerHTML = camps.map(c => {
+    const st = getStatus(c.id);
+    return `
+      <div class="camp-item">
+        <div>
+          <div class="camp-name">${c.titulo}</div>
+          <div class="camp-id">ID ${c.id} · ${fmtTs(c.data)}</div>
+          <div class="camp-desc">${c.descricao.slice(0,180)}${c.descricao.length>180?'...':''}</div>
+        </div>
+        <div><span class="camp-badge ${st.cls}">${st.label}</span></div>
+      </div>`;
+  }).join('');
+}
+
+function renderAlertas() {
+  const alertas = CONFIG.alertas || [];
+  const container = document.getElementById('alertasConteudo');
+  if (!alertas.length) { container.innerHTML = '<div class="empty">Nenhum alerta ativo.</div>'; return; }
+  container.innerHTML = alertas.map(a => `
+    <div class="alerta-card">
+      <div class="alerta-ico">⚠️</div>
+      <div>
+        <div class="alerta-ttl">${a.titulo}</div>
+        <div class="alerta-body">${a.descricao}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderLog() {
+  const entries = [...(LOG.entries||[])].sort((a,b) => new Date(b.data)-new Date(a.data));
+  document.getElementById('logConteudo').innerHTML = entries.map(e => {
+    const idsStr = e.ids && Object.keys(e.ids).length
+      ? ` [${Object.entries(e.ids).map(([k,v])=>`${k}:${v}`).join(' ')}]` : '';
+    return `
+      <div class="log-item">
+        <div class="log-ts">${fmtTs(e.data)}</div>
+        <div class="log-tag tag-${e.tag}">${e.tag}</div>
+        <div class="log-msg">${e.titulo}${idsStr} — <span style="color:var(--text3)">${e.autor}</span></div>
+      </div>`;
+  }).join('');
+}
+
+function scrollTo(id) {
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  event?.target?.closest('.sb-link')?.classList.add('active');
+}
+
+async function init() {
+  const ok = await loadData();
+  if (!ok) return;
+  renderSidebar();
+  renderDiario();
+  renderAgenda();
+  renderCampanhas();
+  renderAlertas();
+  renderLog();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+init();
+</script>
+</body>
+</html>
