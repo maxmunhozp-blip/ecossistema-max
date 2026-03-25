@@ -154,14 +154,10 @@ tbody td:first-child{width:32px;padding-right:0}
 .history-list::before{content:'';position:absolute;left:14px;top:14px;bottom:6px;width:1px;background:linear-gradient(var(--border),transparent)}
 .history-item{position:relative;margin-bottom:20px}
 .history-item:last-child{margin-bottom:0}
-.history-ico{position:absolute;left:-40px;top:2px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid;flex-shrink:0;background:var(--bg-card)}
-.history-ico.success{border-color:var(--green);color:var(--green)}
-.history-ico.warn{border-color:var(--amber);color:var(--amber)}
-.history-ico.info{border-color:var(--blue);color:var(--blue)}
-.history-ico.alert{border-color:#f87171;color:#f87171}
-.history-ico.pending{border-color:var(--border);color:var(--text-muted);border-style:dashed}
-.history-when{font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px}
-.history-note{font-size:13px;color:var(--text-dark);line-height:1.65}
+.history-ico{position:absolute;left:-40px;top:3px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;color:var(--text-muted)}
+.history-author{font-size:12px;font-weight:700;color:var(--text-dark);margin-bottom:3px}
+.history-when{font-size:10px;font-weight:500;color:var(--text-muted);margin-bottom:6px}
+.history-note{font-size:13px;color:var(--text-muted);line-height:1.7}
 
 /* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text-dark);color:var(--green-neon);padding:9px 18px;border-radius:30px;font-size:12px;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:999;border:1px solid rgba(0,212,160,.3)}
@@ -429,11 +425,10 @@ const COLORS = ['#7c3aed','#2563eb','#059669','#f59e0b','#ef4444','#ec4899','#08
 
 let clients = JSON.parse(localStorage.getItem('eco_clients') || 'null') || [
   {id:1,name:'Tojiro Sushi',email:'contato@tojirosushi.com.br',whatsapp:'',segment:'Restaurante Japonês',products:['Meta Ads','Social Media'],mrr:0,status:'ativo',health:80,created:'2025-10-01',renewal:'-',clientName:'Verlaine',metricas:['conversas_iniciadas','custo_por_mensagem','custo_por_conversa','visualizacoes_video'],notes:'3 campanhas canibalização resolvidas em mar/26. Nova estrutura remarketing + prospecção criada. Alerta: atendimento falho.',dashboard:'clientes/tojiro-sushi/tojiro-vivo.html',pages:[{title:'Tojiro Vivo — Método Marca Viva',url:'clientes/tojiro-sushi/tojiro-vivo.html',type:'relatorio',date:'Mar 2026',desc:'Relatório premium com timeline, time e criativos'}],history:[
-  {type:'success',tag:'criado',when:'25 mar · 14h00',text:'Nova estrutura de campanhas criada',desc:'Alexandre montou 2 conjuntos de público: remarketing (365D engajamento) e prospecção fria (Advantage+). Budget R$60/dia CBO. Campanha pausada aguardando recarga de R$300.'},
-  {type:'info',tag:'ajuste',when:'25 mar · 11h00',text:'Budget ajustado para R$9/dia',desc:'Saldo era R$18,02. Com 3 campanhas a R$30/dia o orçamento zeraria em horas. Alexandre reduziu para garantir cobertura até sexta.'},
-  {type:'info',tag:'pausado',when:'25 mar · 10h00',text:'2 campanhas pausadas — canibalização eliminada',desc:'Campanhas Otimização 2 e 3 pausadas. Disputavam a mesma audiência causando CPM alto (~R$23). Mantida só a Campanha Original com o criativo campeão.'},
-  {type:'warn',tag:'diagnostico',when:'25 mar · 09h00',text:'Diagnóstico completo — 3 problemas identificados',desc:'(1) Canibalização: 3 campanhas, mesma audiência. (2) Objetivo errado: ENGAGEMENT em vez de MESSAGES. (3) Zero prospecção — 100% remarketing. Taxa de resposta no WhatsApp: menos de 3%.'},
-  {type:'alert',tag:'alert',when:'25 mar · 09h00',text:'232 conversas, apenas 7 respondidas',desc:'Camila identificou que o gargalo não está no anúncio — está no atendimento. Recomendação: mensagem automática no WhatsApp Business.'}
+  {tag:'criado',author:'Alexandre Albino',when:'25 mar · 14h00',note:'Criei a nova estrutura de campanhas do zero. Montei dois conjuntos de público separados — um para remarketing (quem já engajou nos últimos 365 dias, raio 8-10km) e um para prospecção fria com Advantage+. Usei o criativo campeão nos dois. Budget de R$60/dia no modo CBO, que distribui automaticamente entre os públicos conforme performance. Deixei pausada aguardando a recarga de R$300 prevista para sexta — não faz sentido ativar com saldo baixo.'},
+  {tag:'ajuste',author:'Alexandre Albino',when:'25 mar · 11h00',note:'Ajustei o budget da campanha principal para R$9/dia porque o saldo estava em R$18,02. Com três campanhas rodando a R$30/dia cada, o dinheiro acabaria em menos de 3 horas. Preferi reduzir e manter a campanha campeã rodando do que deixar zerar e perder o histórico de aprendizado do algoritmo. Volta para R$60/dia na sexta quando o saldo entrar.'},
+  {tag:'pausado',author:'Alexandre Albino',when:'25 mar · 10h00',note:'Pausei as campanhas Otimização 2 e Otimização 3. As duas disputavam a mesma audiência de 365 dias de engajamento da conta, criando canibalização interna no leilão. Quando isso acontece, o Meta aumenta o CPM porque você está competindo com você mesmo — estava em R$23,39. Mantive só a Campanha Original, que tem o melhor criativo e o menor custo por conversa.'},
+  {tag:'diagnostico',author:'Camila Rocha',when:'25 mar · 09h00',note:'Analisei a conta via Meta Graph API e encontrei três problemas ao mesmo tempo: três campanhas brigando pela mesma audiência, objetivo configurado como ENGAGEMENT em vez de MESSAGES, e zero prospecção — 100% do investimento indo para quem já conhece a marca. Além disso, cruzei os dados de conversas com as respostas e vi que 232 pessoas entraram em contato e apenas 7 foram respondidas. O anúncio funciona. O problema está no atendimento do restaurante.'},
 ]},
   {id:2,name:'Óticas JB',email:'contato@oticasjb.com.br',whatsapp:'',segment:'Ótica',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
   {id:3,name:'Expo Peças',email:'contato@exopecas.com.br',whatsapp:'',segment:'Autopeças',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
@@ -575,18 +570,15 @@ function openDetail(id){
   const color=COLORS[idx%COLORS.length];
   const initials=c.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
 
-  const HIST_ICO = {success:'✓',info:'→',warn:'⚠',alert:'!',pending:'○',diagnostico:'🔍',pausado:'⏸',criado:'✦',ajuste:'↻'};
+  const HIST_ICO = {diagnostico:'◎',pausado:'⏸',criado:'＋',ajuste:'↻',alert:'△',warn:'△',info:'→',success:'✓',pending:'○'};
   const historyHtml = (c.history||[]).map(h=>{
-    const icoKey = h.tag || h.type || 'info';
-    const ico = HIST_ICO[icoKey] || HIST_ICO[h.type] || '·';
-    const cls = h.type === 'warn' ? 'warn' : h.type === 'alert' ? 'alert' : h.type === 'pending' ? 'pending' : h.type === 'info' ? 'info' : 'success';
-    // Monta a nota em estilo diário: "Autor · hora — texto. Desc."
-    const nota = h.desc ? `${h.text}. ${h.desc}` : h.text;
+    const ico = HIST_ICO[h.tag] || HIST_ICO[h.type] || '·';
     return `
     <div class="history-item">
-      <div class="history-ico ${cls}">${ico}</div>
+      <div class="history-ico">${ico}</div>
+      ${h.author ? `<div class="history-author">${h.author}</div>` : ''}
       ${h.when ? `<div class="history-when">${h.when}</div>` : ''}
-      <div class="history-note">${nota}</div>
+      <div class="history-note">${h.note || h.text}${h.desc ? ' ' + h.desc : ''}</div>
     </div>`;
   }).join('');
 
