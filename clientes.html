@@ -150,19 +150,18 @@ tbody td:first-child{width:32px;padding-right:0}
 .notes-area{padding:14px;background:var(--surface-alt);border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);line-height:1.7;width:100%;resize:none;font-family:'Inter',sans-serif;min-height:80px}
 .notes-area:focus{outline:none;border-color:var(--accent)}
 .detail-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin-bottom:10px}
-.history-list{display:flex;flex-direction:column;position:relative;padding-left:36px;margin-top:4px}
-.history-list::before{content:'';position:absolute;left:13px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--border),transparent)}
-.history-item{position:relative;margin-bottom:18px;display:flex;flex-direction:column;gap:3px}
+.history-list{display:flex;flex-direction:column;position:relative;padding-left:40px;margin-top:4px}
+.history-list::before{content:'';position:absolute;left:14px;top:14px;bottom:6px;width:1px;background:linear-gradient(var(--border),transparent)}
+.history-item{position:relative;margin-bottom:20px}
 .history-item:last-child{margin-bottom:0}
-.history-ico{position:absolute;left:-36px;top:1px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid;flex-shrink:0;background:var(--bg-card)}
+.history-ico{position:absolute;left:-40px;top:2px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid;flex-shrink:0;background:var(--bg-card)}
 .history-ico.success{border-color:var(--green);color:var(--green)}
 .history-ico.warn{border-color:var(--amber);color:var(--amber)}
 .history-ico.info{border-color:var(--blue);color:var(--blue)}
 .history-ico.alert{border-color:#f87171;color:#f87171}
 .history-ico.pending{border-color:var(--border);color:var(--text-muted);border-style:dashed}
-.history-when{font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--text-muted);text-transform:uppercase}
-.history-title{font-size:13px;font-weight:600;color:var(--text-dark)}
-.history-desc{font-size:12px;color:var(--text-muted);line-height:1.55}
+.history-when{font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px}
+.history-note{font-size:13px;color:var(--text-dark);line-height:1.65}
 
 /* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text-dark);color:var(--green-neon);padding:9px 18px;border-radius:30px;font-size:12px;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:999;border:1px solid rgba(0,212,160,.3)}
@@ -581,12 +580,13 @@ function openDetail(id){
     const icoKey = h.tag || h.type || 'info';
     const ico = HIST_ICO[icoKey] || HIST_ICO[h.type] || '·';
     const cls = h.type === 'warn' ? 'warn' : h.type === 'alert' ? 'alert' : h.type === 'pending' ? 'pending' : h.type === 'info' ? 'info' : 'success';
+    // Monta a nota em estilo diário: "Autor · hora — texto. Desc."
+    const nota = h.desc ? `${h.text}. ${h.desc}` : h.text;
     return `
     <div class="history-item">
       <div class="history-ico ${cls}">${ico}</div>
       ${h.when ? `<div class="history-when">${h.when}</div>` : ''}
-      <div class="history-title">${h.text}</div>
-      ${h.desc ? `<div class="history-desc">${h.desc}</div>` : ''}
+      <div class="history-note">${nota}</div>
     </div>`;
   }).join('');
 

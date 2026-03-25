@@ -39,6 +39,16 @@
 }
 .tema-claro body{background:var(--black);color:var(--white)}
 
+/* ── UPLOAD HINT NO MOCKUP ── */
+.phone-upload-hint{
+  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.55);border:1px dashed rgba(255,255,255,.2);
+  border-radius:6px;padding:3px 10px;cursor:pointer;z-index:4;
+  font-size:8px;letter-spacing:.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.4);white-space:nowrap;transition:all .2s;
+}
+.phone-upload-hint:hover{border-color:var(--red);color:rgba(255,255,255,.8)}
+
 /* ── BOTÃO DE TEMA ── */
 .theme-btn{
   position:fixed;top:16px;right:16px;z-index:500;
@@ -1132,11 +1142,18 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
             <div class="phone-ig-more">···</div>
           </div>
           <!-- Vídeo -->
-          <div class="phone-video-area" id="phoneVideoArea" onclick="togglePlay()">
+          <div class="phone-video-area" id="phoneVideoArea" onclick="togglePlay()"
+               ondragover="event.preventDefault();this.style.outline='2px solid var(--red)'"
+               ondragleave="this.style.outline='none'"
+               ondrop="dropVideo(event)">
             <div class="phone-video-bg-text">TOJIRO&#10;SUSHI&#10;MOOCA</div>
             <div class="phone-play-btn" id="phonePlayBtn">
               <div class="phone-play-icon"></div>
             </div>
+            <label class="phone-upload-hint" id="phoneUploadHint" onclick="event.stopPropagation()">
+              <input type="file" accept="video/*" style="display:none" id="videoFileInput" onchange="loadVideoFile(this)">
+              <span>Soltar vídeo aqui</span>
+            </label>
           </div>
           <!-- Bottom actions -->
           <div class="phone-ig-bottom">
@@ -1377,6 +1394,36 @@ updatePhoneClock();
 setInterval(updatePhoneClock, 30000);
 
 // Play/pause do vídeo (se existir) ou abre Instagram
+function loadVideoFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  injectVideo(url);
+}
+function dropVideo(e) {
+  e.preventDefault();
+  document.getElementById('phoneVideoArea').style.outline = 'none';
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('video/')) {
+    injectVideo(URL.createObjectURL(file));
+  }
+}
+function injectVideo(src) {
+  const area = document.getElementById('phoneVideoArea');
+  let vid = area.querySelector('video');
+  if (!vid) {
+    vid = document.createElement('video');
+    vid.loop = true; vid.playsInline = true; vid.muted = false;
+    vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3';
+    area.appendChild(vid);
+  }
+  vid.src = src;
+  const hint = document.getElementById('phoneUploadHint');
+  if (hint) hint.style.display = 'none';
+  vid.play();
+  document.getElementById('phonePlayBtn').style.opacity = '0';
+}
+
 function togglePlay() {
   const vid = document.querySelector('#phoneVideoArea video');
   const btn = document.getElementById('phonePlayBtn');
