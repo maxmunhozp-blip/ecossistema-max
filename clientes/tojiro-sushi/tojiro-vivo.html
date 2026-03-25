@@ -13,6 +13,7 @@
   --black2:#141414;
   --black3:#1C1610;
   --red:#C1272D;
+  --green-val:#4ADE80;
   --red-dim:rgba(193,39,45,.15);
   --gold:#D4A853;
   --gold-dim:rgba(212,168,83,.12);
@@ -222,6 +223,55 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
   max-width:520px;
 }
 
+/* ══ MÊS SELETOR ══ */
+.month-selector{
+  display:flex;
+  align-items:center;
+  gap:0;
+  margin:24px 0 36px;
+  background:var(--black2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  width:fit-content;
+}
+.month-btn{
+  padding:0;
+  background:none;
+  border:none;
+  color:var(--muted);
+  cursor:pointer;
+  font-size:22px;
+  width:52px;height:72px;
+  display:flex;align-items:center;justify-content:center;
+  transition:color .2s;
+  flex-shrink:0;
+}
+.month-btn:hover{color:var(--white)}
+.month-current{
+  padding:0 32px;
+  height:72px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;
+  border-left:1px solid var(--border2);
+  border-right:1px solid var(--border2);
+  min-width:200px;
+}
+.month-current-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;
+  font-weight:600;
+  color:var(--white);
+  line-height:1;
+  letter-spacing:-.5px;
+}
+.month-current-year{
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
 /* ══ NÚMEROS ══ */
 .numbers-wrap{
   background:var(--black2);
@@ -260,41 +310,50 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
   margin-bottom:6px;
 }
 
-.num-value.red{color:var(--red)}
+.num-value.red{color:var(--green-val)}
 .num-value.gold{color:var(--gold)}
 
 .num-label{font-size:12px;color:var(--muted);letter-spacing:.3px;line-height:1.4}
 .num-label strong{display:block;color:var(--cream);font-weight:500}
 
-/* ══ TEAM ══ */
-.team-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:16px;
+/* ══ TEAM LIST ══ */
+.team-list{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
   margin-top:40px;
-}
-
-.team-card{
-  background:var(--black2);
-  border:1px solid var(--border2);
-  border-radius:12px;
-  padding:24px;
-  transition:border-color .3s,transform .3s;
-  position:relative;
+  border:1px solid var(--border);
+  border-radius:14px;
   overflow:hidden;
 }
 
-.team-card::before{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-  opacity:0;
-  transition:opacity .3s;
+.team-list-item{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:0;
+  background:var(--black2);
+  border-bottom:1px solid var(--border2);
+  transition:background .2s;
 }
 
-.team-card:hover{border-color:rgba(212,168,83,.3);transform:translateY(-3px)}
-.team-card:hover::before{opacity:1}
+.team-list-item:last-child{border-bottom:none}
+.team-list-item:hover{background:#191310}
+
+.team-list-left{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  padding:24px 20px;
+  border-right:1px solid var(--border2);
+  flex-shrink:0;
+}
+
+.team-list-analysis{
+  padding:24px;
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.8;
+}
 
 .team-avatar{
   width:48px;height:48px;
@@ -777,25 +836,34 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
 <!-- ══ NÚMEROS ══ -->
 <section class="reveal">
   <div class="section-label">O que aconteceu</div>
-  <h2 class="section-title">Números que importam</h2>
-  <p class="section-desc" style="margin-bottom:32px">Últimos 30 dias. Fevereiro a março de 2026. Campanha ativa na conta principal.</p>
+  <h2 class="section-title">Números que importam para <em>Verlaine</em></h2>
+
+  <!-- SELETOR DE MÊS -->
+  <div class="month-selector">
+    <button class="month-btn" onclick="changeMonth(-1)">‹</button>
+    <div class="month-current">
+      <span class="month-current-name" id="monthName">Março</span>
+      <span class="month-current-year" id="monthYear">2026</span>
+    </div>
+    <button class="month-btn" onclick="changeMonth(1)">›</button>
+  </div>
 
   <div class="numbers-wrap">
     <div class="num-item">
-      <div class="num-value gold" data-count="25122" data-prefix="">25.122</div>
-      <div class="num-label"><strong>Pessoas alcançadas</strong>num raio de 10km da Mooca</div>
+      <div class="num-value gold" data-count="232">232</div>
+      <div class="num-label"><strong>Conversas iniciadas</strong>pessoas que mandaram mensagem pelo anúncio</div>
     </div>
     <div class="num-item">
-      <div class="num-value" data-count="232">232</div>
-      <div class="num-label"><strong>Conversas iniciadas</strong>clientes que tocaram no anúncio</div>
+      <div class="num-value" style="color:var(--green-val)">R$4,52</div>
+      <div class="num-label"><strong>Custo por mensagem</strong>quanto custou cada pessoa que entrou em contato</div>
     </div>
     <div class="num-item">
-      <div class="num-value gold">3,70%</div>
-      <div class="num-label"><strong>Melhor CTR do período</strong>média do mercado é 1,2%</div>
+      <div class="num-value" style="color:var(--green-val)">R$3,65</div>
+      <div class="num-label"><strong>Menor custo por conversa</strong>no melhor anúncio do mês</div>
     </div>
     <div class="num-item">
-      <div class="num-value red">R$4,52</div>
-      <div class="num-label"><strong>Custo por conversa</strong>no melhor criativo da conta</div>
+      <div class="num-value gold" data-count="45357">45.357</div>
+      <div class="num-label"><strong>Visualizações de vídeo</strong>pessoas que assistiram o anúncio</div>
     </div>
   </div>
 </section>
@@ -806,36 +874,62 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
 <section class="reveal">
   <div class="section-label">As pessoas por trás</div>
   <h2 class="section-title">Quem trabalhou no seu projeto</h2>
-  <p class="section-desc">Não é automação. São pessoas reais pensando em cada detalhe da sua conta.</p>
+  <p class="section-desc">Não é automação. São pessoas reais — cada uma responsável por uma parte da estratégia.</p>
 
-  <div class="team-grid">
-    <div class="team-card reveal">
-      <div class="team-avatar av-lucas">L</div>
-      <div class="team-name">Lucas</div>
-      <div class="team-role">Estrategista</div>
-      <p class="team-quote">"Identifiquei que 3 campanhas brigavam pela mesma audiência. Pausei as piores. Mantivemos só o que performava."</p>
+  <div class="team-list">
+
+    <div class="team-list-item reveal">
+      <div class="team-list-left">
+        <div class="team-avatar av-lucas">L</div>
+        <div>
+          <div class="team-name">Lucas Ferreira</div>
+          <div class="team-role">Estrategista</div>
+        </div>
+      </div>
+      <div class="team-list-analysis">
+        Lucas identificou a causa raiz do problema de desempenho: três campanhas simultâneas disputando o mesmo público no leilão de anúncios. Esse conflito interno elevava o custo sem ampliar o alcance real. A decisão de consolidar em uma única campanha principal foi determinante para recuperar eficiência.
+      </div>
     </div>
 
-    <div class="team-card reveal">
-      <div class="team-avatar av-camila">C</div>
-      <div class="team-name">Camila</div>
-      <div class="team-role">Analista de Dados</div>
-      <p class="team-quote">"O custo por conversa estava R$4,52 na melhor campanha. O problema não era o anúncio — era o atendimento. 232 conversas, 7 respondidas."</p>
+    <div class="team-list-item reveal">
+      <div class="team-list-left">
+        <div class="team-avatar av-camila">C</div>
+        <div>
+          <div class="team-name">Camila Rocha</div>
+          <div class="team-role">Analista de Dados</div>
+        </div>
+      </div>
+      <div class="team-list-analysis">
+        Camila cruzou os dados de conversas iniciadas com o volume de respostas e encontrou uma taxa de atendimento abaixo de 3%. Isso indicou que o gargalo não estava na campanha, mas no processo de resposta do restaurante. O diagnóstico redirecionou a prioridade da equipe para além dos anúncios.
+      </div>
     </div>
 
-    <div class="team-card reveal">
-      <div class="team-avatar av-rafael">A</div>
-      <div class="team-name">Alexandre Albino</div>
-      <div class="team-role">Gestor de Tráfego</div>
-      <p class="team-quote">"Criei uma nova estrutura com 2 públicos: quem já te conhece e quem ainda não sabe que você existe."</p>
+    <div class="team-list-item reveal">
+      <div class="team-list-left">
+        <div class="team-avatar av-rafael">A</div>
+        <div>
+          <div class="team-name">Alexandre Albino</div>
+          <div class="team-role">Gestor de Tráfego</div>
+        </div>
+      </div>
+      <div class="team-list-analysis">
+        Alexandre estruturou a nova arquitetura de campanhas com dois conjuntos de público distintos: remarketing para quem já interagiu com a marca, e prospecção para novos moradores da região. Essa separação garante que o orçamento alcance tanto quem já conhece o Tojiro quanto quem ainda não sabe que ele existe.
+      </div>
     </div>
 
-    <div class="team-card reveal">
-      <div class="team-avatar av-bruno">B</div>
-      <div class="team-name">Bruno</div>
-      <div class="team-role">Criativo</div>
-      <p class="team-quote">"Aproveitamos o melhor vídeo da conta — CTR de 3,70%. Colocamos esse criativo campeão na nova estrutura."</p>
+    <div class="team-list-item reveal">
+      <div class="team-list-left">
+        <div class="team-avatar av-bruno">B</div>
+        <div>
+          <div class="team-name">Bruno Mendes</div>
+          <div class="team-role">Criativo</div>
+        </div>
+      </div>
+      <div class="team-list-analysis">
+        Bruno analisou o desempenho de todos os criativos ativos e selecionou o vídeo com maior taxa de engajamento para a nova estrutura. A decisão de manter o criativo campeão em vez de criar novos do zero preservou o histórico de aprendizado do algoritmo e acelerou a fase de otimização.
+      </div>
     </div>
+
   </div>
 </section>
 
@@ -1099,7 +1193,7 @@ section{padding:80px 24px;max-width:960px;margin:0 auto}
   </p>
   <div class="footer-method">
     <div class="footer-method-dot"></div>
-    Gerado pela Agência Max · Março 2026
+    Gerado pela Tracktor · Março 2026
     <div class="footer-method-dot"></div>
   </div>
 </footer>
@@ -1165,6 +1259,22 @@ const barObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.3 });
 
 document.querySelectorAll('.criativo-list').forEach(el => barObserver.observe(el));
+
+// ── SELETOR DE MÊS ──
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+let mesAtual = new Date(); // começa no mês corrente
+
+function renderMes() {
+  document.getElementById('monthName').textContent = MESES[mesAtual.getMonth()];
+  document.getElementById('monthYear').textContent = mesAtual.getFullYear();
+}
+
+function changeMonth(dir) {
+  mesAtual = new Date(mesAtual.getFullYear(), mesAtual.getMonth() + dir, 1);
+  renderMes();
+}
+
+renderMes();
 </script>
 </body>
 </html>
