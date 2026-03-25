@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Defesa Estratégica — Novo Feed @expopecasmulher</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 /* ── TEMA ROSA PASTEL (padrão) ── */
@@ -33,13 +35,13 @@
   --strong-em:#5C1219;
 }
 html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--bg-hero);color:var(--text-body);overflow-x:hidden;transition:background .3s,color .3s}
+body{font-family:'DM Sans',sans-serif;background:var(--bg-hero);color:var(--text-body);overflow-x:hidden;transition:background .3s,color .3s}
 /* PROGRESS BAR */
 #progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--marsala),var(--gold));width:0%;z-index:9999;transition:width .1s}
 
 /* NAV */
 nav{position:fixed;top:3px;left:0;right:0;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--nav-border);padding:0 40px;height:60px;display:flex;align-items:center;gap:32px;transition:background .3s}
-.nav-logo{font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);font-weight:700;letter-spacing:.5px;white-space:nowrap}
+.nav-logo{font-family:'Fraunces',serif;font-size:16px;color:var(--gold);font-weight:700;letter-spacing:.5px;white-space:nowrap}
 .nav-links{display:flex;gap:4px;margin-left:auto}
 .nav-links a{padding:6px 14px;font-size:12px;font-weight:500;color:var(--muted);text-decoration:none;border-radius:20px;transition:all .2s;letter-spacing:.3px}
 .nav-links a:hover,.nav-links a.active{background:var(--nav-link-active-bg);color:var(--nav-link-active-color)}
@@ -71,7 +73,7 @@ section{padding:100px 40px;transition:background .3s}
 .hero-eyebrow span{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.8}
 .hero-eyebrow::before,.hero-eyebrow::after{content:'';flex:1;max-width:40px;height:1px;background:var(--gold);opacity:.3}
 .hero-eyebrow::after{display:none}
-h1.hero-title{font-family:'Playfair Display',serif;font-size:clamp(42px,6vw,80px);font-weight:900;line-height:1.05;letter-spacing:-1px;margin-bottom:28px;animation:fadeUp .8s .4s both}
+h1.hero-title{font-family:'Fraunces',serif;font-size:clamp(42px,6vw,80px);font-weight:900;line-height:1.05;letter-spacing:-1px;margin-bottom:28px;animation:fadeUp .8s .4s both}
 h1.hero-title .line1{display:block;color:var(--text-body)}
 h1.hero-title .line2{display:block;color:var(--marsala-light)}
 h1.hero-title .line3{display:block;color:var(--gold)}
@@ -90,12 +92,12 @@ h1.hero-title .line3{display:block;color:var(--gold)}
 /* STATS ROW */
 #stats{padding:60px 40px;border-top:1px solid rgba(201,169,110,.1);border-bottom:1px solid rgba(201,169,110,.1);background:rgba(139,37,46,.06)}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;text-align:center}
-.stat-item .num{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--gold);line-height:1}
+.stat-item .num{font-family:'Fraunces',serif;font-size:52px;font-weight:900;color:var(--gold);line-height:1}
 .stat-item .label{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:8px}
 
 /* ── DIAGNOSIS (OLD vs NEW) ── */
 #diagnosis{background:linear-gradient(180deg,var(--bg-section-a) 0%,var(--bg-section-b) 100%)}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,52px);font-weight:900;line-height:1.1;margin-bottom:20px}
+.section-title{font-family:'Fraunces',serif;font-size:clamp(32px,4vw,52px);font-weight:900;line-height:1.1;margin-bottom:20px}
 .section-title em{font-style:italic;color:var(--gold)}
 .section-desc{font-size:16px;color:var(--section-desc-color);line-height:1.75;max-width:600px;margin-bottom:60px}
 
@@ -108,7 +110,7 @@ h1.hero-title .line3{display:block;color:var(--gold)}
 .compare-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
 .tag-old{background:rgba(139,37,46,.08);color:var(--tag-old-color);border:1px solid rgba(139,37,46,.2)}
 .tag-new{background:rgba(139,37,46,.2);color:var(--marsala-light);border:1px solid rgba(139,37,46,.3)}
-.compare-col h3{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:24px;color:var(--text-body)}
+.compare-col h3{font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:24px;color:var(--text-body)}
 .compare-list{list-style:none;display:flex;flex-direction:column;gap:14px}
 .compare-list li{font-size:14px;color:var(--muted);display:flex;align-items:flex-start;gap:10px;line-height:1.5}
 .compare-list li::before{flex-shrink:0;margin-top:3px;width:18px;height:18px;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700}
@@ -117,7 +119,7 @@ h1.hero-title .line3{display:block;color:var(--gold)}
 
 /* INSTAGRAM ALGO BOX */
 .algo-box{margin-top:60px;background:var(--algo-box-bg);border:1px solid var(--algo-box-border);border-radius:12px;padding:48px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
-.algo-box h3{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:20px;color:var(--gold)}
+.algo-box h3{font-family:'Fraunces',serif;font-size:28px;font-weight:700;margin-bottom:20px;color:var(--gold)}
 .algo-box p{font-size:15px;color:var(--section-desc-color);line-height:1.8}
 .algo-points{display:flex;flex-direction:column;gap:16px}
 .algo-point{display:flex;align-items:flex-start;gap:16px;padding:16px;background:var(--algo-point-bg);border-radius:8px;border-left:3px solid var(--marsala)}
@@ -135,7 +137,7 @@ h1.hero-title .line3{display:block;color:var(--gold)}
 .feed-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(15,5,7,.85));opacity:0;transition:opacity .3s;display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
 .feed-item:hover .feed-overlay{opacity:1}
 .feed-overlay-num{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.7}
-.feed-overlay-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--cream);margin-top:4px}
+.feed-overlay-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--cream);margin-top:4px}
 .feed-num-badge{position:absolute;top:10px;left:10px;width:28px;height:28px;background:var(--marsala);border-radius:50%;font-size:11px;font-weight:700;color:var(--cream);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
 .feed-item:hover .feed-num-badge{opacity:1}
 
@@ -168,7 +170,7 @@ h1.hero-title .line3{display:block;color:var(--gold)}
 
 .post-defense{flex:1}
 .post-num{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.5;margin-bottom:12px}
-.post-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;line-height:1.15;margin-bottom:24px;color:var(--text-body)}
+.post-title{font-family:'Fraunces',serif;font-size:32px;font-weight:900;line-height:1.15;margin-bottom:24px;color:var(--text-body)}
 .post-title em{font-style:italic;color:var(--marsala-light)}
 .defense-card{background:var(--surface-card);border:1px solid var(--border-card);border-radius:10px;padding:24px;margin-bottom:24px}
 .defense-card h4{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;opacity:.8}
@@ -178,7 +180,7 @@ h1.hero-title .line3{display:block;color:var(--gold)}
 .caption-box{background:var(--caption-bg);border:1px solid var(--caption-border);border-radius:10px;overflow:hidden}
 .caption-header{padding:12px 16px;background:var(--caption-header-bg);border-bottom:1px solid var(--caption-border);display:flex;align-items:center;gap:8px}
 .caption-header span{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);opacity:.8}
-.caption-header .copy-btn{margin-left:auto;font-size:11px;padding:4px 10px;background:rgba(201,169,110,.12);color:var(--gold);border:1px solid rgba(201,169,110,.2);border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;font-weight:600}
+.caption-header .copy-btn{margin-left:auto;font-size:11px;padding:4px 10px;background:rgba(201,169,110,.12);color:var(--gold);border:1px solid rgba(201,169,110,.2);border-radius:4px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;font-weight:600}
 .copy-btn:hover{background:rgba(201,169,110,.2)}
 .caption-body{padding:20px;font-size:13px;color:var(--caption-text);line-height:1.8;white-space:pre-wrap;max-height:280px;overflow-y:auto}
 .caption-body::-webkit-scrollbar{width:4px}
@@ -201,7 +203,7 @@ tbody td:first-child{font-weight:600;color:var(--muted);opacity:.7;font-size:12p
 /* ── CONCLUSION ── */
 #conclusion{background:linear-gradient(180deg,var(--conclusion-bg-start) 0%,var(--marsala-deep) 100%);text-align:center;position:relative;overflow:hidden}
 #conclusion::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(201,169,110,.1),transparent)}
-.conclusion-quote{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,38px);font-style:italic;line-height:1.5;max-width:800px;margin:0 auto 40px;color:var(--cream)}
+.conclusion-quote{font-family:'Fraunces',serif;font-size:clamp(22px,3vw,38px);font-style:italic;line-height:1.5;max-width:800px;margin:0 auto 40px;color:var(--cream)}
 .conclusion-quote strong{font-style:normal;color:var(--gold)}
 .conclusion-sub{font-size:15px;color:rgba(245,241,237,.65);max-width:500px;margin:0 auto 60px;line-height:1.7}
 .conclusion-divider{width:60px;height:1px;background:var(--gold);margin:40px auto;opacity:.3}
@@ -213,6 +215,78 @@ tbody td:first-child{font-weight:600;color:var(--muted);opacity:.7;font-size:12p
 /* COPY SUCCESS */
 .copy-success{position:fixed;bottom:32px;right:32px;background:var(--marsala);color:var(--cream);padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s}
 .copy-success.show{transform:translateY(0);opacity:1}
+
+/* ── MOBILE HAMBURGER ── */
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:.4rem;margin-left:auto;flex-shrink:0}
+.nav-hamburger span{display:block;width:22px;height:1.5px;background:var(--marsala);transition:transform .3s,opacity .3s}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.nav-mobile-sheet{position:fixed;inset:0;background:rgba(240,232,236,.97);backdrop-filter:blur(20px);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.nav-mobile-sheet.open{transform:none}
+.nav-mobile-sheet a{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:600;color:var(--marsala);text-decoration:none;letter-spacing:.02em}
+.nav-mobile-close{position:absolute;top:20px;right:20px;background:none;border:none;cursor:pointer;font-size:24px;color:var(--marsala)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  nav{padding:0 20px;gap:10px;height:52px}
+  .nav-logo{font-size:13px;letter-spacing:0}
+  .nav-links{display:none}
+  .nav-hamburger{display:flex}
+  section{padding:60px 20px}
+  .container{padding:0}
+  .container-wide{padding:0 20px}
+  #hero{padding:0 20px;min-height:90vh}
+  #hero .hero-content{padding-top:70px}
+  h1.hero-title{font-size:clamp(34px,9vw,52px);letter-spacing:-.5px}
+  .hero-sub{font-size:15px}
+  .hero-cta{flex-direction:column;gap:12px}
+  .btn-primary,.btn-ghost{width:100%;justify-content:center;padding:13px 20px}
+  .hero-scroll{display:none}
+  #stats{padding:40px 20px}
+  .stats-row{grid-template-columns:repeat(2,1fr);gap:24px}
+  .stat-item .num{font-size:38px}
+  .stat-item .label{font-size:11px}
+  .section-title{font-size:clamp(26px,6vw,38px)}
+  .section-desc{font-size:14px;margin-bottom:36px}
+  /* compare */
+  .compare-wrapper{display:flex;flex-direction:column;border-radius:8px}
+  .compare-divider{display:none}
+  .compare-col{padding:24px 20px}
+  .compare-col h3{font-size:18px}
+  .compare-list li{font-size:13px}
+  /* algo box */
+  .algo-box{grid-template-columns:1fr;gap:24px;padding:24px 20px;margin-top:36px}
+  .algo-box h3{font-size:22px}
+  .algo-box p{font-size:14px}
+  /* feed */
+  #feed{padding:60px 20px}
+  .feed-grid{max-width:100%;gap:2px}
+  /* post defense */
+  .post-inner{flex-direction:column;gap:32px}
+  .post-section.reverse .post-inner{flex-direction:column}
+  .post-mockup-wrap{width:100%;max-width:260px;margin:0 auto}
+  .post-section{margin-bottom:64px;padding-bottom:64px}
+  .post-title{font-size:24px}
+  .defense-card{padding:16px}
+  .defense-card p{font-size:14px}
+  .caption-body{font-size:12px;max-height:200px}
+  /* table */
+  .table-wrap{margin:0 -20px}
+  table{font-size:12px}
+  thead th{padding:10px 14px;font-size:10px}
+  tbody td{padding:12px 14px}
+  /* conclusion */
+  #conclusion{padding:60px 20px}
+  .conclusion-quote{font-size:clamp(18px,5vw,26px)}
+  .copy-success{bottom:16px;right:16px;left:16px;text-align:center}
+}
+
+@media(max-width:400px){
+  .stats-row{grid-template-columns:1fr 1fr;gap:16px}
+  .stat-item .num{font-size:32px}
+  h1.hero-title{font-size:clamp(28px,10vw,40px)}
+}
 </style>
 </head>
 <body>
@@ -229,7 +303,16 @@ tbody td:first-child{font-weight:600;color:var(--muted);opacity:.7;font-size:12p
     <a href="#comparison">Comparativo</a>
     <a href="#conclusion">Conclusão</a>
   </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
+<div class="nav-mobile-sheet" id="navSheet">
+  <button class="nav-mobile-close" id="navClose">✕</button>
+  <a href="#diagnosis" class="sheet-link">Diagnóstico</a>
+  <a href="#feed" class="sheet-link">Feed</a>
+  <a href="#posts" class="sheet-link">Defesa</a>
+  <a href="#comparison" class="sheet-link">Comparativo</a>
+  <a href="#conclusion" class="sheet-link">Conclusão</a>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -1424,15 +1507,15 @@ A pergunta não é se você merece estar lá. A pergunta é: quando foi a últim
     <div class="conclusion-divider reveal"></div>
     <div class="reveal" style="display:flex;gap:40px;justify-content:center;flex-wrap:wrap;margin-bottom:60px">
       <div style="text-align:center">
-        <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--gold)">5</div>
+        <div style="font-family:'Fraunces',serif;font-size:48px;font-weight:900;color:var(--gold)">5</div>
         <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:rgba(245,241,237,.4);margin-top:6px">Benefícios imediatos</div>
       </div>
       <div style="text-align:center">
-        <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--gold)">13</div>
+        <div style="font-family:'Fraunces',serif;font-size:48px;font-weight:900;color:var(--gold)">13</div>
         <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:rgba(245,241,237,.4);margin-top:6px">Peças com estratégia</div>
       </div>
       <div style="text-align:center">
-        <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--gold)">1</div>
+        <div style="font-family:'Fraunces',serif;font-size:48px;font-weight:900;color:var(--gold)">1</div>
         <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:rgba(245,241,237,.4);margin-top:6px">Posicionamento claro</div>
       </div>
     </div>
@@ -1441,6 +1524,15 @@ A pergunta não é se você merece estar lá. A pergunta é: quando foi a últim
 </section>
 
 <script>
+// HAMBURGER
+const ham=document.getElementById('hamburger');
+const sheet=document.getElementById('navSheet');
+const navClose=document.getElementById('navClose');
+function closeSheet(){sheet.classList.remove('open');ham.classList.remove('open');document.body.style.overflow=''}
+ham.addEventListener('click',()=>{const open=sheet.classList.toggle('open');ham.classList.toggle('open');document.body.style.overflow=open?'hidden':''});
+navClose.addEventListener('click',closeSheet);
+document.querySelectorAll('.sheet-link').forEach(a=>a.addEventListener('click',closeSheet));
+
 // PROGRESS BAR
 window.addEventListener('scroll',()=>{
   const h=document.documentElement.scrollHeight-window.innerHeight;
