@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Agência — Ecossistema Max</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a12;--surface:#111120;--surface-2:#1a1a2e;--surface-3:#20203a;
+  --border:#1e1e3a;--border-bright:#2d2d50;
+  --purple:#7c3aed;--blue:#3b82f6;--teal:#00d4a0;--orange:#ea8049;--red:#f87171;
+  --text:#e2e8f0;--muted:#94a3b8;--dim:#475569;
+  --nav-h:56px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(10,10,18,.95);
+  backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 24px;gap:20px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
+.logo-icon{width:28px;height:28px;background:var(--purple);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.logo-text{font-size:14px;color:var(--text);font-weight:600}.logo-text strong{font-weight:900}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nl{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;transition:all .15s;white-space:nowrap}
+.nl:hover{background:var(--surface-2);color:var(--text)}
+.nl.active{background:rgba(124,58,237,.18);color:#a78bfa}
+
+/* ── LAYOUT ── */
+.agency-wrap{display:grid;grid-template-columns:1fr 300px;height:calc(100vh - var(--nav-h));overflow:hidden}
+@media(max-width:900px){.agency-wrap{grid-template-columns:1fr;grid-template-rows:1fr auto}}
+
+/* ── OFFICE AREA ── */
+.office-area{display:flex;flex-direction:column;overflow:hidden;position:relative}
+.office-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.office-title{font-size:14px;font-weight:700}
+.office-subtitle{font-size:12px;color:var(--muted)}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background .3s}
+.status-dot.online{background:var(--teal);box-shadow:0 0 6px var(--teal)}
+.status-dot.activity{background:var(--purple);box-shadow:0 0 8px var(--purple);animation:pulse-dot .8s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+.ms-auto{margin-left:auto}
+
+.canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;background:var(--bg);padding:16px}
+#office-canvas{
+  image-rendering:pixelated;
+  image-rendering:crisp-edges;
+  cursor:default;
+  max-width:100%;max-height:100%;
+  border-radius:4px;
+  box-shadow:0 0 60px rgba(124,58,237,.12),0 0 120px rgba(0,0,0,.6);
+}
+
+/* ── AGENT CARDS ── */
+.agent-row{display:flex;gap:8px;padding:10px 16px;border-top:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+.agent-card{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:8px 12px;flex-shrink:0;
+  transition:border-color .3s;min-width:150px;
+}
+.agent-card.active{border-color:rgba(124,58,237,.4);background:rgba(124,58,237,.06)}
+.agent-card.idle-wander{border-color:rgba(148,163,184,.15)}
+.agent-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.agent-name{font-size:11px;font-weight:700}
+.agent-state{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px}
+.agent-tool{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--dim);margin-top:1px}
+
+/* ── ACTIVITY FEED ── */
+.feed-panel{
+  border-left:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  background:var(--surface);
+}
+.feed-header{padding:14px 16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;flex-shrink:0;display:flex;align-items:center;gap:8px}
+.feed-count{font-size:11px;font-weight:700;background:rgba(124,58,237,.15);color:#a78bfa;padding:2px 8px;border-radius:20px}
+.feed-list{flex:1;overflow-y:auto;padding:8px}
+.feed-list::-webkit-scrollbar{width:4px}
+.feed-list::-webkit-scrollbar-track{background:transparent}
+.feed-list::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:4px}
+.feed-item{
+  padding:8px 10px;border-radius:8px;margin-bottom:4px;
+  border:1px solid transparent;
+  animation:feed-in .25s ease;
+}
+@keyframes feed-in{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+.feed-item:hover{background:var(--surface-2)}
+.feed-top{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.feed-agent{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.feed-tool{font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.feed-detail{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:14px}
+.feed-time{font-size:9px;color:var(--dim);margin-left:auto;white-space:nowrap}
+.feed-empty{text-align:center;padding:40px 16px;color:var(--dim);font-size:12px}
+.feed-empty svg{margin-bottom:8px;opacity:.3}
+
+/* ── SSE BADGE ── */
+.sse-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;
+  background:rgba(71,85,105,.2);color:var(--dim);border:1px solid rgba(71,85,105,.2);
+}
+.sse-badge.connected{background:rgba(0,212,160,.08);color:var(--teal);border-color:rgba(0,212,160,.2)}
+.sse-badge.error{background:rgba(248,113,113,.08);color:var(--red);border-color:rgba(248,113,113,.2)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14c.5 2 2 3 4 2.5"/><path d="M16 11.5c1 2 1 3.5-.5 5"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <span class="logo-text">Ecossistema <strong>MAX</strong></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nl">Hub</a>
+    <a href="skills.html" class="nl">Skills</a>
+    <a href="criativos.html" class="nl">Criativos</a>
+    <a href="persona.html" class="nl">Persona</a>
+    <a href="agencia.html" class="nl active">Agência</a>
+    <a href="terminal.html" class="nl">Terminal</a>
+  </div>
+</nav>
+
+<div class="agency-wrap">
+
+  <!-- OFFICE CANVAS -->
+  <div class="office-area">
+    <div class="office-header">
+      <div class="status-dot" id="status-dot"></div>
+      <div>
+        <div class="office-title">Agência Max</div>
+        <div class="office-subtitle" id="office-subtitle">Aguardando atividade…</div>
+      </div>
+      <div class="ms-auto">
+        <span class="sse-badge" id="sse-badge">
+          <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
+          Desconectado
+        </span>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="office-canvas"></canvas>
+    </div>
+
+    <div class="agent-row" id="agent-row">
+      <!-- Agent cards injected by JS -->
+    </div>
+  </div>
+
+  <!-- ACTIVITY FEED -->
+  <aside class="feed-panel">
+    <div class="feed-header">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      Atividade
+      <span class="feed-count" id="feed-count">0</span>
+    </div>
+    <div class="feed-list" id="feed-list">
+      <div class="feed-empty" id="feed-empty">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <p>Nenhuma atividade ainda</p>
+        <p style="margin-top:4px;font-size:10px">Execute uma tarefa no terminal ou<br>no Claude Code local</p>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// CONFIGURATION
+// ═══════════════════════════════════════════════════════
+const SSE_URL = 'https://terminal.tracktor.com.br/api/agents/stream';
+
+const AGENT_DEFS = [
+  {id:'alpha', name:'Alpha',  color:'#7c3aed', dark:'#5b21b6', x:5,  y:4,  desk:{x:4, y:3}},
+  {id:'beta',  name:'Beta',   color:'#3b82f6', dark:'#1d4ed8', x:13, y:4,  desk:{x:12,y:3}},
+  {id:'gamma', name:'Gamma',  color:'#00d4a0', dark:'#059669', x:5,  y:12, desk:{x:4, y:11}},
+  {id:'delta', name:'Delta',  color:'#ea8049', dark:'#c2410c', x:13, y:12, desk:{x:12,y:11}},
+];
+
+// ═══════════════════════════════════════════════════════
+// OFFICE LAYOUT (22 cols × 17 rows, each tile = 32px)
+// ═══════════════════════════════════════════════════════
+const COLS = 22, ROWS = 17, TS = 32; // tile size
+
+// Tile types
+const T = {FL:0, WL:1, DS:2, SC:3, PL:4, TB:5, CP:6, CH:7};
+const TILE_COLORS = {
+  [T.FL]: '#13131f',
+  [T.WL]: '#08080f',
+  [T.DS]: '#1e1208',
+  [T.SC]: '#001428',
+  [T.PL]: '#0a1f0a',
+  [T.TB]: '#161626',
+  [T.CP]: '#10102a',
+  [T.CH]: '#181828',
+};
+
+// L = layout string  W=wall F=floor D=desk S=screen P=plant T=table C=carpet H=chair
+const LAYOUT_STR = [
+  'WWWWWWWWWWWWWWWWWWWWWW',
+  'WFFFFFFFFFFFFFFFFFFFW',
+  'WPFDDSSFFDDSSFFFFFFPFW',
+  'WFFFFFFFFFFFFFFFFFFFW',
+  'WFFDDSSFFDDSSFFFFFFFW',
+  'WFFFFFFFFFFFFFFFFFFFW',
+  'WFFFFCCCCCCCCCFFFFFFW',
+  'WFFFFCTTTTTTCFFFFFFFPW',//  removed extra P as it made col 22
+  'WFFFFCTTTTTTCFFFFFFFW',
+  'WFFFFCCCCCCCCCFFFFFFW',
+  'WFFFFFFFFFFFFFFFFFFFW',
+  'WFFDDSSFFDDSSFFFFFFFW',
+  'WFFFFFFFFFFFFFFFFFFFW',
+  'WPFDDSSFFDDSSFFFFFFPFW',
+  'WFFFFFFFFFFFFFFFFFFFW',
+  'WFFFFFFFFFFFFFFFFFFFW',
+  'WWWWWWWWWWWWWWWWWWWWWW',
+];
+
+const MAP = LAYOUT_STR.map(row => {
+  // pad/trim to COLS
+  const r = (row + 'F'.repeat(COLS)).slice(0, COLS);
+  return r.split('').map(c => {
+    switch(c){
+      case 'W': return T.WL;
+      case 'D': return T.DS;
+      case 'S': return T.SC;
+      case 'P': return T.PL;
+      case 'T': return T.TB;
+      case 'C': return T.CP;
+      case 'H': return T.CH;
+      default:  return T.FL;
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// AGENT STATE MACHINE
+// ═══════════════════════════════════════════════════════
+const STATE = {IDLE:'idle', TYPING:'typing', READING:'reading', THINKING:'thinking', WALKING:'walking', DONE:'done'};
+
+const TOOL_STATES = {
+  Write:'typing', Edit:'typing', NotebookEdit:'typing',
+  Read:'reading', Glob:'reading', Grep:'reading',
+  Bash:'typing', WebFetch:'reading', WebSearch:'reading',
+  Agent:'thinking', Task:'thinking',
+};
+
+class Agent {
+  constructor(def) {
+    Object.assign(this, def);
+    this.state = STATE.IDLE;
+    this.tool = null;
+    this.px = def.x * TS + TS/2; // pixel x (center)
+    this.py = def.y * TS + TS/2;
+    this.targetX = this.px;
+    this.targetY = this.py;
+    this.bobPhase = Math.random() * Math.PI * 2;
+    this.frame = 0;
+    this.lastTool = null;
+    this.doneTimer = 0;
+    this.wanderTimer = Math.random() * 180;
+    this.session = null;
+  }
+
+  goToDesk() {
+    this.targetX = this.desk.x * TS + TS/2;
+    this.targetY = this.desk.y * TS + TS/2;
+    this.state = STATE.WALKING;
+  }
+
+  goToIdle() {
+    // wander to random floor tile near start
+    const ox = (this.x + (Math.random()*3-1.5)|0);
+    const oy = (this.y + (Math.random()*3-1.5)|0);
+    const cx = Math.max(1, Math.min(COLS-2, ox));
+    const cy = Math.max(1, Math.min(ROWS-2, oy));
+    this.targetX = cx * TS + TS/2;
+    this.targetY = cy * TS + TS/2;
+    this.state = STATE.WALKING;
+  }
+
+  setActive(toolName) {
+    this.tool = toolName;
+    this.lastTool = toolName;
+    this.doneTimer = 0;
+    const s = TOOL_STATES[toolName] || STATE.TYPING;
+    if (Math.abs(this.px - this.targetX) > 4 || Math.abs(this.py - this.targetY) > 4) {
+      this.goToDesk();
+    } else {
+      this.state = s;
+    }
+  }
+
+  setDone() {
+    this.doneTimer = 120; // frames before going idle
+    this.state = STATE.DONE;
+    this.tool = null;
+  }
+
+  update(dt) {
+    this.frame++;
+    this.bobPhase += 0.04;
+
+    // movement
+    const dx = this.targetX - this.px;
+    const dy = this.targetY - this.py;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const speed = this.state === STATE.WALKING ? 1.8 : 0;
+    if (dist > 1) {
+      this.px += (dx/dist) * speed;
+      this.py += (dy/dist) * speed;
+    } else {
+      this.px = this.targetX;
+      this.py = this.targetY;
+      if (this.state === STATE.WALKING) {
+        this.state = this.lastTool ? (TOOL_STATES[this.lastTool]||STATE.TYPING) : STATE.IDLE;
+      }
+    }
+
+    // done timer
+    if (this.state === STATE.DONE) {
+      this.doneTimer--;
+      if (this.doneTimer <= 0) {
+        this.state = STATE.IDLE;
+        this.lastTool = null;
+        this.goToIdle();
+      }
+    }
+
+    // idle wander
+    if (this.state === STATE.IDLE) {
+      this.wanderTimer--;
+      if (this.wanderTimer <= 0) {
+        this.wanderTimer = 180 + Math.random()*240;
+        this.goToIdle();
+      }
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// CANVAS RENDERING
+// ═══════════════════════════════════════════════════════
+const canvas = document.getElementById('office-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width  = COLS * TS;
+canvas.height = ROWS * TS;
+
+// Pre-compute screen glow positions
+const screenGlows = [];
+MAP.forEach((row, r) => row.forEach((tile, c) => {
+  if (tile === T.SC) screenGlows.push({c, r});
+}));
+
+function drawTile(c, r, tile) {
+  const x = c * TS, y = r * TS;
+  ctx.fillStyle = TILE_COLORS[tile] || '#13131f';
+  ctx.fillRect(x, y, TS, TS);
+
+  if (tile === T.FL || tile === T.CP) {
+    // subtle grid lines
+    ctx.strokeStyle = tile === T.CP ? 'rgba(124,58,237,.06)' : 'rgba(255,255,255,.018)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x+.5, y+.5, TS-1, TS-1);
+  }
+  if (tile === T.DS) {
+    // desk surface sheen
+    ctx.fillStyle = 'rgba(255,200,100,.04)';
+    ctx.fillRect(x+2, y+2, TS-4, TS*0.4);
+    // desk edge
+    ctx.fillStyle = 'rgba(255,200,100,.12)';
+    ctx.fillRect(x, y+TS-3, TS, 3);
+  }
+  if (tile === T.SC) {
+    // monitor screen glow
+    const grd = ctx.createRadialGradient(x+TS/2, y+TS/2, 0, x+TS/2, y+TS/2, TS*0.9);
+    grd.addColorStop(0,'rgba(56,189,248,.35)');
+    grd.addColorStop(1,'transparent');
+    ctx.fillStyle = grd;
+    ctx.fillRect(x, y, TS, TS);
+    // screen bezel
+    ctx.fillStyle = '#0d2840';
+    ctx.fillRect(x+4, y+5, TS-8, TS-12);
+    ctx.fillStyle = 'rgba(56,189,248,.7)';
+    ctx.fillRect(x+6, y+7, TS-12, TS-16);
+    // scan line
+    ctx.fillStyle = 'rgba(56,189,248,.15)';
+    const sl = ((Date.now()/40)%( TS-16)|0);
+    ctx.fillRect(x+6, y+7+sl, TS-12, 1);
+  }
+  if (tile === T.PL) {
+    // plant pot + leaves
+    ctx.fillStyle = '#2d1a0a';
+    ctx.beginPath(); ctx.ellipse(x+TS/2, y+TS-6, 7, 5, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#0f4a0f';
+    ctx.beginPath(); ctx.arc(x+TS/2, y+TS/2-2, 8, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#166b16';
+    ctx.beginPath(); ctx.arc(x+TS/2-3, y+TS/2-5, 5, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x+TS/2+3, y+TS/2-6, 5, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#1a7a1a';
+    ctx.beginPath(); ctx.arc(x+TS/2, y+TS/2-9, 4, 0, Math.PI*2); ctx.fill();
+  }
+  if (tile === T.TB) {
+    // meeting table surface
+    ctx.fillStyle = 'rgba(148,163,184,.04)';
+    ctx.fillRect(x, y, TS, TS);
+    ctx.strokeStyle = 'rgba(148,163,184,.15)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x+.5, y+.5, TS-1, TS-1);
+  }
+  if (tile === T.WL) {
+    // wall pattern
+    ctx.fillStyle = 'rgba(255,255,255,.015)';
+    ctx.fillRect(x+2, y+2, TS-4, 4);
+  }
+}
+
+function drawAgent(agent) {
+  const {px, py, color, dark, state, bobPhase, frame} = agent;
+  const bob = state===STATE.IDLE ? Math.sin(bobPhase)*1.5 : 0;
+  const ay = py + bob;
+  const R = 11; // body radius
+
+  // shadow
+  ctx.fillStyle = 'rgba(0,0,0,.4)';
+  ctx.beginPath();
+  ctx.ellipse(px, py+R*0.8, R*0.7, R*0.3, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // glow halo
+  const grd = ctx.createRadialGradient(px, ay, 0, px, ay, R*2.5);
+  grd.addColorStop(0, color+'44');
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.beginPath(); ctx.arc(px, ay, R*2.5, 0, Math.PI*2); ctx.fill();
+
+  // body
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.arc(px, ay, R, 0, Math.PI*2); ctx.fill();
+
+  // inner gradient
+  const bodyGrd = ctx.createRadialGradient(px-3, ay-3, 0, px, ay, R);
+  bodyGrd.addColorStop(0, 'rgba(255,255,255,.3)');
+  bodyGrd.addColorStop(1, 'rgba(0,0,0,.2)');
+  ctx.fillStyle = bodyGrd;
+  ctx.beginPath(); ctx.arc(px, ay, R, 0, Math.PI*2); ctx.fill();
+
+  // dark ring
+  ctx.strokeStyle = dark;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(px, ay, R, 0, Math.PI*2); ctx.stroke();
+
+  // face dot
+  ctx.fillStyle = 'rgba(255,255,255,.7)';
+  ctx.beginPath(); ctx.arc(px-3, ay-3, 2.5, 0, Math.PI*2); ctx.fill();
+
+  // state indicator
+  drawStateIndicator(agent, px, ay - R - 8);
+}
+
+function drawStateIndicator(agent, x, y) {
+  const {state, color, frame, tool} = agent;
+  if (state === STATE.IDLE || state === STATE.WALKING) return;
+
+  if (state === STATE.TYPING) {
+    // keyboard dots
+    const blink = Math.floor(frame/6) % 2;
+    ctx.fillStyle = blink ? color : 'rgba(255,255,255,.3)';
+    ctx.beginPath(); ctx.arc(x-5, y, 2.5, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = blink ? 'rgba(255,255,255,.3)' : color;
+    ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = blink ? color : 'rgba(255,255,255,.3)';
+    ctx.beginPath(); ctx.arc(x+5, y, 2.5, 0, Math.PI*2); ctx.fill();
+  }
+  else if (state === STATE.READING) {
+    // eye icon
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI*2); ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(x, y, 1.8, 0, Math.PI*2); ctx.fill();
+  }
+  else if (state === STATE.THINKING) {
+    // spinning arc
+    const a = (frame * 0.08) % (Math.PI*2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, 5, a, a+Math.PI*1.2); ctx.stroke();
+  }
+  else if (state === STATE.DONE) {
+    // checkmark pulse
+    const alpha = Math.min(1, agent.doneTimer/30);
+    ctx.strokeStyle = `rgba(0,212,160,${alpha})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x-4, y); ctx.lineTo(x-1, y+3); ctx.lineTo(x+4, y-3);
+    ctx.stroke();
+  }
+}
+
+function drawOffice() {
+  // clear
+  ctx.fillStyle = '#0a0a12';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // tiles
+  MAP.forEach((row, r) => row.forEach((tile, c) => drawTile(c, r, tile)));
+
+  // agents sorted by Y (painter's algorithm)
+  const sorted = [...agents].sort((a,b) => a.py - b.py);
+  sorted.forEach(drawAgent);
+}
+
+// ═══════════════════════════════════════════════════════
+// AGENTS
+// ═══════════════════════════════════════════════════════
+const agents = AGENT_DEFS.map(d => new Agent(d));
+
+function getAgentForSession(session) {
+  // round-robin assignment
+  const existing = agents.find(a => a.session === session);
+  if (existing) return existing;
+  const free = agents.find(a => !a.session || a.state === STATE.IDLE);
+  if (free) { free.session = session; return free; }
+  return agents[Math.floor(Math.random()*agents.length)];
+}
+
+// ═══════════════════════════════════════════════════════
+// ACTIVITY FEED
+// ═══════════════════════════════════════════════════════
+let eventCount = 0;
+const feedList = document.getElementById('feed-list');
+const feedCount = document.getElementById('feed-count');
+const feedEmpty = document.getElementById('feed-empty');
+
+const TOOL_ICONS = {
+  Write:'✏️', Edit:'✏️', Read:'📖', Bash:'⚡', Glob:'🔍',
+  Grep:'🔍', WebFetch:'🌐', WebSearch:'🌐', Agent:'🤖',
+  Task:'🤖', NotebookEdit:'📓', Default:'⚙️'
+};
+
+function addFeedItem(event) {
+  feedEmpty && feedEmpty.remove();
+  eventCount++;
+  feedCount.textContent = eventCount;
+
+  const agent = event.agent ? agents.find(a => a.id === event.agent) : null;
+  const color = agent ? agent.color : '#94a3b8';
+  const tool = event.tool || event.type || 'event';
+  const icon = TOOL_ICONS[tool] || TOOL_ICONS.Default;
+  const detail = event.file || event.detail || event.session || '';
+  const time = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+  const item = document.createElement('div');
+  item.className = 'feed-item';
+  item.innerHTML = `
+    <div class="feed-top">
+      <div class="feed-agent" style="background:${color}"></div>
+      <span class="feed-tool">${icon} ${tool}</span>
+      <span class="feed-time">${time}</span>
+    </div>
+    ${detail ? `<div class="feed-detail">${detail.split('/').slice(-2).join('/')}</div>` : ''}
+  `;
+  feedList.insertBefore(item, feedList.firstChild);
+
+  // Keep max 80 items
+  while(feedList.children.length > 80) feedList.removeChild(feedList.lastChild);
+}
+
+// ═══════════════════════════════════════════════════════
+// AGENT CARDS
+// ═══════════════════════════════════════════════════════
+const agentRow = document.getElementById('agent-row');
+const cardEls = {};
+
+agents.forEach(agent => {
+  const card = document.createElement('div');
+  card.className = 'agent-card';
+  card.id = `card-${agent.id}`;
+  card.innerHTML = `
+    <div class="agent-dot" style="background:${agent.color}"></div>
+    <div style="flex:1;min-width:0">
+      <div class="agent-name">${agent.name}</div>
+      <div class="agent-state" id="state-${agent.id}">idle</div>
+      <div class="agent-tool" id="tool-${agent.id}"></div>
+    </div>
+  `;
+  agentRow.appendChild(card);
+  cardEls[agent.id] = card;
+});
+
+function updateCards() {
+  agents.forEach(agent => {
+    const card = cardEls[agent.id];
+    const stateEl = document.getElementById(`state-${agent.id}`);
+    const toolEl = document.getElementById(`tool-${agent.id}`);
+    card.className = `agent-card ${agent.state === STATE.IDLE ? 'idle-wander' : 'active'}`;
+    const labels = {typing:'digitando…',reading:'lendo…',thinking:'pensando…',walking:'se movendo…',idle:'em espera',done:'concluído ✓'};
+    stateEl.textContent = labels[agent.state] || agent.state;
+    toolEl.textContent = agent.tool || agent.lastTool || '';
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// PROCESS EVENTS
+// ═══════════════════════════════════════════════════════
+const statusDot = document.getElementById('status-dot');
+const subtitle = document.getElementById('office-subtitle');
+
+function processEvent(event) {
+  const {type, tool, session, agent: agentId} = event;
+  let targetAgent;
+
+  if (agentId) {
+    targetAgent = agents.find(a => a.id === agentId);
+  } else if (session) {
+    targetAgent = getAgentForSession(session);
+  } else {
+    targetAgent = agents[Math.floor(Math.random()*agents.length)];
+  }
+
+  if (!targetAgent) return;
+
+  if (type === 'tool_start') {
+    targetAgent.setActive(tool || 'Bash');
+    subtitle.textContent = `${targetAgent.name} executando ${tool || 'tarefa'}…`;
+    statusDot.className = 'status-dot activity';
+    addFeedItem({...event, agent: targetAgent.id});
+  } else if (type === 'tool_end' || type === 'done') {
+    targetAgent.setDone();
+    addFeedItem({...event, agent: targetAgent.id, tool: tool || '✓ concluído'});
+  } else {
+    addFeedItem(event);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// SSE CONNECTION
+// ═══════════════════════════════════════════════════════
+const sseBadge = document.getElementById('sse-badge');
+let sseRetries = 0;
+
+function connectSSE() {
+  try {
+    const es = new EventSource(SSE_URL);
+    es.onopen = () => {
+      sseBadge.className = 'sse-badge connected';
+      sseBadge.innerHTML = '<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Conectado';
+      statusDot.className = 'status-dot online';
+      sseRetries = 0;
+    };
+    es.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === 'connected' && data.events) {
+          data.events.slice(0,10).reverse().forEach(ev => addFeedItem(ev));
+        } else {
+          processEvent(data);
+        }
+      } catch(_) {}
+    };
+    es.onerror = () => {
+      es.close();
+      sseBadge.className = 'sse-badge error';
+      sseBadge.innerHTML = '<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Reconectando…';
+      const delay = Math.min(30000, 2000 * Math.pow(1.5, sseRetries++));
+      setTimeout(connectSSE, delay);
+    };
+  } catch(e) {
+    sseBadge.className = 'sse-badge error';
+    sseBadge.innerHTML = '<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Offline';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// DEMO MODE — simulate activity when no SSE events
+// ═══════════════════════════════════════════════════════
+const DEMO_TOOLS = ['Read','Write','Bash','Grep','Glob','Edit','WebSearch','Agent'];
+const DEMO_FILES = ['index.html','server.js','SKILL.md','settings.json','styles.css','main.py'];
+let demoActive = false;
+let demoTimer = 0;
+
+function runDemo() {
+  if (demoActive) return;
+  demoActive = true;
+  demoTimer = setInterval(() => {
+    const agent = agents[Math.floor(Math.random()*agents.length)];
+    if (agent.state !== STATE.IDLE && agent.state !== STATE.WALKING) return;
+    const tool = DEMO_TOOLS[Math.floor(Math.random()*DEMO_TOOLS.length)];
+    const file = DEMO_FILES[Math.floor(Math.random()*DEMO_FILES.length)];
+    agent.setActive(tool);
+    subtitle.textContent = `${agent.name} executando ${tool}…`;
+    statusDot.className = 'status-dot activity';
+    addFeedItem({type:'tool_start', tool, file, agent: agent.id, detail: file});
+    setTimeout(() => {
+      agent.setDone();
+      addFeedItem({type:'tool_end', tool:'✓', agent: agent.id});
+      if (agents.every(a => a.state===STATE.IDLE||a.state===STATE.WALKING||a.state===STATE.DONE)) {
+        subtitle.textContent = 'Aguardando atividade…';
+        statusDot.className = 'status-dot online';
+      }
+    }, 3000 + Math.random()*5000);
+  }, 4000 + Math.random()*3000);
+}
+
+// Start demo after 3s if no SSE
+setTimeout(() => { if (!document.querySelector('.sse-badge.connected')) runDemo(); }, 3000);
+
+// ═══════════════════════════════════════════════════════
+// MAIN LOOP
+// ═══════════════════════════════════════════════════════
+function loop() {
+  agents.forEach(a => a.update());
+  drawOffice();
+  updateCards();
+  requestAnimationFrame(loop);
+}
+
+connectSSE();
+loop();
+</script>
+</body>
+</html>
