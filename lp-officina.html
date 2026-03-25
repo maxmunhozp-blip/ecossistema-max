@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Officina App — Encontre a Melhor Oficina Perto de Você</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,800;0,900;1,800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0b0b0e;
+  --bg2:#111116;
+  --surface:#18181f;
+  --surface2:#202028;
+  --border:rgba(255,255,255,.07);
+  --orange:#ff5e00;
+  --orange2:#ff8c42;
+  --orange-dim:rgba(255,94,0,.12);
+  --orange-glow:rgba(255,94,0,.25);
+  --silver:#c4c4d0;
+  --text:#eaeaf2;
+  --muted:#7a7a90;
+  --dim:#44444f;
+  --font-display:'Barlow Condensed',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --ease:cubic-bezier(.22,.68,0,1.2);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* ═══════════════════════════════════════════════
+   NOISE OVERLAY
+═══════════════════════════════════════════════ */
+body::before{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.025;
+}
+
+/* ═══════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 5vw;
+  height:68px;
+  display:flex;align-items:center;gap:2rem;
+  background:rgba(11,11,14,.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:background .3s;
+}
+.nav-logo{
+  font-family:var(--font-display);
+  font-size:1.5rem;font-weight:900;
+  letter-spacing:-.02em;
+  color:var(--text);
+  text-decoration:none;
+}
+.nav-logo span{color:var(--orange)}
+.nav-links{display:flex;gap:.25rem;margin-left:auto}
+.nav-link{
+  font-size:.8rem;font-weight:600;
+  color:var(--muted);text-decoration:none;
+  padding:.5rem .9rem;border-radius:6px;
+  transition:all .2s;
+}
+.nav-link:hover{color:var(--text);background:var(--surface)}
+.nav-cta{
+  background:var(--orange);color:#fff;
+  padding:.55rem 1.3rem;border-radius:8px;
+  font-size:.8rem;font-weight:700;
+  text-decoration:none;letter-spacing:.01em;
+  transition:all .2s;
+  box-shadow:0 4px 20px var(--orange-glow);
+}
+.nav-cta:hover{background:var(--orange2);transform:translateY(-1px);box-shadow:0 8px 28px var(--orange-glow)}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;margin-left:auto}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--silver);border-radius:2px;transition:all .3s}
+
+/* ═══════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════ */
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  padding:68px 5vw 0;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Carbon fiber dot grid */
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 80% 80% at 20% 50%, black 40%, transparent 80%);
+}
+/* Speed stripe */
+.hero::after{
+  content:'';position:absolute;
+  top:0;right:-10%;bottom:0;width:70%;
+  background:linear-gradient(135deg,
+    transparent 35%,
+    rgba(255,94,0,.04) 45%,
+    rgba(255,94,0,.08) 52%,
+    rgba(255,94,0,.04) 60%,
+    transparent 70%);
+  clip-path:polygon(20% 0,100% 0,100% 100%,0% 100%);
+  pointer-events:none;
+}
+
+.hero-content{
+  padding:5rem 0 4rem;
+  position:relative;z-index:2;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--orange);border:1px solid rgba(255,94,0,.3);
+  padding:.4rem .9rem;border-radius:4px;margin-bottom:1.8rem;
+  background:var(--orange-dim);
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.hero-h1{
+  font-family:var(--font-display);
+  font-size:clamp(3.8rem,6.5vw,6.5rem);
+  font-weight:900;
+  line-height:.95;
+  letter-spacing:-.02em;
+  text-transform:uppercase;
+  color:var(--text);
+  margin-bottom:1.5rem;
+}
+.hero-h1 em{
+  font-style:italic;
+  color:var(--orange);
+  display:block;
+}
+.hero-sub{
+  font-size:1rem;line-height:1.7;
+  color:var(--muted);max-width:420px;
+  margin-bottom:2.5rem;
+}
+.hero-sub strong{color:var(--silver);font-weight:600}
+
+.hero-actions{display:flex;gap:.9rem;flex-wrap:wrap;align-items:center}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.6rem;
+  background:var(--orange);color:#fff;
+  padding:.85rem 1.8rem;border-radius:10px;
+  font-size:.9rem;font-weight:700;text-decoration:none;
+  letter-spacing:.01em;
+  box-shadow:0 6px 30px var(--orange-glow);
+  transition:all .25s var(--ease);
+}
+.btn-primary:hover{background:var(--orange2);transform:translateY(-2px);box-shadow:0 12px 40px var(--orange-glow)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:.6rem;
+  color:var(--silver);
+  padding:.85rem 1.8rem;border-radius:10px;
+  font-size:.9rem;font-weight:600;text-decoration:none;
+  border:1px solid var(--border);
+  transition:all .25s;
+  background:var(--surface);
+}
+.btn-secondary:hover{border-color:rgba(255,255,255,.18);color:var(--text);transform:translateY(-2px)}
+
+.hero-stores{
+  display:flex;gap:.75rem;margin-top:1.5rem;align-items:center;
+}
+.store-badge{
+  display:flex;align-items:center;gap:.6rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:9px;padding:.55rem 1rem;
+  text-decoration:none;color:var(--text);
+  transition:all .2s;
+}
+.store-badge:hover{border-color:rgba(255,255,255,.2);background:var(--surface2)}
+.store-badge svg{flex-shrink:0}
+.store-badge-text{line-height:1.2}
+.store-badge-label{font-size:.58rem;color:var(--muted);font-weight:500;display:block}
+.store-badge-name{font-size:.78rem;font-weight:700;display:block}
+
+/* PHONE MOCKUP */
+.hero-visual{
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:2;
+  padding:4rem 0;
+}
+.phone-scene{
+  position:relative;
+  width:260px;
+}
+.phone{
+  width:260px;
+  background:#0f0f14;
+  border:2px solid #2a2a35;
+  border-radius:40px;
+  overflow:hidden;
+  box-shadow:
+    0 40px 100px rgba(0,0,0,.8),
+    0 0 0 1px rgba(255,255,255,.04),
+    0 8px 40px rgba(255,94,0,.15);
+  position:relative;
+  animation:phone-float 6s ease-in-out infinite;
+}
+@keyframes phone-float{
+  0%,100%{transform:translateY(0) rotate(-2deg)}
+  50%{transform:translateY(-12px) rotate(-2deg)}
+}
+.phone-bar{
+  background:#0d0d12;
+  height:32px;
+  display:flex;align-items:center;justify-content:center;
+}
+.phone-pill{width:80px;height:18px;background:#1a1a22;border-radius:20px}
+.phone-screen{
+  background:#13131a;
+  padding:12px;
+  min-height:460px;
+}
+/* App UI inside phone */
+.app-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.app-topbar-title{font-size:13px;font-weight:700;color:#eaeaf2}
+.app-topbar-btn{
+  width:28px;height:28px;border-radius:8px;background:#1e1e28;
+  display:flex;align-items:center;justify-content:center;
+}
+.app-search{
+  background:#1a1a24;border-radius:10px;
+  padding:8px 10px;display:flex;align-items:center;gap:6px;
+  margin-bottom:10px;border:1px solid #2a2a38;
+}
+.app-search-icon{width:14px;height:14px;background:#44444f;border-radius:50%;flex-shrink:0}
+.app-search-text{font-size:10px;color:#44444f}
+/* fake map */
+.app-map{
+  background:#0e1520;
+  border-radius:12px;
+  height:120px;
+  margin-bottom:10px;
+  position:relative;overflow:hidden;
+}
+.map-grid-h,.map-grid-v{position:absolute;background:rgba(255,255,255,.04)}
+.map-grid-h{left:0;right:0;height:1px}
+.map-grid-v{top:0;bottom:0;width:1px}
+.map-road-h{
+  position:absolute;left:0;right:0;
+  background:rgba(255,255,255,.07);
+}
+.map-road-v{
+  position:absolute;top:0;bottom:0;
+  background:rgba(255,255,255,.07);
+}
+.map-pin{
+  position:absolute;
+  width:12px;height:12px;
+  border-radius:50%;
+  border:2px solid var(--bg);
+}
+.map-you{
+  width:14px;height:14px;
+  background:#3b82f6;
+  box-shadow:0 0 0 3px rgba(59,130,246,.3);
+  top:55%;left:50%;transform:translate(-50%,-50%);
+}
+.map-pulse{
+  position:absolute;
+  width:28px;height:28px;
+  border-radius:50%;
+  background:rgba(59,130,246,.15);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:map-pulse 2s ease-out infinite;
+}
+@keyframes map-pulse{0%{transform:translate(-50%,-50%) scale(.5);opacity:1}100%{transform:translate(-50%,-50%) scale(2);opacity:0}}
+
+/* Officina cards */
+.app-cards-title{font-size:9px;font-weight:700;color:#5a5a70;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.app-card{
+  background:#1a1a26;border-radius:10px;
+  padding:8px 10px;
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:6px;
+  border:1px solid #252535;
+  animation:card-slide .5s var(--ease) both;
+}
+.app-card:nth-child(1){animation-delay:.1s}
+.app-card:nth-child(2){animation-delay:.2s}
+.app-card:nth-child(3){animation-delay:.3s}
+@keyframes card-slide{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+.app-card-icon{
+  width:30px;height:30px;border-radius:8px;
+  background:var(--orange-dim);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+}
+.app-card-info{flex:1;min-width:0}
+.app-card-name{font-size:10px;font-weight:700;color:#d0d0e0;display:block}
+.app-card-meta{font-size:8px;color:#5a5a70;display:flex;gap:4px;align-items:center;margin-top:1px}
+.app-stars{color:#fbbf24;font-size:8px}
+.app-card-dist{margin-left:auto;font-size:8px;font-weight:700;color:var(--orange)}
+
+/* floating badges */
+.float-badge{
+  position:absolute;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:.6rem .9rem;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);
+  animation:badge-float 5s ease-in-out infinite;
+  white-space:nowrap;
+}
+.float-badge-label{font-size:.6rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.float-badge-val{font-family:var(--font-display);font-size:1.1rem;font-weight:900;color:var(--text)}
+.float-badge.left{left:-80px;top:30%;animation-delay:.8s}
+.float-badge.right{right:-70px;bottom:30%;animation-delay:1.6s}
+@keyframes badge-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* glow behind phone */
+.phone-glow{
+  position:absolute;inset:-40px;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255,94,0,.12), transparent 70%);
+  pointer-events:none;z-index:-1;
+}
+
+/* ═══════════════════════════════════════════════
+   STATS BAR
+═══════════════════════════════════════════════ */
+.stats-bar{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:2rem 5vw;
+}
+.stats-inner{
+  max-width:900px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2rem;
+}
+.stat{text-align:center}
+.stat-num{
+  font-family:var(--font-display);
+  font-size:clamp(2.4rem,4vw,3.5rem);
+  font-weight:900;
+  line-height:1;
+  color:var(--text);
+  display:block;
+}
+.stat-num .accent{color:var(--orange)}
+.stat-label{font-size:.78rem;color:var(--muted);font-weight:500;margin-top:.3rem;display:block}
+.stat-sep{width:1px;background:var(--border);display:none}
+
+/* ═══════════════════════════════════════════════
+   SECTIONS COMMON
+═══════════════════════════════════════════════ */
+section{padding:6rem 5vw}
+.section-inner{max-width:1080px;margin:0 auto}
+.section-tag{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:1rem;
+}
+.section-tag::before{content:'';width:20px;height:2px;background:var(--orange);border-radius:2px}
+.section-h2{
+  font-family:var(--font-display);
+  font-size:clamp(2.4rem,4vw,3.8rem);
+  font-weight:900;line-height:.95;
+  text-transform:uppercase;
+  letter-spacing:-.02em;
+  color:var(--text);
+  margin-bottom:1.2rem;
+}
+.section-h2 em{font-style:italic;color:var(--orange)}
+.section-lead{font-size:1rem;line-height:1.7;color:var(--muted);max-width:520px}
+
+/* ═══════════════════════════════════════════════
+   BENEFITS
+═══════════════════════════════════════════════ */
+.benefits{background:var(--bg)}
+.benefits-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:1.5rem;margin-top:3.5rem;
+}
+.benefit-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;padding:2rem;
+  transition:all .3s var(--ease);
+  position:relative;overflow:hidden;
+  cursor:default;
+}
+.benefit-card::before{
+  content:'';
+  position:absolute;inset:0;border-radius:16px;
+  background:linear-gradient(135deg, rgba(255,94,0,.06), transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.benefit-card:hover{border-color:rgba(255,94,0,.3);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+.benefit-card:hover::before{opacity:1}
+.benefit-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:var(--orange-dim);border:1px solid rgba(255,94,0,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin-bottom:1.2rem;
+}
+.benefit-title{
+  font-family:var(--font-display);
+  font-size:1.3rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:-.01em;
+  color:var(--text);margin-bottom:.6rem;
+}
+.benefit-desc{font-size:.88rem;line-height:1.65;color:var(--muted)}
+
+/* ═══════════════════════════════════════════════
+   PMP SECTION
+═══════════════════════════════════════════════ */
+.pmp{
+  background:linear-gradient(135deg, #0f0a06 0%, var(--bg2) 40%, #0a0f12 100%);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.pmp::before{
+  content:'PMP';
+  position:absolute;right:-2%;top:50%;transform:translateY(-50%);
+  font-family:var(--font-display);font-size:min(28vw,320px);font-weight:900;
+  color:rgba(255,94,0,.03);letter-spacing:-.05em;line-height:1;
+  pointer-events:none;user-select:none;
+}
+.pmp-inner{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:5rem;align-items:center;
+}
+.pmp-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--orange-dim);border:1px solid rgba(255,94,0,.25);
+  border-radius:6px;padding:.4rem .9rem;
+  font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:1.5rem;
+}
+.pmp-content .section-h2{margin-bottom:1rem}
+.pmp-desc{font-size:.95rem;line-height:1.75;color:var(--muted);margin-bottom:2rem}
+.pmp-items{display:flex;flex-direction:column;gap:.75rem}
+.pmp-item{
+  display:flex;align-items:center;gap:.8rem;
+  font-size:.88rem;color:var(--silver);
+}
+.pmp-item-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--orange);flex-shrink:0;
+}
+.pmp-visual{
+  display:flex;flex-direction:column;gap:1rem;
+}
+.pmp-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:1.4rem 1.6rem;
+  display:flex;align-items:center;gap:1.2rem;
+  transition:all .3s;
+}
+.pmp-card:hover{border-color:rgba(255,94,0,.25);background:rgba(255,94,0,.04)}
+.pmp-card-num{
+  font-family:var(--font-display);
+  font-size:2.8rem;font-weight:900;
+  color:var(--orange);line-height:1;
+  flex-shrink:0;min-width:48px;
+}
+.pmp-card-title{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:.25rem}
+.pmp-card-desc{font-size:.8rem;color:var(--muted);line-height:1.5}
+
+/* ═══════════════════════════════════════════════
+   HOW IT WORKS
+═══════════════════════════════════════════════ */
+.how{background:var(--bg)}
+.how-steps{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2rem;margin-top:3.5rem;
+  position:relative;
+}
+.how-steps::before{
+  content:'';
+  position:absolute;
+  top:3rem;left:15%;right:15%;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--orange-dim) 20%, var(--border) 50%, var(--orange-dim) 80%, transparent);
+  z-index:0;
+}
+.how-step{position:relative;z-index:1;text-align:center;padding:0 .5rem}
+.how-step-num{
+  font-family:var(--font-display);
+  font-size:4.5rem;font-weight:900;
+  line-height:1;
+  background:linear-gradient(135deg, var(--orange), #ff8c42);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.8rem;
+  display:inline-block;
+}
+.how-step-icon{
+  width:56px;height:56px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;margin:0 auto .9rem;
+}
+.how-step-title{
+  font-family:var(--font-display);
+  font-size:1.15rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:-.01em;color:var(--text);margin-bottom:.5rem;
+}
+.how-step-desc{font-size:.85rem;line-height:1.65;color:var(--muted)}
+
+/* ═══════════════════════════════════════════════
+   SOCIAL PROOF
+═══════════════════════════════════════════════ */
+.reviews{background:var(--bg2);border-top:1px solid var(--border)}
+.reviews-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.2rem;margin-top:3rem;
+}
+.review-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:1.5rem;
+  transition:transform .3s,border-color .3s;
+}
+.review-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.14)}
+.review-stars{color:#fbbf24;font-size:1rem;margin-bottom:.75rem;letter-spacing:.05em}
+.review-text{font-size:.88rem;line-height:1.7;color:var(--silver);margin-bottom:1rem;font-style:italic}
+.review-author{display:flex;align-items:center;gap:.6rem}
+.review-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--orange-dim);border:1px solid rgba(255,94,0,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.9rem;font-weight:800;color:var(--orange);
+  flex-shrink:0;
+}
+.review-name{font-size:.82rem;font-weight:700;color:var(--text)}
+.review-city{font-size:.72rem;color:var(--muted)}
+
+/* ═══════════════════════════════════════════════
+   CTA SECTION
+═══════════════════════════════════════════════ */
+.cta-section{
+  background:var(--bg);
+  text-align:center;
+  padding:7rem 5vw;
+  position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:400px;
+  background:radial-gradient(ellipse, rgba(255,94,0,.1) 0%, transparent 65%);
+  pointer-events:none;
+}
+.cta-h2{
+  font-family:var(--font-display);
+  font-size:clamp(2.8rem,5vw,5rem);
+  font-weight:900;text-transform:uppercase;
+  letter-spacing:-.02em;line-height:.95;
+  margin-bottom:1.2rem;
+  position:relative;z-index:1;
+}
+.cta-h2 em{color:var(--orange);font-style:italic}
+.cta-sub{
+  font-size:1rem;color:var(--muted);
+  margin-bottom:2.5rem;line-height:1.7;
+  position:relative;z-index:1;
+}
+.cta-actions{
+  display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;
+  position:relative;z-index:1;
+}
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════ */
+footer{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:3rem 5vw;
+}
+.footer-inner{
+  max-width:1080px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1.5rem;
+}
+.footer-logo{
+  font-family:var(--font-display);
+  font-size:1.3rem;font-weight:900;
+  letter-spacing:-.02em;color:var(--text);
+  text-decoration:none;
+}
+.footer-logo span{color:var(--orange)}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap}
+.footer-link{font-size:.8rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.footer-link:hover{color:var(--text)}
+.footer-copy{font-size:.75rem;color:var(--dim)}
+
+/* ═══════════════════════════════════════════════
+   REVEAL ANIMATIONS
+═══════════════════════════════════════════════ */
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .7s ease,transform .7s var(--ease);
+}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-28px);transition:opacity .7s ease,transform .7s var(--ease)}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(28px);transition:opacity .7s ease,transform .7s var(--ease)}
+.reveal-right.visible{opacity:1;transform:none}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;padding-top:calc(68px + 2rem)}
+  .hero-visual{display:none}
+  .hero-h1{font-size:clamp(3rem,12vw,5rem)}
+  .benefits-grid{grid-template-columns:1fr}
+  .pmp-inner{grid-template-columns:1fr;gap:3rem}
+  .how-steps{grid-template-columns:1fr;gap:2.5rem}
+  .how-steps::before{display:none}
+  .reviews-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .nav-hamburger{display:flex}
+  .stats-inner{grid-template-columns:1fr;gap:1.5rem}
+  .float-badge{display:none}
+}
+@media(max-width:600px){
+  section{padding:4rem 6vw}
+  .hero{padding:calc(68px + 1.5rem) 6vw 3rem}
+  .hero-badge{font-size:.58rem}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .btn-primary,.btn-secondary{justify-content:center}
+  .hero-stores{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav>
+  <a href="https://officinaapp.com.br" class="nav-logo">OFFICINA<span>.</span></a>
+  <div class="nav-links">
+    <a href="#beneficios" class="nav-link">Benefícios</a>
+    <a href="#pmp" class="nav-link">PMP</a>
+    <a href="#como-funciona" class="nav-link">Como funciona</a>
+    <a href="https://app.officinaapp.com.br/acessar" class="nav-link">Entrar</a>
+    <a href="https://app.officinaapp.com.br/cadastro/tipo" class="nav-cta">Criar conta grátis</a>
+  </div>
+  <div class="nav-hamburger" id="hamburger" onclick="this.classList.toggle('open');document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      O app que todo motorista precisa
+    </div>
+    <h1 class="hero-h1">
+      Sua oficina<br>
+      ideal
+      <em>na palma<br>da mão</em>
+    </h1>
+    <p class="hero-sub">
+      Encontre <strong>oficinas confiáveis</strong> perto de você, compare avaliações reais, agende inspeções e cuide do seu carro com um <strong>Plano de Manutenção Preventiva</strong>.
+    </p>
+    <div class="hero-actions">
+      <a href="https://app.officinaapp.com.br/cadastro/tipo" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Criar conta grátis
+      </a>
+      <a href="https://app.officinaapp.com.br/acessar" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Já tenho conta
+      </a>
+    </div>
+    <div class="hero-stores">
+      <a href="#" class="store-badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--silver)"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        <div class="store-badge-text">
+          <span class="store-badge-label">Disponível na</span>
+          <span class="store-badge-name">App Store</span>
+        </div>
+      </a>
+      <a href="#" class="store-badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--silver)"><path d="m3 20.5.1-.1L12 12l-8.9-8.4L3 3.5v17zm13-10.1L13.9 12l2.1 1.6 3.4-2-.1-.1-3.3-1.1zM4.1 4.3 12 11l-7.9-6.7zM12 13l-7.9 6.7L12 13zm3.4 2.5-3.4-2.1 2.1-1.6 4.4 2.7-3.1 1z"/></svg>
+        <div class="store-badge-text">
+          <span class="store-badge-label">Disponível no</span>
+          <span class="store-badge-name">Google Play</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Phone Mockup -->
+  <div class="hero-visual">
+    <div class="phone-scene">
+      <div class="phone-glow"></div>
+      <div class="phone">
+        <div class="phone-bar"><div class="phone-pill"></div></div>
+        <div class="phone-screen">
+          <div class="app-topbar">
+            <span class="app-topbar-title">Oficinas Próximas</span>
+            <div class="app-topbar-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7a7a90" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </div>
+          </div>
+          <div class="app-search">
+            <div class="app-search-icon"></div>
+            <span class="app-search-text">Buscar oficina…</span>
+          </div>
+          <!-- Map -->
+          <div class="app-map">
+            <div class="map-grid-h" style="top:25%"></div>
+            <div class="map-grid-h" style="top:50%"></div>
+            <div class="map-grid-h" style="top:75%"></div>
+            <div class="map-grid-v" style="left:33%"></div>
+            <div class="map-grid-v" style="left:66%"></div>
+            <div class="map-road-h" style="top:48%;height:6px"></div>
+            <div class="map-road-v" style="left:32%;width:6px"></div>
+            <div class="map-road-h" style="top:22%;height:4px"></div>
+            <div class="map-road-v" style="left:65%;width:4px"></div>
+            <div class="map-pin" style="background:#ff5e00;top:28%;left:22%;"></div>
+            <div class="map-pin" style="background:#ff5e00;top:62%;left:68%;"></div>
+            <div class="map-pin" style="background:#ff5e00;top:38%;left:72%;"></div>
+            <div class="map-pin map-you" style="top:52%;left:44%"></div>
+            <div class="map-pulse" style="top:52%;left:44%"></div>
+          </div>
+          <div class="app-cards-title">3 oficinas encontradas</div>
+          <div class="app-card">
+            <div class="app-card-icon">🔧</div>
+            <div class="app-card-info">
+              <span class="app-card-name">Auto Center Premium</span>
+              <div class="app-card-meta"><span class="app-stars">★★★★★</span> 4.9 · 120 avaliações</div>
+            </div>
+            <span class="app-card-dist">0.8km</span>
+          </div>
+          <div class="app-card">
+            <div class="app-card-icon">⚙️</div>
+            <div class="app-card-info">
+              <span class="app-card-name">Mecânica Brasil</span>
+              <div class="app-card-meta"><span class="app-stars">★★★★★</span> 4.7 · 89 avaliações</div>
+            </div>
+            <span class="app-card-dist">1.2km</span>
+          </div>
+          <div class="app-card">
+            <div class="app-card-icon">🚗</div>
+            <div class="app-card-info">
+              <span class="app-card-name">Oficina do João</span>
+              <div class="app-card-meta"><span class="app-stars">★★★★☆</span> 4.5 · 56 avaliações</div>
+            </div>
+            <span class="app-card-dist">2.1km</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating badges -->
+      <div class="float-badge left">
+        <div class="float-badge-label">Avaliação média</div>
+        <div class="float-badge-val">4.8 ⭐</div>
+      </div>
+      <div class="float-badge right">
+        <div class="float-badge-label">Agendamentos hoje</div>
+        <div class="float-badge-val">+1.200</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ STATS ═══════════════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat reveal">
+      <span class="stat-num"><span class="num" data-target="500">0</span><span class="accent">+</span></span>
+      <span class="stat-label">Oficinas cadastradas</span>
+    </div>
+    <div class="stat reveal" style="transition-delay:.12s">
+      <span class="stat-num"><span class="num" data-target="12000">0</span><span class="accent">+</span></span>
+      <span class="stat-label">Motoristas ativos</span>
+    </div>
+    <div class="stat reveal" style="transition-delay:.24s">
+      <span class="stat-num"><span class="num" data-target="50">0</span><span class="accent">+</span></span>
+      <span class="stat-label">Cidades atendidas</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ BENEFITS ═══════════════ -->
+<section class="benefits" id="beneficios">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-tag">Por que usar</div>
+      <h2 class="section-h2">Tudo que seu<br>carro <em>precisa</em></h2>
+      <p class="section-lead">Do filtro de ar ao câmbio — encontre o especialista certo, na hora certa, pelo preço justo.</p>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card reveal" style="transition-delay:.1s">
+        <div class="benefit-icon">📍</div>
+        <h3 class="benefit-title">Busca por localização</h3>
+        <p class="benefit-desc">Encontre as melhores oficinas no raio que você quiser. Filtre por tipo de serviço, avaliação e distância.</p>
+      </div>
+      <div class="benefit-card reveal" style="transition-delay:.18s">
+        <div class="benefit-icon">⭐</div>
+        <h3 class="benefit-title">Avaliações reais</h3>
+        <p class="benefit-desc">Leia opiniões de outros motoristas antes de escolher. Notas e comentários verificados de clientes reais.</p>
+      </div>
+      <div class="benefit-card reveal" style="transition-delay:.26s">
+        <div class="benefit-icon">📅</div>
+        <h3 class="benefit-title">Agendamento online</h3>
+        <p class="benefit-desc">Solicite orçamentos e agende serviços direto pelo app. Sem ligações, sem espera — tudo resolvido em minutos.</p>
+      </div>
+      <div class="benefit-card reveal" style="transition-delay:.34s">
+        <div class="benefit-icon">🔍</div>
+        <h3 class="benefit-title">Inspeção veicular</h3>
+        <p class="benefit-desc">Agende inspeções preventivas e saiba exatamente o estado do seu veículo antes que algum problema apareça.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PMP ═══════════════ -->
+<section class="pmp" id="pmp">
+  <div class="section-inner">
+    <div class="pmp-inner">
+      <div class="pmp-content reveal-left">
+        <div class="pmp-badge">⚙️ Exclusivo Officina App</div>
+        <h2 class="section-h2">Plano de Manutenção<br><em>Preventiva</em></h2>
+        <p class="pmp-desc">
+          O PMP é um programa inteligente que <strong style="color:var(--silver)">acompanha o estado do seu motor e câmbio</strong>, alertando sobre revisões necessárias antes que virem problemas caros.
+        </p>
+        <div class="pmp-items">
+          <div class="pmp-item"><div class="pmp-item-dot"></div>Alertas automáticos de revisão por km rodado</div>
+          <div class="pmp-item"><div class="pmp-item-dot"></div>Histórico completo de manutenções</div>
+          <div class="pmp-item"><div class="pmp-item-dot"></div>Relatório de saúde do motor e câmbio</div>
+          <div class="pmp-item"><div class="pmp-item-dot"></div>Recomendações personalizadas por modelo</div>
+        </div>
+      </div>
+      <div class="pmp-visual reveal-right">
+        <div class="pmp-card">
+          <div class="pmp-card-num">01</div>
+          <div>
+            <div class="pmp-card-title">Cadastre seu veículo</div>
+            <div class="pmp-card-desc">Informe modelo, ano e quilometragem atual. O app configura o plano ideal.</div>
+          </div>
+        </div>
+        <div class="pmp-card">
+          <div class="pmp-card-num">02</div>
+          <div>
+            <div class="pmp-card-title">Receba os alertas</div>
+            <div class="pmp-card-desc">Notificações inteligentes na hora certa: trocar óleo, filtros, fluidos e muito mais.</div>
+          </div>
+        </div>
+        <div class="pmp-card">
+          <div class="pmp-card-num">03</div>
+          <div>
+            <div class="pmp-card-title">Agende com 1 toque</div>
+            <div class="pmp-card-desc">Conecte o alerta diretamente ao agendamento na melhor oficina da sua região.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<section class="how" id="como-funciona">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <div class="section-tag" style="justify-content:center">Como funciona</div>
+      <h2 class="section-h2" style="text-align:center">3 passos para<br><em>resolver tudo</em></h2>
+    </div>
+    <div class="how-steps">
+      <div class="how-step reveal" style="transition-delay:.1s">
+        <div class="how-step-num">01</div>
+        <div class="how-step-icon">📱</div>
+        <h3 class="how-step-title">Baixe o app</h3>
+        <p class="how-step-desc">Disponível para iOS e Android. Crie sua conta em segundos, é gratuito.</p>
+      </div>
+      <div class="how-step reveal" style="transition-delay:.2s">
+        <div class="how-step-num">02</div>
+        <div class="how-step-icon">🗺️</div>
+        <h3 class="how-step-title">Encontre oficinas</h3>
+        <p class="how-step-desc">Busque por localização, leia avaliações reais e compare orçamentos.</p>
+      </div>
+      <div class="how-step reveal" style="transition-delay:.3s">
+        <div class="how-step-num">03</div>
+        <div class="how-step-icon">✅</div>
+        <h3 class="how-step-title">Agende e resolva</h3>
+        <p class="how-step-desc">Marque o serviço pelo app. Seu carro agradece, seu bolso também.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ REVIEWS ═══════════════ -->
+<section class="reviews">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <div class="section-tag" style="justify-content:center">Depoimentos</div>
+      <h2 class="section-h2" style="text-align:center">O que nossos<br><em>usuários dizem</em></h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal" style="transition-delay:.1s">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Encontrei uma oficina excelente a 500m de casa. Agendei, levei o carro e saiu tudo certo. Nunca foi tão fácil."</p>
+        <div class="review-author">
+          <div class="review-avatar">RM</div>
+          <div><div class="review-name">Ricardo M.</div><div class="review-city">São Paulo, SP</div></div>
+        </div>
+      </div>
+      <div class="review-card reveal" style="transition-delay:.2s">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"O PMP me avisou que o câmbio precisava de revisão. Graças ao alerta evitei um problema de R$4.000. Valeu demais."</p>
+        <div class="review-author">
+          <div class="review-avatar">CS</div>
+          <div><div class="review-name">Camila S.</div><div class="review-city">Belo Horizonte, MG</div></div>
+        </div>
+      </div>
+      <div class="review-card reveal" style="transition-delay:.3s">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Comparei 3 orçamentos no mesmo dia pelo app. Economizei 40% sem sair de casa. Aplicativo impecável."</p>
+        <div class="review-author">
+          <div class="review-avatar">FP</div>
+          <div><div class="review-name">Felipe P.</div><div class="review-city">Curitiba, PR</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CTA ═══════════════ -->
+<section class="cta-section">
+  <h2 class="cta-h2 reveal">Seu carro merece<br>o <em>melhor cuidado</em></h2>
+  <p class="cta-sub reveal" style="transition-delay:.1s">Junte-se a milhares de motoristas que já encontraram as melhores oficinas pelo Officina App.</p>
+  <div class="cta-actions reveal" style="transition-delay:.2s">
+    <a href="https://app.officinaapp.com.br/cadastro/tipo" class="btn-primary" style="font-size:1rem;padding:1rem 2.2rem">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Criar conta grátis
+    </a>
+    <a href="https://app.officinaapp.com.br/acessar" class="btn-secondary" style="font-size:1rem;padding:1rem 2.2rem">
+      Acessar minha conta
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <div class="footer-inner">
+    <a href="https://officinaapp.com.br" class="footer-logo">OFFICINA<span>.</span></a>
+    <div class="footer-links">
+      <a href="https://officinaapp.com.br/privacidade" class="footer-link">Política de Privacidade</a>
+      <a href="https://officinaapp.com.br/termos" class="footer-link">Termos de Serviço</a>
+      <a href="https://app.officinaapp.com.br/cadastro/tipo" class="footer-link">Criar conta</a>
+    </div>
+    <span class="footer-copy">© 2025 Officina App. Todos os direitos reservados.</span>
+  </div>
+</footer>
+
+<script>
+// ─── INTERSECTION OBSERVER ───────────────────────────────
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+}, { threshold: .12, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
+
+// ─── COUNTER ANIMATION ───────────────────────────────────
+function animCount(el, target, duration = 1800) {
+  const start = performance.now();
+  const isLarge = target >= 1000;
+  const step = ts => {
+    const p = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 4);
+    const val = Math.floor(ease * target);
+    el.textContent = isLarge ? val.toLocaleString('pt-BR') : val;
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = isLarge ? target.toLocaleString('pt-BR') : target;
+  };
+  requestAnimationFrame(step);
+}
+const countObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.num').forEach(num => {
+        animCount(num, parseInt(num.dataset.target));
+      });
+      countObs.unobserve(e.target);
+    }
+  });
+}, { threshold: .4 });
+document.querySelectorAll('.stat').forEach(el => countObs.observe(el));
+
+// ─── NAV SCROLL ──────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').style.background =
+    window.scrollY > 40 ? 'rgba(11,11,14,.97)' : 'rgba(11,11,14,.85)';
+}, { passive: true });
+</script>
+</body>
+</html>
