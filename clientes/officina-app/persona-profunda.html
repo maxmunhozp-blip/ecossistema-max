@@ -453,6 +453,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .post-thumb-iframe{width:1080px;height:1440px;border:none;transform:scale(0.0481);transform-origin:top left;pointer-events:none;display:block}
 .slide-card-frame{width:100%;height:100%;overflow:hidden;border-radius:6px}
 .slide-card-iframe{width:1080px;height:1440px;border:none;transform:scale(0.063);transform-origin:top left;pointer-events:none;display:block}
+.slide-card-brand{position:absolute;bottom:3px;right:4px;font-size:7px;font-weight:900;color:var(--teal);opacity:.4;letter-spacing:.1px;pointer-events:none;z-index:2;line-height:1}
+/* ── Créditos de equipe por post ── */
+.post-credits{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap}
+.post-credit-item{font-size:10px;color:var(--text4);white-space:nowrap}
+.post-credit-sep{width:2px;height:2px;border-radius:50%;background:var(--border);flex-shrink:0}
+/* ── Status proposta ── */
+.pst.proposta{color:var(--amber-dark)}
+/* ── Lightbox brand ── */
+.rs2-lb-brand{text-align:center;padding:6px 0 4px;font-size:9px;font-weight:900;color:rgba(61,169,165,.4);letter-spacing:.8px;text-transform:uppercase}
 /* Lightbox v2 */
 .rs2-lb{position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:300;display:none;align-items:center;justify-content:center}
 .rs2-lb.open{display:flex;animation:fadeIn .18s ease}
@@ -1532,6 +1541,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
         <button class="rs-pill" onclick="rsFilter('publicado',this)">Publicado</button>
         <button class="rs-pill" onclick="rsFilter('revisao',this)">Em revisão</button>
         <button class="rs-pill" onclick="rsFilter('rascunho',this)">Rascunho</button>
+        <button class="rs-pill" onclick="rsFilter('proposta',this)">Propostas</button>
       </div>
       <div class="posts-list" id="postsList"></div>
     </div>
@@ -1585,6 +1595,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
       <div class="rs2-lb-slide">
         <iframe id="rs2LbIframe" class="rs2-lb-iframe" src="" scrolling="no" loading="lazy"></iframe>
       </div>
+      <div class="rs2-lb-brand">officina</div>
     </div>
     <div class="rs2-lb-dots" id="rs2LbDots"></div>
     <button class="rs2-lb-nav prev" onclick="rs2NavLb(-1)">‹</button>
@@ -1604,11 +1615,14 @@ lucide.createIcons();
 
 /* ═══ REDES SOCIAIS v2 ═══ */
 const RS2_POSTS = [
-  {id:'p1',postIdx:0,titulo:'Como escolher a oficina certa',plataformas:['instagram'],status:'publicado',data:'15/03/2026',slides:5},
-  {id:'p2',postIdx:1,titulo:'5 sinais que seu carro precisa de revisão',plataformas:['instagram'],status:'revisao',data:'24/03/2026',slides:6},
-  {id:'p3',postIdx:2,titulo:'Depoimento: Eduardo resolveu em 1 hora',plataformas:['instagram','facebook'],status:'publicado',data:'20/03/2026',slides:4},
-  {id:'p4',postIdx:3,titulo:'Officina App em 3 passos',plataformas:['instagram'],status:'rascunho',data:'—',slides:3},
-  {id:'p5',postIdx:4,titulo:'Por que revisão preventiva vale a pena',plataformas:['facebook'],status:'agendado',data:'01/04/2026',slides:5},
+  {id:'p1',postIdx:0,titulo:'Como escolher a oficina certa',plataformas:['instagram'],status:'publicado',data:'15/03/2026',slides:5,redator:'Juliana Costa',designer:'Rafael Mota'},
+  {id:'p2',postIdx:1,titulo:'5 sinais que seu carro precisa de revisão',plataformas:['instagram'],status:'revisao',data:'24/03/2026',slides:6,redator:'Juliana Costa',designer:'Rafael Mota'},
+  {id:'p3',postIdx:2,titulo:'Depoimento: Eduardo resolveu em 1 hora',plataformas:['instagram','facebook'],status:'publicado',data:'20/03/2026',slides:4,redator:'Bruno Leal',designer:'Camila Ferreira'},
+  {id:'p4',postIdx:3,titulo:'Officina App em 3 passos',plataformas:['instagram'],status:'rascunho',data:'—',slides:3,redator:'Bruno Leal',designer:'Camila Ferreira'},
+  {id:'p5',postIdx:4,titulo:'Por que revisão preventiva vale a pena',plataformas:['facebook'],status:'agendado',data:'01/04/2026',slides:5,redator:'Juliana Costa',designer:'Rafael Mota'},
+  {id:'p6',postIdx:0,titulo:'Como funciona o diagnóstico pelo app',plataformas:['instagram'],status:'proposta',data:'—',slides:4,redator:'Juliana Costa',designer:'Camila Ferreira'},
+  {id:'p7',postIdx:1,titulo:'Orçamento transparente: entenda como',plataformas:['instagram','facebook'],status:'proposta',data:'—',slides:3,redator:'Bruno Leal',designer:'Rafael Mota'},
+  {id:'p8',postIdx:2,titulo:'Top 5 erros ao escolher oficina',plataformas:['instagram'],status:'proposta',data:'—',slides:5,redator:'Juliana Costa',designer:'Rafael Mota'},
 ];
 
 const DH_HISTORY = [
@@ -1616,6 +1630,10 @@ const DH_HISTORY = [
   {tipo:'user',when:'25/03 · 10h30',text:'Preciso mudar o slide 3, o texto está muito longo.'},
   {tipo:'agent',when:'25/03 · 10h31',text:'Ajustado! Reduzi o texto do slide 3 para 2 linhas. Ficou mais limpo e respirado.',preview:{titulo:'Como escolher a oficina certa — v2',meta:'5 slides · Instagram · Slide 3 atualizado'}},
   {tipo:'agent',when:'24/03 · 11h',text:'Iniciei o carrossel <strong>"5 sinais que seu carro precisa de revisão"</strong>. Em revisão — aguardando aprovação nos dados do slide 4.',preview:{titulo:'5 sinais que seu carro precisa de revisão',meta:'6 slides · Instagram · Em revisão'}},
+  {tipo:'agent',when:'26/03 · 09h',text:'Com base no comportamento do perfil este mês, preparei <strong>3 propostas</strong> para os próximos carrosséis. Você pode aprovar ou pedir ajuste em cada um.'},
+  {tipo:'agent',when:'26/03 · 09h01',text:'Proposta 1 — <strong>"Como funciona o diagnóstico pelo app"</strong><br/>Ideia: mostrar o passo a passo desde abrir o app até receber o laudo da oficina. Foco em educação de produto.',preview:{titulo:'Como funciona o diagnóstico pelo app',meta:'4 slides · Instagram · Proposta'}},
+  {tipo:'agent',when:'26/03 · 09h02',text:'Proposta 2 — <strong>"Orçamento transparente: entenda como"</strong><br/>Ideia: desmistificar o medo de surpresas na conta. Comparativo antes/depois do app. CTA forte.',preview:{titulo:'Orçamento transparente: entenda como',meta:'3 slides · Instagram + Facebook · Proposta'}},
+  {tipo:'agent',when:'26/03 · 09h03',text:'Proposta 3 — <strong>"Top 5 erros ao escolher oficina"</strong><br/>Ideia: conteúdo de problema + solução, formato lista com contraste alto. Alto potencial de compartilhamento.',preview:{titulo:'Top 5 erros ao escolher oficina',meta:'5 slides · Instagram · Proposta'}},
 ];
 
 let rs2FilterAtivo = 'todos', rs2OpenPost = null;
@@ -1652,7 +1670,7 @@ function renderPosts() {
     return p.status === rs2FilterAtivo;
   });
   countEl.textContent = filtered.length + ' post' + (filtered.length!==1?'s':'');
-  const statusLabel = {publicado:'Publicado',revisao:'Em revisão',rascunho:'Rascunho',agendado:'Agendado'};
+  const statusLabel = {publicado:'Publicado',revisao:'Em revisão',rascunho:'Rascunho',agendado:'Agendado',proposta:'Proposta'};
   list.innerHTML = filtered.map(p => {
     const isOpen = rs2OpenPost === p.id;
     const plat = p.plataformas.map(pl=>pl.charAt(0).toUpperCase()+pl.slice(1)).join(' · ');
@@ -1662,9 +1680,16 @@ function renderPosts() {
         `<div class="slide-card" onclick="rs2OpenLb('${p.id}',${i})" title="Slide ${i+1}">
           <div class="slide-card-frame"><iframe class="slide-card-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=${i}" scrolling="no" loading="lazy"></iframe></div>
           <span class="slide-card-num">${i+1}</span>
+          <span class="slide-card-brand">O</span>
         </div>`).join('');
       slidesHtml = `<div class="post-slides-inner"><div class="slides-row-label">Slides</div><div class="slides-row">${cards}</div></div>`;
     }
+    const creditsHtml = p.redator || p.designer ? `
+      <div class="post-credits">
+        ${p.redator?`<span class="post-credit-item">Texto: ${p.redator}</span>`:''}
+        ${p.redator&&p.designer?`<span class="post-credit-sep"></span>`:''}
+        ${p.designer?`<span class="post-credit-item">Design: ${p.designer}</span>`:''}
+      </div>` : '';
     return `<div class="post-item${isOpen?' open':''}" id="pi-${p.id}">
       <div class="post-row" onclick="rs2Toggle('${p.id}')">
         <div class="post-thumb"><div class="post-thumb-frame"><iframe class="post-thumb-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=0" scrolling="no" loading="lazy"></iframe></div></div>
@@ -1674,6 +1699,7 @@ function renderPosts() {
             <span class="post-plat"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>${plat}</span>
             <span class="pst ${p.status}">${statusLabel[p.status]||p.status}${p.status==='agendado'?' · '+p.data:''}</span>
           </div>
+          ${creditsHtml}
         </div>
         <span class="post-slides-count">${p.slides} slides</span>
         <div class="post-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
@@ -1800,26 +1826,53 @@ function dhAprovar(btn) {
   btn.innerHTML = '<svg viewBox="0 0 24 24" width="11" height="11" stroke="#fff" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Aprovado';
   const adj = btn.nextElementSibling;
   if(adj){adj.disabled=true;adj.style.opacity='.35';}
-  // Update post status
   const previewTitle = btn.closest('.dh-preview').querySelector('.dh-preview-title').textContent;
   const post = RS2_POSTS.find(p => previewTitle.startsWith(p.titulo));
-  if(post && post.status !== 'publicado') { post.status = 'publicado'; renderPosts(); }
-  // Agent confirms production
   const msgs = document.getElementById('dhMsgs');
   const typing = document.getElementById('dhTyping');
-  setTimeout(()=>{
-    typing.classList.add('show');
-    msgs.scrollTop = msgs.scrollHeight;
-    setTimeout(()=>{
-      typing.classList.remove('show');
-      const agentEl = document.createElement('div');
-      agentEl.className = 'dh-bbl agent';
-      const postName = post ? post.titulo : 'carrossel';
-      agentEl.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text"><strong>Slides produzidos e prontos.</strong><br/>O carrossel <em>"${postName}"</em> está disponível na lista ao lado — clique nos slides para visualizar em tela cheia.</div><div class="dh-bbl-time">agora</div>`;
-      msgs.insertBefore(agentEl, typing);
-      msgs.scrollTop = msgs.scrollHeight;
-    },1800);
-  },350);
+  const n = post ? post.slides : 4;
+  const redator = post ? post.redator : 'Juliana Costa';
+  const designer = post ? post.designer : 'Rafael Mota';
+  const postName = post ? post.titulo : 'carrossel';
+
+  // Sequence de produção: array de [delay_antes_typing, delay_typing, texto]
+  const steps = [
+    [300,  1000, `Aprovado. Iniciando a produção do carrossel <strong>"${postName}"</strong>.`],
+    [300,  1400, `Criando os formatos base — <strong>1080 × 1440px</strong>, proporção Instagram portrait 3:4.`],
+    [300,  1600, `Passando o briefing para <strong>${redator}</strong> (redação) — pegando os textos e ajustando o tom de voz da marca.`],
+    [300,  1800, `<strong>${redator}</strong> entregou os textos. Aplicando títulos, subtítulos e corpo em cada um dos ${n} slides.`],
+    [300,  1500, `<strong>${designer}</strong> (design) estruturando hierarquia visual — tipografia Inter, paleta teal + amber, espaçamento generoso.`],
+    [300,  1200, `Revisão final — checando contraste, legibilidade e consistência dos ${n} slides.`],
+    [300,  0,    null], // último: mensagem especial com preview
+  ];
+
+  let chain = Promise.resolve();
+  steps.forEach(([delayBefore, delayTyping, text], idx) => {
+    chain = chain.then(() => new Promise(resolve => {
+      setTimeout(() => {
+        typing.classList.add('show');
+        msgs.scrollTop = msgs.scrollHeight;
+        setTimeout(() => {
+          typing.classList.remove('show');
+          if(idx < steps.length - 1) {
+            const el = document.createElement('div');
+            el.className = 'dh-bbl agent';
+            el.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
+            msgs.insertBefore(el, typing);
+          } else {
+            // Final: atualiza status + mensagem de conclusão
+            if(post && post.status !== 'publicado') { post.status = 'publicado'; renderPosts(); }
+            const el = document.createElement('div');
+            el.className = 'dh-bbl agent';
+            el.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text"><strong>Carrossel pronto.</strong> Os ${n} slides estão disponíveis na lista ao lado. Clique em qualquer slide para visualizar em tela cheia antes de publicar.</div><div class="dh-bbl-time">agora</div>`;
+            msgs.insertBefore(el, typing);
+          }
+          msgs.scrollTop = msgs.scrollHeight;
+          resolve();
+        }, delayTyping || 1200);
+      }, delayBefore);
+    }));
+  });
 }
 
 function dhAjustar(titulo) {
