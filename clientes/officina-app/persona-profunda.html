@@ -1881,7 +1881,7 @@ const DH_ROLE = 'Estratégico de Conteúdo';
 
 let rs2FilterAtivo = 'todos', rs2OpenPost = null;
 let rs2LbPost = null, rs2LbIdx = 0;
-let dhSending = false, dhRespIdx = 0, dhCtxPost = null; // dhCtxPost = post em contexto atual
+let dhSending = false, dhRespIdx = 0, dhCtxPost = null, dhPendingDismissed = false;
 let calYear = 2026, calMonth = 2, calFilterDay = null; // month 0-indexed
 let _statusPostId = null;
 
@@ -2216,12 +2216,21 @@ function dhFindPostInText(text) {
 
 function dhDetectIntent(text) {
   const t = text.toLowerCase();
+  // Dismissal — usuário mandando parar de cobrar/lembrar
+  if(/esquece|ignora|não precisa lembrar|deixa pra lá|eu sei|eu que mando|para de (cobrar|lembrar|ficar)|chega de (pendência|lembrar)/i.test(t)) return 'dismissal';
+  // Nova proposta
   if(/propon|proposta|novo post|novo carrossel|nova ideia|mais um|suger|criar|crie|quero (um|mais|outro)|outro carrossel|mais conteúdo|mais post/i.test(t)) return 'nova_proposta';
-  if(/não gost|não curti|não ficou|ruim|errado|refaz|recome|do zero|não era isso|não é isso|voce ainda nao|ainda nao (corrigiu|fez|ajustou)/i.test(t)) return 'refazer';
-  if(/ajust|muda|altera|corrig|encurt|simples|longo|slide \d|tira|coloca|troca|ficou (grande|pequen)|logo (sobrepôs|encavalou|em cima|sobrepondo)/i.test(t)) return 'ajuste';
+  // Refazer / não gostou
+  if(/não gost|não curti|não ficou|ruim|errado|refaz|recome|do zero|não era isso|não é isso|ainda não (corrigiu|fez|ajustou)/i.test(t)) return 'refazer';
+  // Ajuste — inclui "ajudar", "consegue", "pode" + card/slide/post
+  if(/ajust|muda|altera|corrig|encurt|simples|longo|slide \d|card \d|tira|coloca|troca|ficou (grande|pequen)|(ajudar|ajuda|consegue|pode) (o |com |n[oa] )?(?:card|post|slide|carrossel)/i.test(t)) return 'ajuste';
+  // Aprovação
   if(/aprovo|aprovad|confirm|pode ir|tá bom|ficou bom|gostei|show|topz|isso mesmo|perfeito|ótimo/i.test(t)) return 'aprovacao';
+  // Prazo
   if(/quando|prazo|data|entrega|semana|dia|publicar|agendar|cronogram/i.test(t)) return 'prazo';
+  // Saudação
   if(/^(oi|olá|boa|bom dia|boa tarde|boa noite|e aí|tudo bem|tudo certo)/i.test(t)) return 'saudacao';
+  // Opinião
   if(/o que acha|você acha|sua (opinião|sugestão|ideia)|me indica|qual (formato|tema|assunto|tipo)|você recomenda/i.test(t)) return 'opiniao';
   return 'geral';
 }
@@ -2257,7 +2266,13 @@ function dhEnviar() {
       if(postMentioned) dhCtxPost = postMentioned;
       const ctxPost = dhCtxPost || RS2_POSTS.find(p=>p.status==='criado'||p.status==='revisao') || RS2_POSTS[0];
 
-      if(intent === 'saudacao') {
+      if(intent === 'dismissal') {
+        dhPendingDismissed = true;
+        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
+          <div class="dh-bbl-text">Entendido. Me fala quando precisar.</div>
+          <div class="dh-bbl-time">agora</div>`;
+
+      } else if(intent === 'saudacao') {
         const propostas = RS2_POSTS.filter(p=>p.status==='proposta');
         const emRevisao = RS2_POSTS.filter(p=>p.status==='revisao');
         let reply = 'Oi! Tudo certo.';
@@ -2346,17 +2361,19 @@ function dhEnviar() {
         dhRespIdx++;
 
       } else {
-        // Respostas genéricas mas contextuais
+        const pool = [
+          `Me fala o que precisa — nova peça, ajuste, o que for.`,
+          `Pode mandar.`,
+          `Estou por aqui. O que você precisa?`,
+          `Só falar.`,
+        ];
+        // Só menciona pendências se o usuário não dismissou e ainda não foi dita
         const pendentes = RS2_POSTS.filter(p=>p.status==='proposta'||p.status==='revisao');
         let resposta;
-        if(pendentes.length > 0) {
-          resposta = `Só lembrando que ainda tem ${pendentes.length} ${pendentes.length>1?'itens pendentes':'item pendente'} aqui — <strong>${pendentes[0].titulo}</strong>${pendentes.length>1?' entre outros':''}. Quer ver ou prefere falar de outra coisa?`;
+        if(!dhPendingDismissed && pendentes.length > 0 && dhRespIdx === 0) {
+          resposta = `Tem <strong>${pendentes.length} item${pendentes.length>1?'s':''} pendente${pendentes.length>1?'s':''}</strong> quando quiser ver — <strong>${pendentes[0].titulo}</strong>${pendentes.length>1?' entre outros':''}. Me fala o que precisa.`;
+          dhRespIdx++;
         } else {
-          const pool = [
-            `Pode mandar — estou de olho no calendário e tenho algumas ideias na manga quando quiser.`,
-            `Estamos em dia com a produção. Quer pautar mais conteúdo ou tem algum ajuste pendente?`,
-            `Me fala o que você precisa — nova peça, ajuste em algo existente, o que for.`,
-          ];
           resposta = pool[dhRespIdx % pool.length];
           dhRespIdx++;
         }
