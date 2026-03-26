@@ -350,6 +350,128 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
   .tabs{padding:0 16px}
 }
 </style>
+<style id="redes-style">
+/* ═══ REDES SOCIAIS v2 ═══ */
+.redes-layout{display:grid;grid-template-columns:1fr 370px;gap:20px;height:calc(100vh - 200px);min-height:560px}
+.posts-col{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.posts-col-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;flex-shrink:0}
+.posts-col-title{font-size:17px;font-weight:800;color:var(--text)}
+.posts-count{font-size:12px;color:var(--text3)}
+.rs-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;flex-shrink:0}
+.rs-pill{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid var(--border);background:var(--surface);color:var(--text3);cursor:pointer;font-family:'Inter',sans-serif;transition:.15s}
+.rs-pill:hover{border-color:var(--teal);color:var(--teal)}
+.rs-pill.active{border-color:var(--teal);color:var(--teal);background:var(--teal-dim);font-weight:600}
+.posts-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:3px;padding-right:2px}
+.posts-list::-webkit-scrollbar{width:3px}
+.posts-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.post-item{border:1.5px solid var(--border);border-radius:12px;background:var(--surface);transition:border-color .15s}
+.post-item.open{border-color:var(--teal-mid)}
+.post-row{display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer;transition:background .12s;border-radius:10px}
+.post-row:hover{background:var(--surface2)}
+.post-thumb{width:52px;height:52px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)}
+.post-thumb svg{width:20px;height:20px;stroke:var(--text4);fill:none;stroke-width:1.5}
+.post-info{flex:1;min-width:0}
+.post-title{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.post-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.post-plat{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px}
+.post-plat svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
+.pst{font-size:11px;font-weight:600}
+.pst.publicado{color:var(--green)}
+.pst.revisao{color:var(--teal)}
+.pst.rascunho{color:var(--text3)}
+.pst.agendado{color:var(--amber-dark)}
+.post-slides-count{font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0}
+.post-chevron{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
+.post-chevron svg{width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:2;transition:transform .22s}
+.post-item.open .post-chevron svg{transform:rotate(180deg)}
+.post-item.open .post-chevron{border-color:var(--teal);background:var(--teal-dim)}
+.post-item.open .post-chevron svg{stroke:var(--teal)}
+.post-slides-wrap{max-height:0;overflow:hidden;transition:max-height .32s ease}
+.post-item.open .post-slides-wrap{max-height:180px}
+.post-slides-inner{padding:0 14px 14px;border-top:1px solid var(--border)}
+.slides-row-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin:12px 0 8px}
+.slides-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;scroll-snap-type:x mandatory}
+.slides-row::-webkit-scrollbar{height:3px}
+.slides-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.slide-card{flex-shrink:0;width:68px;height:86px;border-radius:8px;background:var(--surface2);border:1.5px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;scroll-snap-align:start;transition:.15s;position:relative}
+.slide-card:hover{border-color:var(--teal);transform:scale(1.04)}
+.slide-card svg{width:20px;height:20px;stroke:var(--text4);fill:none;stroke-width:1.5}
+.slide-card-num{position:absolute;bottom:5px;font-size:9px;font-weight:700;color:var(--text4)}
+/* Chat column */
+.chat-col{display:flex;flex-direction:column;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;min-height:0}
+.dh-head{display:flex;align-items:center;gap:12px;padding:15px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.dh-avatar{width:36px;height:36px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;letter-spacing:.3px}
+.dh-name{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:2px}
+.dh-sub{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px}
+.dh-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dh-dot.online{background:#3DB87A;animation:dhPulse 2s ease infinite}
+.dh-dot.offline{background:var(--text4)}
+@keyframes dhPulse{0%,100%{box-shadow:0 0 0 0 rgba(61,184,122,0)}50%{box-shadow:0 0 0 4px rgba(61,184,122,.2)}}
+.dh-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+.dh-msgs::-webkit-scrollbar{width:3px}
+.dh-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.dh-bbl{display:flex;flex-direction:column;max-width:90%}
+.dh-bbl.agent{align-self:flex-start}
+.dh-bbl.user{align-self:flex-end;align-items:flex-end}
+.dh-bbl-who{font-size:10px;font-weight:700;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.dh-bbl-text{padding:10px 13px;font-size:13px;line-height:1.55;color:var(--text);border:1px solid var(--border)}
+.dh-bbl.agent .dh-bbl-text{background:var(--surface2);border-radius:0 10px 10px 10px}
+.dh-bbl.user .dh-bbl-text{background:var(--teal-dim);border-color:var(--teal-mid);border-radius:10px 0 10px 10px}
+.dh-bbl-time{font-size:10px;color:var(--text4);margin-top:3px}
+.dh-preview{margin-top:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
+.dh-preview-thumb{height:56px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border)}
+.dh-preview-thumb svg{width:22px;height:22px;stroke:var(--text4);fill:none;stroke-width:1.5}
+.dh-preview-body{padding:9px 11px}
+.dh-preview-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px}
+.dh-preview-meta{font-size:11px;color:var(--text3);margin-bottom:9px}
+.dh-preview-btns{display:flex;gap:6px}
+.dh-btn-ok{flex:1;padding:6px 8px;border-radius:7px;background:var(--teal);color:#fff;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s;display:flex;align-items:center;justify-content:center;gap:4px}
+.dh-btn-ok svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.5}
+.dh-btn-ok:hover{background:var(--teal-dark)}
+.dh-btn-ok.done{background:var(--green);pointer-events:none}
+.dh-btn-adj{flex:1;padding:6px 8px;border-radius:7px;background:var(--surface);color:var(--text2);border:1px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s}
+.dh-btn-adj:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-dim)}
+.dh-btn-adj:disabled{opacity:.35;pointer-events:none}
+.dh-typing{display:none;align-self:flex-start;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:0 10px 10px 10px;gap:4px;align-items:center}
+.dh-typing.show{display:flex}
+.dh-td{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:tdBounce 1.2s ease infinite}
+.dh-td:nth-child(2){animation-delay:.2s}
+.dh-td:nth-child(3){animation-delay:.4s}
+@keyframes tdBounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+.dh-typing-lbl{font-size:11px;color:var(--text3);margin-left:4px}
+.dh-input-area{border-top:1px solid var(--border);padding:10px 12px;flex-shrink:0}
+.dh-input-row{display:flex;gap:8px;align-items:flex-end}
+.dh-ta{flex:1;min-height:40px;max-height:96px;resize:none;border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;line-height:1.4}
+.dh-ta:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(61,169,165,.07)}
+.dh-ta::placeholder{color:var(--text4)}
+.dh-send{width:40px;height:40px;border-radius:10px;background:var(--teal);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
+.dh-send:hover{background:var(--teal-dark)}
+.dh-send svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.5}
+.dh-send:disabled{background:var(--border);cursor:not-allowed}
+/* Lightbox v2 */
+.rs2-lb{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:none;align-items:center;justify-content:center}
+.rs2-lb.open{display:flex;animation:fadeIn .18s ease}
+.rs2-lb-wrap{position:relative}
+.rs2-lb-card{background:var(--surface);border-radius:14px;width:280px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.rs2-lb-slide{height:310px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border)}
+.rs2-lb-slide svg{width:44px;height:44px;stroke:var(--text4);fill:none;stroke-width:1.5}
+.rs2-lb-foot{padding:14px 16px}
+.rs2-lb-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.rs2-lb-num{font-size:11px;color:var(--text3)}
+.rs2-lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;cursor:pointer;width:38px;height:38px;border-radius:8px;font-size:22px;display:flex;align-items:center;justify-content:center;transition:.15s;line-height:1}
+.rs2-lb-nav:hover{background:rgba(255,255,255,.22)}
+.rs2-lb-nav.prev{left:-52px}
+.rs2-lb-nav.next{right:-52px}
+.rs2-lb-x{position:absolute;top:-12px;right:-12px;width:30px;height:30px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text3);transition:.15s;z-index:1}
+.rs2-lb-x:hover{color:var(--red);border-color:var(--red)}
+@media(max-width:768px){
+  .redes-layout{grid-template-columns:1fr;height:auto}
+  .posts-col{min-height:0}
+  .chat-col{height:480px}
+  .rs2-lb-nav.prev{left:8px}
+  .rs2-lb-nav.next{right:8px}
+}
+</style>
 </head>
 <body>
 
@@ -1372,96 +1494,81 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 
 </div><!-- /tab-identidade -->
 
-<!-- ════════════════ REDES SOCIAIS ════════════════ -->
+<!-- ════════════════ REDES SOCIAIS v2 ════════════════ -->
 <div id="tab-redes" class="section">
 
-  <!-- KPI STRIP -->
-  <div style="display:flex;gap:12px;margin-bottom:22px;flex-wrap:wrap">
-    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 20px;flex:1;min-width:140px">
-      <div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Conjuntos ativos</div>
-      <div style="font-size:28px;font-weight:900;color:var(--teal)">4</div>
+  <div class="redes-layout">
+
+    <!-- COLUNA ESQUERDA: posts -->
+    <div class="posts-col">
+      <div class="posts-col-head">
+        <div class="posts-col-title">Conteúdo criado</div>
+        <span class="posts-count" id="postsCount">5 posts</span>
+      </div>
+      <div class="rs-pills" id="rsPills">
+        <button class="rs-pill active" onclick="rsFilter('todos',this)">Todos</button>
+        <button class="rs-pill" onclick="rsFilter('instagram',this)">Instagram</button>
+        <button class="rs-pill" onclick="rsFilter('facebook',this)">Facebook</button>
+        <button class="rs-pill" onclick="rsFilter('publicado',this)">Publicado</button>
+        <button class="rs-pill" onclick="rsFilter('revisao',this)">Em revisão</button>
+        <button class="rs-pill" onclick="rsFilter('rascunho',this)">Rascunho</button>
+      </div>
+      <div class="posts-list" id="postsList"></div>
     </div>
-    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 20px;flex:1;min-width:140px">
-      <div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Slides totais</div>
-      <div style="font-size:28px;font-weight:900;color:var(--amber)">19</div>
-    </div>
-    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 20px;flex:1;min-width:140px">
-      <div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Publicados</div>
-      <div style="font-size:28px;font-weight:900;color:var(--green)">2</div>
-    </div>
-    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 20px;flex:1;min-width:140px">
-      <div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Em revisão</div>
-      <div style="font-size:28px;font-weight:900;color:#0369a1">2</div>
-    </div>
-    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 20px;flex:1;min-width:180px">
-      <div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Plataformas</div>
-      <div style="display:flex;gap:6px;margin-top:4px">
-        <span class="cj-plat-badge ig" style="width:26px;height:26px;font-size:13px">📷</span>
-        <span class="cj-plat-badge fb" style="width:26px;height:26px;font-size:13px">f</span>
+
+    <!-- COLUNA DIREITA: chat -->
+    <div class="chat-col">
+      <div class="dh-head">
+        <div class="dh-avatar">DH</div>
+        <div>
+          <div class="dh-name">Design Humano</div>
+          <div class="dh-sub">
+            <span class="dh-dot online"></span>
+            <span>Online</span>
+            &nbsp;·&nbsp;Agente de criação
+          </div>
+        </div>
+      </div>
+      <div class="dh-msgs" id="dhMsgs">
+        <div class="dh-typing" id="dhTyping">
+          <div class="dh-td"></div>
+          <div class="dh-td"></div>
+          <div class="dh-td"></div>
+          <span class="dh-typing-lbl">criando...</span>
+        </div>
+      </div>
+      <div class="dh-input-area">
+        <div class="dh-input-row">
+          <textarea class="dh-ta" id="dhInput" placeholder="Pedir alteração ou novo post..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();dhEnviar()}"></textarea>
+          <button class="dh-send" id="dhSendBtn" onclick="dhEnviar()">
+            <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+        </div>
       </div>
     </div>
+
   </div>
-
-  <!-- FILTROS -->
-  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
-    <span style="font-size:12px;font-weight:700;color:var(--text3);margin-right:4px">Filtrar:</span>
-    <button class="chat-scope-opt active" onclick="filtrarRedes('todos', this)">Todos</button>
-    <button class="chat-scope-opt" onclick="filtrarRedes('publicado', this)">Publicado</button>
-    <button class="chat-scope-opt" onclick="filtrarRedes('revisao', this)">Revisão</button>
-    <button class="chat-scope-opt" onclick="filtrarRedes('agendado', this)">Agendado</button>
-    <button class="chat-scope-opt" onclick="filtrarRedes('rascunho', this)">Rascunho</button>
-    <div style="margin-left:auto;display:flex;gap:6px">
-      <button class="chat-scope-opt" onclick="filtrarPlat('todos')" id="plat-todos" style="background:var(--teal-dim);border-color:var(--teal);color:var(--teal)">Todas</button>
-      <button class="chat-scope-opt" onclick="filtrarPlat('ig')" id="plat-ig">📷 IG</button>
-      <button class="chat-scope-opt" onclick="filtrarPlat('fb')" id="plat-fb">f FB</button>
-    </div>
-  </div>
-
-  <!-- GRADE DE CONJUNTOS -->
-  <div class="rs-grade" id="rsGrade"></div>
-
 </div><!-- /tab-redes -->
 
 </div><!-- /content -->
 
-<!-- DRAWER OVERLAY -->
-<div class="rs-overlay" id="rsOverlay" onclick="fecharDrawer()"></div>
-
-<!-- DRAWER PANEL -->
-<div class="rs-drawer" id="rsDrawer">
-  <div class="rs-drawer-head">
-    <button class="rs-drawer-back" onclick="fecharDrawer()">
-      <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-      Voltar
-    </button>
-    <div class="rs-drawer-title" id="drawerTitle">Conjunto</div>
-    <button class="rs-drawer-close" onclick="fecharDrawer()">✕</button>
+<!-- LIGHTBOX v2 -->
+<div class="rs2-lb" id="rs2Lb" onclick="rs2CloseLb()">
+  <div class="rs2-lb-wrap" onclick="event.stopPropagation()">
+    <button class="rs2-lb-x" onclick="rs2CloseLb()">✕</button>
+    <div class="rs2-lb-card">
+      <div class="rs2-lb-slide">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </div>
+      <div class="rs2-lb-foot">
+        <div class="rs2-lb-title" id="rs2LbTitle"></div>
+        <div class="rs2-lb-num" id="rs2LbNum"></div>
+      </div>
+    </div>
+    <button class="rs2-lb-nav prev" onclick="rs2NavLb(-1)">‹</button>
+    <button class="rs2-lb-nav next" onclick="rs2NavLb(1)">›</button>
   </div>
-  <div class="rs-dtabs">
-    <button class="rs-dtab active" onclick="rsTab('carrosséis', this)">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-      Carrosséis
-      <span class="rs-badge-dot"></span>
-    </button>
-    <button class="rs-dtab" onclick="rsTab('pedidos', this)">
-      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Pedidos
-    </button>
-    <button class="rs-dtab" onclick="rsTab('info', this)">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Info
-    </button>
-  </div>
-  <div class="rs-drawer-body" id="drawerBody"></div>
-</div>
-
-<!-- LIGHTBOX -->
-<div class="lb-overlay" id="lbOverlay" onclick="fecharLightbox()">
-  <button class="lb-nav prev" onclick="event.stopPropagation();navLb(-1)">‹</button>
-  <div class="lb-img" id="lbImg"></div>
-  <button class="lb-nav next" onclick="event.stopPropagation();navLb(1)">›</button>
-  <button class="lb-close" onclick="fecharLightbox()">✕</button>
-  <div class="lb-counter" id="lbCounter"></div>
 </div>
 
 <script>
@@ -1470,313 +1577,216 @@ function showTab(name, btn) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   (btn || event.currentTarget).classList.add('active');
-  if(name === 'redes') renderGrade();
+  if(name === 'redes') rs2Init();
 }
 lucide.createIcons();
 
-/* ──────────────── REDES SOCIAIS DATA ──────────────── */
-const RS_DATA = [
-  {
-    id:'cj1', titulo:'Como encontrar a oficina certa', plataformas:['ig','fb'],
-    status:'publicado', data:'20/03/2026', slides:[
-      {emoji:'🔍',bg:'#E8F7F7',label:'Slide 1'},
-      {emoji:'⭐',bg:'#FFF8E8',label:'Slide 2'},
-      {emoji:'📍',bg:'#E8F7F7',label:'Slide 3'},
-      {emoji:'✅',bg:'#EDF9F2',label:'Slide 4'},
-      {emoji:'📱',bg:'#E8F7F7',label:'Slide 5'},
-    ],
-    carrosseis:[
-      {id:'car1a',titulo:'Feed principal',slides:5,status:'publicado',cor:getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3DB87A'},
-      {id:'car1b',titulo:'Stories 9:16',slides:5,status:'publicado',cor:'#3DB87A'},
-    ],
-    pedidos:[
-      {de:'Lucas',texto:'Ajustar CTA do slide 5 — trocar "Saiba mais" por "Agendar agora"',status:'concluido',when:'22/03 · 14h'},
-    ]
-  },
-  {
-    id:'cj2', titulo:'5 sinais que seu carro precisa de revisão', plataformas:['ig'],
-    status:'revisao', data:'24/03/2026', slides:[
-      {emoji:'🚗',bg:'#F5F5F5',label:'Slide 1'},
-      {emoji:'🔧',bg:'#FFF0E8',label:'Slide 2'},
-      {emoji:'💨',bg:'#F5F5F5',label:'Slide 3'},
-      {emoji:'💧',bg:'#E8F0FF',label:'Slide 4'},
-      {emoji:'🔴',bg:'#FFF0F0',label:'Slide 5'},
-      {emoji:'📅',bg:'#E8F7F7',label:'Slide 6'},
-    ],
-    carrosseis:[
-      {id:'car2a',titulo:'Feed 1:1',slides:6,status:'revisao',cor:'#0369a1'},
-    ],
-    pedidos:[
-      {de:'Bruno',texto:'Revisar tipografia do slide 3 — está muito pequena no mobile',status:'pendente',when:'24/03 · 10h'},
-      {de:'Camila',texto:'Adicionar fonte da estatística no slide 4',status:'analise',when:'24/03 · 11h'},
-    ]
-  },
-  {
-    id:'cj3', titulo:'Depoimento: Cliente resolveu em 1 hora', plataformas:['ig','fb'],
-    status:'agendado', data:'28/03/2026', slides:[
-      {emoji:'👤',bg:'#F0F0F0',label:'Slide 1'},
-      {emoji:'💬',bg:'#E8F7F7',label:'Slide 2'},
-      {emoji:'⏱️',bg:'#FFF8E8',label:'Slide 3'},
-      {emoji:'🌟',bg:'#FFF8E8',label:'Slide 4'},
-    ],
-    carrosseis:[
-      {id:'car3a',titulo:'Feed quadrado',slides:4,status:'agendado',cor:'#D48A10'},
-      {id:'car3b',titulo:'Reels cover',slides:1,status:'rascunho',cor:'#6A8888'},
-    ],
-    pedidos:[]
-  },
-  {
-    id:'cj4', titulo:'Oficina App: como funciona em 3 passos', plataformas:['ig'],
-    status:'rascunho', data:'—', slides:[
-      {emoji:'1️⃣',bg:'#E8F7F7',label:'Slide 1'},
-      {emoji:'2️⃣',bg:'#FFF8E8',label:'Slide 2'},
-      {emoji:'3️⃣',bg:'#E8F7F7',label:'Slide 3'},
-    ],
-    carrosseis:[
-      {id:'car4a',titulo:'Tutorial feed',slides:3,status:'rascunho',cor:'#6A8888'},
-    ],
-    pedidos:[]
-  }
+/* ═══ REDES SOCIAIS v2 ═══ */
+const RS2_POSTS = [
+  {id:'p1',titulo:'Como escolher a oficina certa',plataformas:['instagram'],status:'publicado',data:'15/03/2026',slides:5},
+  {id:'p2',titulo:'5 sinais que seu carro precisa de revisão',plataformas:['instagram'],status:'revisao',data:'24/03/2026',slides:6},
+  {id:'p3',titulo:'Depoimento: Eduardo resolveu em 1 hora',plataformas:['instagram','facebook'],status:'publicado',data:'20/03/2026',slides:4},
+  {id:'p4',titulo:'Officina App em 3 passos',plataformas:['instagram'],status:'rascunho',data:'—',slides:3},
+  {id:'p5',titulo:'Por que revisão preventiva vale a pena',plataformas:['facebook'],status:'agendado',data:'01/04/2026',slides:5},
 ];
 
-let rsAtivo = null, rsSlideAtivo = {}, rsFiltrStatus = 'todos', rsFiltroPlat = 'todos';
-let rsDrawerTab = 'carrosséis';
-let lbSlides = [], lbIdx = 0;
+const DH_HISTORY = [
+  {tipo:'agent',when:'25/03 · 10h',text:'Olá! Criei o carrossel <strong>"Como escolher a oficina certa"</strong> com 5 slides. Está no perfil aguardando a sua revisão.',preview:{titulo:'Como escolher a oficina certa',meta:'5 slides · Instagram'}},
+  {tipo:'user',when:'25/03 · 10h30',text:'Preciso mudar o slide 3, o texto está muito longo.'},
+  {tipo:'agent',when:'25/03 · 10h31',text:'Ajustado! Reduzi o texto do slide 3 para 2 linhas. Ficou mais limpo e respirado.',preview:{titulo:'Como escolher a oficina certa — v2',meta:'5 slides · Instagram · Slide 3 atualizado'}},
+  {tipo:'agent',when:'24/03 · 11h',text:'Iniciei o carrossel <strong>"5 sinais que seu carro precisa de revisão"</strong>. Em revisão — aguardando aprovação nos dados do slide 4.',preview:{titulo:'5 sinais que seu carro precisa de revisão',meta:'6 slides · Instagram · Em revisão'}},
+];
 
-function renderGrade() {
-  const grade = document.getElementById('rsGrade');
-  if(!grade) return;
-  const lista = RS_DATA.filter(c => {
-    const okStatus = rsFiltrStatus === 'todos' || c.status === rsFiltrStatus;
-    const okPlat = rsFiltroPlat === 'todos' || c.plataformas.includes(rsFiltroPlat);
-    return okStatus && okPlat;
+let rs2FilterAtivo = 'todos', rs2OpenPost = null;
+let rs2LbPost = null, rs2LbIdx = 0;
+let dhSending = false, dhRespIdx = 0;
+
+const DH_RESPS = [
+  t => `Entendido! Apliquei o ajuste solicitado. Confira o preview abaixo.`,
+  () => 'Alteração feita! O post está pronto para aprovação.',
+  () => 'Pronto. Realizei a modificação nos slides. Qualquer outro ajuste é só pedir.',
+  () => 'Feito! Reduzi o texto e ajustei o layout. Ficou mais limpo.',
+];
+
+function rs2Init() {
+  renderPosts();
+  renderDhHistory();
+}
+
+function rsFilter(f, btn) {
+  rs2FilterAtivo = f;
+  document.querySelectorAll('.rs-pill').forEach(p => p.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderPosts();
+}
+
+function renderPosts() {
+  const list = document.getElementById('postsList');
+  const countEl = document.getElementById('postsCount');
+  if(!list) return;
+  const filtered = RS2_POSTS.filter(p => {
+    if(rs2FilterAtivo==='todos') return true;
+    if(rs2FilterAtivo==='instagram') return p.plataformas.includes('instagram');
+    if(rs2FilterAtivo==='facebook') return p.plataformas.includes('facebook');
+    return p.status === rs2FilterAtivo;
   });
-  if(!lista.length) {
-    grade.innerHTML = `<div class="rs-empty" style="grid-column:1/-1"><svg viewBox="0 0 24 24"><path d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Nenhum conjunto encontrado</div>`;
-    return;
-  }
-  grade.innerHTML = lista.map((c,i) => {
-    const thumbs = c.slides.slice(0,3).map(s =>
-      `<div class="cj-thumb" style="background:${s.bg}">${s.emoji}</div>`).join('');
-    const extra = c.slides.length > 3 ? `<span class="cj-more">+${c.slides.length-3}</span>` : '';
-    const plats = c.plataformas.map(p =>
-      p==='ig' ? `<span class="cj-plat-badge ig" title="Instagram">📷</span>`
-               : `<span class="cj-plat-badge fb" title="Facebook">f</span>`).join('');
-    return `<div class="cj-card" style="animation-delay:${i*0.06}s" onclick="abrirDrawer('${c.id}')">
-      <div class="cj-thumbs-wrap">${thumbs}${extra}</div>
-      <div class="cj-body">
-        <div class="cj-platform-row">
-          ${plats}
-          <span class="cj-status ${c.status}">${labelStatus(c.status)}</span>
+  countEl.textContent = filtered.length + ' post' + (filtered.length!==1?'s':'');
+  const statusLabel = {publicado:'Publicado',revisao:'Em revisão',rascunho:'Rascunho',agendado:'Agendado'};
+  list.innerHTML = filtered.map(p => {
+    const isOpen = rs2OpenPost === p.id;
+    const plat = p.plataformas.map(pl=>pl.charAt(0).toUpperCase()+pl.slice(1)).join(' · ');
+    let slidesHtml = '';
+    if(isOpen) {
+      const cards = Array.from({length:p.slides},(_,i) =>
+        `<div class="slide-card" onclick="rs2OpenLb('${p.id}',${i})" title="Slide ${i+1}">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span class="slide-card-num">${i+1}</span>
+        </div>`).join('');
+      slidesHtml = `<div class="post-slides-inner"><div class="slides-row-label">Slides</div><div class="slides-row">${cards}</div></div>`;
+    }
+    return `<div class="post-item${isOpen?' open':''}" id="pi-${p.id}">
+      <div class="post-row" onclick="rs2Toggle('${p.id}')">
+        <div class="post-thumb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+        <div class="post-info">
+          <div class="post-title">${p.titulo}</div>
+          <div class="post-meta">
+            <span class="post-plat"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>${plat}</span>
+            <span class="pst ${p.status}">${statusLabel[p.status]||p.status}${p.status==='agendado'?' · '+p.data:''}</span>
+          </div>
         </div>
-        <div class="cj-title">${c.titulo}</div>
-        <div class="cj-meta">${c.carrosseis.length} carrossel${c.carrosseis.length>1?'s':''} · ${c.slides.length} slides · ${c.data}</div>
-        <button class="cj-open-btn">
-          <svg viewBox="0 0 24 24"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
-          Abrir conjunto
-        </button>
+        <span class="post-slides-count">${p.slides} slides</span>
+        <div class="post-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
       </div>
+      <div class="post-slides-wrap">${slidesHtml}</div>
     </div>`;
   }).join('');
 }
 
-function labelStatus(s) {
-  return {publicado:'Publicado',agendado:'Agendado',rascunho:'Rascunho',revisao:'Em revisão'}[s]||s;
+function rs2Toggle(id) {
+  rs2OpenPost = rs2OpenPost===id ? null : id;
+  renderPosts();
+  if(rs2OpenPost===id) setTimeout(()=>{
+    const el = document.getElementById('pi-'+id);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },50);
 }
 
-function abrirDrawer(id) {
-  rsAtivo = RS_DATA.find(c => c.id === id);
-  if(!rsAtivo) return;
-  document.getElementById('drawerTitle').textContent = rsAtivo.titulo;
-  document.getElementById('rsOverlay').classList.add('vis');
-  document.getElementById('rsDrawer').classList.add('open');
-  rsDrawerTab = 'carrosséis';
-  document.querySelectorAll('.rs-dtab').forEach((t,i) => t.classList.toggle('active', i===0));
-  renderDrawerBody();
+/* Lightbox */
+function rs2OpenLb(postId, idx) {
+  rs2LbPost = RS2_POSTS.find(p=>p.id===postId);
+  rs2LbIdx = idx;
+  renderLb2();
+  document.getElementById('rs2Lb').classList.add('open');
+}
+function rs2CloseLb() { document.getElementById('rs2Lb').classList.remove('open'); }
+function rs2NavLb(dir) {
+  if(!rs2LbPost) return;
+  rs2LbIdx = (rs2LbIdx+dir+rs2LbPost.slides)%rs2LbPost.slides;
+  renderLb2();
+}
+function renderLb2() {
+  document.getElementById('rs2LbTitle').textContent = rs2LbPost.titulo;
+  document.getElementById('rs2LbNum').textContent = 'Slide '+(rs2LbIdx+1)+' de '+rs2LbPost.slides;
 }
 
-function fecharDrawer() {
-  document.getElementById('rsOverlay').classList.remove('vis');
-  document.getElementById('rsDrawer').classList.remove('open');
+/* Chat */
+function renderDhHistory() {
+  const msgs = document.getElementById('dhMsgs');
+  const typing = document.getElementById('dhTyping');
+  if(!msgs||msgs.querySelectorAll('.dh-bbl').length) return;
+  const html = DH_HISTORY.map(m=>dhBubble(m)).join('');
+  msgs.insertAdjacentHTML('afterbegin', html);
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
-function rsTab(tab, btn) {
-  rsDrawerTab = tab;
-  document.querySelectorAll('.rs-dtab').forEach(t => t.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  renderDrawerBody();
-}
-
-function renderDrawerBody() {
-  const body = document.getElementById('drawerBody');
-  if(!rsAtivo) return;
-  if(rsDrawerTab === 'carrosséis') {
-    body.innerHTML = rsAtivo.carrosseis.map(car => {
-      const isOpen = rsSlideAtivo[car.id] !== undefined;
-      const activeIdx = rsSlideAtivo[car.id] || 0;
-      const dotColor = car.cor || '#6A8888';
-      const slideThumbs = rsAtivo.slides.map((s,i) =>
-        `<div class="slide-th${i===activeIdx?' active':''}" onclick="selectSlide('${car.id}',${i})" title="${s.label}">
-          <div style="width:100%;height:100%;background:${s.bg};display:flex;align-items:center;justify-content:center;font-size:26px">${s.emoji}</div>
-          <span class="slide-num">${i+1}</span>
-        </div>`).join('');
-      return `<div class="car-item${isOpen?' open':''}" id="carItem-${car.id}">
-        <div class="car-header" onclick="expandCarrossel('${car.id}')">
-          <div class="car-dot" style="background:${dotColor}"></div>
-          <div class="car-title">${car.titulo}</div>
-          <div class="car-meta-sm">${car.slides} slides · <span class="cj-status ${car.status}" style="padding:1px 7px">${labelStatus(car.status)}</span></div>
-          <svg class="car-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+function dhBubble(m) {
+  const prev = m.preview ? `
+    <div class="dh-preview">
+      <div class="dh-preview-thumb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+      <div class="dh-preview-body">
+        <div class="dh-preview-title">${m.preview.titulo}</div>
+        <div class="dh-preview-meta">${m.preview.meta}</div>
+        <div class="dh-preview-btns">
+          <button class="dh-btn-ok" onclick="dhAprovar(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Aprovar</button>
+          <button class="dh-btn-adj" onclick="dhAjustar('${m.preview.titulo}')">Pedir ajuste</button>
         </div>
-        <div class="car-body${isOpen?' open':''}" id="carBody-${car.id}">
-          <div class="car-body-inner">
-            <div class="slides-strip" id="strip-${car.id}">${slideThumbs}</div>
-            <div class="car-actions">
-              <button class="car-act-btn" onclick="openLightbox('${car.id}',${activeIdx})">
-                <svg viewBox="0 0 24 24"><path d="M1 6s4-4 11-4 11 4 11 4-4 4-11 4S1 6 1 6zM1 18s4 4 11 4 11-4 11-4-4-4-11-4-11 4-11 4z"/><circle cx="12" cy="12" r="3"/></svg>
-                Ver em tela cheia
-              </button>
-              <button class="car-act-btn">
-                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                Solicitar edição
-              </button>
-              <button class="car-act-btn primary" onclick="document.getElementById('chatNovo').scrollIntoView({behavior:'smooth'})">
-                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                Pedir mudança
-              </button>
-            </div>
+      </div>
+    </div>` : '';
+  return `<div class="dh-bbl ${m.tipo}">
+    <div class="dh-bbl-who">${m.tipo==='agent'?'Design Humano':'Você'}</div>
+    <div class="dh-bbl-text">${m.text}${prev}</div>
+    <div class="dh-bbl-time">${m.when}</div>
+  </div>`;
+}
+
+function dhEnviar() {
+  if(dhSending) return;
+  const ta = document.getElementById('dhInput');
+  const text = ta.value.trim();
+  if(!text) return;
+  const msgs = document.getElementById('dhMsgs');
+  const typing = document.getElementById('dhTyping');
+  const userEl = document.createElement('div');
+  userEl.className = 'dh-bbl user';
+  userEl.innerHTML = `<div class="dh-bbl-who">Você</div><div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
+  msgs.insertBefore(userEl, typing);
+  ta.value = ''; ta.style.height = 'auto';
+  msgs.scrollTop = msgs.scrollHeight;
+  dhSending = true;
+  document.getElementById('dhSendBtn').disabled = true;
+  setTimeout(()=>{
+    typing.classList.add('show');
+    msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(()=>{
+      typing.classList.remove('show');
+      const post = RS2_POSTS[dhRespIdx%RS2_POSTS.length];
+      const respText = DH_RESPS[dhRespIdx%DH_RESPS.length](text);
+      dhRespIdx++;
+      const agentEl = document.createElement('div');
+      agentEl.className = 'dh-bbl agent';
+      const prev = `<div class="dh-preview">
+        <div class="dh-preview-thumb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+        <div class="dh-preview-body">
+          <div class="dh-preview-title">${post.titulo}</div>
+          <div class="dh-preview-meta">${post.slides} slides · ${post.plataformas.map(p=>p.charAt(0).toUpperCase()+p.slice(1)).join(' · ')}</div>
+          <div class="dh-preview-btns">
+            <button class="dh-btn-ok" onclick="dhAprovar(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Aprovar</button>
+            <button class="dh-btn-adj" onclick="dhAjustar('${post.titulo}')">Pedir ajuste</button>
           </div>
         </div>
       </div>`;
-    }).join('') + renderChatSection();
-  } else if(rsDrawerTab === 'pedidos') {
-    const pedidos = rsAtivo.pedidos;
-    if(!pedidos.length) {
-      body.innerHTML = `<div class="rs-empty"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Nenhum pedido ainda para este conjunto.</div>`;
-      return;
-    }
-    body.innerHTML = pedidos.map(p => `
-      <div class="chat-bbl" style="margin-bottom:14px">
-        <div class="chat-bbl-who">${p.de} · <span style="font-weight:400;color:var(--text3)">${p.when}</span></div>
-        <div class="chat-bbl-text">${p.texto}</div>
-        <span class="chat-bbl-status ${p.status}">${{pendente:'⏳ Pendente',concluido:'✓ Concluído',analise:'🔍 Em análise'}[p.status]||p.status}</span>
-      </div>`).join('');
-  } else {
-    body.innerHTML = `
-      <div class="chat-scope" style="margin-bottom:0">
-        <div class="chat-scope-label">Informações do Conjunto</div>
-        <table style="width:100%;font-size:13px;border-collapse:collapse">
-          <tr><td style="padding:7px 0;color:var(--text3);width:130px">Título</td><td style="font-weight:600">${rsAtivo.titulo}</td></tr>
-          <tr><td style="padding:7px 0;color:var(--text3)">Status</td><td><span class="cj-status ${rsAtivo.status}">${labelStatus(rsAtivo.status)}</span></td></tr>
-          <tr><td style="padding:7px 0;color:var(--text3)">Plataformas</td><td>${rsAtivo.plataformas.join(', ').toUpperCase()}</td></tr>
-          <tr><td style="padding:7px 0;color:var(--text3)">Data</td><td>${rsAtivo.data}</td></tr>
-          <tr><td style="padding:7px 0;color:var(--text3)">Slides</td><td>${rsAtivo.slides.length}</td></tr>
-          <tr><td style="padding:7px 0;color:var(--text3)">Carrosséis</td><td>${rsAtivo.carrosseis.length}</td></tr>
-        </table>
-      </div>`;
-  }
+      agentEl.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text">${respText}${prev}</div><div class="dh-bbl-time">agora</div>`;
+      msgs.insertBefore(agentEl, typing);
+      msgs.scrollTop = msgs.scrollHeight;
+      dhSending = false;
+      document.getElementById('dhSendBtn').disabled = false;
+    },2000);
+  },800);
 }
 
-function renderChatSection() {
-  const msgs = rsAtivo.pedidos.length ?
-    rsAtivo.pedidos.map(p => `
-      <div class="chat-bbl">
-        <div class="chat-bbl-who">${p.de}</div>
-        <div class="chat-bbl-scope-chip"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Pedido</div>
-        <div class="chat-bbl-text">${p.texto}</div>
-        <span class="chat-bbl-status ${p.status}">${{pendente:'⏳ Pendente',concluido:'✓ Concluído',analise:'🔍 Em análise'}[p.status]||p.status}</span>
-      </div>`).join('') : '';
-  return `
-    <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:20px">
-      <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:14px">Conversa do conjunto</div>
-      <div class="chat-msgs">${msgs || '<div style="color:var(--text3);font-size:13px">Nenhuma mensagem ainda.</div>'}</div>
-      <div class="chat-input-wrap" id="chatNovo">
-        <div class="chat-input-scope-preview">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          Pedindo mudança para: <strong style="margin-left:4px">${rsAtivo.titulo}</strong>
-        </div>
-        <textarea class="chat-ta" id="chatInput" placeholder="Ex: Trocar a cor do slide 2 para teal, ajustar o texto do CTA..."></textarea>
-        <div class="chat-send-row">
-          <button class="chat-send-btn" onclick="enviarPedido()">
-            <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-            Enviar pedido
-          </button>
-        </div>
-      </div>
-    </div>`;
+function dhAprovar(btn) {
+  btn.classList.add('done');
+  btn.innerHTML = '<svg viewBox="0 0 24 24" width="11" height="11" stroke="#fff" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Aprovado';
+  const adj = btn.nextElementSibling;
+  if(adj){adj.disabled=true;adj.style.opacity='.35';}
 }
 
-function expandCarrossel(carId) {
-  const item = document.getElementById('carItem-' + carId);
-  const body = document.getElementById('carBody-' + carId);
-  if(!item || !body) return;
-  const isOpen = item.classList.contains('open');
-  item.classList.toggle('open', !isOpen);
-  body.classList.toggle('open', !isOpen);
-  if(!isOpen && rsSlideAtivo[carId] === undefined) rsSlideAtivo[carId] = 0;
+function dhAjustar(titulo) {
+  const ta = document.getElementById('dhInput');
+  ta.value = 'Ajustar "'+titulo+'": ';
+  ta.focus();
+  ta.setSelectionRange(ta.value.length,ta.value.length);
 }
 
-function selectSlide(carId, idx) {
-  rsSlideAtivo[carId] = idx;
-  document.querySelectorAll(`#strip-${carId} .slide-th`).forEach((el,i) => el.classList.toggle('active', i===idx));
-}
+document.addEventListener('DOMContentLoaded',()=>{
+  const ta = document.getElementById('dhInput');
+  if(ta) ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,96)+'px';});
+});
 
-function openLightbox(carId, startIdx) {
-  if(!rsAtivo) return;
-  lbSlides = rsAtivo.slides;
-  lbIdx = startIdx || 0;
-  renderLb();
-  document.getElementById('lbOverlay').classList.add('open');
-}
-
-function fecharLightbox() { document.getElementById('lbOverlay').classList.remove('open'); }
-
-function navLb(dir) {
-  lbIdx = (lbIdx + dir + lbSlides.length) % lbSlides.length;
-  renderLb();
-}
-
-function renderLb() {
-  const s = lbSlides[lbIdx];
-  document.getElementById('lbImg').innerHTML = `<div style="width:280px;height:350px;background:${s.bg};display:flex;align-items:center;justify-content:center;font-size:90px;border-radius:12px">${s.emoji}</div>`;
-  document.getElementById('lbCounter').textContent = `${lbIdx+1} / ${lbSlides.length}`;
-}
-
-function enviarPedido() {
-  const input = document.getElementById('chatInput');
-  if(!input || !input.value.trim()) return;
-  if(!rsAtivo) return;
-  rsAtivo.pedidos.push({de:'Você', texto:input.value.trim(), status:'pendente', when:'agora'});
-  input.value = '';
-  renderDrawerBody();
-}
-
-function filtrarRedes(status, btn) {
-  rsFiltrStatus = status;
-  document.querySelectorAll('#tab-redes .chat-scope-opt').forEach(b => {
-    if(['todos','publicado','revisao','agendado','rascunho'].includes(b.textContent.toLowerCase().trim().replace(' ','').replace('ã','a').replace('ç','c'))) {
-      b.classList.remove('active');
-    }
-  });
-  if(btn) btn.classList.add('active');
-  renderGrade();
-}
-
-function filtrarPlat(plat) {
-  rsFiltroPlat = plat;
-  ['todos','ig','fb'].forEach(p => {
-    const el = document.getElementById('plat-' + p);
-    if(el) { el.style.background=''; el.style.borderColor=''; el.style.color=''; }
-  });
-  const el = document.getElementById('plat-' + plat);
-  if(el) { el.style.background='var(--teal-dim)'; el.style.borderColor='var(--teal)'; el.style.color='var(--teal)'; }
-  renderGrade();
-}
-
-// Fechar drawer com Escape
-document.addEventListener('keydown', e => {
-  if(e.key === 'Escape') { fecharDrawer(); fecharLightbox(); }
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') rs2CloseLb();
 });
 </script>
 
 </body>
-</html>
