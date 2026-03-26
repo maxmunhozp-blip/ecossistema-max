@@ -2306,22 +2306,42 @@ const DH_STORE_KEY = 'dh_chat_officina';
 
 function dhSaveSession() {
   try {
+    // Salva só o necessário — visible tem HTML, api tem texto do Gemini
+    // Limita a 50 mensagens para evitar overflow do localStorage
+    const visibleTrim = dhVisibleHistory.slice(-50);
+    const apiTrim     = dhChatHistory.slice(-50);
     localStorage.setItem(DH_STORE_KEY, JSON.stringify({
-      api: dhChatHistory,
-      visible: dhVisibleHistory
+      api: apiTrim,
+      visible: visibleTrim,
+      ts: Date.now()
     }));
-  } catch(e) {}
+  } catch(e) {
+    console.error('[dh] save error:', e);
+    // Se localStorage cheio, limpa e tenta de novo com menos dados
+    try {
+      localStorage.setItem(DH_STORE_KEY, JSON.stringify({
+        api: dhChatHistory.slice(-10),
+        visible: dhVisibleHistory.slice(-10),
+        ts: Date.now()
+      }));
+    } catch(e2) {}
+  }
 }
 
 function dhLoadSession() {
   try {
     const raw = localStorage.getItem(DH_STORE_KEY);
     if(!raw) return false;
-    const {api, visible} = JSON.parse(raw);
-    dhChatHistory = api || [];
-    dhVisibleHistory = visible || [];
+    const parsed = JSON.parse(raw);
+    if(!parsed || typeof parsed !== 'object') return false;
+    dhChatHistory    = Array.isArray(parsed.api)     ? parsed.api     : [];
+    dhVisibleHistory = Array.isArray(parsed.visible) ? parsed.visible : [];
     return dhVisibleHistory.length > 0;
-  } catch(e) { return false; }
+  } catch(e) {
+    console.error('[dh] load error:', e);
+    localStorage.removeItem(DH_STORE_KEY); // limpa dado corrompido
+    return false;
+  }
 }
 
 function dhRestoreVisible() {
@@ -2460,6 +2480,7 @@ async function dhEnviar() {
   userEl.className = 'dh-bbl user';
   userEl.innerHTML = userHtml;
   dhVisibleHistory.push({role:'user', html: userHtml});
+  dhSaveSession();
   msgs.insertBefore(userEl, typing);
   ta.value = ''; ta.style.height = 'auto';
   msgs.scrollTop = msgs.scrollHeight;
