@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Officina App — Carrosséis</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#3DA9A5;--teal-d:#2A8A86;--teal-l:#5CC4C0;
+  --amber:#F5A623;--amber-d:#D48A10;
+  --bg:#F0F7F7;--surface:#FFFFFF;
+  --text:#1A2424;--text2:#3A5050;--text3:#6A8888;
+  --border:#E2EEEE;
+}
+body{font-family:'Inter',sans-serif;background:#0F1A1A;color:var(--text);min-height:100vh}
+
+/* ── NAV ── */
+.top-nav{display:flex;align-items:center;gap:16px;padding:16px 28px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.3)}
+.nav-logo{font-size:13px;font-weight:800;color:var(--teal);letter-spacing:-.2px}
+.nav-sub{font-size:11px;color:rgba(255,255,255,.35)}
+.nav-count{margin-left:auto;font-size:11px;color:rgba(255,255,255,.35)}
+
+/* ── CARROSSEL TABS ── */
+.car-tabs{display:flex;gap:6px;padding:20px 28px 0;overflow-x:auto;flex-shrink:0}
+.car-tabs::-webkit-scrollbar{height:3px}
+.car-tabs::-webkit-scrollbar-thumb{background:rgba(61,169,165,.3);border-radius:3px}
+.car-tab{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:rgba(255,255,255,.45);cursor:pointer;white-space:nowrap;transition:.15s;font-family:'Inter',sans-serif}
+.car-tab:hover{border-color:rgba(61,169,165,.4);color:rgba(255,255,255,.7)}
+.car-tab.active{border-color:var(--teal);background:rgba(61,169,165,.12);color:#fff}
+
+/* ── GRID DE THUMBNAILS ── */
+.grid-wrap{padding:24px 28px;overflow-y:auto;flex:1}
+.car-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+.thumbs-grid{display:flex;gap:12px;flex-wrap:wrap}
+
+/* Thumbnail container: 1080*.2 x 1440*.2 */
+.thumb-wrap{width:216px;height:288px;position:relative;border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid rgba(255,255,255,.08);transition:transform .15s,border-color .15s}
+.thumb-wrap:hover{transform:translateY(-3px);border-color:rgba(61,169,165,.5)}
+.thumb-scale{width:1080px;height:1440px;transform:scale(0.2);transform-origin:top left;pointer-events:none}
+.slide-num-badge{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;backdrop-filter:blur(4px)}
+
+/* ── LIGHTBOX ── */
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center}
+.lb.open{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.lb-top{display:flex;align-items:center;gap:16px;padding:14px 24px;width:100%;max-width:700px}
+.lb-car-name{font-size:12px;font-weight:700;color:rgba(255,255,255,.6);flex:1}
+.lb-slide-info{font-size:12px;color:rgba(255,255,255,.4)}
+.lb-close-btn{background:rgba(255,255,255,.1);border:none;color:#fff;cursor:pointer;width:32px;height:32px;border-radius:8px;font-size:16px;display:flex;align-items:center;justify-content:center;transition:.15s}
+.lb-close-btn:hover{background:rgba(255,255,255,.2)}
+.lb-main{display:flex;align-items:center;gap:16px;flex:1}
+.lb-nav-btn{background:rgba(255,255,255,.08);border:none;color:#fff;cursor:pointer;width:44px;height:64px;border-radius:10px;font-size:24px;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
+.lb-nav-btn:hover{background:rgba(61,169,165,.25)}
+.lb-nav-btn:disabled{opacity:.2;cursor:default}
+.lb-slide-wrap{width:540px;height:720px;overflow:hidden;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.5);position:relative}
+.lb-slide-inner{width:1080px;height:1440px;transform:scale(0.5);transform-origin:top left;pointer-events:none}
+.lb-dots{display:flex;gap:6px;padding:14px 0 0;justify-content:center}
+.lb-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:.15s;cursor:pointer}
+.lb-dot.active{background:var(--teal);width:18px;border-radius:3px}
+
+/* ── SLIDES ── */
+.slide{width:1080px;height:1440px;position:relative;overflow:hidden;font-family:'Inter',sans-serif}
+
+/* ── SLIDE UTILS ── */
+.s-pad{padding:96px 80px}
+.s-tag{display:inline-flex;align-items:center;padding:8px 22px;border-radius:100px;font-size:22px;font-weight:700;letter-spacing:.3px}
+.s-tag.teal{background:rgba(61,169,165,.15);color:var(--teal);border:1.5px solid rgba(61,169,165,.3)}
+.s-tag.amber{background:rgba(245,166,35,.15);color:var(--amber-d);border:1.5px solid rgba(245,166,35,.3)}
+.s-tag.white{background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.25)}
+.s-tag.dark{background:rgba(26,36,36,.1);color:var(--text2);border:1.5px solid rgba(26,36,36,.12)}
+.s-num{font-size:220px;font-weight:900;line-height:.85;letter-spacing:-8px}
+.s-title{font-size:80px;font-weight:800;line-height:1.08;letter-spacing:-2px}
+.s-title-lg{font-size:96px;font-weight:900;line-height:1.0;letter-spacing:-3px}
+.s-body{font-size:38px;font-weight:400;line-height:1.6;color:var(--text2)}
+.s-body-sm{font-size:34px;font-weight:400;line-height:1.65}
+.s-line{height:6px;border-radius:3px;background:var(--teal)}
+.s-line-amber{height:6px;border-radius:3px;background:var(--amber)}
+.s-cta{display:inline-block;padding:32px 56px;border-radius:20px;font-size:40px;font-weight:800;letter-spacing:-.5px}
+.s-cta.teal{background:var(--teal);color:#fff}
+.s-cta.amber{background:var(--amber);color:var(--text)}
+.s-cta.white{background:#fff;color:var(--teal)}
+
+/* deco shapes */
+.deco-circle{position:absolute;border-radius:50%;pointer-events:none}
+.deco-line{position:absolute;pointer-events:none;background:var(--teal);border-radius:4px}
+
+/* ── POST 1 styles ── */
+.p1-s1-bg{background:#fff}
+.p1-s2-bg{background:var(--teal)}
+.p1-s3-bg{background:#fff}
+.p1-s4-bg{background:var(--bg)}
+.p1-s5-bg{background:var(--teal)}
+
+/* ── POST 2 styles ── */
+.p2-s1-bg{background:#fff}
+.p2-s3-bg{background:var(--teal)}
+.p2-s6-bg{background:var(--amber)}
+
+/* ── POST 3 styles ── */
+.p3-s1-bg{background:var(--teal)}
+.p3-s2-bg{background:#fff}
+.p3-s3-bg{background:var(--bg)}
+.p3-s4-bg{background:#fff}
+
+/* ── POST 4 styles ── */
+.p4-s1-bg{background:var(--teal)}
+.p4-s2-bg{background:#fff}
+.p4-s3-bg{background:#fff}
+
+/* ── POST 5 styles ── */
+.p5-s1-bg{background:#fff}
+.p5-s2-bg{background:var(--teal)}
+.p5-s3-bg{background:#fff}
+.p5-s4-bg{background:var(--bg)}
+.p5-s5-bg{background:var(--teal)}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <span class="nav-logo">Officina App</span>
+  <span class="nav-sub">Carrosséis · 1080 × 1440px</span>
+  <span class="nav-count" id="slideCount"></span>
+</div>
+
+<div class="car-tabs" id="carTabs"></div>
+<div class="grid-wrap">
+  <div class="car-label" id="carLabel"></div>
+  <div class="thumbs-grid" id="thumbsGrid"></div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb">
+  <div class="lb-top">
+    <span class="lb-car-name" id="lbCarName"></span>
+    <span class="lb-slide-info" id="lbSlideInfo"></span>
+    <button class="lb-close-btn" onclick="closeLb()">✕</button>
+  </div>
+  <div class="lb-main">
+    <button class="lb-nav-btn" id="lbPrev" onclick="navLb(-1)">‹</button>
+    <div class="lb-slide-wrap">
+      <div class="lb-slide-inner" id="lbSlideInner"></div>
+    </div>
+    <button class="lb-nav-btn" id="lbNext" onclick="navLb(1)">›</button>
+  </div>
+  <div class="lb-dots" id="lbDots"></div>
+</div>
+
+<!-- ════════════ SLIDES DATA ════════════ -->
+<div id="allSlides" style="display:none">
+
+<!-- ══ POST 1: Como escolher a oficina certa ══ -->
+<div data-post="0" data-idx="0" class="slide p1-s1-bg">
+  <div style="position:absolute;top:0;left:0;right:0;height:12px;background:var(--teal)"></div>
+  <div class="s-pad" style="padding-top:120px;display:flex;flex-direction:column;height:100%;justify-content:space-between">
+    <div>
+      <div class="s-tag teal" style="margin-bottom:80px">Dica Officina App</div>
+      <div style="font-size:22px;font-weight:500;color:var(--text3);margin-bottom:24px;letter-spacing:.5px;text-transform:uppercase">Como escolher</div>
+      <div class="s-title-lg" style="color:var(--text);margin-bottom:48px">a oficina<br/>certa</div>
+      <div style="width:120px;height:6px;background:var(--amber);border-radius:3px;margin-bottom:56px"></div>
+      <div class="s-body" style="color:var(--text3);max-width:780px">Sem indicação de alguém de confiança,<br/>você está no escuro.</div>
+    </div>
+    <div>
+      <div style="font-size:26px;font-weight:700;color:var(--teal)">officinaapp.com.br</div>
+    </div>
+  </div>
+  <!-- deco diagonal -->
+  <div style="position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;border:3px solid rgba(61,169,165,.15);border-radius:50%;pointer-events:none"></div>
+  <div style="position:absolute;bottom:60px;right:60px;width:220px;height:220px;border:3px solid rgba(61,169,165,.08);border-radius:50%;pointer-events:none"></div>
+  <div style="position:absolute;bottom:0;right:0;width:200px;height:6px;background:var(--teal);transform-origin:right bottom;transform:rotate(-45deg) translateX(70px)"></div>
+</div>
+
+<div data-post="0" data-idx="1" class="slide p1-s2-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:60px">
+    <div class="s-num" style="color:var(--amber);opacity:.9">01</div>
+    <div>
+      <div style="font-size:28px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:28px">Primeiro passo</div>
+      <div class="s-title" style="color:#fff;margin-bottom:48px">Verifique as avaliações —<br/>mas as certas</div>
+      <div style="width:80px;height:4px;background:var(--amber);border-radius:2px;margin-bottom:48px"></div>
+      <div class="s-body" style="color:rgba(255,255,255,.8);max-width:840px">Estrelas gerais enganam. Procure avaliações que mencionam <strong style="color:#fff">transparência no orçamento</strong> e tempo de entrega do carro.</div>
+    </div>
+  </div>
+  <div style="position:absolute;top:0;right:0;width:300px;height:300px;background:rgba(255,255,255,.04);border-radius:0 0 0 300px;pointer-events:none"></div>
+</div>
+
+<div data-post="0" data-idx="2" class="slide p1-s3-bg">
+  <div style="position:absolute;left:0;top:0;bottom:0;width:12px;background:var(--teal)"></div>
+  <div class="s-pad" style="padding-left:120px;display:flex;flex-direction:column;justify-content:center;height:100%;gap:60px">
+    <div class="s-num" style="color:var(--teal);opacity:.15;position:absolute;right:-20px;top:80px;line-height:1">02</div>
+    <div>
+      <div style="font-size:28px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;margin-bottom:28px">Segundo passo</div>
+      <div class="s-title" style="color:var(--text);margin-bottom:48px">Peça o orçamento<br/>antes de deixar<br/>o carro</div>
+      <div style="width:80px;height:4px;background:var(--teal);border-radius:2px;margin-bottom:48px"></div>
+      <div class="s-body" style="color:var(--text2);max-width:800px">Oficina que não dá orçamento antes é sinal de alerta.<br/><br/>No Officina App, o orçamento chega no seu celular <strong>antes de qualquer serviço começar.</strong></div>
+    </div>
+  </div>
+</div>
+
+<div data-post="0" data-idx="3" class="slide p1-s4-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:60px">
+    <div class="s-num" style="color:var(--teal);opacity:.12;position:absolute;right:-20px;bottom:80px;line-height:1">03</div>
+    <div>
+      <div style="font-size:28px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;margin-bottom:28px">Terceiro passo</div>
+      <div class="s-title" style="color:var(--text);margin-bottom:48px">Prefira oficinas<br/>com histórico<br/>verificado</div>
+      <div style="width:80px;height:4px;background:var(--amber);border-radius:2px;margin-bottom:48px"></div>
+      <div class="s-body" style="color:var(--text2);max-width:840px">O Officina App só lista oficinas que passaram por verificação —<br/><strong>endereço real, CNPJ ativo</strong> e histórico real de atendimentos.</div>
+    </div>
+    <div style="display:flex;gap:32px;margin-top:20px">
+      <div style="display:flex;align-items:center;gap:16px;background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:24px 36px">
+        <div style="width:16px;height:16px;border-radius:50%;background:#3DB87A;flex-shrink:0"></div>
+        <span style="font-size:28px;font-weight:700;color:var(--text)">CNPJ verificado</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:24px 36px">
+        <div style="width:16px;height:16px;border-radius:50%;background:#3DB87A;flex-shrink:0"></div>
+        <span style="font-size:28px;font-weight:700;color:var(--text)">Endereço físico</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-post="0" data-idx="4" class="slide p1-s5-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:space-between;height:100%">
+    <div>
+      <div style="width:80px;height:80px;border-radius:20px;border:3px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;margin-bottom:80px">
+        <span style="font-size:48px;font-weight:900;color:#fff">O</span>
+      </div>
+      <div class="s-title-lg" style="color:#fff;margin-bottom:40px">Encontre uma<br/>oficina<br/>confiável<br/>agora</div>
+      <div class="s-body" style="color:rgba(255,255,255,.75);margin-bottom:60px">Mais de 500 oficinas verificadas<br/>em São Paulo</div>
+      <div class="s-cta amber" style="display:inline-block">Baixe o Officina App</div>
+    </div>
+    <div style="font-size:26px;color:rgba(255,255,255,.4);font-weight:500">officinaapp.com.br</div>
+  </div>
+  <div style="position:absolute;bottom:-100px;right:-100px;width:500px;height:500px;border:2px solid rgba(255,255,255,.06);border-radius:50%;pointer-events:none"></div>
+</div>
+
+<!-- ══ POST 2: 5 sinais ══ -->
+<div data-post="1" data-idx="0" class="slide p2-s1-bg">
+  <div style="position:absolute;top:0;left:0;right:0;height:16px;background:var(--teal)"></div>
+  <div class="s-pad" style="padding-top:140px;display:flex;flex-direction:column;justify-content:space-between;height:100%">
+    <div>
+      <div class="s-tag amber" style="margin-bottom:72px">Revisão preventiva</div>
+      <div class="s-title-lg" style="color:var(--text);margin-bottom:32px">5 sinais que<br/>seu carro<br/>precisa de<br/>revisão</div>
+      <div style="width:100px;height:6px;background:var(--teal);border-radius:3px;margin-bottom:48px"></div>
+      <div class="s-body" style="color:var(--text3);font-style:italic">(antes de ficar na mão no meio da rua)</div>
+    </div>
+    <div style="font-size:26px;font-weight:600;color:var(--teal)">Officina App</div>
+  </div>
+</div>
+
+<div data-post="1" data-idx="1" class="slide" style="background:#fff">
+  <div style="position:absolute;top:0;left:0;right:0;height:8px;background:var(--amber)"></div>
+  <div class="s-pad" style="padding-top:120px;display:flex;flex-direction:column;justify-content:center;height:100%;gap:48px">
+    <div>
+      <div style="font-size:28px;font-weight:800;color:var(--amber);text-transform:uppercase;letter-spacing:.5px;margin-bottom:20px">Sinal 01</div>
+      <div class="s-title" style="color:var(--text);margin-bottom:40px">Barulho novo<br/>que não estava<br/>lá antes</div>
+      <div style="width:80px;height:4px;background:var(--teal);border-radius:2px;margin-bottom:44px"></div>
+      <div class="s-body" style="color:var(--text2);max-width:860px">Qualquer som novo — rangido, batida, assobio — merece atenção imediata.<br/><br/><strong>Carro saudável é carro silencioso.</strong></div>
+    </div>
+    <div style="background:var(--bg);border-left:6px solid var(--teal);border-radius:0 12px 12px 0;padding:32px 40px">
+      <div style="font-size:30px;font-weight:600;color:var(--text2);font-style:italic">"Se tem dúvida, já é hora de verificar."</div>
+    </div>
+  </div>
+</div>
+
+<div data-post="1" data-idx="2" class="slide p2-s3-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:56px">
+    <div>
+      <div style="font-size:28px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:20px">Sinal 02</div>
+      <div class="s-title" style="color:#fff;margin-bottom:40px">Pedal de freio<br/>mais mole<br/>ou fundo</div>
+      <div style="width:80px;height:4px;background:var(--amber);border-radius:2px;margin-bottom:44px"></div>
+      <div class="s-body" style="color:rgba(255,255,255,.8);max-width:860px">Freio é vida. Se o pedal afundou, parou de responder bem ou está vibrando —</div>
+    </div>
+    <div style="background:rgba(0,0,0,.2);border-radius:20px;padding:48px;text-align:center">
+      <div style="font-size:56px;font-weight:900;color:#fff;margin-bottom:12px">Vá à oficina hoje.</div>
+      <div style="font-size:28px;color:rgba(255,255,255,.65)">Não amanhã. Hoje.</div>
+    </div>
+  </div>
+</div>
+
+<div data-post="1" data-idx="3" class="slide" style="background:#fff">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:48px">
+    <div>
+      <div style="font-size:28px;font-weight:800;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;margin-bottom:20px">Sinal 03</div>
+      <div class="s-title" style="color:var(--text);margin-bottom:40px">Luz de alerta<br/>no painel<br/>acesa</div>
+      <div style="width:80px;height:4px;background:var(--teal);border-radius:2px;margin-bottom:44px"></div>
+      <div class="s-body" style="color:var(--text2);max-width:860px">Cada ícone no painel existe por uma razão. <strong>Não ignore.</strong><br/><br/>Muitas falhas são baratas de resolver no início — e caras se deixar passar.</div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:80px;left:80px;right:80px;display:flex;gap:24px;flex-wrap:wrap">
+    <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:14px;padding:24px 32px;font-size:28px;font-weight:600;color:var(--text2)">Motor</div>
+    <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:14px;padding:24px 32px;font-size:28px;font-weight:600;color:var(--text2)">Temperatura</div>
+    <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:14px;padding:24px 32px;font-size:28px;font-weight:600;color:var(--text2)">Óleo</div>
+    <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:14px;padding:24px 32px;font-size:28px;font-weight:600;color:var(--text2)">Bateria</div>
+  </div>
+</div>
+
+<div data-post="1" data-idx="4" class="slide" style="background:var(--bg)">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:48px">
+    <div>
+      <div style="font-size:28px;font-weight:800;color:var(--amber-d);text-transform:uppercase;letter-spacing:.5px;margin-bottom:20px">Sinal 04</div>
+      <div class="s-title" style="color:var(--text);margin-bottom:40px">Consumo de<br/>combustível<br/>subindo</div>
+      <div style="width:80px;height:4px;background:var(--amber);border-radius:2px;margin-bottom:44px"></div>
+      <div class="s-body" style="color:var(--text2);max-width:860px">Encheu o tanque mais cedo do que o normal?<br/><br/>O motor pode estar com problema. <strong>Diagnóstico precoce poupa combustível e dinheiro.</strong></div>
+    </div>
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:40px;display:flex;align-items:center;gap:32px">
+      <div style="flex:1">
+        <div style="font-size:26px;color:var(--text3);margin-bottom:8px">Normal</div>
+        <div style="font-size:60px;font-weight:900;color:var(--teal)">12km/L</div>
+      </div>
+      <div style="width:2px;height:80px;background:var(--border)"></div>
+      <div style="flex:1">
+        <div style="font-size:26px;color:var(--text3);margin-bottom:8px">Com problema</div>
+        <div style="font-size:60px;font-weight:900;color:#E05252">8km/L</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-post="1" data-idx="5" class="slide p2-s6-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:space-between;height:100%">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:56px">
+      <div class="s-title-lg" style="color:var(--text);line-height:1.05">Seu carro<br/>está te<br/>avisando.</div>
+      <div style="font-size:64px;font-weight:800;color:rgba(26,36,36,.7)">Você está<br/>ouvindo?</div>
+      <div style="width:100px;height:6px;background:var(--teal);border-radius:3px"></div>
+      <div class="s-body" style="color:var(--text2)">Agende uma revisão em uma oficina verificada.</div>
+      <div class="s-cta teal" style="display:inline-block;align-self:flex-start">Abrir Officina App</div>
+    </div>
+    <div style="font-size:26px;font-weight:600;color:rgba(26,36,36,.45)">officinaapp.com.br</div>
+  </div>
+</div>
+
+<!-- ══ POST 3: Depoimento Eduardo ══ -->
+<div data-post="2" data-idx="0" class="slide p3-s1-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:space-between;height:100%">
+    <div>
+      <div class="s-tag white" style="margin-bottom:72px">Caso real</div>
+    </div>
+    <div>
+      <div style="width:100px;height:4px;background:rgba(255,255,255,.4);border-radius:2px;margin-bottom:48px"></div>
+      <div class="s-title-lg" style="color:#fff;margin-bottom:40px">De 3 dias de<br/>incerteza<br/>para 1 hora<br/>de solução</div>
+      <div class="s-body" style="color:rgba(255,255,255,.7)">Eduardo Faria, cliente Officina App · São Paulo</div>
+    </div>
+  </div>
+  <div style="position:absolute;top:-60px;right:-60px;width:400px;height:400px;border:2px solid rgba(255,255,255,.06);border-radius:50%;pointer-events:none"></div>
+</div>
+
+<div data-post="2" data-idx="1" class="slide p3-s2-bg">
+  <div style="position:absolute;top:80px;left:60px;font-size:280px;font-weight:900;color:rgba(61,169,165,.1);line-height:1;pointer-events:none;font-family:Georgia,serif">"</div>
+  <div class="s-pad" style="padding-top:200px;display:flex;flex-direction:column;justify-content:center;height:100%;gap:56px">
+    <div style="font-size:40px;font-weight:400;line-height:1.65;color:var(--text);font-style:italic;max-width:900px">"Eu ia levar num mecânico que minha sogra indicou, mas estava ocupado. Abri o app, escolhi uma oficina pelo histórico de avaliações e <strong style="font-style:normal;color:var(--teal)">resolvi meu problema em menos de uma hora.</strong> Mais barato do que eu esperava."</div>
+    <div>
+      <div style="width:60px;height:3px;background:var(--teal);border-radius:2px;margin-bottom:24px"></div>
+      <div style="font-size:30px;font-weight:700;color:var(--text)">Eduardo Faria</div>
+      <div style="font-size:26px;color:var(--text3);margin-top:6px">38 anos · motorista · São Paulo</div>
+    </div>
+  </div>
+</div>
+
+<div data-post="2" data-idx="2" class="slide p3-s3-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:64px">
+    <div>
+      <div style="font-size:28px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:40px">Na mesma visita</div>
+      <div style="display:flex;align-items:flex-start;gap:60px">
+        <div style="flex:1;text-align:center">
+          <div style="font-size:26px;color:var(--text3);margin-bottom:12px">Eduardo pagou</div>
+          <div style="font-size:110px;font-weight:900;color:var(--teal);line-height:1">R$280</div>
+          <div style="font-size:26px;color:var(--text3);margin-top:8px">via Officina App</div>
+        </div>
+        <div style="width:2px;background:var(--border);align-self:stretch"></div>
+        <div style="flex:1;text-align:center">
+          <div style="font-size:26px;color:var(--text3);margin-bottom:12px">Concorrente cobrou</div>
+          <div style="font-size:110px;font-weight:900;color:#ccc;line-height:1;text-decoration:line-through">R$480</div>
+          <div style="font-size:26px;color:var(--text3);margin-top:8px">sem orçamento prévio</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:40px;text-align:center">
+      <div style="font-size:38px;font-weight:800;color:var(--teal)">Economia de R$200</div>
+      <div style="font-size:28px;color:var(--text2);margin-top:12px">Transparência no orçamento fez a diferença</div>
+    </div>
+  </div>
+</div>
+
+<div data-post="2" data-idx="3" class="slide p3-s4-bg">
+  <div style="position:absolute;inset:40px;border:3px solid var(--teal);border-radius:28px;pointer-events:none;opacity:.3"></div>
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:56px">
+    <div>
+      <div class="s-title" style="color:var(--text);margin-bottom:48px">A próxima<br/>história pode<br/>ser a sua.</div>
+      <div style="width:80px;height:4px;background:var(--teal);border-radius:2px;margin-bottom:48px"></div>
+      <div class="s-body" style="color:var(--text2);max-width:860px">Officina App.<br/>Oficinas verificadas, orçamento na hora,<br/>sem surpresa.</div>
+    </div>
+    <div>
+      <div class="s-cta teal" style="display:inline-block">Baixar agora — é grátis</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ POST 4: 3 passos ══ -->
+<div data-post="3" data-idx="0" class="slide p4-s1-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:64px;position:relative">
+    <div style="position:absolute;right:60px;top:50%;transform:translateY(-50%);font-size:340px;font-weight:900;color:rgba(255,255,255,.05);line-height:1;pointer-events:none;letter-spacing:-20px">1·2·3</div>
+    <div>
+      <div style="font-size:32px;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-bottom:32px">É mais simples do que você imagina</div>
+      <div class="s-title-lg" style="color:#fff">Resolveu<br/>em 3<br/>passos</div>
+    </div>
+    <div style="width:100px;height:5px;background:var(--amber);border-radius:3px"></div>
+    <div style="font-size:38px;font-weight:500;color:rgba(255,255,255,.6)">Officina App</div>
+  </div>
+</div>
+
+<div data-post="3" data-idx="1" class="slide p4-s2-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:40px">
+    <div style="font-size:32px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Como funciona</div>
+    <div style="display:flex;flex-direction:column;gap:32px">
+      <div style="border-left:8px solid var(--teal);border-radius:0 16px 16px 0;padding:40px 48px;background:var(--bg)">
+        <div style="font-size:26px;font-weight:800;color:var(--teal);margin-bottom:14px">01 — Descreva o problema</div>
+        <div style="font-size:32px;color:var(--text2);line-height:1.5">Escreva o que aconteceu com o carro ou escolha na lista.</div>
+      </div>
+      <div style="border-left:8px solid var(--teal);border-radius:0 16px 16px 0;padding:40px 48px;background:var(--bg)">
+        <div style="font-size:26px;font-weight:800;color:var(--teal);margin-bottom:14px">02 — Compare oficinas verificadas</div>
+        <div style="font-size:32px;color:var(--text2);line-height:1.5">Veja avaliações, localização e histórico antes de decidir.</div>
+      </div>
+      <div style="border-left:8px solid var(--amber);border-radius:0 16px 16px 0;padding:40px 48px;background:#fffbf0">
+        <div style="font-size:26px;font-weight:800;color:var(--amber-d);margin-bottom:14px">03 — Agende e acompanhe</div>
+        <div style="font-size:32px;color:var(--text2);line-height:1.5">Marque horário e receba o orçamento antes de sair de casa.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-post="3" data-idx="2" class="slide p4-s3-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;gap:52px;text-align:center">
+    <div style="width:160px;height:160px;border-radius:36px;border:4px solid var(--teal);display:flex;align-items:center;justify-content:center">
+      <span style="font-size:100px;font-weight:900;color:var(--teal);line-height:1">O</span>
+    </div>
+    <div>
+      <div style="font-size:72px;font-weight:900;color:var(--text);letter-spacing:-2px;margin-bottom:16px">Officina App</div>
+      <div style="width:80px;height:4px;background:var(--teal);border-radius:2px;margin:0 auto 40px"></div>
+      <div class="s-body" style="color:var(--text2);max-width:780px">O app que coloca você no controle<br/>da manutenção do seu carro.</div>
+    </div>
+    <div class="s-cta amber">Baixar grátis</div>
+  </div>
+</div>
+
+<!-- ══ POST 5: Revisão preventiva ══ -->
+<div data-post="4" data-idx="0" class="slide p5-s1-bg">
+  <div style="position:absolute;top:0;left:0;right:0;height:12px;background:var(--teal)"></div>
+  <div class="s-pad" style="padding-top:140px;display:flex;flex-direction:column;justify-content:space-between;height:100%">
+    <div>
+      <div class="s-tag teal" style="margin-bottom:72px">Saúde do seu carro</div>
+      <div style="width:120px;height:6px;background:var(--teal);border-radius:3px;margin-bottom:56px"></div>
+      <div class="s-title" style="color:var(--text)">Por que revisão<br/>preventiva<br/>sempre<br/>vale a pena</div>
+    </div>
+    <div style="font-size:26px;font-weight:600;color:var(--teal)">Officina App</div>
+  </div>
+  <div style="position:absolute;bottom:100px;right:80px;width:280px;height:280px;border:2px solid rgba(61,169,165,.12);border-radius:50%;pointer-events:none"></div>
+</div>
+
+<div data-post="4" data-idx="1" class="slide p5-s2-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:48px">
+    <div style="font-size:220px;font-weight:900;color:var(--amber);line-height:.9;letter-spacing:-4px">3×</div>
+    <div style="width:100px;height:5px;background:rgba(255,255,255,.4);border-radius:3px"></div>
+    <div class="s-title" style="color:#fff">Reparos corretivos<br/>custam em média<br/>3 vezes mais</div>
+    <div class="s-body" style="color:rgba(255,255,255,.75);max-width:860px">Do que a revisão preventiva que teria evitado o problema.</div>
+  </div>
+</div>
+
+<div data-post="4" data-idx="2" class="slide p5-s3-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:52px">
+    <div>
+      <div class="s-title" style="color:var(--text);margin-bottom:16px">O que custa<br/>barato agora</div>
+      <div style="width:80px;height:4px;background:var(--teal);border-radius:2px"></div>
+    </div>
+    <div style="border:1.5px solid var(--border);border-radius:20px;overflow:hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:32px 40px;border-bottom:1px solid var(--border)">
+        <span style="font-size:32px;font-weight:600;color:var(--text)">Troca de óleo</span>
+        <span style="font-size:32px;font-weight:700;color:var(--teal)">R$80–120</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:32px 40px;border-bottom:1px solid var(--border)">
+        <span style="font-size:32px;font-weight:600;color:var(--text)">Filtros</span>
+        <span style="font-size:32px;font-weight:700;color:var(--teal)">R$40–80</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:32px 40px;border-bottom:1px solid var(--border)">
+        <span style="font-size:32px;font-weight:600;color:var(--text)">Pastilha de freio</span>
+        <span style="font-size:32px;font-weight:700;color:var(--teal)">R$120–200</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:32px 40px">
+        <span style="font-size:32px;font-weight:600;color:var(--text)">Correia dentada</span>
+        <span style="font-size:32px;font-weight:700;color:var(--teal)">R$300–500</span>
+      </div>
+    </div>
+    <div style="background:#FEF2F2;border:1.5px solid rgba(224,82,82,.2);border-radius:16px;padding:32px 40px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:32px;font-weight:700;color:#E05252">Motor fundido</span>
+      <span style="font-size:40px;font-weight:900;color:#E05252">R$3.000–8.000+</span>
+    </div>
+  </div>
+</div>
+
+<div data-post="4" data-idx="3" class="slide p5-s4-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:64px">
+    <div>
+      <div style="font-size:28px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;margin-bottom:32px">A regra simples</div>
+      <div style="width:80px;height:4px;background:var(--teal);border-radius:2px;margin-bottom:56px"></div>
+    </div>
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:24px;padding:64px 64px">
+      <div style="font-size:44px;font-weight:700;line-height:1.5;color:var(--text)">Se você rodar mais de<br/><span style="color:var(--teal);font-size:56px;font-weight:900">10.000 km por ano,</span><br/>faça revisão a cada<br/><span style="color:var(--teal);font-size:56px;font-weight:900">6 meses —</span><br/>independente de estar sentindo algum problema.</div>
+    </div>
+  </div>
+</div>
+
+<div data-post="4" data-idx="4" class="slide p5-s5-bg">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:space-between;height:100%">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:56px">
+      <div class="s-title-lg" style="color:#fff">Cuide do carro<br/>antes que o<br/>carro te deixe<br/>na mão.</div>
+      <div style="width:100px;height:5px;background:var(--amber);border-radius:3px"></div>
+      <div>
+        <div class="s-cta amber" style="display:inline-block">Agendar revisão no Officina App</div>
+      </div>
+    </div>
+    <div style="font-size:26px;color:rgba(255,255,255,.4);font-weight:500">officinaapp.com.br</div>
+  </div>
+  <div style="position:absolute;top:-80px;right:-80px;width:460px;height:460px;border:2px solid rgba(255,255,255,.05);border-radius:50%;pointer-events:none"></div>
+</div>
+
+</div><!-- /allSlides -->
+
+<script>
+const POSTS = [
+  {nome:'Como escolher a oficina certa', total:5},
+  {nome:'5 sinais que seu carro precisa de revisão', total:6},
+  {nome:'Depoimento: Eduardo resolveu em 1 hora', total:4},
+  {nome:'Officina App em 3 passos', total:3},
+  {nome:'Por que revisão preventiva vale a pena', total:5},
+];
+
+let activePost = 0;
+let lbPost = 0, lbIdx = 0;
+
+// Build tabs
+const tabsEl = document.getElementById('carTabs');
+POSTS.forEach((p,i) => {
+  const btn = document.createElement('button');
+  btn.className = 'car-tab' + (i===0?' active':'');
+  btn.textContent = `${i+1}. ${p.nome}`;
+  btn.onclick = () => selectPost(i);
+  tabsEl.appendChild(btn);
+});
+
+// Collect slides per post
+const allSlideEls = document.querySelectorAll('#allSlides [data-post]');
+const slidesByPost = {};
+allSlideEls.forEach(el => {
+  const p = +el.dataset.post;
+  if(!slidesByPost[p]) slidesByPost[p] = [];
+  slidesByPost[p].push(el);
+});
+
+function selectPost(idx) {
+  activePost = idx;
+  document.querySelectorAll('.car-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.getElementById('carLabel').textContent = POSTS[idx].nome + ' · ' + POSTS[idx].total + ' slides';
+  document.getElementById('slideCount').textContent = POSTS[idx].total + ' slides';
+  renderGrid(idx);
+}
+
+function renderGrid(postIdx) {
+  const grid = document.getElementById('thumbsGrid');
+  grid.innerHTML = '';
+  const slides = slidesByPost[postIdx] || [];
+  slides.forEach((sl, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'thumb-wrap';
+    wrap.onclick = () => openLb(postIdx, i);
+    // Clone and scale
+    const scaleDiv = document.createElement('div');
+    scaleDiv.className = 'thumb-scale';
+    scaleDiv.appendChild(sl.cloneNode(true));
+    wrap.appendChild(scaleDiv);
+    const badge = document.createElement('div');
+    badge.className = 'slide-num-badge';
+    badge.textContent = (i+1) + ' / ' + slides.length;
+    wrap.appendChild(badge);
+    grid.appendChild(wrap);
+  });
+}
+
+// Lightbox
+function openLb(postIdx, slideIdx) {
+  lbPost = postIdx; lbIdx = slideIdx;
+  renderLb();
+  document.getElementById('lb').classList.add('open');
+}
+
+function closeLb() { document.getElementById('lb').classList.remove('open'); }
+
+function navLb(dir) {
+  const total = POSTS[lbPost].total;
+  lbIdx = (lbIdx + dir + total) % total;
+  renderLb();
+}
+
+function renderLb() {
+  const slides = slidesByPost[lbPost] || [];
+  const sl = slides[lbIdx];
+  const inner = document.getElementById('lbSlideInner');
+  inner.innerHTML = '';
+  if(sl) inner.appendChild(sl.cloneNode(true));
+  document.getElementById('lbCarName').textContent = POSTS[lbPost].nome;
+  document.getElementById('lbSlideInfo').textContent = 'Slide ' + (lbIdx+1) + ' de ' + slides.length;
+  document.getElementById('lbPrev').disabled = false;
+  document.getElementById('lbNext').disabled = false;
+  // dots
+  const dots = document.getElementById('lbDots');
+  dots.innerHTML = '';
+  slides.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'lb-dot' + (i===lbIdx?' active':'');
+    d.onclick = () => { lbIdx=i; renderLb(); };
+    dots.appendChild(d);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if(!document.getElementById('lb').classList.contains('open')) return;
+  if(e.key==='Escape') closeLb();
+  if(e.key==='ArrowLeft') navLb(-1);
+  if(e.key==='ArrowRight') navLb(1);
+});
+
+// ── Single-slide embed mode: ?single=1&p=POST_IDX&s=SLIDE_IDX ──
+const _qp = new URLSearchParams(location.search);
+if(_qp.get('single')==='1') {
+  const _p = +(_qp.get('p')||0), _s = +(_qp.get('s')||0);
+  ['.top-nav','#carTabs','.grid-wrap','#lb'].forEach(sel => {
+    const el = document.querySelector(sel);
+    if(el) el.style.display = 'none';
+  });
+  const _sl = (slidesByPost[_p]||[])[_s];
+  if(_sl) {
+    const _allS = document.querySelectorAll('#allSlides .slide');
+    _allS.forEach(e => e.style.display = 'none');
+    document.getElementById('allSlides').style.display = 'block';
+    _sl.style.display = 'block';
+  }
+  document.body.style.cssText = 'margin:0;padding:0;overflow:hidden;background:transparent';
+} else {
+  selectPost(0);
+}
+</script>
+</body>
+</html>

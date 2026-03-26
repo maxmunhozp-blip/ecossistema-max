@@ -419,7 +419,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .dh-bbl.user .dh-bbl-text{background:var(--teal-dim);border-color:var(--teal-mid);border-radius:10px 0 10px 10px}
 .dh-bbl-time{font-size:10px;color:var(--text4);margin-top:3px}
 .dh-preview{margin-top:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
-.dh-preview-thumb{height:56px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border)}
+.dh-preview-thumb{height:56px;background:var(--surface2);overflow:hidden;border-bottom:1px solid var(--border);position:relative}
 .dh-preview-thumb svg{width:22px;height:22px;stroke:var(--text4);fill:none;stroke-width:1.5}
 .dh-preview-body{padding:9px 11px}
 .dh-preview-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px}
@@ -448,22 +448,30 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .dh-send:hover{background:var(--teal-dark)}
 .dh-send svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.5}
 .dh-send:disabled{background:var(--border);cursor:not-allowed}
+/* Iframe thumbnails */
+.post-thumb-frame{width:100%;height:100%;overflow:hidden;border-radius:7px}
+.post-thumb-iframe{width:1080px;height:1440px;border:none;transform:scale(0.0481);transform-origin:top left;pointer-events:none;display:block}
+.slide-card-frame{width:100%;height:100%;overflow:hidden;border-radius:6px}
+.slide-card-iframe{width:1080px;height:1440px;border:none;transform:scale(0.063);transform-origin:top left;pointer-events:none;display:block}
 /* Lightbox v2 */
-.rs2-lb{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:none;align-items:center;justify-content:center}
+.rs2-lb{position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:300;display:none;align-items:center;justify-content:center}
 .rs2-lb.open{display:flex;animation:fadeIn .18s ease}
 .rs2-lb-wrap{position:relative}
-.rs2-lb-card{background:var(--surface);border-radius:14px;width:280px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.rs2-lb-slide{height:310px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border)}
-.rs2-lb-slide svg{width:44px;height:44px;stroke:var(--text4);fill:none;stroke-width:1.5}
-.rs2-lb-foot{padding:14px 16px}
-.rs2-lb-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
-.rs2-lb-num{font-size:11px;color:var(--text3)}
-.rs2-lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;cursor:pointer;width:38px;height:38px;border-radius:8px;font-size:22px;display:flex;align-items:center;justify-content:center;transition:.15s;line-height:1}
-.rs2-lb-nav:hover{background:rgba(255,255,255,.22)}
-.rs2-lb-nav.prev{left:-52px}
-.rs2-lb-nav.next{right:-52px}
+.rs2-lb-info{position:absolute;top:-36px;left:0;right:0;display:flex;align-items:center;gap:10px}
+.rs2-lb-title{font-size:12px;font-weight:700;color:rgba(255,255,255,.7);flex:1}
+.rs2-lb-num{font-size:11px;color:rgba(255,255,255,.4)}
+.rs2-lb-card{background:#000;border-radius:14px;width:300px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.5)}
+.rs2-lb-slide{height:400px;overflow:hidden;position:relative;background:var(--surface2)}
+.rs2-lb-iframe{width:1080px;height:1440px;border:none;transform:scale(0.2778);transform-origin:top left;pointer-events:none;display:block}
+.rs2-lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.1);border:none;color:#fff;cursor:pointer;width:38px;height:38px;border-radius:8px;font-size:22px;display:flex;align-items:center;justify-content:center;transition:.15s;line-height:1}
+.rs2-lb-nav:hover{background:rgba(61,169,165,.35)}
+.rs2-lb-nav.prev{left:-54px}
+.rs2-lb-nav.next{right:-54px}
 .rs2-lb-x{position:absolute;top:-12px;right:-12px;width:30px;height:30px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text3);transition:.15s;z-index:1}
 .rs2-lb-x:hover{color:var(--red);border-color:var(--red)}
+.rs2-lb-dots{display:flex;gap:5px;justify-content:center;padding:10px 0 0}
+.rs2-lb-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);transition:.15s;cursor:pointer}
+.rs2-lb-dot.active{background:var(--teal);width:14px;border-radius:3px}
 @media(max-width:768px){
   .redes-layout{grid-template-columns:1fr;height:auto}
   .posts-col{min-height:0}
@@ -1502,7 +1510,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <!-- COLUNA ESQUERDA: posts -->
     <div class="posts-col">
       <div class="posts-col-head">
-        <div class="posts-col-title">Conteúdo criado</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:30px;height:30px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+              <path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h13.56L21 12l-4.44 5H3"/>
+              <circle cx="7.5" cy="17.5" r="1.5"/>
+              <circle cx="17.5" cy="17.5" r="1.5"/>
+            </svg>
+          </div>
+          <div>
+            <div class="posts-col-title">Conteúdo criado</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:1px;font-weight:500">Officina App</div>
+          </div>
+        </div>
         <span class="posts-count" id="postsCount">5 posts</span>
       </div>
       <div class="rs-pills" id="rsPills">
@@ -1557,15 +1577,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 <div class="rs2-lb" id="rs2Lb" onclick="rs2CloseLb()">
   <div class="rs2-lb-wrap" onclick="event.stopPropagation()">
     <button class="rs2-lb-x" onclick="rs2CloseLb()">✕</button>
+    <div class="rs2-lb-info">
+      <span class="rs2-lb-title" id="rs2LbTitle"></span>
+      <span class="rs2-lb-num" id="rs2LbNum"></span>
+    </div>
     <div class="rs2-lb-card">
       <div class="rs2-lb-slide">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-      </div>
-      <div class="rs2-lb-foot">
-        <div class="rs2-lb-title" id="rs2LbTitle"></div>
-        <div class="rs2-lb-num" id="rs2LbNum"></div>
+        <iframe id="rs2LbIframe" class="rs2-lb-iframe" src="" scrolling="no" loading="lazy"></iframe>
       </div>
     </div>
+    <div class="rs2-lb-dots" id="rs2LbDots"></div>
     <button class="rs2-lb-nav prev" onclick="rs2NavLb(-1)">‹</button>
     <button class="rs2-lb-nav next" onclick="rs2NavLb(1)">›</button>
   </div>
@@ -1583,11 +1604,11 @@ lucide.createIcons();
 
 /* ═══ REDES SOCIAIS v2 ═══ */
 const RS2_POSTS = [
-  {id:'p1',titulo:'Como escolher a oficina certa',plataformas:['instagram'],status:'publicado',data:'15/03/2026',slides:5},
-  {id:'p2',titulo:'5 sinais que seu carro precisa de revisão',plataformas:['instagram'],status:'revisao',data:'24/03/2026',slides:6},
-  {id:'p3',titulo:'Depoimento: Eduardo resolveu em 1 hora',plataformas:['instagram','facebook'],status:'publicado',data:'20/03/2026',slides:4},
-  {id:'p4',titulo:'Officina App em 3 passos',plataformas:['instagram'],status:'rascunho',data:'—',slides:3},
-  {id:'p5',titulo:'Por que revisão preventiva vale a pena',plataformas:['facebook'],status:'agendado',data:'01/04/2026',slides:5},
+  {id:'p1',postIdx:0,titulo:'Como escolher a oficina certa',plataformas:['instagram'],status:'publicado',data:'15/03/2026',slides:5},
+  {id:'p2',postIdx:1,titulo:'5 sinais que seu carro precisa de revisão',plataformas:['instagram'],status:'revisao',data:'24/03/2026',slides:6},
+  {id:'p3',postIdx:2,titulo:'Depoimento: Eduardo resolveu em 1 hora',plataformas:['instagram','facebook'],status:'publicado',data:'20/03/2026',slides:4},
+  {id:'p4',postIdx:3,titulo:'Officina App em 3 passos',plataformas:['instagram'],status:'rascunho',data:'—',slides:3},
+  {id:'p5',postIdx:4,titulo:'Por que revisão preventiva vale a pena',plataformas:['facebook'],status:'agendado',data:'01/04/2026',slides:5},
 ];
 
 const DH_HISTORY = [
@@ -1639,14 +1660,14 @@ function renderPosts() {
     if(isOpen) {
       const cards = Array.from({length:p.slides},(_,i) =>
         `<div class="slide-card" onclick="rs2OpenLb('${p.id}',${i})" title="Slide ${i+1}">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <div class="slide-card-frame"><iframe class="slide-card-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=${i}" scrolling="no" loading="lazy"></iframe></div>
           <span class="slide-card-num">${i+1}</span>
         </div>`).join('');
       slidesHtml = `<div class="post-slides-inner"><div class="slides-row-label">Slides</div><div class="slides-row">${cards}</div></div>`;
     }
     return `<div class="post-item${isOpen?' open':''}" id="pi-${p.id}">
       <div class="post-row" onclick="rs2Toggle('${p.id}')">
-        <div class="post-thumb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+        <div class="post-thumb"><div class="post-thumb-frame"><iframe class="post-thumb-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=0" scrolling="no" loading="lazy"></iframe></div></div>
         <div class="post-info">
           <div class="post-title">${p.titulo}</div>
           <div class="post-meta">
@@ -1685,8 +1706,16 @@ function rs2NavLb(dir) {
   renderLb2();
 }
 function renderLb2() {
+  const src = `carrosseis-officina.html?single=1&p=${rs2LbPost.postIdx}&s=${rs2LbIdx}`;
+  document.getElementById('rs2LbIframe').src = src;
   document.getElementById('rs2LbTitle').textContent = rs2LbPost.titulo;
   document.getElementById('rs2LbNum').textContent = 'Slide '+(rs2LbIdx+1)+' de '+rs2LbPost.slides;
+  const dots = document.getElementById('rs2LbDots');
+  if(dots) {
+    dots.innerHTML = Array.from({length:rs2LbPost.slides},(_,i)=>
+      `<div class="rs2-lb-dot${i===rs2LbIdx?' active':''}" onclick="rs2LbIdx=${i};renderLb2()"></div>`
+    ).join('');
+  }
 }
 
 /* Chat */
@@ -1701,9 +1730,10 @@ function renderDhHistory() {
 }
 
 function dhBubble(m) {
+  const prevPost = m.preview ? RS2_POSTS.find(p=>m.preview.titulo.startsWith(p.titulo)) : null;
   const prev = m.preview ? `
     <div class="dh-preview">
-      <div class="dh-preview-thumb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+      <div class="dh-preview-thumb" style="overflow:hidden;position:relative">${prevPost?`<iframe src="carrosseis-officina.html?single=1&p=${prevPost.postIdx}&s=0" scrolling="no" style="width:1080px;height:1440px;border:none;transform:scale(0.222);transform-origin:top left;pointer-events:none;display:block" loading="lazy"></iframe>`:`<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`}</div>
       <div class="dh-preview-body">
         <div class="dh-preview-title">${m.preview.titulo}</div>
         <div class="dh-preview-meta">${m.preview.meta}</div>
@@ -1746,7 +1776,7 @@ function dhEnviar() {
       const agentEl = document.createElement('div');
       agentEl.className = 'dh-bbl agent';
       const prev = `<div class="dh-preview">
-        <div class="dh-preview-thumb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+        <div class="dh-preview-thumb" style="overflow:hidden;position:relative"><iframe src="carrosseis-officina.html?single=1&p=${post.postIdx}&s=0" scrolling="no" style="width:1080px;height:1440px;border:none;transform:scale(0.222);transform-origin:top left;pointer-events:none;display:block" loading="lazy"></iframe></div>
         <div class="dh-preview-body">
           <div class="dh-preview-title">${post.titulo}</div>
           <div class="dh-preview-meta">${post.slides} slides · ${post.plataformas.map(p=>p.charAt(0).toUpperCase()+p.slice(1)).join(' · ')}</div>
@@ -1770,6 +1800,26 @@ function dhAprovar(btn) {
   btn.innerHTML = '<svg viewBox="0 0 24 24" width="11" height="11" stroke="#fff" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Aprovado';
   const adj = btn.nextElementSibling;
   if(adj){adj.disabled=true;adj.style.opacity='.35';}
+  // Update post status
+  const previewTitle = btn.closest('.dh-preview').querySelector('.dh-preview-title').textContent;
+  const post = RS2_POSTS.find(p => previewTitle.startsWith(p.titulo));
+  if(post && post.status !== 'publicado') { post.status = 'publicado'; renderPosts(); }
+  // Agent confirms production
+  const msgs = document.getElementById('dhMsgs');
+  const typing = document.getElementById('dhTyping');
+  setTimeout(()=>{
+    typing.classList.add('show');
+    msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(()=>{
+      typing.classList.remove('show');
+      const agentEl = document.createElement('div');
+      agentEl.className = 'dh-bbl agent';
+      const postName = post ? post.titulo : 'carrossel';
+      agentEl.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text"><strong>Slides produzidos e prontos.</strong><br/>O carrossel <em>"${postName}"</em> está disponível na lista ao lado — clique nos slides para visualizar em tela cheia.</div><div class="dh-bbl-time">agora</div>`;
+      msgs.insertBefore(agentEl, typing);
+      msgs.scrollTop = msgs.scrollHeight;
+    },1800);
+  },350);
 }
 
 function dhAjustar(titulo) {
