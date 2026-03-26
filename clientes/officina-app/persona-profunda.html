@@ -3062,22 +3062,24 @@ async function rsGerar() {
   if(btn) { btn.disabled=true; btn.textContent='Gerando...'; }
   if(log) log.textContent='Gerando imagem...';
   document.getElementById('rsGenDlBtn').style.display='none';
-  // Modelos de imagem tentados na ordem — experimentais não aparecem no /models endpoint
-  const IMAGE_MODELS = [
-    'gemini-2.0-flash-preview-image-generation',
-    'gemini-2.0-flash-exp-image-generation',
-    'gemini-2.0-flash-exp',
+  // Tentativas: modelo x versão da API
+  const IMAGE_ATTEMPTS = [
+    {model:'gemini-2.0-flash-preview-image-generation', api:'v1beta'},
+    {model:'gemini-2.0-flash-preview-image-generation', api:'v1alpha'},
+    {model:'gemini-2.0-flash-exp-image-generation',     api:'v1beta'},
+    {model:'gemini-2.0-flash-exp-image-generation',     api:'v1alpha'},
+    {model:'gemini-2.0-flash-exp',                      api:'v1beta'},
   ];
 
-  let lastErr = '';
+  const errs = [];
   let generated = false;
 
-  for(const imgModel of IMAGE_MODELS) {
+  for(const {model, api} of IMAGE_ATTEMPTS) {
     if(generated) break;
     try {
-      if(log) log.textContent = `Tentando ${imgModel}...`;
+      if(log) log.textContent = `Tentando ${model} (${api})...`;
       const resp = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${imgModel}:generateContent?key=${key}`,
+        `https://generativelanguage.googleapis.com/${api}/models/${model}:generateContent?key=${key}`,
         {method:'POST', headers:{'Content-Type':'application/json'},
          body: JSON.stringify({
            contents:[{parts:[{text: prompt}]}],
@@ -3085,20 +3087,20 @@ async function rsGerar() {
          })}
       );
       const data = await resp.json();
-      if(data.error) { lastErr = data.error.message; continue; }
+      if(data.error) { errs.push(`${model}(${api}): ${data.error.message}`); continue; }
       const parts = data.candidates?.[0]?.content?.parts||[];
       const imgPart = parts.find(p=>p.inlineData?.mimeType?.startsWith('image'));
-      if(!imgPart) { lastErr = `${imgModel} não retornou imagem`; continue; }
+      if(!imgPart) { errs.push(`${model}(${api}): sem imagem na resposta`); continue; }
       rsGenImg = `data:${imgPart.inlineData.mimeType};base64,${imgPart.inlineData.data}`;
       generated = true;
       document.getElementById('rsGenPreview').innerHTML = `<img src="${rsGenImg}" style="width:100%;border-radius:8px;display:block"/>`;
       document.getElementById('rsGenDlBtn').style.display = 'block';
-      if(log) log.textContent = `Imagem gerada com ${imgModel}.`;
-    } catch(e) { lastErr = e.message; }
+      if(log) log.textContent = `Imagem gerada com ${model}.`;
+    } catch(e) { errs.push(`${model}(${api}): ${e.message}`); }
   }
 
   if(!generated) {
-    if(log) log.innerHTML = `<span style="color:var(--red)">Erro: ${lastErr || 'Nenhum modelo de imagem disponível para esta chave'}</span>`;
+    if(log) log.innerHTML = `<span style="color:var(--red)">Falha em todos os modelos:<br>${errs.map(e=>`• ${e}`).join('<br>')}</span>`;
   }
   if(btn) { btn.disabled=false; btn.innerHTML='<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:#fff;stroke-width:2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Gerar imagem'; }
 }
