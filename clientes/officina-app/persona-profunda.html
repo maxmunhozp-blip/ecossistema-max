@@ -1628,13 +1628,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <!-- COLUNA DIREITA: chat -->
     <div class="chat-col">
       <div class="dh-head">
-        <div class="dh-avatar">DH</div>
+        <div class="dh-avatar">LL</div>
         <div>
-          <div class="dh-name">Design Humano</div>
+          <div class="dh-name">Lucas Lobato</div>
           <div class="dh-sub">
             <span class="dh-dot online"></span>
             <span>Online</span>
-            &nbsp;·&nbsp;Agente de criação
+            &nbsp;·&nbsp;Estratégico de Conteúdo
           </div>
         </div>
       </div>
@@ -1745,7 +1745,18 @@ const DH_HISTORY = [
     {num:4,copy:'<strong>Erro 3 — Escolher só pela proximidade.</strong> Oficina perto não é oficina boa. Filtros de avaliação e verificação valem mais que distância.'},
     {num:5,label:'CTA',copy:'<strong>Encontre a oficina certa pelo critério certo.</strong><br/>Mais de 500 oficinas verificadas em São Paulo.'},
   ]}},
+  {tipo:'agent',when:'26/03 · 09h15',text:'Proposta 4 — <strong>"Antes do Officina App: como era encontrar oficina"</strong> (5 slides · Instagram + Facebook)<br/><span style="font-size:11px;color:var(--text3)">Formato contraste antes/depois — alto potencial de identificação e compartilhamento.</span>',textProp:{titulo:'Antes do app: como era encontrar oficina',postId:'p6',slides:[
+    {num:1,label:'Capa',copy:'<strong>Antes do Officina App:</strong><br/>como era encontrar oficina de confiança.<br/><em style="font-size:.9em;color:var(--text3)">(Dica: era bem pior.)</em>'},
+    {num:2,copy:'<strong>Modo 1 — Indicação da sogra.</strong> Ótimo quando existe. Mas e quando o mecânico dela está ocupado, longe, ou cobrou caro da última vez?'},
+    {num:3,copy:'<strong>Modo 2 — Google Maps e torcida.</strong> Estrelas no Google não dizem se a oficina é honesta no orçamento. Você só descobre depois de deixar o carro.'},
+    {num:4,copy:'<strong>Modo 3 — Entrar em qualquer uma por desespero.</strong> Quando o carro quebra na rua, você não tem tempo de pesquisar. E é aí que chegam as surpresas.'},
+    {num:5,label:'CTA',copy:'<strong>Agora existe uma forma melhor.</strong><br/>Officina App — oficinas verificadas, orçamento antes, sem surpresa.'},
+  ]}},
 ];
+
+const DH_NOME = 'Lucas Lobato';
+const DH_INITIALS = 'LL';
+const DH_ROLE = 'Estratégico de Conteúdo';
 
 let rs2FilterAtivo = 'todos', rs2OpenPost = null;
 let rs2LbPost = null, rs2LbIdx = 0;
@@ -1907,23 +1918,10 @@ function renderPosts() {
       slidesHtml = `<div class="post-slides-inner"><div class="slides-row-label">Slides</div><div class="slides-row">${cards}</div></div>`;
       const ta = p.textoApoio||{};
       textoHtml = `<div class="post-texto-section">
-        <div class="post-texto-head">Textos de apoio</div>
-        <div class="post-texto-fields">
-          <div class="post-texto-row">
-            <span class="post-texto-label">Legenda</span>
-            <textarea class="post-texto-input" rows="3" id="ta-legenda-${p.id}" onchange="saveTexto('${p.id}','legenda',this.value)">${ta.legenda||''}</textarea>
-            <button class="post-texto-copy" onclick="copyTexto('ta-legenda-${p.id}',this)" title="Copiar"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-          </div>
-          <div class="post-texto-row">
-            <span class="post-texto-label">Hashtags</span>
-            <input class="post-texto-input" id="ta-hashtags-${p.id}" value="${(ta.hashtags||'').replace(/"/g,'&quot;')}" onchange="saveTexto('${p.id}','hashtags',this.value)"/>
-            <button class="post-texto-copy" onclick="copyTexto('ta-hashtags-${p.id}',this)" title="Copiar"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-          </div>
-          <div class="post-texto-row">
-            <span class="post-texto-label">CTA / Link</span>
-            <input class="post-texto-input" id="ta-cta-${p.id}" value="${(ta.cta||'').replace(/"/g,'&quot;')}" onchange="saveTexto('${p.id}','cta',this.value)"/>
-            <button class="post-texto-copy" onclick="copyTexto('ta-cta-${p.id}',this)" title="Copiar"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-          </div>
+        <div class="post-texto-head">Legenda</div>
+        <div class="post-texto-row">
+          <textarea class="post-texto-input" rows="3" id="ta-legenda-${p.id}" onchange="saveTexto('${p.id}','legenda',this.value)" placeholder="Escreva a legenda do post...">${ta.legenda||''}</textarea>
+          <button class="post-texto-copy" onclick="copyTexto('ta-legenda-${p.id}',this)" title="Copiar"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
       </div>`;
     }
@@ -2033,7 +2031,7 @@ function dhBubble(m) {
     </div>`;
   })() : '';
   return `<div class="dh-bbl ${m.tipo}">
-    <div class="dh-bbl-who">${m.tipo==='agent'?'Design Humano':'Você'}</div>
+    <div class="dh-bbl-who">${m.tipo==='agent'?DH_NOME:'Você'}</div>
     <div class="dh-bbl-text">${m.text}${prev}${tp}</div>
     <div class="dh-bbl-time">${m.when}</div>
   </div>`;
@@ -2075,7 +2073,7 @@ function dhEnviar() {
           </div>
         </div>
       </div>`;
-      agentEl.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text">${respText}${prev}</div><div class="dh-bbl-time">agora</div>`;
+      agentEl.innerHTML = `${"<div class=\"dh-bbl-who\">" + DH_NOME + "</div>"}<div class="dh-bbl-text">${respText}${prev}</div><div class="dh-bbl-time">agora</div>`;
       msgs.insertBefore(agentEl, typing);
       msgs.scrollTop = msgs.scrollHeight;
       dhSending = false;
@@ -2120,14 +2118,14 @@ function dhAprovar(btn) {
           if(idx < steps.length - 1) {
             const el = document.createElement('div');
             el.className = 'dh-bbl agent';
-            el.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
+            el.innerHTML = `${"<div class=\"dh-bbl-who\">" + DH_NOME + "</div>"}<div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
             msgs.insertBefore(el, typing);
           } else {
             // Final: atualiza status + mensagem de conclusão
             if(post && post.status !== 'publicado') { post.status = 'publicado'; renderPosts(); }
             const el = document.createElement('div');
             el.className = 'dh-bbl agent';
-            el.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text"><strong>Carrossel pronto.</strong> Os ${n} slides estão disponíveis na lista ao lado. Clique em qualquer slide para visualizar em tela cheia antes de publicar.</div><div class="dh-bbl-time">agora</div>`;
+            el.innerHTML = `${"<div class=\"dh-bbl-who\">" + DH_NOME + "</div>"}<div class="dh-bbl-text"><strong>Carrossel pronto.</strong> Os ${n} slides estão disponíveis na lista ao lado. Clique em qualquer slide para visualizar em tela cheia antes de publicar.</div><div class="dh-bbl-time">agora</div>`;
             msgs.insertBefore(el, typing);
           }
           msgs.scrollTop = msgs.scrollHeight;
@@ -2170,11 +2168,11 @@ function dhAprovarTexto(btn, postId) {
           const el = document.createElement('div');
           el.className = 'dh-bbl agent';
           if(idx < steps.length - 1) {
-            el.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
+            el.innerHTML = `${"<div class=\"dh-bbl-who\">" + DH_NOME + "</div>"}<div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
           } else {
             if(post) { post.status = 'revisao'; renderPosts(); }
             const prevPost2 = post || RS2_POSTS[0];
-            el.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text"><strong>Carrossel pronto para revisão.</strong> Os ${n} slides foram produzidos. Confira ao lado e aprove para publicar.
+            el.innerHTML = `${"<div class=\"dh-bbl-who\">" + DH_NOME + "</div>"}<div class="dh-bbl-text"><strong>Carrossel pronto para revisão.</strong> Os ${n} slides foram produzidos. Confira ao lado e aprove para publicar.
               <div class="dh-preview" style="margin-top:8px">
                 <div class="dh-preview-thumb" style="overflow:hidden;position:relative"><iframe src="carrosseis-officina.html?single=1&p=${prevPost2.postIdx}&s=0" scrolling="no" style="width:1080px;height:1440px;border:none;transform:scale(0.222);transform-origin:top left;pointer-events:none;display:block" loading="lazy"></iframe></div>
                 <div class="dh-preview-body">
