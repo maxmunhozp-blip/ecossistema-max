@@ -47,6 +47,11 @@ jobs:
               echo "Push feito."
             fi
 
+            # Sync repo → pasta de servir do nginx (garante deploy mesmo se FTP do Hostinger falhar)
+            rsync -a --delete /opt/ecossistema-max-repo/clientes/ /opt/ecosistema-max/clientes/
+            rsync -a --delete /opt/ecossistema-max-repo/assets/ /opt/ecosistema-max/assets/ 2>/dev/null || true
+            echo "Sync VPS ok."
+
       - name: Notifica Telegram
         if: always()
         env:
