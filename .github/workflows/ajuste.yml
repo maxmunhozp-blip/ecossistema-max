@@ -36,7 +36,7 @@ jobs:
             echo "$INSTRUCTION"
             echo "=========================="
 
-            /usr/bin/claude -p "$INSTRUCTION" --dangerously-skip-permissions
+            /usr/bin/claude -p "$INSTRUCTION" --allowedTools "Edit,Write,Read,Bash,Glob,Grep" < /dev/null
 
             git add -A
             if git diff --staged --quiet; then
