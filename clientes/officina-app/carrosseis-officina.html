@@ -788,40 +788,56 @@ if(_qp.get('single')==='1') {
 }
 
 // Inject logo only on first and last slide per post
-const _postSlides = {};
-document.querySelectorAll('.slide[data-post]').forEach(s => {
-  const p = s.dataset.post;
-  if(!_postSlides[p]) _postSlides[p] = [];
-  _postSlides[p].push(s);
-});
-Object.values(_postSlides).forEach(slides => {
-  const firstSlide = slides[0];
-  const lastSlide = slides.length > 1 ? slides[slides.length-1] : null;
+function _injectLogos() {
+  const _postSlides = {};
+  document.querySelectorAll('.slide[data-post]').forEach(s => {
+    const p = s.dataset.post;
+    if(!_postSlides[p]) _postSlides[p] = [];
+    _postSlides[p].push(s);
+  });
+  Object.entries(_postSlides).forEach(([postKey, slides]) => {
+    const firstSlide = slides[0];
+    const lastSlide = slides.length > 1 ? slides[slides.length-1] : null;
 
-  const injectLogo = (slide, isFirst) => {
-    if(!slide || slide.querySelector('.slide-logo-inject')) return;
-    const cls = slide.className;
-    const isDark = cls.includes('p1-s2')||cls.includes('p1-s5')||cls.includes('p2-s3')
-      ||cls.includes('p2-s6')||cls.includes('p3-s1')||cls.includes('p4-s1')
-      ||cls.includes('p5-s2')||cls.includes('p5-s5');
-    // Dark bg → logo-amber (amber icon + white text legível)
-    // Light bg → logo-teal (ícone teal, mais adequado para fundo claro)
-    const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
-    const logo = document.createElement('div');
-    logo.className = 'slide-logo-inject';
-    // First slide: top-right (evita sobrepor conteúdo que fica no lado esquerdo)
-    // Last slide: bottom-right
-    const pos = isFirst
-      ? 'top:64px;right:72px'
-      : 'bottom:72px;right:72px';
-    logo.style.cssText = `position:absolute;${pos};opacity:1;pointer-events:none;z-index:10`;
-    logo.innerHTML = `<img src="${logoSrc}" style="height:126px;object-fit:contain;display:block"/>`;
-    slide.appendChild(logo);
-  };
+    const injectLogo = (slide, isFirst, slideIndex) => {
+      if(!slide || slide.querySelector('.slide-logo-inject')) return;
 
-  injectLogo(firstSlide, true);
-  if(lastSlide) injectLogo(lastSlide, false);
-});
+      // Post 0, slide 0: círculo laranja com logo branco SVG
+      if(postKey === '0' && slideIndex === 0) {
+        // Remove logo-officina-black.svg se existir
+        slide.querySelectorAll('img[src="assets/logo-officina-black.svg"]').forEach(el => el.remove());
+        const badge = document.createElement('div');
+        badge.className = 'slide-logo-inject';
+        badge.style.cssText = 'position:absolute;top:64px;right:72px;width:88px;height:88px;border-radius:50%;background:#FF6600;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:10';
+        badge.innerHTML = '<img src="assets/logo-officina-white.svg" style="width:60px;display:block"/>';
+        slide.appendChild(badge);
+        return;
+      }
+
+      const cls = slide.className;
+      const isDark = cls.includes('p1-s2')||cls.includes('p1-s5')||cls.includes('p2-s3')
+        ||cls.includes('p2-s6')||cls.includes('p3-s1')||cls.includes('p4-s1')
+        ||cls.includes('p5-s2')||cls.includes('p5-s5');
+      // Dark bg → logo-amber (amber icon + white text legível)
+      // Light bg → logo-teal (ícone teal, mais adequado para fundo claro)
+      const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
+      const logo = document.createElement('div');
+      logo.className = 'slide-logo-inject';
+      // First slide: top-right (evita sobrepor conteúdo que fica no lado esquerdo)
+      // Last slide: bottom-right
+      const pos = isFirst
+        ? 'top:64px;right:72px'
+        : 'bottom:72px;right:72px';
+      logo.style.cssText = `position:absolute;${pos};opacity:1;pointer-events:none;z-index:10`;
+      logo.innerHTML = `<img src="${logoSrc}" style="height:126px;object-fit:contain;display:block"/>`;
+      slide.appendChild(logo);
+    };
+
+    injectLogo(firstSlide, true, 0);
+    if(lastSlide) injectLogo(lastSlide, false, slides.length - 1);
+  });
+}
+_injectLogos();
 
 
 
