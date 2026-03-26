@@ -89,7 +89,8 @@ tbody tr:hover{background:var(--surface-alt)}
 tbody td{padding:13px 16px;font-size:13px;color:var(--text);vertical-align:middle}
 tbody td:first-child{width:32px;padding-right:0}
 .client-info{display:flex;align-items:center;gap:10px}
-.client-avatar{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.client-avatar{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.client-avatar img{width:100%;height:100%;object-fit:contain;padding:4px}
 .client-name{font-weight:700;color:var(--text-dark);font-size:13px}
 .client-segment{font-size:11px;color:var(--text-muted)}
 .status-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
@@ -165,6 +166,14 @@ tbody td:first-child{width:32px;padding-right:0}
 
 footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-size:12px;color:var(--text-dim);margin-top:40px}
 footer a{color:var(--purple);text-decoration:none;font-weight:600}
+/* DASHBOARD DESTAQUE */
+.dashboard-cta{display:flex;align-items:center;gap:14px;padding:14px 18px;background:linear-gradient(135deg,var(--purple-dim),#f0ebff);border:1.5px solid var(--accent-mid);border-radius:10px;text-decoration:none;margin-bottom:20px;transition:all .15s}
+.dashboard-cta:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(124,58,237,.15);transform:translateY(-1px)}
+.dashboard-cta-icon{width:38px;height:38px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.dashboard-cta-text strong{font-size:14px;font-weight:800;color:var(--text-dark);display:block;margin-bottom:2px}
+.dashboard-cta-text span{font-size:12px;color:var(--text-muted)}
+.dashboard-cta-arrow{margin-left:auto;font-size:16px;color:var(--accent)}
+
 /* PAGES LIST */
 .pages-list{display:flex;flex-direction:column;gap:6px;margin-top:0}
 .page-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;text-decoration:none;transition:all .15s;background:var(--surface)}
@@ -174,6 +183,7 @@ footer a{color:var(--purple);text-decoration:none;font-weight:600}
 .page-link-icon.dashboard{background:var(--accent-dim);color:var(--accent)}
 .page-link-icon.landing{background:var(--green-dim);color:var(--green)}
 .page-link-icon.crm{background:var(--blue-dim);color:var(--blue)}
+.page-link-icon.biblioteca{background:#e0f2fe;color:#0369a1}
 .page-link-body{flex:1;min-width:0}
 .page-link-title{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .page-link-desc{font-size:11px;color:var(--text-muted)}
@@ -184,6 +194,7 @@ footer a{color:var(--purple);text-decoration:none;font-weight:600}
 .type-badge.dashboard{background:var(--accent-dim);color:var(--accent)}
 .type-badge.landing{background:var(--green-dim);color:var(--green)}
 .type-badge.crm{background:var(--blue-dim);color:var(--blue)}
+.type-badge.biblioteca{background:#e0f2fe;color:#0369a1}
 @media(max-width:900px){
   .kpi-grid{grid-template-columns:repeat(3,1fr)}
   main{padding:32px 16px 60px}
@@ -434,7 +445,7 @@ let clients = JSON.parse(localStorage.getItem('eco_clients') || 'null') || [
   {id:3,name:'Expo Peças',email:'contato@exopecas.com.br',whatsapp:'',segment:'Autopeças',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
   {id:4,name:'Expo Peças Mulher',email:'contato@expopecasmulher.com.br',whatsapp:'',segment:'Evento / Autopeças',products:['Social Media','Feed','Defesa'],mrr:0,status:'ativo',health:90,created:'2026-01-01',renewal:'-',notes:'Novo feed Marsala em andamento. Defesa estratégica apresentada.',dashboard:'cliente-expo-pecas.html',pages:[{title:'Dashboard Expo Peças Mulher',url:'cliente-expo-pecas.html',type:'dashboard',date:'Mar 2026',desc:'Painel com feed Marsala e defesa estratégica'}],history:[{type:'success',text:'Defesa estratégica do feed Marsala apresentada','date':'Mar 2026'},{type:'info',text:'Transição para identidade visual Marsala iniciada','date':'Mar 2026'}]},
   {id:5,name:'Expo Play',email:'contato@expoplay.com.br',whatsapp:'',segment:'Entretenimento',products:['Social Media'],mrr:0,status:'ativo',health:80,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[{title:'Landing Page ExpoPlay',url:'lp-expoplay.html',type:'landing',date:'Mar 2026',desc:'LP com hero, stats, benefícios, plano premium'}],history:[]},
-  {id:6,name:'Officina APP',email:'contato@officinaapp.com.br',whatsapp:'',segment:'SaaS / App',products:['Social Media','Tráfego'],mrr:0,status:'ativo',health:75,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[{title:'Landing Page Officina',url:'lp-officina.html',type:'landing',date:'Mar 2026',desc:'LP institucional do app'}],history:[]},
+  {id:6,name:'Officina APP',email:'contato@officinaapp.com.br',whatsapp:'',segment:'SaaS / App',products:['Social Media','Tráfego'],mrr:0,status:'ativo',health:75,created:'2026-01-01',renewal:'-',logo:'clientes/officina-app/logo-teal.png',notes:'Persona Profunda + 30 Dimensões + Sexy Canvas criados em Mar/26.',dashboard:'clientes/officina-app/persona-profunda.html',pages:[{title:'Biblioteca de Persona',url:'clientes/officina-app/persona-profunda.html',type:'biblioteca',date:'Mar 2026',desc:'Persona Profunda, 30 Dimensões psicológicas e Sexy Canvas do produto'}],history:[{tag:'criado',author:'Max',when:'25/03 — Mar 2026',note:'Criei o framework completo de persona para o Officina App: Persona Profunda (Thiago Andrade, 34 anos, SP), 30 dimensões psicológicas mapeadas e Sexy Canvas do produto. A biblioteca vai servir como referência para todo criativo, copy, site e agente de IA que tocar nessa conta.'}]},
   {id:7,name:'Grupo PMS',email:'contato@grupopms.com.br',whatsapp:'',segment:'Grupo Empresarial',products:['Social Media','Tráfego'],mrr:0,status:'ativo',health:75,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
   {id:8,name:'Perfil Aline Miranda',email:'aline@alinemiranda.com.br',whatsapp:'',segment:'Perfil Pessoal',products:['Social Media','Copy'],mrr:0,status:'ativo',health:85,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]},
   {id:9,name:'Perfil Paulo Miranda',email:'paulo@paulomiranda.com.br',whatsapp:'',segment:'Perfil Pessoal',products:['Social Media','Copy'],mrr:0,status:'ativo',health:85,created:'2026-01-01',renewal:'-',notes:'',dashboard:'',pages:[],history:[]}
@@ -500,10 +511,15 @@ function healthBar(h){
   return `<div class="score-bar"><div class="score-track"><div class="score-fill" style="width:${h}%;background:${color}"></div></div><span class="score-num">${h}</span></div>`;
 }
 
-function avatar(name,idx){
+function avatar(name,idx,logo){
   const initials = name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
   const bg = COLORS[idx%COLORS.length];
-  return `<div class="client-avatar" style="background:${bg}20;color:${bg}">${initials}</div>`;
+  if(logo){
+    return `<div class="client-avatar" style="background:${bg}12;border:1px solid ${bg}25">
+      <img src="${logo}" alt="${name}" onerror="this.parentElement.innerHTML='<span style=color:${bg};font-weight:800;font-size:13px>${initials}</span>'"/>
+    </div>`;
+  }
+  return `<div class="client-avatar" style="background:${bg}20;color:${bg};border:1px solid ${bg}30;letter-spacing:-.5px">${initials}</div>`;
 }
 
 function renderTable(){
@@ -520,7 +536,7 @@ function renderTable(){
   tbody.innerHTML = slice.map((c,i)=>{
     const globalIdx = clients.indexOf(c);
     return `<tr onclick="openDetail(${c.id})">
-      <td>${avatar(c.name,globalIdx)}</td>
+      <td>${avatar(c.name,globalIdx,c.logo)}</td>
       <td><div class="client-info"><div><div class="client-name">${c.name}</div><div class="client-segment">${c.segment}</div></div></div></td>
       <td>${statusBadge(c.status)}</td>
       <td><div class="product-tags">${productTags(c.products)}</div></td>
@@ -582,7 +598,7 @@ function openDetail(id){
     </div>`;
   }).join('');
 
-  const typeIcon = {relatorio:'📋',dashboard:'📊',landing:'🚀',crm:'🗂️'};
+  const typeIcon = {relatorio:'📋',dashboard:'📊',landing:'🚀',crm:'🗂️',biblioteca:'📚'};
   const pagesHtml = (c.pages||[]).length
     ? (c.pages||[]).map(p=>`
       <a class="page-link" href="${p.url}" target="_blank">
@@ -597,6 +613,16 @@ function openDetail(id){
         </div>
       </a>`).join('')
     : '<div class="pages-empty">Nenhuma página criada ainda.</div>';
+
+  const dashboardCta = c.dashboard
+    ? `<a class="dashboard-cta" href="${c.dashboard}" target="_blank">
+        <div class="dashboard-cta-icon">📊</div>
+        <div class="dashboard-cta-text">
+          <strong>Abrir Dashboard do Cliente</strong>
+          <span>${c.dashboard.split('/').pop().replace('.html','').replace(/-/g,' ')}</span>
+        </div>
+        <span class="dashboard-cta-arrow">→</span>
+      </a>` : '';
 
   document.getElementById('detailPanel').innerHTML = `
     <div class="detail-top">
@@ -615,13 +641,14 @@ function openDetail(id){
         </button>
       </div>
     </div>
+    ${dashboardCta}
     <div class="detail-grid">
       <div class="detail-stat"><div class="detail-stat-label">MRR</div><div class="detail-stat-val">${c.mrr?'R$ '+c.mrr:'—'}</div><div class="detail-stat-sub">${c.status==='trial'?'trial ativo':'/mês'}</div></div>
       <div class="detail-stat"><div class="detail-stat-label">Health Score</div><div class="detail-stat-val" style="color:${c.health>=75?'var(--green)':c.health>=50?'var(--amber)':'var(--red)'}">${c.health}</div><div class="detail-stat-sub">/100</div></div>
       <div class="detail-stat"><div class="detail-stat-label">Cliente desde</div><div class="detail-stat-val" style="font-size:16px">${formatDate(c.created)}</div><div class="detail-stat-sub">próx. renov: ${formatDate(c.renewal)}</div></div>
     </div>
     <div style="margin-bottom:16px">
-      <div class="detail-label">Páginas do Cliente <span style="font-size:11px;color:var(--text-dim);font-weight:400;margin-left:4px">${(c.pages||[]).length} entrega${(c.pages||[]).length!==1?'s':''}</span></div>
+      <div class="detail-label">Biblioteca & Entregas <span style="font-size:11px;color:var(--text-dim);font-weight:400;margin-left:4px">${(c.pages||[]).length} item${(c.pages||[]).length!==1?'s':''}</span></div>
       <div class="pages-list">${pagesHtml}</div>
     </div>
     <div style="margin-bottom:16px">

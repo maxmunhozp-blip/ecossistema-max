@@ -1434,6 +1434,26 @@ function togglePlay() {
   }
   window.open('https://www.instagram.com/tojirosushimooca/', '_blank');
 }
+
+// Auto-load do vídeo via Meta Graph API
+(async function autoLoadVideo() {
+  const PAGE_TOKEN = "EAANnmMK8s8YBRLvceIaFE4J8mcZBpiR9iZBZBozGkpa6MoKwYH6f8AMVKRY61P8sZBX5eUrckRLvi3f3F1IYsZC37Yak1ecZCTjj6ygulSvIa0v8uJonhyB0t8WSV21WAsqnoOp5dueuvQIjzmAI2rcQzEPiUESl4UpVdvrpGiuNm4ke3uoKZBu7zgrBaZCKtFGEMsgQ";
+  const VIDEO_ID = "1606332420647902";
+  try {
+    const resp = await fetch(`https://graph.facebook.com/v19.0/${VIDEO_ID}?fields=source,thumbnails&access_token=${PAGE_TOKEN}`);
+    const data = await resp.json();
+    if (data.source) {
+      injectVideo(data.source);
+    } else if (data.thumbnails && data.thumbnails.data && data.thumbnails.data[0]) {
+      const area = document.getElementById('phoneVideoArea');
+      area.style.backgroundImage = `url('${data.thumbnails.data[0].uri}')`;
+      area.style.backgroundSize = 'cover';
+      area.style.backgroundPosition = 'center';
+    }
+  } catch(e) {
+    // silently fail — user can still drag-and-drop
+  }
+})();
 </script>
 </body>
 </html>

@@ -20,6 +20,11 @@
     { "id": "custo_por_conversa", "label": "Menor custo por conversa", "desc": "no melhor anúncio do mês", "formato": "moeda" },
     { "id": "visualizacoes_video", "label": "Visualizações de vídeo", "desc": "pessoas que assistiram o anúncio", "formato": "numero" }
   ],
+  "meta_api": {
+    "page_id": "283420248179716",
+    "page_token": "EAANnmMK8s8YBRLvceIaFE4J8mcZBpiR9iZBZBozGkpa6MoKwYH6f8AMVKRY61P8sZBX5eUrckRLvi3f3F1IYsZC37Yak1ecZCTjj6ygulSvIa0v8uJonhyB0t8WSV21WAsqnoOp5dueuvQIjzmAI2rcQzEPiUESl4UpVdvrpGiuNm4ke3uoKZBu7zgrBaZCKtFGEMsgQ",
+    "video_id": "1606332420647902"
+  },
   "criativo": {
     "titulo": "Chamada ao Ambiente",
     "video_url": "",

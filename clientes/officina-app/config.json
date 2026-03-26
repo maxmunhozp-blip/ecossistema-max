@@ -1,0 +1,29 @@
+{
+  "slug": "officina-app",
+  "nome": "Officina App",
+  "clientName": "Officina",
+  "segmento": "Marketplace Automotivo",
+  "cidade": "Brasil",
+  "gestor": "Tracktor",
+  "url": "https://officinaapp.com.br",
+  "instagram": "officinaapp",
+  "cores": {
+    "primaria": "#3DA9A5",
+    "secundaria": "#F5A623",
+    "fundo": "#F0F7F7",
+    "superficie": "#FFFFFF",
+    "texto": "#1A2424",
+    "muted": "#6A8888"
+  },
+  "persona": {
+    "nome": "Thiago Andrade",
+    "idade": 34,
+    "cargo": "Proprietário de Veículo",
+    "cidade": "São Paulo — Zona Leste",
+    "renda": "R$4.800/mês",
+    "frase": "Meu carro deu problema. Preciso de uma oficina — mas qual? A última vez que fui num lugar que não conhecia, saí pagando o dobro."
+  },
+  "biblioteca": [
+    { "titulo": "Persona Profunda + 30 Dimensões + Sexy Canvas", "url": "persona-profunda.html", "descricao": "Framework completo de persona para uso em criativos, copy, sites e agentes de IA." }
+  ]
+}

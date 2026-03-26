@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Officina App — Biblioteca de Persona</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#3DA9A5;
+  --teal-dark:#2A8A86;
+  --teal-light:#5CC4C0;
+  --teal-dim:rgba(61,169,165,.1);
+  --teal-mid:rgba(61,169,165,.2);
+  --amber:#F5A623;
+  --amber-dark:#D48A10;
+  --amber-dim:rgba(245,166,35,.1);
+  --amber-mid:rgba(245,166,35,.22);
+  --bg:#F7FAFA;
+  --surface:#FFFFFF;
+  --surface2:#F0F7F7;
+  --border:#E2EEEE;
+  --border2:#D4E8E8;
+  --text:#1A2424;
+  --text2:#3A5050;
+  --text3:#6A8888;
+  --text4:#9AAFAF;
+  --red:#E05252;
+  --green:#3DB87A;
+  --shadow:0 1px 4px rgba(61,169,165,.08),0 2px 10px rgba(0,0,0,.05);
+  --shadow-lg:0 4px 24px rgba(61,169,165,.12),0 8px 32px rgba(0,0,0,.07);
+}
+
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(247,250,250,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;height:58px;gap:20px}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-logo-icon{width:32px;height:32px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.nav-logo-icon svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2}
+.nav-logo-text{font-size:15px;font-weight:800;color:var(--teal);letter-spacing:-.3px}
+.nav-logo-sub{font-size:11px;color:var(--text3);font-weight:400}
+.nav-badge{background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-mid);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.nav-url{font-size:11px;color:var(--text3)}
+
+/* ── TABS ── */
+.tabs-wrap{background:rgba(247,250,250,.97);border-bottom:1px solid var(--border);position:sticky;top:58px;z-index:90}
+.tabs{display:flex;padding:0 28px;overflow-x:auto;scrollbar-width:none;max-width:1200px;margin:0 auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:13px 16px;font-size:13px;font-weight:500;color:var(--text3);border:none;background:none;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:6px}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal);font-weight:600}
+.tab-dot{width:7px;height:7px;border-radius:50%}
+
+/* ── LAYOUT ── */
+.content{max-width:1200px;margin:0 auto;padding:32px 28px}
+.section{display:none}.section.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO PERSONA ── */
+.hero-card{background:linear-gradient(135deg,var(--teal) 0%,var(--teal-dark) 100%);border-radius:20px;padding:36px;margin-bottom:28px;color:#fff;position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:rgba(255,255,255,.07);border-radius:50%;pointer-events:none}
+.hero-card::after{content:'';position:absolute;bottom:-40px;left:40px;width:160px;height:160px;background:rgba(245,166,35,.12);border-radius:50%;pointer-events:none}
+.hero-inner{position:relative;z-index:1;display:flex;align-items:flex-start;gap:28px}
+.avatar{width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;border:3px solid rgba(255,255,255,.35);flex-shrink:0;color:#fff;letter-spacing:-1px}
+.hero-info h1{font-size:26px;font-weight:900;letter-spacing:-.5px;margin-bottom:3px}
+.hero-info .sub{font-size:14px;opacity:.8;margin-bottom:12px}
+.hero-quote{background:rgba(0,0,0,.2);border-left:3px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;font-size:14px;font-style:italic;line-height:1.6;max-width:540px;color:rgba(255,255,255,.9)}
+.hero-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.hero-tag{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600}
+.hero-tag.amber{background:rgba(245,166,35,.25);border-color:rgba(245,166,35,.4);color:#FFD07A}
+.hero-stats{margin-left:auto;display:flex;flex-direction:column;gap:10px;flex-shrink:0}
+.stat-pill{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 20px;text-align:center;min-width:120px}
+.stat-pill strong{display:block;font-size:22px;font-weight:900;color:#fff}
+.stat-pill span{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.5px}
+
+/* ── CARDS GERAIS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;box-shadow:var(--shadow)}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.card-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.card-icon.teal{background:var(--teal-dim)}
+.card-icon.amber{background:var(--amber-dim)}
+.card-icon.red{background:rgba(224,82,82,.1)}
+.card-icon.green{background:rgba(61,184,122,.1)}
+.card-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.1px}
+.card-subtitle{font-size:11px;color:var(--text3);font-weight:400}
+.list-items{list-style:none;display:flex;flex-direction:column;gap:5px}
+.list-items li{font-size:12.5px;color:var(--text2);padding:6px 10px;background:var(--surface2);border-radius:7px;line-height:1.45}
+.list-items li::before{content:'·';color:var(--teal);font-weight:700;margin-right:6px}
+
+/* ── SECTION TITLE ── */
+.section-header{margin-bottom:24px}
+.section-title{font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.section-desc{font-size:13px;color:var(--text3);margin-top:4px}
+
+/* ── FRASE PERSONA ── */
+.frase-box{background:linear-gradient(135deg,var(--teal-dim),var(--amber-dim));border:1px solid var(--teal-mid);border-radius:12px;padding:16px 20px;font-size:14px;font-style:italic;color:var(--text);line-height:1.65;margin-bottom:20px}
+.frase-box strong{color:var(--teal);font-style:normal}
+
+/* ── PROFILE BLOCK ── */
+.profile-grid{display:grid;grid-template-columns:280px 1fr;gap:20px;margin-bottom:24px}
+.profile-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;box-shadow:var(--shadow)}
+.profile-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)}
+.profile-row:last-child{border-bottom:none}
+.profile-label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.profile-value{font-size:12.5px;color:var(--text);font-weight:500;text-align:right}
+
+/* ── ROTINA BLOCK ── */
+.rotina-list{display:flex;flex-direction:column;gap:10px}
+.rotina-item{display:flex;gap:14px;align-items:flex-start}
+.rotina-hora{font-size:11px;font-weight:700;color:var(--teal);min-width:36px;padding-top:2px}
+.rotina-text{font-size:13px;color:var(--text2);line-height:1.5}
+
+/* ── 30 DIMENSOES ── */
+.dimensao-section{margin-bottom:32px}
+.bloco-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--border)}
+.bloco-letter{width:36px;height:36px;border-radius:10px;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;flex-shrink:0}
+.bloco-letter.amber{background:var(--amber)}
+.bloco-letter.red{background:var(--red)}
+.bloco-letter.green{background:var(--green)}
+.bloco-letter.gray{background:var(--text3)}
+.bloco-title{font-size:15px;font-weight:800;color:var(--text)}
+.bloco-sub{font-size:12px;color:var(--text3)}
+.dim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.dim-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;transition:border-color .2s,box-shadow .2s}
+.dim-card:hover{border-color:var(--teal-mid);box-shadow:0 2px 12px rgba(61,169,165,.1)}
+.dim-num{font-size:10px;font-weight:700;color:var(--text4);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.dim-name{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px}
+.dim-items{list-style:none;display:flex;flex-direction:column;gap:3px}
+.dim-items li{font-size:11.5px;color:var(--text2);padding:3px 7px;background:var(--surface2);border-radius:5px;line-height:1.4}
+.dim-items li::before{content:'–';color:var(--text4);margin-right:5px}
+
+/* ── SEXY CANVAS ── */
+.canvas-hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;box-shadow:var(--shadow)}
+.canvas-hero h2{font-size:22px;font-weight:900;color:var(--text);letter-spacing:-.4px;margin-bottom:4px}
+.canvas-hero .tagline{font-size:15px;color:var(--teal);font-weight:600;margin-bottom:12px}
+.canvas-hero .desc{font-size:14px;color:var(--text2);line-height:1.65;max-width:700px}
+.canvas-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.ctag{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
+.ctag-teal{background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-mid)}
+.ctag-amber{background:var(--amber-dim);color:var(--amber-dark);border:1px solid var(--amber-mid)}
+
+.canvas-block{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.canvas-block-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.canvas-block-title .dot{width:8px;height:8px;border-radius:50%;background:var(--teal)}
+.canvas-block-title .dot.amber{background:var(--amber)}
+.canvas-block-title .dot.red{background:var(--red)}
+.canvas-big-text{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.4px;margin-bottom:12px}
+.canvas-kv{display:flex;flex-direction:column;gap:8px}
+.canvas-kv-item{background:var(--surface2);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text2);line-height:1.5;border-left:3px solid var(--teal)}
+.canvas-kv-item.amber{border-left-color:var(--amber)}
+.canvas-kv-item.red{border-left-color:var(--red)}
+.canvas-kv-item strong{color:var(--text);font-weight:700;display:block;font-size:12px;margin-bottom:2px}
+.canvas-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.canvas-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+
+/* ── PALETA ── */
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.color-swatch{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.swatch-block{height:80px}
+.swatch-info{padding:12px 14px}
+.swatch-name{font-size:13px;font-weight:700;color:var(--text)}
+.swatch-hex{font-size:11px;color:var(--text3);font-family:monospace;margin-top:2px}
+.swatch-use{font-size:11px;color:var(--text3);margin-top:4px}
+.font-sample{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:12px;box-shadow:var(--shadow)}
+.font-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:10px}
+.font-display{font-size:32px;font-weight:900;color:var(--teal);letter-spacing:-.5px;line-height:1}
+.font-body{font-size:14px;color:var(--text2);margin-top:6px;line-height:1.6}
+
+/* ── TAGS / BADGES ── */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
+.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-mid)}
+.badge-amber{background:var(--amber-dim);color:var(--amber-dark);border:1px solid var(--amber-mid)}
+.badge-red{background:rgba(224,82,82,.1);color:var(--red);border:1px solid rgba(224,82,82,.25)}
+.badge-green{background:rgba(61,184,122,.1);color:var(--green);border:1px solid rgba(61,184,122,.25)}
+
+/* ── HEADLINES / FRASES ── */
+.headline-list{display:flex;flex-direction:column;gap:8px}
+.headline-item{background:var(--surface2);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;font-weight:600;color:var(--text);line-height:1.4}
+.headline-item.amber{border-left-color:var(--amber)}
+.headline-item.red{border-left-color:var(--red)}
+
+/* ── JOURNEY TABLE ── */
+.journey-table{width:100%;border-collapse:collapse}
+.journey-table th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);padding:8px 12px;border-bottom:2px solid var(--border);text-align:left}
+.journey-table td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2);vertical-align:top;line-height:1.5}
+.journey-table tr:last-child td{border-bottom:none}
+.journey-table tr:hover td{background:var(--surface2)}
+.jt-stage{font-weight:700;color:var(--teal)}
+
+/* ── SCROLL HINT ── */
+.scroll-fade{position:relative}
+.scroll-fade::after{content:'';position:absolute;right:0;top:0;width:40px;height:100%;background:linear-gradient(90deg,transparent,var(--bg));pointer-events:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .grid-2,.grid-3,.canvas-2col,.canvas-3col{grid-template-columns:1fr}
+  .profile-grid{grid-template-columns:1fr}
+  .hero-inner{flex-direction:column}
+  .hero-stats{margin-left:0;flex-direction:row;flex-wrap:wrap}
+  .dim-grid{grid-template-columns:1fr}
+  .content{padding:20px 16px}
+  .nav{padding:0 16px}
+  .tabs{padding:0 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h13.56L21 12l-4.44 5H3"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="17.5" cy="17.5" r="1.5"/></svg>
+    </div>
+    <div>
+      <div class="nav-logo-text">officina</div>
+      <div class="nav-logo-sub">Biblioteca de Persona</div>
+    </div>
+  </a>
+  <span class="nav-badge">v1.0 — Mar 2026</span>
+  <div class="nav-right">
+    <span class="nav-url">officinaapp.com.br</span>
+  </div>
+</nav>
+
+<!-- ── TABS ── -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('persona')"><span class="tab-dot" style="background:var(--teal)"></span>Persona Profunda</button>
+    <button class="tab" onclick="showTab('dimensoes')"><span class="tab-dot" style="background:var(--amber)"></span>30 Dimensões</button>
+    <button class="tab" onclick="showTab('canvas')"><span class="tab-dot" style="background:var(--red)"></span>Sexy Canvas</button>
+    <button class="tab" onclick="showTab('identidade')"><span class="tab-dot" style="background:var(--text3)"></span>Identidade Visual</button>
+  </div>
+</div>
+
+<!-- ════════════════ PERSONA PROFUNDA ════════════════ -->
+<div class="content">
+<div id="tab-persona" class="section active">
+
+  <!-- HERO -->
+  <div class="hero-card">
+    <div class="hero-inner">
+      <div class="avatar">TA</div>
+      <div class="hero-info" style="flex:1">
+        <div style="font-size:12px;opacity:.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">ICP Principal — Proprietário de Veículo</div>
+        <h1>Thiago Andrade</h1>
+        <div class="sub">34 anos · Analista de TI · São Paulo (Zona Leste)</div>
+        <div class="hero-quote">
+          "Meu carro deu problema. Preciso levar em alguma oficina — mas qual? A última vez que levei num lugar que não conhecia, saí pagando o dobro do que devia."
+        </div>
+        <div class="hero-tags">
+          <span class="hero-tag">Onix 2021</span>
+          <span class="hero-tag">Financia o carro</span>
+          <span class="hero-tag amber">Medo de ser roubado</span>
+          <span class="hero-tag">Usa apps para tudo</span>
+          <span class="hero-tag">Não entende de carro</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-pill"><strong>R$4.800</strong><span>Renda mensal</span></div>
+        <div class="stat-pill"><strong>3x</strong><span>Já foi enganado</span></div>
+        <div class="stat-pill"><strong>87%</strong><span>Usam apps p/ serviços</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRASE -->
+  <div class="frase-box">
+    <strong>"O problema não é o preço da manutenção — é não saber se está pagando o preço certo."</strong><br/>
+    Thiago não é avaro. Ele paga contas, parcela carro, sustenta a família. O que o paralisa é a <strong>incerteza</strong> — não ter como saber se aquele mecânico que não conhece está sendo honesto. O Officina App não vende barato. Vende <strong>confiança</strong>.
+  </div>
+
+  <!-- PERFIL + ROTINA -->
+  <div class="profile-grid">
+    <div class="profile-card">
+      <div class="card-header" style="border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:14px">
+        <div class="card-icon teal">👤</div>
+        <div>
+          <div class="card-title">Perfil Demográfico</div>
+          <div class="card-subtitle">Quem é na vida real</div>
+        </div>
+      </div>
+      <div class="profile-row"><span class="profile-label">Idade</span><span class="profile-value">28–42 anos (média 34)</span></div>
+      <div class="profile-row"><span class="profile-label">Cidade</span><span class="profile-value">São Paulo, Campinas, BH, Curitiba</span></div>
+      <div class="profile-row"><span class="profile-label">Renda</span><span class="profile-value">R$3.500 – R$8.000/mês</span></div>
+      <div class="profile-row"><span class="profile-label">Escolaridade</span><span class="profile-value">Superior completo ou cursando</span></div>
+      <div class="profile-row"><span class="profile-label">Veículo</span><span class="profile-value">Popular (Onix, Polo, HB20)</span></div>
+      <div class="profile-row"><span class="profile-label">Perfil familiar</span><span class="profile-value">Solteiro ou casado, 0–2 filhos</span></div>
+      <div class="profile-row"><span class="profile-label">Uso do carro</span><span class="profile-value">Trabalho diário + família</span></div>
+      <div class="profile-row"><span class="profile-label">Conhecimento auto</span><span class="profile-value">Básico — troca óleo só</span></div>
+      <div class="profile-row"><span class="profile-label">Compra apps?</span><span class="profile-value">Sim, usa iFood, Uber, 99</span></div>
+    </div>
+
+    <div class="profile-card">
+      <div class="card-header" style="border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:14px">
+        <div class="card-icon amber">⏰</div>
+        <div>
+          <div class="card-title">Dia Típico do Thiago</div>
+          <div class="card-subtitle">Quando o carro aparece na cabeça dele</div>
+        </div>
+      </div>
+      <div class="rotina-list">
+        <div class="rotina-item"><span class="rotina-hora">06h30</span><span class="rotina-text">Sai de casa com o carro. Ouviu um barulho ontem, está prestando atenção hoje. "Será que é algo sério?"</span></div>
+        <div class="rotina-item"><span class="rotina-hora">12h00</span><span class="rotina-text">No almoço pesquisa no celular: "barulho no carro ao frear" + "oficina mecânica perto de mim". Resultado: review ruins, sem preço, sem confiança.</span></div>
+        <div class="rotina-item"><span class="rotina-hora">18h30</span><span class="rotina-text">Liga para o amigo que "entende de carro" pedindo indicação. Amigo indica uma oficina longe.</span></div>
+        <div class="rotina-item"><span class="rotina-hora">20h00</span><span class="rotina-text">Pesquisa no Google Maps por oficinas. Vê 3 estrelas, fotos ruins. Fica inseguro, adia a decisão.</span></div>
+        <div class="rotina-item"><span class="rotina-hora">22h30</span><span class="rotina-text">No sofá, pensa: "Preciso resolver isso antes de piorar". Abre o celular, procura uma solução que dê confiança.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DORES + DESEJOS -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon red">💥</div>
+        <div><div class="card-title">Dores Principais</div><div class="card-subtitle">O que tira o sono</div></div>
+      </div>
+      <ul class="list-items">
+        <li>Não saber distinguir uma oficina boa de uma ruim antes de entrar</li>
+        <li>Medo de pagar por serviços que não precisava</li>
+        <li>Ser tratado como leigo (porque é) e ser explorado por isso</li>
+        <li>O carro quebrar no meio da semana e travar a rotina inteira</li>
+        <li>Gastar R$800 em algo que deveria custar R$300</li>
+        <li>Não ter como comparar preços sem parecer inconveniente</li>
+        <li>Voltar para buscar o carro e ver cobranças surpresa no orçamento</li>
+        <li>Perder o dia de trabalho esperando orçamento que nunca chega</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green">✨</div>
+        <div><div class="card-title">Desejos Principais</div><div class="card-subtitle">O que ele quer conquistar</div></div>
+      </div>
+      <ul class="list-items">
+        <li>Ter uma oficina de confiança que ele já conhece antes de precisar</li>
+        <li>Saber antes de chegar quanto vai custar mais ou menos</li>
+        <li>Resolver o problema do carro sem perder o dia de trabalho</li>
+        <li>Sentir que está no controle da situação, não na mão do mecânico</li>
+        <li>Receber o diagnóstico de forma clara, sem jargão técnico</li>
+        <li>Não precisar ficar ligando e esperando retorno na oficina</li>
+        <li>Poder avaliar o serviço feito para ajudar outros como ele</li>
+        <li>Ter paz de espírito de que o carro está bem cuidado</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- GATILHOS + FRASES -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon amber">⚡</div>
+        <div><div class="card-title">Gatilhos de Compra</div><div class="card-subtitle">O que faz ele agir agora</div></div>
+      </div>
+      <ul class="list-items">
+        <li>Barulho novo no carro ou luz de alerta acendendo</li>
+        <li>Revisão de manutenção atrasada (sabe que precisa fazer)</li>
+        <li>Amigo ou colega recomendou o app diretamente</li>
+        <li>Viu review com nota alta e avaliações detalhadas e confiou</li>
+        <li>Precisa resolver urgente e não tem indicação de alguém</li>
+        <li>A última oficina decepcionou e quer mudar</li>
+        <li>Comprou carro novo/usado e quer oficina para revisão geral</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon teal">💬</div>
+        <div><div class="card-title">Frases Reais da Persona</div><div class="card-subtitle">Como ele fala sobre o problema</div></div>
+      </div>
+      <ul class="list-items">
+        <li>"Não entendo de carro, aí fica difícil saber se me estão enganando"</li>
+        <li>"Preciso de uma oficina boa, alguém tem indicação?"</li>
+        <li>"Levei numa que não conhecia e saí pagando o dobro"</li>
+        <li>"Queria saber o preço antes de levar pra não ter surpresa"</li>
+        <li>"Fica aquele mecânico falando em coisa que não entendo"</li>
+        <li>"Já perdi dia de trabalho esperando retorno de orçamento"</li>
+        <li>"Minha oficina é a que meu pai usa, mas fica longe"</li>
+        <li>"Confio mais em app com review do que em panfleto"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- JORNADA -->
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-header">
+      <div class="card-icon teal">🗺️</div>
+      <div><div class="card-title">Jornada do Usuário</div><div class="card-subtitle">Do problema à confiança</div></div>
+    </div>
+    <table class="journey-table">
+      <thead><tr><th>Etapa</th><th>Estado Mental</th><th>Ação</th><th>Oportunidade do Officina</th></tr></thead>
+      <tbody>
+        <tr><td class="jt-stage">Consciência do problema</td><td>Ansioso, com barulho novo no carro</td><td>Pesquisa no Google, pergunta no WhatsApp</td><td>Ser encontrado no momento de busca</td></tr>
+        <tr><td class="jt-stage">Busca por solução</td><td>Frustrado com resultados genéricos</td><td>Abre Google Maps, vê avaliações inconsistentes</td><td>Aparecer com reviews reais e preços transparentes</td></tr>
+        <tr><td class="jt-stage">Consideração</td><td>Desconfiado, comparando opções</td><td>Lê avaliações, olha fotos, tenta ligar</td><td>Mostrar oficinas verificadas com perfil completo</td></tr>
+        <tr><td class="jt-stage">Decisão</td><td>Quer segurança antes de decidir</td><td>Escolhe a opção com mais credibilidade</td><td>CTA claro: Solicitar orçamento / Agendar visita</td></tr>
+        <tr><td class="jt-stage">Pós-serviço</td><td>Aliviado (ou frustrado) com o resultado</td><td>Avalia ou não avalia a experiência</td><td>Incentivar avaliação e fidelização com o app</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ANTI PERSONA -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon red">🚫</div>
+      <div><div class="card-title">Anti-Persona — Quem NÃO é o cliente ideal</div></div>
+    </div>
+    <div class="grid-3" style="margin-top:4px">
+      <ul class="list-items">
+        <li>Dono de carro que tem mecânico de confiança fixo há anos e não troca</li>
+        <li>Pessoa que compara apenas preço e ignora qualidade e avaliações</li>
+      </ul>
+      <ul class="list-items">
+        <li>Motorista que nunca faz manutenção preventiva ("só levo quando quebra")</li>
+        <li>Entusiasta que faz as revisões sozinho e só usa peças</li>
+      </ul>
+      <ul class="list-items">
+        <li>Frotas corporativas com contratos fixos de manutenção</li>
+        <li>Pessoa sem smartphones ou acesso digital regular</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /tab-persona -->
+
+
+<!-- ════════════════ 30 DIMENSÕES ════════════════ -->
+<div id="tab-dimensoes" class="section">
+
+  <div class="section-header">
+    <div class="section-title">30 Dimensões Psicológicas — Thiago Andrade</div>
+    <div class="section-desc">Framework completo de mapeamento psicológico da persona. Use isso antes de criar qualquer copy, criativo ou campanha.</div>
+  </div>
+
+  <!-- BLOCO A: SOMBRAS E MEDOS -->
+  <div class="dimensao-section">
+    <div class="bloco-header">
+      <div class="bloco-letter red">A</div>
+      <div><div class="bloco-title">Sombras e Medos</div><div class="bloco-sub">Dimensões 1–6 · O que assombra a persona</div></div>
+    </div>
+    <div class="dim-grid">
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 1</div>
+        <div class="dim-name">Sombras Existenciais</div>
+        <ul class="dim-items">
+          <li>Medo de nunca ter controle sobre algo tão importante (o carro)</li>
+          <li>Sensação de ser sempre o leigo na relação com o especialista</li>
+          <li>Angústia de que cada problema do carro vai destruir o orçamento</li>
+          <li>Vergonha de não entender o que o mecânico está explicando</li>
+          <li>Medo de tomar decisão errada e piorar o problema</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 2</div>
+        <div class="dim-name">Medos Fundamentais</div>
+        <ul class="dim-items">
+          <li>Ser cobrado por serviços que não precisava</li>
+          <li>O carro quebrar no meio da via ou em lugar perigoso</li>
+          <li>Perder compromisso importante por problema no carro</li>
+          <li>Gastar a reserva de emergência com mecânica inesperada</li>
+          <li>A oficina "mexer em mais coisa" sem autorização</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 3</div>
+        <div class="dim-name">Medos Ocultos</div>
+        <ul class="dim-items">
+          <li>Que o mecânico perceba que não entende nada e explore isso</li>
+          <li>Que o carro esteja pior do que parece e custará muito mais</li>
+          <li>Que esteja deixando problema acumular por procrastinação</li>
+          <li>Que o carro que financiou vire fonte de dívida extra</li>
+          <li>Ser visto como ingênuo pelos filhos ou companheira</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 4</div>
+        <div class="dim-name">Medos Primordiais</div>
+        <ul class="dim-items">
+          <li>Perda de controle — estar nas mãos de alguém que pode enganar</li>
+          <li>Vulnerabilidade financeira em momento inoportuno</li>
+          <li>Humilhação velada por não conhecer termos técnicos</li>
+          <li>Invisibilidade — ser mais um cliente a ser explorado</li>
+          <li>Dependência — sem carro, sem vida funcionando</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 5</div>
+        <div class="dim-name">Feridas Ancestrais</div>
+        <ul class="dim-items">
+          <li>Cresceu vendo pai/tio levar carro em mecânica e "ser enganado"</li>
+          <li>Aprendeu que especialista tem sempre vantagem sobre o leigo</li>
+          <li>Carregou a crença de que "não existe mecânico honesto"</li>
+          <li>Nunca ninguém ensinou o básico sobre carros — gap geracional</li>
+          <li>Internalizou que problema de carro sempre vira dívida</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 6</div>
+        <div class="dim-name">Feridas Emocionais</div>
+        <ul class="dim-items">
+          <li>Já pagou R$600 por revisão que alguém disse que custava R$200</li>
+          <li>Já autorizou serviço por telefone sem entender e arrependeu</li>
+          <li>Já esperou 3 dias para o carro e a oficina não deu retorno</li>
+          <li>Já levou numa indicação do Google que foi um desastre</li>
+          <li>Já saiu da oficina com o problema resolvido mas com novo barulho</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BLOCO B: DESEJOS E NECESSIDADES -->
+  <div class="dimensao-section">
+    <div class="bloco-header">
+      <div class="bloco-letter" style="background:var(--teal)">B</div>
+      <div><div class="bloco-title">Desejos e Necessidades</div><div class="bloco-sub">Dimensões 7–12 · O que a persona busca no fundo</div></div>
+    </div>
+    <div class="dim-grid">
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 7</div>
+        <div class="dim-name">Necessidades Primais</div>
+        <ul class="dim-items">
+          <li>Segurança — saber que a oficina é confiável antes de entrar</li>
+          <li>Transparência — ver o preço antes, sem surpresa</li>
+          <li>Controle — aprovar cada etapa do serviço</li>
+          <li>Conveniência — resolver pelo celular sem ficar ao telefone</li>
+          <li>Reconhecimento — ser tratado com respeito mesmo sendo leigo</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 8</div>
+        <div class="dim-name">Fantasias Não Realizadas</div>
+        <ul class="dim-items">
+          <li>Ter um "mecânico de confiança" igual seu pai tinha — mas seu</li>
+          <li>Saber quando o carro precisa de revisão antes de quebrar</li>
+          <li>Levar o carro, aprovar o orçamento e retirar — sem surpresa nenhuma</li>
+          <li>Receber o carro limpo e com relatório do que foi feito</li>
+          <li>Ter paz de espírito de que o carro está cuidado por profissionais sérios</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 9</div>
+        <div class="dim-name">Desejos Inconfessáveis</div>
+        <ul class="dim-items">
+          <li>Ser capaz de identificar quando o mecânico está enganando</li>
+          <li>Poder "testar" a honestidade da oficina antes de confiar</li>
+          <li>Não precisar fingir que entende do assunto na frente da família</li>
+          <li>Pagar menos do que quem não pesquisa — vantagem de quem sabe usar apps</li>
+          <li>Que a oficina tenha medo de enganar ele — porque ele vai avaliar</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 10</div>
+        <div class="dim-name">Desejos Nucleares</div>
+        <ul class="dim-items">
+          <li>Paz de espírito — saber que o carro está bem cuidado</li>
+          <li>Ser tratado com dignidade e transparência em toda interação</li>
+          <li>Nunca mais perder dinheiro por desinformação</li>
+          <li>Ter alguém de confiança para o carro como tem para o médico</li>
+          <li>Sentir que tem o controle — mesmo sem entender de mecânica</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 11</div>
+        <div class="dim-name">Necessidades Emocionais Não Expressas</div>
+        <ul class="dim-items">
+          <li>Ser visto como pessoa inteligente que faz boas escolhas</li>
+          <li>Ter a sensação de ter se protegido — não de ter sido salvo</li>
+          <li>Sentir que a tecnologia está do lado dele nessa relação</li>
+          <li>Pertencer a um grupo de pessoas que "sabem como fazer certo"</li>
+          <li>Alivio genuíno — de não carregar mais essa ansiedade</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 12</div>
+        <div class="dim-name">Buscas Infinitas</div>
+        <ul class="dim-items">
+          <li>A oficina perfeita que sempre vai ser honesta, boa e próxima</li>
+          <li>A maneira definitiva de nunca ser enganado num serviço automotivo</li>
+          <li>O momento em que vai entender o suficiente de carro para não ser leigo</li>
+          <li>A certeza absoluta de que o problema do carro está resolvido de vez</li>
+          <li>O app que finalmente resolve tudo — e continua resolvendo</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BLOCO C: MECANISMOS E PADRÕES -->
+  <div class="dimensao-section">
+    <div class="bloco-header">
+      <div class="bloco-letter amber">C</div>
+      <div><div class="bloco-title">Mecanismos e Padrões</div><div class="bloco-sub">Dimensões 13–18 · Como a persona age e se comporta</div></div>
+    </div>
+    <div class="dim-grid">
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 13</div>
+        <div class="dim-name">Compensações Inconscientes</div>
+        <ul class="dim-items">
+          <li>Pede indicação no grupo de família "para sentir controle"</li>
+          <li>Adia o problema do carro esperando ele "se resolver"</li>
+          <li>Finge entender o mecânico para não parecer vulnerável</li>
+          <li>Aceita preço absurdo por não ter comparação — e reclama depois</li>
+          <li>Pesquisa no YouTube o problema mas não toma decisão</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 14</div>
+        <div class="dim-name">Mecanismos de Defesa</div>
+        <ul class="dim-items">
+          <li>"Toda mecânica é igual, vou naquela mais barata"</li>
+          <li>Culpa a oficina quando a revisão não resolve: "são todos incompetentes"</li>
+          <li>Evita levar o carro para não encarar a conta</li>
+          <li>Procrastina: "ainda dá para esperar mais um mês"</li>
+          <li>Racionaliza manutenção atrasada: "nunca precisei até agora"</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 15</div>
+        <div class="dim-name">Comportamentos Compensatórios</div>
+        <ul class="dim-items">
+          <li>Salva vários vídeos do YouTube sobre o sintoma do carro mas nunca assiste</li>
+          <li>Pede opinião para 5 pessoas diferentes antes de decidir</li>
+          <li>Vai pessoalmente à oficina "dar uma olhada" antes de deixar o carro</li>
+          <li>Faz pergunta genérica no grupo de WhatsApp sem especificar o problema</li>
+          <li>Evita trocar de carro por medo da nova despesa — aguenta o atual</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 16</div>
+        <div class="dim-name">Ciclos Viciosos</div>
+        <ul class="dim-items">
+          <li>Adia manutenção → problema piora → custo dobra → confirma crença que "carro come dinheiro"</li>
+          <li>Leva numa oficina ruim → experiência ruim → desconfia de todas → volta para a oficina que indicaram</li>
+          <li>Não avalia o serviço → outros sofrem o mesmo → nenhum dado para confiar nas avaliações</li>
+          <li>Paga caro por medo → não tem comparação → paga caro de novo</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 17</div>
+        <div class="dim-name">Crenças Limitantes</div>
+        <ul class="dim-items">
+          <li>"Não existe mecânico honesto — a questão é achar um que engane menos"</li>
+          <li>"Se eu souber perguntar errado vou pagar mais"</li>
+          <li>"App não muda nada na vida real — a oficina faz o que quer"</li>
+          <li>"Quem tem indicação de alguém de confiança está protegido — o resto é roubado"</li>
+          <li>"Revisão preventiva é gasto à toa enquanto não está quebrando"</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 18</div>
+        <div class="dim-name">Prisões Invisíveis</div>
+        <ul class="dim-items">
+          <li>Dependência da indicação pessoal — sem ela se sente perdido</li>
+          <li>Lealdade ao mecânico ruim por "já conhecer" — safer than unknown</li>
+          <li>Medo de questionar o orçamento e parecer desrespeitoso</li>
+          <li>Crença de que o preço certo é desconhecido — aceita qualquer coisa</li>
+          <li>Identidade de "não entendo de carro" que o mantém passivo</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BLOCO D: IDENTIDADE E PODER -->
+  <div class="dimensao-section">
+    <div class="bloco-header">
+      <div class="bloco-letter" style="background:var(--text2)">D</div>
+      <div><div class="bloco-title">Identidade e Poder</div><div class="bloco-sub">Dimensões 19–24 · Como a persona se vê e se relaciona</div></div>
+    </div>
+    <div class="dim-grid">
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 19</div>
+        <div class="dim-name">Questões de Identidade</div>
+        <ul class="dim-items">
+          <li>Não se identifica como "entendido de carro" — não quer nem ser</li>
+          <li>Se vê como um consumidor racional que pesquisa antes de decidir</li>
+          <li>Quer ser visto como alguém que faz boas escolhas, não como otário</li>
+          <li>Orgulho de usar tecnologia para tomar decisão mais informada</li>
+          <li>Conflito: quer independência mas depende sempre de indicação alheia</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 20</div>
+        <div class="dim-name">Dinâmicas de Poder</div>
+        <ul class="dim-items">
+          <li>O mecânico tem informação que ele não tem — assimetria clara</li>
+          <li>Quando não entende, perde poder de negociação naturalmente</li>
+          <li>App de avaliação inverte um pouco esse poder — mecânico fica exposto</li>
+          <li>Tem medo de demonstrar desconhecimento — o mecânico pode explorar</li>
+          <li>Prefere aceitar preço alto a negociar e parecer difícil</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 21</div>
+        <div class="dim-name">Traumas com Carros/Mecânicos</div>
+        <ul class="dim-items">
+          <li>Pagou revisão completa, saiu com novo barulho, voltou e cobrou mais</li>
+          <li>Autorizou serviço por telefone sem entender — conta veio o dobro</li>
+          <li>Ficou sem carro 6 dias porque a peça "demorou a chegar"</li>
+          <li>Indicação do Google foi uma mecânica-fantasma sem profissional fixo</li>
+          <li>Carro voltou com riscos no parachoque que não estavam antes</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 22</div>
+        <div class="dim-name">Inseguranças sobre o Carro</div>
+        <ul class="dim-items">
+          <li>Não sabe distinguir barulho grave de normal — tudo parece urgente</li>
+          <li>Não sabe quando aceitar ou recusar um orçamento</li>
+          <li>Não sabe quanto tempo cada peça/serviço dura — nem o básico</li>
+          <li>Inseguro para deixar carro sozinho sem ver o que é feito</li>
+          <li>Não sabe se as peças usadas são originais ou paralelas</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 23</div>
+        <div class="dim-name">Experiências Tóxicas</div>
+        <ul class="dim-items">
+          <li>Oficina que sempre encontra "mais um problema" a cada visita</li>
+          <li>Mecânico que usa jargão excessivo para intimidar e justificar preço</li>
+          <li>Oficina que não dá retorno de orçamento e some com o carro</li>
+          <li>Cobrador agressivo quando questiona um item da nota</li>
+          <li>Serviço entregue incompleto com promessa de completar "na próxima"</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 24</div>
+        <div class="dim-name">Conflitos Internos</div>
+        <ul class="dim-items">
+          <li>Quer pagar pouco mas tem medo que barato = ruim</li>
+          <li>Quer questionar o orçamento mas teme parecer chato</li>
+          <li>Quer segurança mas não quer pagar por revisão preventiva</li>
+          <li>Quer uma oficina perto mas desconfia das que ficam longe e têm melhor nota</li>
+          <li>Quer usar app mas pergunta pro amigo de qualquer jeito</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BLOCO E: EXISTÊNCIA E TRANSCENDÊNCIA -->
+  <div class="dimensao-section">
+    <div class="bloco-header">
+      <div class="bloco-letter green">E</div>
+      <div><div class="bloco-title">Existência e Transcendência</div><div class="bloco-sub">Dimensões 25–30 · Camadas mais profundas da psique</div></div>
+    </div>
+    <div class="dim-grid">
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 25</div>
+        <div class="dim-name">Vazios Primordiais</div>
+        <ul class="dim-items">
+          <li>Sensação de que sempre terá alguém mais esperto tirando vantagem</li>
+          <li>Ausência de um "padrinho de confiança" para problemas práticos da vida</li>
+          <li>Vazio de não ter aprendido o básico que deveria saber sobre carro</li>
+          <li>Isolamento: problema de carro é solitário — não tem com quem dividir</li>
+          <li>Falta de comunidade de motoristas que se ajudam de verdade</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 26</div>
+        <div class="dim-name">Sombras Arquetípicas</div>
+        <ul class="dim-items">
+          <li>Parte dele que quer descontar raiva na oficina mas se contém</li>
+          <li>Inveja de quem "entende de carro" e nunca é enganado</li>
+          <li>Raiva velada do sistema que sempre favorece o especialista</li>
+          <li>Parte que quer aceitar de olhos fechados e não pensar nisso</li>
+          <li>Desejo secreto de nunca precisar de carro — mas não consegue</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 27</div>
+        <div class="dim-name">Feridas da Alma</div>
+        <ul class="dim-items">
+          <li>A vez que ficou sem carro e quase perdeu emprego</li>
+          <li>Quando pagou R$1.200 de madrugada com cartão e não dormiu</li>
+          <li>Quando a companheira perguntou "quanto ficou?" e ele teve vergonha</li>
+          <li>Quando pediu desconto e o mecânico riu — na frente do filho</li>
+          <li>Quando chegou atrasado numa reunião importante por causa do carro</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 28</div>
+        <div class="dim-name">Abismos Existenciais</div>
+        <ul class="dim-items">
+          <li>Se toda a minha vida depende do carro, por que não tenho controle sobre ele?</li>
+          <li>Quanto dinheiro já desperdicei por não saber nada disso?</li>
+          <li>Algum dia vou parar de ser vulnerável em relação a esse assunto?</li>
+          <li>Por que a única coisa que realmente precisa funcionar é a que menos entendo?</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 29</div>
+        <div class="dim-name">Paradoxos Fundamentais</div>
+        <ul class="dim-items">
+          <li>Precisa do carro para ter liberdade, mas o carro o aprisiona financeiramente</li>
+          <li>Quer o mecânico mais barato mas desconfia de quem cobra menos</li>
+          <li>Pesquisa reviews mas no final vai na indicação do amigo mesmo</li>
+          <li>Quer transparência mas evita fazer perguntas para não parecer ignorante</li>
+          <li>Quer fidelizar uma oficina mas desconfia de toda relação próxima</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">Dimensão 30</div>
+        <div class="dim-name">Tensões Primordiais</div>
+        <ul class="dim-items">
+          <li>Segurança vs. Economia — a oficina confiável costuma cobrar mais</li>
+          <li>Informação vs. Paralisia — quanto mais pesquisa, menos decide</li>
+          <li>Autonomia vs. Dependência — quer decidir sozinho mas precisa de indicação</li>
+          <li>Presente vs. Prevenção — evita manutenção preventiva por custo imediato</li>
+          <li>Tecnologia vs. Tradição — app vs. indicação do pai/tio</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MAPA DE EMPATIA -->
+  <div class="card" style="margin-top:8px">
+    <div class="card-header">
+      <div class="card-icon teal">🧠</div>
+      <div><div class="card-title">Mapa de Empatia Completo</div><div class="card-subtitle">Como aplicar as dimensões em copy e criativo</div></div>
+    </div>
+    <div class="grid-2" style="margin-top:4px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:8px">Pensa e Sente</div>
+        <ul class="list-items">
+          <li>Carro = liberdade + ansiedade ao mesmo tempo</li>
+          <li>Mecânico é sempre o inimigo em potencial</li>
+          <li>Problema de carro sempre chega na pior hora</li>
+          <li>Quem entende de carro tem vantagem na vida</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:8px">Vê</div>
+        <ul class="list-items">
+          <li>Amigos fazendo manutenção sem sofrimento</li>
+          <li>Reviews no Google que não inspira confiança</li>
+          <li>Anúncios de oficina sem preço e sem evidência</li>
+          <li>Grupos de WhatsApp cheios de reclamação de mecânico</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:8px">Ouve</div>
+        <ul class="list-items">
+          <li>"Preciso levar em alguma oficina, alguém tem indicação?"</li>
+          <li>"Meu mecânico cobrou X por isso" (sem saber se é caro ou barato)</li>
+          <li>"Fui em oficina que não conhecia e me roubaram"</li>
+          <li>"Usou aquele app? Funcionou?"</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:8px">Faz e Fala</div>
+        <ul class="list-items">
+          <li>Pede indicação antes de qualquer decisão</li>
+          <li>Pesquisa no celular mas não converte sem indicação</li>
+          <li>Leva o carro mas evita questionar o mecânico</li>
+          <li>Paga e reclama para os amigos depois</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-dimensoes -->
+
+
+<!-- ════════════════ SEXY CANVAS ════════════════ -->
+<div id="tab-canvas" class="section">
+
+  <div class="canvas-hero">
+    <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap">
+      <div style="flex:1;min-width:280px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--teal);margin-bottom:6px">Sexy Canvas · Produto</div>
+        <h2>Officina App</h2>
+        <div class="tagline">O marketplace que coloca o motorista no controle da manutenção do carro</div>
+        <div class="desc">Um aplicativo que conecta proprietários de veículos às melhores oficinas avaliadas da região — com agendamento online, orçamentos digitais e o Plano de Manutenção Preventiva (PMP). A promessa central é simples: nunca mais chegar numa oficina sem saber em quem confiar.</div>
+        <div class="canvas-tags">
+          <span class="ctag ctag-teal">Marketplace</span>
+          <span class="ctag ctag-teal">B2C</span>
+          <span class="ctag ctag-amber">Serviço automotivo</span>
+          <span class="ctag ctag-amber">Confiança & Transparência</span>
+          <span class="ctag ctag-teal">App + Web</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;flex-shrink:0">
+        <div class="stat-pill" style="background:var(--teal-dim);border:1px solid var(--teal-mid)">
+          <strong style="color:var(--teal)">47M+</strong>
+          <span>Carros no Brasil</span>
+        </div>
+        <div class="stat-pill" style="background:var(--amber-dim);border:1px solid var(--amber-mid)">
+          <strong style="color:var(--amber-dark)">R$89B</strong>
+          <span>Mkt automotivo/ano</span>
+        </div>
+        <div class="stat-pill" style="background:var(--surface2);border:1px solid var(--border)">
+          <strong style="color:var(--text)">1 em 3</strong>
+          <span>já foi enganado</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="canvas-2col">
+    <!-- PROBLEMA -->
+    <div class="canvas-block">
+      <div class="canvas-block-title"><span class="dot red"></span>O Problema Central</div>
+      <div class="canvas-big-text">O motorista não sabe em quem confiar</div>
+      <div class="canvas-kv">
+        <div class="canvas-kv-item red"><strong>Dor #1 — Assimetria de informação</strong>O mecânico sabe; o dono do carro não. Quem não entende, paga mais e aceita qualquer coisa.</div>
+        <div class="canvas-kv-item red"><strong>Dor #2 — Processo fragmentado</strong>Busca no Google, liga, espera retorno, vai pessoalmente, espera orçamento. Tudo offline e demorado.</div>
+        <div class="canvas-kv-item red"><strong>Dor #3 — Falta de dados confiáveis</strong>Review no Google Maps é insuficiente. Não há histórico do serviço, preço de referência nem garantia.</div>
+      </div>
+    </div>
+
+    <!-- SOLUÇÃO -->
+    <div class="canvas-block">
+      <div class="canvas-block-title"><span class="dot"></span>A Solução Officina</div>
+      <div class="canvas-big-text">Confiança antes de entrar pela porta</div>
+      <div class="canvas-kv">
+        <div class="canvas-kv-item"><strong>Descoberta segura</strong>Mapa de oficinas verificadas com avaliações detalhadas, fotos reais e especialidades. Não é o Google Maps.</div>
+        <div class="canvas-kv-item"><strong>Orçamento digital antes</strong>Solicita orçamento pelo app sem precisar ir pessoalmente. Compara e aprova antes de levar o carro.</div>
+        <div class="canvas-kv-item"><strong>Agendamento online</strong>Agenda horário pelo app sem ficar ao telefone. Confirmação, lembrete e histórico em um lugar só.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PMP -->
+  <div class="canvas-block">
+    <div class="canvas-block-title"><span class="dot amber"></span>Produto Premium — Plano de Manutenção Preventiva (PMP)</div>
+    <div class="canvas-3col" style="margin-top:4px">
+      <div class="canvas-kv-item amber" style="height:auto"><strong>O que é</strong>Plano recorrente que cobre motor e câmbio — os componentes mais caros de qualquer carro. Funciona como seguro preventivo.</div>
+      <div class="canvas-kv-item amber" style="height:auto"><strong>Para quem</strong>Proprietários que financiam o carro, dependem dele para trabalhar, e querem evitar gastos imprevistos de alto impacto.</div>
+      <div class="canvas-kv-item amber" style="height:auto"><strong>Por que compra</strong>Paz de espírito. A promessa não é "seu carro nunca vai quebrar" — é "quando quebrar, você está protegido e não vai quebrar o orçamento".</div>
+    </div>
+  </div>
+
+  <div class="canvas-2col">
+    <!-- PROPOSTA DE VALOR -->
+    <div class="canvas-block">
+      <div class="canvas-block-title"><span class="dot"></span>Proposta de Valor</div>
+      <div class="canvas-kv">
+        <div class="canvas-kv-item"><strong>Para o motorista</strong>Nunca mais chegar numa oficina sem saber em quem confiar. Transparência, conveniência e segurança em um único app.</div>
+        <div class="canvas-kv-item"><strong>Para as oficinas</strong>Canal de aquisição de clientes qualificados com sistema de avaliação que premia os melhores e pressiona os mediocres.</div>
+        <div class="canvas-kv-item"><strong>Diferencial central</strong>Não é só um diretório. É uma plataforma de confiança com dados reais de serviços — o Mercado Livre da mecânica automotiva.</div>
+      </div>
+    </div>
+
+    <!-- POSICIONAMENTO -->
+    <div class="canvas-block">
+      <div class="canvas-block-title"><span class="dot amber"></span>Posicionamento</div>
+      <div class="canvas-kv">
+        <div class="canvas-kv-item amber"><strong>Mensagem central</strong>"Descubra as oficinas mais bem avaliadas para cuidar do seu carro" — segurança pelo caminho mais curto.</div>
+        <div class="canvas-kv-item amber"><strong>Tom de voz</strong>Confiante, direto, do lado do motorista. Nunca técnico ou intimidador. Fala a língua do leigo — porque o leigo é o cliente.</div>
+        <div class="canvas-kv-item amber"><strong>Emoção que vende</strong>Alívio + controle. A sensação de "agora eu sei o que estou fazendo" quando o assunto é o carro.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANAIS E GATILHOS -->
+  <div class="canvas-2col">
+    <div class="canvas-block">
+      <div class="canvas-block-title"><span class="dot"></span>Gatilhos de Conversão</div>
+      <div class="headline-list">
+        <div class="headline-item">Carro com barulho ou luz de alerta → busca urgente</div>
+        <div class="headline-item">Revisão atrasada → consciência do risco</div>
+        <div class="headline-item amber">Amigo indicou o app → prova social direta</div>
+        <div class="headline-item amber">Última oficina decepcionou → quer mudar</div>
+        <div class="headline-item">Comprou carro novo/usado → quer revisão geral segura</div>
+      </div>
+    </div>
+    <div class="canvas-block">
+      <div class="canvas-block-title"><span class="dot red"></span>Objeções a Quebrar</div>
+      <div class="headline-list">
+        <div class="headline-item red">"App não muda nada — oficina faz o que quer mesmo"</div>
+        <div class="headline-item red">"Prefiro indicação de alguém que já foi"</div>
+        <div class="headline-item">"Minha oficina já é de confiança, não preciso"</div>
+        <div class="headline-item">"Nunca vou usar app para escolher mecânico"</div>
+        <div class="headline-item">"PMP parece caro sem saber o que está coberto"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADLINES -->
+  <div class="canvas-block">
+    <div class="canvas-block-title"><span class="dot amber"></span>Headlines que Param o Feed</div>
+    <div class="canvas-3col" style="margin-top:4px">
+      <div class="headline-list">
+        <div class="headline-item">"Sua oficina de confiança está no Officina App"</div>
+        <div class="headline-item">"Encontrei uma oficina com 4.9 estrelas a 800m de casa"</div>
+        <div class="headline-item amber">"Aprovei o orçamento antes de levar o carro"</div>
+      </div>
+      <div class="headline-list">
+        <div class="headline-item">"Nunca mais pague por serviço que não precisava"</div>
+        <div class="headline-item amber">"Sabia que eles cobrariam R$280? Sabia — porque vi antes"</div>
+        <div class="headline-item">"3 oficinas avaliadas em 1 km de você agora"</div>
+      </div>
+      <div class="headline-list">
+        <div class="headline-item red">"Levou num lugar que não conhecia? Também aconteceu comigo"</div>
+        <div class="headline-item">"Agendei, aprovei o orçamento, retirei o carro. Simples assim."</div>
+        <div class="headline-item amber">"Seu carro não quebra quando você está pronto — o PMP sim"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRASES PERSONA -->
+  <div class="canvas-block">
+    <div class="canvas-block-title"><span class="dot"></span>Frases que a Persona Usa — Use no Copy</div>
+    <div class="canvas-3col" style="margin-top:4px">
+      <ul class="list-items" style="gap:6px">
+        <li>"Não entendo de carro, fica difícil saber se me enganam"</li>
+        <li>"Preciso de indicação de oficina boa — alguém sabe?"</li>
+        <li>"A última vez que fui num lugar novo saí pagando o dobro"</li>
+      </ul>
+      <ul class="list-items" style="gap:6px">
+        <li>"Queria saber quanto custa antes de levar, sem surpresa"</li>
+        <li>"Já perdi dia de trabalho esperando orçamento que não veio"</li>
+        <li>"Confio mais em review do app do que em panfleto de esquina"</li>
+      </ul>
+      <ul class="list-items" style="gap:6px">
+        <li>"Minha oficina é do meu pai, mas fica longe e é lenta"</li>
+        <li>"Se pudesse, pagava para não precisar pensar nisso"</li>
+        <li>"Carro come dinheiro — quero pelo menos saber quando e quanto"</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /tab-canvas -->
+
+
+<!-- ════════════════ IDENTIDADE VISUAL ════════════════ -->
+<div id="tab-identidade" class="section">
+
+  <div class="section-header">
+    <div class="section-title">Identidade Visual — Officina App</div>
+    <div class="section-desc">Use estritamente esta paleta e tipografia em todos os materiais. Não crie variações ou tons não listados aqui.</div>
+  </div>
+
+  <!-- CORES -->
+  <div style="margin-bottom:8px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:14px">Paleta Oficial</div>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#3DA9A5"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Teal Principal</div>
+          <div class="swatch-hex">#3DA9A5</div>
+          <div class="swatch-use">Cor primária de marca, CTAs, destaques</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#2A8A86"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Teal Escuro</div>
+          <div class="swatch-hex">#2A8A86</div>
+          <div class="swatch-use">Hover, variante escura, contraste</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#5CC4C0"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Teal Claro</div>
+          <div class="swatch-hex">#5CC4C0</div>
+          <div class="swatch-use">Fundos suaves, badges, tags</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#F5A623"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Amber — Acento</div>
+          <div class="swatch-hex">#F5A623</div>
+          <div class="swatch-use">Ícone do carro, destaques especiais, PMP</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#D48A10"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Amber Escuro</div>
+          <div class="swatch-hex">#D48A10</div>
+          <div class="swatch-use">Texto sobre amber, contraste de acento</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#1A2424"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Preto Marca</div>
+          <div class="swatch-hex">#1A2424</div>
+          <div class="swatch-use">Textos principais, versão dark do logo</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#FFFFFF;border:1px solid #E2EEEE"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Branco</div>
+          <div class="swatch-hex">#FFFFFF</div>
+          <div class="swatch-use">Fundos, logo versão clara, cards</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#F0F7F7"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Teal Off-White</div>
+          <div class="swatch-hex">#F0F7F7</div>
+          <div class="swatch-use">Background de página, superfícies neutras</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIPOGRAFIA -->
+  <div style="margin-bottom:24px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:14px">Tipografia</div>
+    <div class="font-sample">
+      <div class="font-name">Fonte Principal — Inter (Google Fonts)</div>
+      <div class="font-display">officina</div>
+      <div class="font-body">Seu carro. Sua escolha. Sua confiança. — The quick brown fox jumps over the lazy dog.</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
+        <span style="font-size:11px;color:var(--text3)"><strong>900</strong> — Títulos hero</span>
+        <span style="font-size:11px;color:var(--text3)"><strong>700</strong> — Headlines</span>
+        <span style="font-size:11px;color:var(--text3)"><strong>600</strong> — Subtítulos</span>
+        <span style="font-size:11px;color:var(--text3)"><strong>400</strong> — Corpo</span>
+        <span style="font-size:11px;color:var(--text3)"><strong>300</strong> — Notas, captions</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERSÕES DO LOGO -->
+  <div style="margin-bottom:24px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:14px">Versões do Logo</div>
+    <div class="grid-3">
+      <div class="card" style="text-align:center">
+        <div style="background:#3DA9A5;border-radius:10px;padding:24px;margin-bottom:12px">
+          <img src="logo-amber.png" style="height:60px;max-width:100%;object-fit:contain" alt="Logo amber"/>
+        </div>
+        <div class="card-title">Versão Principal</div>
+        <div class="card-subtitle">Fundo teal · Ícone amber · Texto branco</div>
+        <div style="margin-top:8px"><span class="badge badge-teal">USO PRIORITÁRIO</span></div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="background:#FFFFFF;border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:12px">
+          <img src="logo-teal.png" style="height:60px;max-width:100%;object-fit:contain" alt="Logo teal"/>
+        </div>
+        <div class="card-title">Versão Clara</div>
+        <div class="card-subtitle">Fundo branco · Texto e ícone teal</div>
+        <div style="margin-top:8px"><span class="badge badge-green">FUNDOS CLAROS</span></div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="background:#F0F7F7;border-radius:10px;padding:24px;margin-bottom:12px">
+          <img src="logo-black.png" style="height:60px;max-width:100%;object-fit:contain" alt="Logo preto"/>
+        </div>
+        <div class="card-title">Versão Monocromática</div>
+        <div class="card-subtitle">Para documentos, impressos, PB</div>
+        <div style="margin-top:8px"><span class="badge badge-amber">IMPRESSÃO</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGRAS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon red">⚠️</div>
+      <div><div class="card-title">Regras de Uso da Identidade</div><div class="card-subtitle">Invioláveis em qualquer material</div></div>
+    </div>
+    <div class="grid-2" style="margin-top:4px">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">✓ Pode</div>
+        <ul class="list-items">
+          <li>Usar teal (#3DA9A5) como cor dominante em fundos e CTAs</li>
+          <li>Usar amber (#F5A623) exclusivamente como acento e destaque</li>
+          <li>Fundo branco ou off-white teal (#F0F7F7) para layouts limpos</li>
+          <li>Tipografia Inter em todos os pesos definidos</li>
+          <li>Logo amber sobre fundo teal, ou logo teal sobre fundo branco</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">✗ Não pode</div>
+        <ul class="list-items">
+          <li>Criar variações de cor não listadas nesta paleta</li>
+          <li>Usar gradientes violeta, roxo ou azul escuro (fora da marca)</li>
+          <li>Alterar proporções ou elementos do logotipo</li>
+          <li>Usar amber como cor dominante de fundo — só como acento</li>
+          <li>Usar fontes diferentes de Inter sem aprovação da marca</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-identidade -->
+</div><!-- /content -->
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+
+</body>
+</html>
