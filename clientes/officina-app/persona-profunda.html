@@ -2457,10 +2457,13 @@ function dhAppendAgentMsg(html) {
 async function dhTriggerAction(action) {
   const ghToken = localStorage.getItem('officina_gh_token');
   if(!ghToken) {
-    dhAppendAgentMsg('Para executar ajustes automáticos, salve o <strong>GitHub Token</strong> nas configurações (ícone de engrenagem acima).');
+    dhAppendAgentMsg('pra executar os ajustes automáticos, salva o <strong>GitHub Token</strong> nas configurações (ícone de engrenagem acima)');
     return;
   }
-  dhAppendAgentMsg('<span style="color:var(--text3)">Enviando para o time de criação... aguarda ~60s para o deploy.</span>');
+
+  // Mensagem inicial — sem "Dev", linguagem natural
+  dhAppendAgentMsg('já mandei pro time de criação... aguarda aí');
+
   try {
     const resp = await fetch(
       'https://api.github.com/repos/maxmunhozp-blip/ecossistema-max/actions/workflows/ajuste.yml/dispatches',
@@ -2468,15 +2471,41 @@ async function dhTriggerAction(action) {
        headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
        body: JSON.stringify({ref:'main', inputs:{instruction: action.instruction}})}
     );
-    if(resp.status === 204) {
-      setTimeout(()=> dhAppendAgentMsg('Ajuste em produção. Deploy automático em ~60s.'), 1200);
-    } else {
+    if(resp.status !== 204) {
       const d = await resp.json();
-      dhAppendAgentMsg('Erro ao acionar workflow: ' + (d.message||resp.status));
+      dhAppendAgentMsg('eita, deu erro aqui: ' + (d.message||resp.status));
+      return;
     }
   } catch(e) {
-    dhAppendAgentMsg('Erro: ' + e.message);
+    dhAppendAgentMsg('erro de conexão: ' + e.message);
+    return;
   }
+
+  // Countdown com mensagens periódicas do Lucas acompanhando
+  const updates = [
+    {t: 15, msg: 'tá processando... uns 60s no total'},
+    {t: 30, msg: 'ainda aqui, acompanhando'},
+    {t: 45, msg: 'quase lá...'},
+    {t: 65, msg: 'pronto — dá um F5 pra ver a mudança no ar'},
+  ];
+
+  // Elemento de countdown na última mensagem
+  const countdownId = 'dh-cd-' + Date.now();
+  dhAppendAgentMsg(`<span id="${countdownId}" style="color:var(--text3);font-size:11px">⏱ 0s</span>`);
+  const start = Date.now();
+  const ticker = setInterval(() => {
+    const el = document.getElementById(countdownId);
+    if(el) el.textContent = `⏱ ${Math.floor((Date.now()-start)/1000)}s`;
+  }, 1000);
+
+  for(const {t, msg} of updates) {
+    await new Promise(r => setTimeout(r, t * 1000));
+    dhAppendAgentMsg(msg);
+  }
+
+  clearInterval(ticker);
+  const el = document.getElementById(countdownId);
+  if(el) el.closest('.dh-bbl')?.remove();
 }
 
 async function dhEnviar() {
