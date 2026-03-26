@@ -460,6 +460,28 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .post-credit-sep{width:2px;height:2px;border-radius:50%;background:var(--border);flex-shrink:0}
 /* ── Status proposta ── */
 .pst.proposta{color:var(--amber-dark)}
+/* ── Proposta de texto (DH) ── */
+.dh-tprop{margin-top:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
+.dh-tprop-head{padding:9px 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.dh-tprop-icon{width:20px;height:20px;background:var(--teal);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dh-tprop-icon svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.5}
+.dh-tprop-title{font-size:11px;font-weight:700;color:var(--text);flex:1;line-height:1.3}
+.dh-tprop-count{font-size:10px;color:var(--text3);white-space:nowrap}
+.dh-tprop-slides{padding:10px 12px;display:flex;flex-direction:column;gap:9px;max-height:200px;overflow-y:auto}
+.dh-tprop-slides::-webkit-scrollbar{width:3px}
+.dh-tprop-slides::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.dh-tprop-slide{display:flex;gap:9px;align-items:flex-start}
+.dh-tprop-num{font-size:10px;font-weight:800;color:var(--teal);width:18px;flex-shrink:0;padding-top:1px}
+.dh-tprop-copy{font-size:11px;color:var(--text2);line-height:1.55}
+.dh-tprop-copy strong{color:var(--text)}
+.dh-tprop-btns{padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:6px}
+.dh-btn-tx-ok{flex:1;padding:6px 8px;border-radius:7px;background:var(--teal);color:#fff;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s;display:flex;align-items:center;justify-content:center;gap:4px}
+.dh-btn-tx-ok svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.5}
+.dh-btn-tx-ok:hover{background:var(--teal-dark)}
+.dh-btn-tx-ok.done{background:var(--green);pointer-events:none}
+.dh-btn-tx-adj{flex:1;padding:6px 8px;border-radius:7px;background:var(--surface);color:var(--text2);border:1px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s}
+.dh-btn-tx-adj:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-dim)}
+.dh-btn-tx-adj:disabled{opacity:.35;pointer-events:none}
 /* ── Lightbox brand ── */
 .rs2-lb-brand{text-align:center;padding:6px 0 4px;font-size:9px;font-weight:900;color:rgba(61,169,165,.4);letter-spacing:.8px;text-transform:uppercase}
 /* Lightbox v2 */
@@ -1630,10 +1652,25 @@ const DH_HISTORY = [
   {tipo:'user',when:'25/03 · 10h30',text:'Preciso mudar o slide 3, o texto está muito longo.'},
   {tipo:'agent',when:'25/03 · 10h31',text:'Ajustado! Reduzi o texto do slide 3 para 2 linhas. Ficou mais limpo e respirado.',preview:{titulo:'Como escolher a oficina certa — v2',meta:'5 slides · Instagram · Slide 3 atualizado'}},
   {tipo:'agent',when:'24/03 · 11h',text:'Iniciei o carrossel <strong>"5 sinais que seu carro precisa de revisão"</strong>. Em revisão — aguardando aprovação nos dados do slide 4.',preview:{titulo:'5 sinais que seu carro precisa de revisão',meta:'6 slides · Instagram · Em revisão'}},
-  {tipo:'agent',when:'26/03 · 09h',text:'Com base no comportamento do perfil este mês, preparei <strong>3 propostas</strong> para os próximos carrosséis. Você pode aprovar ou pedir ajuste em cada um.'},
-  {tipo:'agent',when:'26/03 · 09h01',text:'Proposta 1 — <strong>"Como funciona o diagnóstico pelo app"</strong><br/>Ideia: mostrar o passo a passo desde abrir o app até receber o laudo da oficina. Foco em educação de produto.',preview:{titulo:'Como funciona o diagnóstico pelo app',meta:'4 slides · Instagram · Proposta'}},
-  {tipo:'agent',when:'26/03 · 09h02',text:'Proposta 2 — <strong>"Orçamento transparente: entenda como"</strong><br/>Ideia: desmistificar o medo de surpresas na conta. Comparativo antes/depois do app. CTA forte.',preview:{titulo:'Orçamento transparente: entenda como',meta:'3 slides · Instagram + Facebook · Proposta'}},
-  {tipo:'agent',when:'26/03 · 09h03',text:'Proposta 3 — <strong>"Top 5 erros ao escolher oficina"</strong><br/>Ideia: conteúdo de problema + solução, formato lista com contraste alto. Alto potencial de compartilhamento.',preview:{titulo:'Top 5 erros ao escolher oficina',meta:'5 slides · Instagram · Proposta'}},
+  {tipo:'agent',when:'26/03 · 09h',text:'Com base no comportamento do perfil este mês, preparei <strong>3 propostas de texto</strong> para os próximos carrosséis. Cada uma está com o copy de cada slide — <strong>aprove o texto primeiro</strong>, depois a gente produz a peça visual.'},
+  {tipo:'agent',when:'26/03 · 09h01',text:'Proposta 1 — <strong>"Como funciona o diagnóstico pelo app"</strong> (4 slides · Instagram)',textProp:{titulo:'Como funciona o diagnóstico pelo app',postId:'p6',slides:[
+    {num:1,label:'Capa',copy:'<strong>Como funciona o diagnóstico pelo app</strong><br/>Do sintoma ao laudo em menos de 24h.'},
+    {num:2,copy:'<strong>1 — Descreva o que está sentindo.</strong> Escreva o sintoma ou escolha na lista. O app já identifica os sistemas afetados.'},
+    {num:3,copy:'<strong>2 — Receba o diagnóstico da oficina.</strong> A oficina verifica, fotografa e envia o laudo direto no app. Sem surpresa, sem telefonema.'},
+    {num:4,label:'CTA',copy:'<strong>Baixe o Officina App.</strong> Diagnóstico claro. Orçamento na hora. Oficina verificada.'},
+  ]}},
+  {tipo:'agent',when:'26/03 · 09h02',text:'Proposta 2 — <strong>"Orçamento transparente: entenda como"</strong> (3 slides · Instagram + Facebook)',textProp:{titulo:'Orçamento transparente: entenda como',postId:'p7',slides:[
+    {num:1,label:'Capa',copy:'<strong>Orçamento transparente:</strong><br/>Você aprova antes. O serviço começa depois.'},
+    {num:2,copy:'<strong>Como funciona:</strong> 1 · Você descreve o problema &nbsp;2 · Oficina envia o orçamento no app &nbsp;3 · Você aprova ou recusa &nbsp;4 · Serviço só começa com a sua aprovação.'},
+    {num:3,label:'CTA',copy:'<strong>Chega de surpresa na hora de pagar.</strong><br/>Officina App — orçamento antes, serviço depois.'},
+  ]}},
+  {tipo:'agent',when:'26/03 · 09h03',text:'Proposta 3 — <strong>"Top 5 erros ao escolher oficina"</strong> (5 slides · Instagram)',textProp:{titulo:'Top 5 erros ao escolher oficina',postId:'p8',slides:[
+    {num:1,label:'Capa',copy:'<strong>Top 5 erros ao escolher oficina</strong><br/>(e como o Officina App resolve cada um)'},
+    {num:2,copy:'<strong>Erro 1 — Ir sem pesquisar avaliações.</strong> Estrelas gerais enganam. O app filtra histórico real de atendimentos verificados.'},
+    {num:3,copy:'<strong>Erro 2 — Aceitar orçamento verbal.</strong> Se não está no papel, não existe. No app, tudo fica registrado e você aprova antes.'},
+    {num:4,copy:'<strong>Erro 3 — Escolher só pela proximidade.</strong> Oficina perto não é oficina boa. Filtros de avaliação e verificação valem mais que distância.'},
+    {num:5,label:'CTA',copy:'<strong>Encontre a oficina certa pelo critério certo.</strong><br/>Mais de 500 oficinas verificadas em São Paulo.'},
+  ]}},
 ];
 
 let rs2FilterAtivo = 'todos', rs2OpenPost = null;
@@ -1769,9 +1806,28 @@ function dhBubble(m) {
         </div>
       </div>
     </div>` : '';
+  const tp = m.textProp ? (() => {
+    const slidesHtml = m.textProp.slides.map(s =>
+      `<div class="dh-tprop-slide">
+        <span class="dh-tprop-num">${s.num}</span>
+        <span class="dh-tprop-copy">${s.label?`<span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin-right:4px">${s.label}</span>`:''}${s.copy}</span>
+      </div>`).join('');
+    return `<div class="dh-tprop">
+      <div class="dh-tprop-head">
+        <div class="dh-tprop-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <span class="dh-tprop-title">${m.textProp.titulo}</span>
+        <span class="dh-tprop-count">${m.textProp.slides.length} slides</span>
+      </div>
+      <div class="dh-tprop-slides">${slidesHtml}</div>
+      <div class="dh-tprop-btns">
+        <button class="dh-btn-tx-ok" onclick="dhAprovarTexto(this,'${m.textProp.postId}')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Aprovar texto</button>
+        <button class="dh-btn-tx-adj" onclick="dhAjustar('${m.textProp.titulo}')">Pedir ajuste</button>
+      </div>
+    </div>`;
+  })() : '';
   return `<div class="dh-bbl ${m.tipo}">
     <div class="dh-bbl-who">${m.tipo==='agent'?'Design Humano':'Você'}</div>
-    <div class="dh-bbl-text">${m.text}${prev}</div>
+    <div class="dh-bbl-text">${m.text}${prev}${tp}</div>
     <div class="dh-bbl-time">${m.when}</div>
   </div>`;
 }
@@ -1867,6 +1923,65 @@ function dhAprovar(btn) {
             el.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text"><strong>Carrossel pronto.</strong> Os ${n} slides estão disponíveis na lista ao lado. Clique em qualquer slide para visualizar em tela cheia antes de publicar.</div><div class="dh-bbl-time">agora</div>`;
             msgs.insertBefore(el, typing);
           }
+          msgs.scrollTop = msgs.scrollHeight;
+          resolve();
+        }, delayTyping || 1200);
+      }, delayBefore);
+    }));
+  });
+}
+
+function dhAprovarTexto(btn, postId) {
+  btn.classList.add('done');
+  btn.innerHTML = '<svg viewBox="0 0 24 24" width="11" height="11" stroke="#fff" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Texto aprovado';
+  const adj = btn.nextElementSibling;
+  if(adj){adj.disabled=true;}
+  const post = RS2_POSTS.find(p=>p.id===postId);
+  const msgs = document.getElementById('dhMsgs');
+  const typing = document.getElementById('dhTyping');
+  const n = post ? post.slides : 4;
+  const redator = post ? post.redator : 'Juliana Costa';
+  const designer = post ? post.designer : 'Rafael Mota';
+  const postName = post ? post.titulo : 'carrossel';
+  const steps = [
+    [300,  900,  `Texto aprovado. Iniciando a produção de <strong>"${postName}"</strong>.`],
+    [250,  1300, `Criando os <strong>${n} formatos base</strong> — 1080 × 1440px, proporção Instagram portrait 3:4.`],
+    [250,  1500, `<strong>${redator}</strong> (redação) revisando os textos e ajustando o tom de voz para cada slide.`],
+    [250,  1600, `Textos finalizados. <strong>${designer}</strong> (design) aplicando títulos, corpo e hierarquia visual nos slides.`],
+    [250,  1400, `Definindo paleta — teal como cor primária, amber nos destaques, fundo limpo. Tipografia Inter em todos os pesos.`],
+    [250,  1200, `Revisão final — contraste, legibilidade e consistência dos ${n} slides.`],
+    [250,  0,    null],
+  ];
+  let chain = Promise.resolve();
+  steps.forEach(([delayBefore, delayTyping, text], idx) => {
+    chain = chain.then(() => new Promise(resolve => {
+      setTimeout(() => {
+        typing.classList.add('show');
+        msgs.scrollTop = msgs.scrollHeight;
+        setTimeout(() => {
+          typing.classList.remove('show');
+          const el = document.createElement('div');
+          el.className = 'dh-bbl agent';
+          if(idx < steps.length - 1) {
+            el.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
+          } else {
+            if(post) { post.status = 'revisao'; renderPosts(); }
+            const prevPost2 = post || RS2_POSTS[0];
+            el.innerHTML = `<div class="dh-bbl-who">Design Humano</div><div class="dh-bbl-text"><strong>Carrossel pronto para revisão.</strong> Os ${n} slides foram produzidos. Confira ao lado e aprove para publicar.
+              <div class="dh-preview" style="margin-top:8px">
+                <div class="dh-preview-thumb" style="overflow:hidden;position:relative"><iframe src="carrosseis-officina.html?single=1&p=${prevPost2.postIdx}&s=0" scrolling="no" style="width:1080px;height:1440px;border:none;transform:scale(0.222);transform-origin:top left;pointer-events:none;display:block" loading="lazy"></iframe></div>
+                <div class="dh-preview-body">
+                  <div class="dh-preview-title">${postName}</div>
+                  <div class="dh-preview-meta">${n} slides · ${post?post.plataformas.map(p=>p.charAt(0).toUpperCase()+p.slice(1)).join(' · '):'Instagram'}</div>
+                  <div class="dh-preview-btns">
+                    <button class="dh-btn-ok" onclick="dhAprovar(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Aprovar e publicar</button>
+                    <button class="dh-btn-adj" onclick="dhAjustar('${postName}')">Pedir ajuste</button>
+                  </div>
+                </div>
+              </div>
+            </div><div class="dh-bbl-time">agora</div>`;
+          }
+          msgs.insertBefore(el, typing);
           msgs.scrollTop = msgs.scrollHeight;
           resolve();
         }, delayTyping || 1200);
