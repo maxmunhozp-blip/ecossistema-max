@@ -147,6 +147,22 @@ body{font-family:'Inter',sans-serif;background:#0F1A1A;color:var(--text);min-hei
 .gen-save-btn:hover{background:rgba(245,166,35,.25)}
 .gen-log{font-size:10px;color:rgba(255,255,255,.3);font-style:italic;min-height:18px;text-align:center}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* ══ DESIGN THEMES — rotacionam a cada 3 posts ══ */
+.theme-b .s-title{font-weight:900;letter-spacing:-3px;line-height:1.0}
+.theme-b .s-title-lg{font-weight:900;letter-spacing:-5px;line-height:.92}
+.theme-b .s-body{font-weight:500;letter-spacing:.2px}
+.theme-b .s-num{font-style:italic;opacity:.05}
+.theme-b .s-cta.teal{background:#1A2424;color:#fff}
+.theme-b .s-cta.amber{box-shadow:5px 5px 0 #1A2424}
+.theme-b .s-tag.teal{background:#1A2424;color:#fff;border-color:#1A2424}
+
+.theme-c .s-title{font-weight:700;font-style:italic;letter-spacing:0px;line-height:1.12}
+.theme-c .s-title-lg{font-weight:800;font-style:italic;letter-spacing:-2px;line-height:.98}
+.theme-c .s-body{font-weight:300;line-height:1.8;letter-spacing:.2px}
+.theme-c .s-num{font-weight:300;opacity:.04;letter-spacing:-14px}
+.theme-c .s-tag{border-radius:6px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;font-size:19px}
+.theme-c .s-cta{border-radius:10px;letter-spacing:.4px}
 </style>
 </head>
 <body>
@@ -605,7 +621,21 @@ allSlideEls.forEach(el => {
   slidesByPost[p].push(el);
 });
 
+
+// Design themes — A (default), B (bold), C (editorial) — rotate per post
+const POST_THEMES = ['','theme-b','theme-c','','theme-b'];
+function applyPostTheme(postIdx) {
+  document.querySelectorAll('.slide[data-post]').forEach(s => {
+    s.classList.remove('theme-b','theme-c');
+    if(+s.dataset.post === postIdx) {
+      const t = POST_THEMES[postIdx] || '';
+      if(t) s.classList.add(t);
+    }
+  });
+}
+
 function selectPost(idx) {
+  applyPostTheme(idx);
   activePost = idx;
   document.querySelectorAll('.car-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
   document.getElementById('carLabel').textContent = POSTS[idx].nome + ' · ' + POSTS[idx].total + ' slides';
@@ -697,22 +727,28 @@ if(_qp.get('single')==='1') {
   selectPost(0);
 }
 
-// Inject Officina App logo on all slides
-// Use logo-amber on dark/teal slides, logo-teal on white/light slides
-document.querySelectorAll('.slide').forEach(slide => {
-  if(slide.querySelector('.slide-logo-inject')) return;
-  const bg = getComputedStyle(slide).backgroundColor;
-  // Determine if slide bg is light or dark/teal
-  const isDark = bg.includes('61, 169, 165') || bg.includes('26, 36') || bg.includes('245, 166') 
-    || slide.className.includes('p1-s2') || slide.className.includes('p1-s5')
-    || slide.className.includes('p2-s3') || slide.className.includes('p3-s1')
-    || slide.className.includes('p4-s1') || slide.className.includes('p5-s2') || slide.className.includes('p5-s5');
-  const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
-  const logo = document.createElement('div');
-  logo.className = 'slide-logo-inject';
-  logo.style.cssText = 'position:absolute;bottom:48px;right:56px;opacity:.55;pointer-events:none;z-index:10';
-  logo.innerHTML = `<img src="${logoSrc}" style="height:48px;object-fit:contain;display:block"/>`;
-  slide.appendChild(logo);
+// Inject logo only on first and last slide per post
+const _postSlides = {};
+document.querySelectorAll('.slide[data-post]').forEach(s => {
+  const p = s.dataset.post;
+  if(!_postSlides[p]) _postSlides[p] = [];
+  _postSlides[p].push(s);
+});
+Object.values(_postSlides).forEach(slides => {
+  const targets = slides.length > 1 ? [slides[0], slides[slides.length-1]] : [slides[0]];
+  targets.forEach(slide => {
+    if(!slide || slide.querySelector('.slide-logo-inject')) return;
+    const cls = slide.className;
+    const isDark = cls.includes('p1-s2')||cls.includes('p1-s5')||cls.includes('p2-s3')
+      ||cls.includes('p2-s6')||cls.includes('p3-s1')||cls.includes('p4-s1')
+      ||cls.includes('p5-s2')||cls.includes('p5-s5');
+    const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
+    const logo = document.createElement('div');
+    logo.className = 'slide-logo-inject';
+    logo.style.cssText = 'position:absolute;bottom:52px;left:72px;opacity:.78;pointer-events:none;z-index:10';
+    logo.innerHTML = `<img src="${logoSrc}" style="height:42px;object-fit:contain;display:block"/>`;
+    slide.appendChild(logo);
+  });
 });
 
 
