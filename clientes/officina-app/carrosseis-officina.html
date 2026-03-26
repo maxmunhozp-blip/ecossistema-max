@@ -17,7 +17,7 @@
 body{font-family:'Inter',sans-serif;background:#0F1A1A;color:var(--text);min-height:100vh}
 
 /* ── NAV ── */
-.top-nav{display:flex;align-items:center;gap:16px;padding:16px 28px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.3)}
+.top-nav{display:none;align-items:center;gap:16px;padding:16px 28px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.3)}
 .nav-logo{font-size:13px;font-weight:800;color:var(--teal);letter-spacing:-.2px}
 .nav-sub{font-size:11px;color:rgba(255,255,255,.35)}
 .nav-count{margin-left:auto;font-size:11px;color:rgba(255,255,255,.35)}
@@ -181,10 +181,13 @@ body{font-family:'Inter',sans-serif;background:#0F1A1A;color:var(--text);min-hei
 
 
 <!-- LIGHTBOX -->
+<input type="file" id="coverInput" accept="image/*" style="display:none" onchange="applyCoverUpload(this)"/>
 <div class="lb" id="lb">
   <div class="lb-top">
     <span class="lb-car-name" id="lbCarName"></span>
     <span class="lb-slide-info" id="lbSlideInfo"></span>
+    <button id="lbCoverBtn" onclick="document.getElementById('coverInput').click()" style="display:none;font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;border:1px solid rgba(61,169,165,.5);background:rgba(61,169,165,.12);color:#3DA9A5;cursor:pointer;letter-spacing:.2px">Trocar capa</button>
+    <button id="lbRemoveCoverBtn" onclick="removeCover()" style="display:none;font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;border:1px solid rgba(239,68,68,.35);background:rgba(239,68,68,.08);color:#E05252;cursor:pointer">Remover capa</button>
     <button class="lb-close-btn" onclick="closeLb()">✕</button>
   </div>
   <div class="lb-main">
@@ -654,7 +657,18 @@ function renderGrid(postIdx) {
     // Clone and scale
     const scaleDiv = document.createElement('div');
     scaleDiv.className = 'thumb-scale';
-    scaleDiv.appendChild(sl.cloneNode(true));
+    const slClone = sl.cloneNode(true);
+    // Apply stored cover on first slide
+    if(i === 0) {
+      const storedCover = localStorage.getItem('cover_p'+postIdx);
+      if(storedCover) {
+        const img = document.createElement('img');
+        img.src = storedCover;
+        img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1';
+        slClone.insertBefore(img, slClone.firstChild);
+      }
+    }
+    scaleDiv.appendChild(slClone);
     wrap.appendChild(scaleDiv);
     const badge = document.createElement('div');
     badge.className = 'slide-num-badge';
@@ -684,11 +698,34 @@ function renderLb() {
   const sl = slides[lbIdx];
   const inner = document.getElementById('lbSlideInner');
   inner.innerHTML = '';
-  if(sl) inner.appendChild(sl.cloneNode(true));
+  if(sl) {
+    const clone = sl.cloneNode(true);
+    // Apply stored cover image on slide 0
+    if(lbIdx === 0) {
+      const storedCover = localStorage.getItem('cover_p'+lbPost);
+      if(storedCover) {
+        const img = document.createElement('img');
+        img.src = storedCover;
+        img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;border-radius:inherit';
+        clone.insertBefore(img, clone.firstChild);
+      }
+    }
+    inner.appendChild(clone);
+  }
   document.getElementById('lbCarName').textContent = POSTS[lbPost].nome;
   document.getElementById('lbSlideInfo').textContent = 'Slide ' + (lbIdx+1) + ' de ' + slides.length;
   document.getElementById('lbPrev').disabled = false;
   document.getElementById('lbNext').disabled = false;
+  // Cover upload button — only on slide 0 (cover/capa)
+  const coverBtn = document.getElementById('lbCoverBtn');
+  const removeCoverBtn = document.getElementById('lbRemoveCoverBtn');
+  if(lbIdx === 0) {
+    coverBtn.style.display = 'inline-block';
+    removeCoverBtn.style.display = localStorage.getItem('cover_p'+lbPost) ? 'inline-block' : 'none';
+  } else {
+    coverBtn.style.display = 'none';
+    removeCoverBtn.style.display = 'none';
+  }
   // dots
   const dots = document.getElementById('lbDots');
   dots.innerHTML = '';
@@ -698,6 +735,25 @@ function renderLb() {
     d.onclick = () => { lbIdx=i; renderLb(); };
     dots.appendChild(d);
   });
+}
+
+function applyCoverUpload(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    localStorage.setItem('cover_p'+lbPost, e.target.result);
+    input.value = '';
+    renderLb();
+    renderGrid(lbPost); // refresh thumbnails
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeCover() {
+  localStorage.removeItem('cover_p'+lbPost);
+  renderLb();
+  renderGrid(lbPost);
 }
 
 document.addEventListener('keydown', e => {
@@ -724,6 +780,9 @@ if(_qp.get('single')==='1') {
   }
   document.body.style.cssText = 'margin:0;padding:0;overflow:hidden;background:transparent';
 } else {
+  // Show nav only in full page mode
+  document.querySelector('.top-nav').style.display = 'flex';
+  document.querySelector('#carTabs').style.display = 'flex';
   selectPost(0);
 }
 
@@ -735,8 +794,10 @@ document.querySelectorAll('.slide[data-post]').forEach(s => {
   _postSlides[p].push(s);
 });
 Object.values(_postSlides).forEach(slides => {
-  const targets = slides.length > 1 ? [slides[0], slides[slides.length-1]] : [slides[0]];
-  targets.forEach(slide => {
+  const firstSlide = slides[0];
+  const lastSlide = slides.length > 1 ? slides[slides.length-1] : null;
+
+  const injectLogo = (slide, isFirst) => {
     if(!slide || slide.querySelector('.slide-logo-inject')) return;
     const cls = slide.className;
     const isDark = cls.includes('p1-s2')||cls.includes('p1-s5')||cls.includes('p2-s3')
@@ -745,10 +806,17 @@ Object.values(_postSlides).forEach(slides => {
     const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
     const logo = document.createElement('div');
     logo.className = 'slide-logo-inject';
-    logo.style.cssText = 'position:absolute;bottom:52px;left:72px;opacity:.78;pointer-events:none;z-index:10';
-    logo.innerHTML = `<img src="${logoSrc}" style="height:42px;object-fit:contain;display:block"/>`;
+    // First slide: top-left; Last slide: bottom-right (visual balance)
+    const pos = isFirst
+      ? 'top:64px;left:72px'
+      : 'bottom:72px;right:72px';
+    logo.style.cssText = `position:absolute;${pos};opacity:1;pointer-events:none;z-index:10`;
+    logo.innerHTML = `<img src="${logoSrc}" style="height:126px;object-fit:contain;display:block"/>`;
     slide.appendChild(logo);
-  });
+  };
+
+  injectLogo(firstSlide, true);
+  if(lastSlide) injectLogo(lastSlide, false);
 });
 
 

@@ -602,7 +602,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <button class="tab t-green" onclick="showTab('redes', this)" style="--t-color:#3DA9A5">
       <i data-lucide="instagram"></i>Redes Sociais
     </button>
-    <button class="tab t-violet" onclick="showTab('videos', this)" style="--t-color:#8B5CF6">
+    <button class="tab t-green" onclick="showTab('videos', this)" style="--t-color:#3DA9A5">
       <i data-lucide="video"></i>Produção de Vídeos
     </button>
   </div>
@@ -1750,7 +1750,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <!-- COLUNA DIREITA: chat Beatriz -->
     <div class="chat-col">
       <div class="dh-head">
-        <div class="dh-avatar" style="background:#8B5CF6"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="dh-avatar" style="background:#3DA9A5"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
         <div>
           <div class="dh-name">Beatriz Barros</div>
           <div class="dh-sub">
@@ -1772,7 +1772,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
         <div class="dh-input-row">
           <textarea class="dh-ta" id="bbInput" placeholder="Falar com Beatriz..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();bbEnviar()}"></textarea>
-          <button class="dh-send" id="bbSendBtn" onclick="bbEnviar()" style="background:#8B5CF6">
+          <button class="dh-send" id="bbSendBtn" onclick="bbEnviar()" style="background:#3DA9A5">
             <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           </button>
         </div>
@@ -2417,7 +2417,7 @@ function renderVideos() {
     return p.status === vdFilterAtivo;
   });
   countEl.textContent = filtered.length + ' vídeo' + (filtered.length!==1?'s':'');
-  const statusDotVd = {proposta:'var(--amber-dark)',aprovado:'var(--green)',producao:'var(--teal)',entregue:'#8B5CF6'};
+  const statusDotVd = {proposta:'var(--amber-dark)',aprovado:'var(--green)',producao:'var(--teal)',entregue:'var(--teal)'};
   list.innerHTML = filtered.map((p, idx) => {
     const isOpen = vdOpenPost === p.id;
     const num = String(idx+1).padStart(2,'0');
@@ -2430,7 +2430,7 @@ function renderVideos() {
     if(isOpen) {
       const aspectW = p.formato==='9:16' ? 60 : 108;
       const aspectH = p.formato==='9:16' ? 107 : 61;
-      const scenePalette = {abertura:'#3DA9A5',problema:'#e05252',solucao:'#3DA9A5',destaque:'#F5A623',lista:'#5b7fa6',cta:'#8B5CF6'};
+      const scenePalette = {abertura:'#3DA9A5',problema:'#e05252',solucao:'#3DA9A5',destaque:'#F5A623',lista:'#3DA9A5',cta:'#F5A623'};
       const scenes = p.roteiro.map((c,i) => {
         const bg = scenePalette[c.tipo]||'#6A8888';
         return `<div style="flex-shrink:0;cursor:pointer" title="${c.desc}">
@@ -2467,7 +2467,7 @@ function renderVideos() {
     return `<div class="post-item${isOpen?' open':''}" id="vpi-${p.id}">
       <div class="post-row" onclick="vdToggle('${p.id}')">
         <div style="font-size:10px;font-weight:700;color:var(--text4);width:22px;flex-shrink:0;text-align:right">${num}</div>
-        <div class="post-thumb" style="background:linear-gradient(135deg,#8B5CF6 0%,#6D3FC5 100%);display:flex;align-items:center;justify-content:center">
+        <div class="post-thumb" style="background:linear-gradient(135deg,#3DA9A5 0%,#2B7A77 100%);display:flex;align-items:center;justify-content:center">
           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </div>
         <div class="post-info">
@@ -2523,19 +2523,19 @@ function renderBbHistory() {
       if(h.textProp) {
         // Roteiro proposal card
         const vd = VD_POSTS.find(v=>v.id===h.videoId);
-        const scenePalette = {abertura:'#3DA9A5',problema:'#e05252',solucao:'#3DA9A5',destaque:'#F5A623',lista:'#5b7fa6',cta:'#8B5CF6'};
+        const scenePalette = {abertura:'#3DA9A5',problema:'#e05252',solucao:'#3DA9A5',destaque:'#F5A623',lista:'#3DA9A5',cta:'#F5A623'};
         const scenes = vd ? vd.roteiro.map(c=>`<div style="padding:8px 10px;border-left:3px solid ${scenePalette[c.tipo]||'#6A8888'};background:var(--bg1);border-radius:0 6px 6px 0;margin-bottom:6px">
           <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.4px">Cena ${c.cena} — ${c.label}</div>
           <div style="font-size:12px;color:var(--text1);line-height:1.5;margin-top:2px">${c.desc}</div>
         </div>`).join('') : '';
         el.innerHTML = `<div class="dh-bbl-who">${BB_NOME}</div>
           <div class="dh-bbl-text">${h.text}</div>
-          <div class="dh-tprop" style="border-color:#8B5CF6">
-            <div class="dh-tprop-title" style="color:#8B5CF6">${vd?vd.titulo:'Roteiro'}</div>
+          <div class="dh-tprop" style="border-color:var(--teal)">
+            <div class="dh-tprop-title" style="color:var(--teal)">${vd?vd.titulo:'Roteiro'}</div>
             <div style="font-size:10px;color:var(--text3);margin-bottom:8px">${vd?vd.duracao+' · '+vd.formato:''}</div>
             ${scenes}
             <div style="margin-top:10px">
-              <button class="dh-btn-ok" style="background:#8B5CF6" onclick="bbAprovarRoteiro(this,'${h.videoId}')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Aprovar roteiro</button>
+              <button class="dh-btn-ok" style="background:var(--teal)" onclick="bbAprovarRoteiro(this,'${h.videoId}')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Aprovar roteiro</button>
             </div>
           </div>
           <div class="dh-bbl-time">${h.time||'ontem'}</div>`;
@@ -2617,12 +2617,12 @@ function bbAprovarRoteiro(btn, videoId) {
         vid.status='entregue'; renderVideos();
         el.innerHTML=`<div class="dh-bbl-who">${BB_NOME}</div><div class="dh-bbl-text">${msg}</div>
           <div class="dh-preview">
-            <div class="dh-preview-thumb" style="background:linear-gradient(135deg,#8B5CF6,#3DA9A5);${vid.formato==='9:16'?'width:90px;height:160px':'width:180px;height:101px'};border-radius:12px;display:flex;align-items:center;justify-content:center">
+            <div class="dh-preview-thumb" style="background:linear-gradient(135deg,#3DA9A5,#2B7A77);${vid.formato==='9:16'?'width:90px;height:160px':'width:180px;height:101px'};border-radius:12px;display:flex;align-items:center;justify-content:center">
               <svg viewBox="0 0 24 24" style="width:32px;height:32px;fill:none;stroke:#fff;stroke-width:2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             </div>
             <div class="dh-preview-meta">${vid.roteiro.length} cenas · ${vid.formato} · ${vid.duracao}</div>
             <div class="dh-preview-btns">
-              <button class="dh-btn-ok" style="background:#8B5CF6" onclick="this.textContent='Publicado!'"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Aprovar para publicar</button>
+              <button class="dh-btn-ok" style="background:var(--teal)" onclick="this.textContent='Publicado!'"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Aprovar para publicar</button>
             </div>
           </div>
           <div class="dh-bbl-time">agora</div>`;
@@ -2680,25 +2680,67 @@ async function rsGerar() {
   localStorage.setItem('gemini_api_key', key);
   const btn = document.getElementById('rsGenBtn');
   if(btn) { btn.disabled=true; btn.textContent='Gerando...'; }
-  if(log) log.textContent='Conectando ao Gemini Imagen 3...';
+  if(log) log.textContent='Conectando...';
   document.getElementById('rsGenDlBtn').style.display='none';
-  try {
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-fast-generate-001:predict?key=${key}`,
-      {method:'POST',headers:{'Content-Type':'application/json'},
-       body:JSON.stringify({instances:[{prompt}],parameters:{sampleCount:1,aspectRatio:rsGenFmt,safetyFilterLevel:'block_few',personGeneration:'allow_adult'}})}
-    );
-    const data = await resp.json();
-    if(data.error) throw new Error(data.error.message);
-    const b64 = data.predictions?.[0]?.bytesBase64Encoded;
-    if(!b64) throw new Error('Sem imagem na resposta');
-    rsGenImg = 'data:image/jpeg;base64,'+b64;
-    const prev = document.getElementById('rsGenPreview');
-    if(prev) prev.innerHTML = `<img src="${rsGenImg}" style="width:100%;border-radius:8px;display:block"/>`;
-    document.getElementById('rsGenDlBtn').style.display='block';
-    if(log) log.textContent='Imagem gerada.';
-  } catch(e) {
-    if(log) log.textContent='Erro: '+e.message;
+  let lastError = null;
+  let generated = false;
+
+  // Strategy 1: Gemini 2.0 Flash image generation (generateContent, same key as text)
+  const FLASH_MODELS = ['gemini-2.0-flash-preview-image-generation','gemini-2.0-flash-exp-image-generation'];
+  for(const model of FLASH_MODELS) {
+    if(generated) break;
+    if(log) log.textContent=`Gerando via ${model}...`;
+    try {
+      const resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+        {method:'POST',headers:{'Content-Type':'application/json'},
+         body:JSON.stringify({
+           contents:[{parts:[{text:prompt}]}],
+           generationConfig:{responseModalities:['IMAGE','TEXT']}
+         })}
+      );
+      const data = await resp.json();
+      if(data.error){lastError=data.error.message;continue;}
+      const parts = data.candidates?.[0]?.content?.parts||[];
+      const imgPart = parts.find(p=>p.inlineData?.mimeType?.startsWith('image'));
+      if(!imgPart){lastError='Sem imagem na resposta';continue;}
+      rsGenImg = `data:${imgPart.inlineData.mimeType};base64,${imgPart.inlineData.data}`;
+      const prev = document.getElementById('rsGenPreview');
+      if(prev) prev.innerHTML = `<img src="${rsGenImg}" style="width:100%;border-radius:8px;display:block"/>`;
+      document.getElementById('rsGenDlBtn').style.display='block';
+      if(log) log.textContent='Imagem gerada.';
+      generated = true;
+    } catch(e){lastError=e.message;}
+  }
+
+  // Strategy 2: Imagen 3 via predict endpoint (requires billing)
+  if(!generated) {
+    const IMAGEN_MODELS = ['imagen-3.0-generate-001','imagen-3.0-fast-generate-001'];
+    outer2: for(const model of IMAGEN_MODELS) {
+      for(const ver of ['v1beta','v1']) {
+        if(log) log.textContent=`Tentando ${model} (${ver})...`;
+        try {
+          const resp = await fetch(
+            `https://generativelanguage.googleapis.com/${ver}/models/${model}:predict?key=${key}`,
+            {method:'POST',headers:{'Content-Type':'application/json'},
+             body:JSON.stringify({instances:[{prompt}],parameters:{sampleCount:1,aspectRatio:rsGenFmt,safetyFilterLevel:'block_few',personGeneration:'allow_adult'}})}
+          );
+          const data = await resp.json();
+          if(data.error){lastError=data.error.message;continue;}
+          const b64 = data.predictions?.[0]?.bytesBase64Encoded;
+          if(!b64){lastError='Sem imagem';continue;}
+          rsGenImg='data:image/jpeg;base64,'+b64;
+          document.getElementById('rsGenPreview').innerHTML=`<img src="${rsGenImg}" style="width:100%;border-radius:8px;display:block"/>`;
+          document.getElementById('rsGenDlBtn').style.display='block';
+          if(log) log.textContent='Imagem gerada via Imagen.';
+          generated=true; break outer2;
+        } catch(e){lastError=e.message;}
+      }
+    }
+  }
+
+  if(!generated) {
+    if(log) log.innerHTML=`<span style="color:var(--red)">Erro: ${lastError}</span>`;
   }
   if(btn) { btn.disabled=false; btn.innerHTML='<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:#fff;stroke-width:2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Gerar imagem'; }
 }
