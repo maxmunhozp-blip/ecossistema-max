@@ -15,44 +15,26 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Escreve instrução em arquivo
-        run: |
-          mkdir -p /tmp/ajuste
-          printf '%s' "$INSTRUCTION" > /tmp/ajuste/instruction.txt
-          echo "Instrução (primeiros 120 chars):"
-          head -c 120 /tmp/ajuste/instruction.txt
-        env:
-          INSTRUCTION: ${{ github.event.inputs.instruction }}
-
-      - name: Copia instrução para o VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: 76.13.172.151
-          username: root
-          password: ${{ secrets.VPS_PASSWORD }}
-          source: /tmp/ajuste/instruction.txt
-          target: /tmp/ajuste/
-          strip_components: 3
-
       - name: Executa Claude Code no VPS
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          INSTRUCTION: ${{ github.event.inputs.instruction }}
         with:
           host: 76.13.172.151
           username: root
           password: ${{ secrets.VPS_PASSWORD }}
+          envs: INSTRUCTION
           command_timeout: 8m
           script: |
-            echo "=== Instrução ==="
-            cat /tmp/ajuste/instruction.txt
-            echo ""
-
+            export HOME=/root
             cd /opt/ecosistema-max-repo
-            git pull origin main --quiet || echo "git pull falhou, continuando..."
+            git pull origin main --quiet || true
 
-            echo "=== Executando Claude Code ==="
-            /usr/bin/claude --print < /tmp/ajuste/instruction.txt
-            EXIT_CODE=$?
-            echo "=== Claude Code saiu com código: $EXIT_CODE ==="
+            echo "=== Instrução recebida ==="
+            echo "$INSTRUCTION"
+            echo "=========================="
+
+            /usr/bin/claude -p "$INSTRUCTION"
 
             git add -A
             if git diff --staged --quiet; then
@@ -60,10 +42,8 @@ jobs:
             else
               git commit -m "ajuste(chat-ll): $(date '+%d/%m/%Y %H:%M')"
               git push origin main
-              echo "Push feito com sucesso."
+              echo "Push feito."
             fi
-
-            rm -rf /tmp/ajuste
 
       - name: Notifica Telegram
         if: always()
