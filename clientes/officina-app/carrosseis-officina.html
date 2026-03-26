@@ -799,17 +799,19 @@ function _injectLogos() {
     const firstSlide = slides[0];
     const lastSlide = slides.length > 1 ? slides[slides.length-1] : null;
 
-    // Ícone carrinho SVG branco — inline, sem dependência de arquivo externo
-    const cartSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:42px;height:42px"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>`;
-
     const injectLogo = (slide, isFirst) => {
       if(!slide || slide.querySelector('.slide-logo-inject')) return;
+      const cls = slide.className;
+      const isDark = cls.includes('p1-s2')||cls.includes('p1-s5')||cls.includes('p2-s3')
+        ||cls.includes('p2-s6')||cls.includes('p3-s1')||cls.includes('p4-s1')
+        ||cls.includes('p5-s2')||cls.includes('p5-s5');
+      const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
       const pos = isFirst ? 'top:64px;right:72px' : 'bottom:72px;right:72px';
-      const badge = document.createElement('div');
-      badge.className = 'slide-logo-inject';
-      badge.style.cssText = `position:absolute;${pos};width:80px;height:80px;border-radius:50%;background:#F5A623;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:10;box-shadow:0 4px 16px rgba(0,0,0,0.15)`;
-      badge.innerHTML = cartSvg;
-      slide.appendChild(badge);
+      const logo = document.createElement('div');
+      logo.className = 'slide-logo-inject';
+      logo.style.cssText = `position:absolute;${pos};pointer-events:none;z-index:10`;
+      logo.innerHTML = `<img src="${logoSrc}" style="height:80px;object-fit:contain;display:block"/>`;
+      slide.appendChild(logo);
     };
 
     injectLogo(firstSlide, true);
