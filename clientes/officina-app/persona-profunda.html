@@ -1712,7 +1712,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
             <label style="font-size:11px;color:var(--text3);display:block;margin-bottom:3px">GitHub Token (execução de ajustes)</label>
             <input id="dhCfgGh" type="password" placeholder="ghp_..." style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Inter',sans-serif;background:var(--surface);color:var(--text);box-sizing:border-box">
           </div>
-          <button onclick="dhSaveCfg()" style="padding:6px 12px;background:var(--teal);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;align-self:flex-start">Salvar</button>
+          <div style="display:flex;gap:8px">
+            <button onclick="dhSaveCfg()" style="padding:6px 12px;background:var(--teal);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif">Salvar</button>
+            <button onclick="dhClearSession()" style="padding:6px 12px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif">Limpar conversa</button>
+          </div>
         </div>
       </div>
       <div class="dh-msgs" id="dhMsgs">
@@ -2177,7 +2180,12 @@ function renderLb2() {
 function renderDhHistory() {
   const msgs = document.getElementById('dhMsgs');
   const typing = document.getElementById('dhTyping');
-  if(!msgs||msgs.querySelectorAll('.dh-bbl').length) return;
+  if(!msgs || msgs.querySelectorAll('.dh-bbl').length) return;
+  // Sessão salva tem prioridade sobre histórico estático
+  if(dhLoadSession()) {
+    dhRestoreVisible();
+    return;
+  }
   const html = DH_HISTORY.map(m=>dhBubble(m)).join('');
   msgs.insertAdjacentHTML('afterbegin', html);
   msgs.appendChild(typing);
@@ -2292,6 +2300,54 @@ function humanizarFala(text, personaId = 'lucas-lobato') {
 
 // Histórico multi-turn para o Gemini
 let dhChatHistory = [];
+let dhVisibleHistory = []; // {role:'user'|'agent', html, time}
+
+const DH_STORE_KEY = 'dh_chat_officina';
+
+function dhSaveSession() {
+  try {
+    localStorage.setItem(DH_STORE_KEY, JSON.stringify({
+      api: dhChatHistory,
+      visible: dhVisibleHistory
+    }));
+  } catch(e) {}
+}
+
+function dhLoadSession() {
+  try {
+    const raw = localStorage.getItem(DH_STORE_KEY);
+    if(!raw) return false;
+    const {api, visible} = JSON.parse(raw);
+    dhChatHistory = api || [];
+    dhVisibleHistory = visible || [];
+    return dhVisibleHistory.length > 0;
+  } catch(e) { return false; }
+}
+
+function dhRestoreVisible() {
+  const msgs = document.getElementById('dhMsgs');
+  const typing = document.getElementById('dhTyping');
+  if(!msgs || !dhVisibleHistory.length) return;
+  dhVisibleHistory.forEach(m => {
+    const el = document.createElement('div');
+    el.className = 'dh-bbl ' + m.role;
+    el.innerHTML = m.html;
+    msgs.insertBefore(el, typing);
+  });
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function dhClearSession() {
+  dhChatHistory = [];
+  dhVisibleHistory = [];
+  localStorage.removeItem(DH_STORE_KEY);
+  const msgs = document.getElementById('dhMsgs');
+  const typing = document.getElementById('dhTyping');
+  if(msgs) {
+    msgs.querySelectorAll('.dh-bbl').forEach(el => el.remove());
+    renderDhHistory();
+  }
+}
 
 function dhBuildSystemPrompt() {
   const postsCtx = RS2_POSTS.map((p,i)=>
@@ -2399,9 +2455,11 @@ async function dhEnviar() {
   const typing = document.getElementById('dhTyping');
 
   // Bubble do usuário
+  const userHtml = `<div class="dh-bbl-who">Você</div><div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
   const userEl = document.createElement('div');
   userEl.className = 'dh-bbl user';
-  userEl.innerHTML = `<div class="dh-bbl-who">Você</div><div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
+  userEl.innerHTML = userHtml;
+  dhVisibleHistory.push({role:'user', html: userHtml});
   msgs.insertBefore(userEl, typing);
   ta.value = ''; ta.style.height = 'auto';
   msgs.scrollTop = msgs.scrollHeight;
@@ -2458,7 +2516,10 @@ async function dhEnviar() {
     const html = reply
       .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
       .replace(/\n/g,'<br>');
-    agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div><div class="dh-bbl-text">${html}</div><div class="dh-bbl-time">agora</div>`;
+    const agentHtml = `<div class="dh-bbl-who">${DH_NOME}</div><div class="dh-bbl-text">${html}</div><div class="dh-bbl-time">agora</div>`;
+    agentEl.innerHTML = agentHtml;
+    dhVisibleHistory.push({role:'agent', html: agentHtml});
+    dhSaveSession();
     msgs.insertBefore(agentEl, typing);
     msgs.scrollTop = msgs.scrollHeight;
 
