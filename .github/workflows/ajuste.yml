@@ -29,14 +29,14 @@ jobs:
           script: |
             export HOME=/root
             export ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY"
-            cd /opt/ecosistema-max-repo
+            cd /opt/ecossistema-max-repo
             git pull origin main --quiet || true
 
             echo "=== Instrução recebida ==="
             echo "$INSTRUCTION"
             echo "=========================="
 
-            /usr/bin/claude -p "$INSTRUCTION"
+            /usr/bin/claude -p "$INSTRUCTION" --dangerously-skip-permissions
 
             git add -A
             if git diff --staged --quiet; then
