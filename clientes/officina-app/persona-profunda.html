@@ -386,8 +386,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .post-item.open .post-chevron svg{transform:rotate(180deg)}
 .post-item.open .post-chevron{border-color:var(--teal);background:var(--teal-dim)}
 .post-item.open .post-chevron svg{stroke:var(--teal)}
-.post-slides-wrap{max-height:0;overflow:hidden;transition:max-height .32s ease}
-.post-item.open .post-slides-wrap{max-height:180px}
+.post-slides-wrap{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.post-item.open .post-slides-wrap{max-height:600px}
 .post-slides-inner{padding:0 14px 14px;border-top:1px solid var(--border)}
 .slides-row-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin:12px 0 8px}
 .slides-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;scroll-snap-type:x mandatory}
@@ -482,6 +482,54 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .dh-btn-tx-adj{flex:1;padding:6px 8px;border-radius:7px;background:var(--surface);color:var(--text2);border:1px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s}
 .dh-btn-tx-adj:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-dim)}
 .dh-btn-tx-adj:disabled{opacity:.35;pointer-events:none}
+/* ── Calendário mini ── */
+.rs-cal-bar{display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-shrink:0}
+.rs-cal-toggle{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1.5px solid var(--border);background:var(--surface);color:var(--text3);cursor:pointer;font-family:'Inter',sans-serif;transition:.15s}
+.rs-cal-toggle:hover,.rs-cal-toggle.open{border-color:var(--teal);color:var(--teal);background:var(--teal-dim)}
+.rs-cal-toggle svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
+.rs-cal-filter-lbl{font-size:11px;color:var(--teal);font-weight:600}
+.rs-cal-clear{padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700;background:var(--teal-dim);border:1px solid var(--teal-mid);color:var(--teal);cursor:pointer;font-family:'Inter',sans-serif;transition:.15s}
+.rs-cal-clear:hover{background:var(--teal);color:#fff}
+.rs-cal{display:none;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 12px 12px;margin-bottom:10px;flex-shrink:0}
+.rs-cal.open{display:block}
+.rs-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.rs-cal-month{font-size:12px;font-weight:700;color:var(--text)}
+.rs-cal-nav{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text3);transition:.15s;font-size:13px;line-height:1;padding:0;font-family:'Inter',sans-serif}
+.rs-cal-nav:hover{border-color:var(--teal);color:var(--teal)}
+.rs-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.rs-cal-dow{font-size:8px;font-weight:700;color:var(--text4);text-align:center;padding:0 0 5px;text-transform:uppercase;letter-spacing:.3px}
+.rs-cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;font-size:10px;color:var(--text4);cursor:pointer;transition:.12s;position:relative;gap:1px}
+.rs-cal-day.cur{color:var(--text2);font-weight:500}
+.rs-cal-day:hover.cur{background:var(--surface2);color:var(--text)}
+.rs-cal-day.today{color:var(--teal);font-weight:800}
+.rs-cal-day.active{background:var(--teal)!important;color:#fff!important;font-weight:700;border-radius:6px}
+.rs-cal-dot{width:4px;height:4px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.rs-cal-day.active .rs-cal-dot{background:rgba(255,255,255,.7)}
+.rs-cal-day.empty{pointer-events:none;opacity:0}
+/* ── Status popover ── */
+.status-pop{position:fixed;z-index:400;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1),0 1px 4px rgba(0,0,0,.06);padding:5px;min-width:168px;display:none}
+.status-pop.open{display:block;animation:fadeIn .12s ease}
+.status-pop-opt{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);transition:.1s}
+.status-pop-opt:hover{background:var(--surface2)}
+.status-pop-opt.active{color:var(--teal);background:var(--teal-dim)}
+.sp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.status-pop-date{padding:7px 10px 4px;border-top:1px solid var(--border);margin-top:3px}
+.status-pop-date-lbl{font-size:10px;color:var(--text3);margin-bottom:4px;font-weight:600}
+.status-pop-date input{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:5px 8px;font-size:11px;font-family:'Inter',sans-serif;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s}
+.status-pop-date input:focus{border-color:var(--teal)}
+/* ── Textos de apoio ── */
+.post-texto-section{padding:0 14px 14px;border-top:1px solid var(--border)}
+.post-texto-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin:12px 0 10px}
+.post-texto-fields{display:flex;flex-direction:column;gap:8px}
+.post-texto-row{display:flex;align-items:flex-start;gap:6px}
+.post-texto-label{font-size:10px;font-weight:700;color:var(--text3);padding-top:7px;width:70px;flex-shrink:0}
+.post-texto-input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:11px;font-family:'Inter',sans-serif;color:var(--text);background:var(--surface);outline:none;resize:none;line-height:1.55;transition:border-color .15s;min-height:34px}
+.post-texto-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(61,169,165,.06)}
+.post-texto-copy{width:28px;height:28px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;margin-top:3px}
+.post-texto-copy:hover{border-color:var(--teal);background:var(--teal-dim)}
+.post-texto-copy svg{width:12px;height:12px;stroke:var(--text3);fill:none;stroke-width:2}
+.post-texto-copy:hover svg,.post-texto-copy.copied svg{stroke:var(--teal)}
+.post-texto-copy.copied{border-color:var(--teal);background:var(--teal-dim)}
 /* ── Lightbox brand ── */
 .rs2-lb-brand{text-align:center;padding:6px 0 4px;font-size:9px;font-weight:900;color:rgba(61,169,165,.4);letter-spacing:.8px;text-transform:uppercase}
 /* Lightbox v2 */
@@ -1565,6 +1613,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
         <button class="rs-pill" onclick="rsFilter('rascunho',this)">Rascunho</button>
         <button class="rs-pill" onclick="rsFilter('proposta',this)">Propostas</button>
       </div>
+      <div class="rs-cal-bar">
+        <button class="rs-cal-toggle" id="calToggleBtn" onclick="toggleCal()">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendário
+        </button>
+        <span class="rs-cal-filter-lbl" id="calFilterLbl" style="display:none"></span>
+        <button class="rs-cal-clear" id="calClearBtn" style="display:none" onclick="calClear()">Limpar</button>
+      </div>
+      <div class="rs-cal" id="rsCal"></div>
       <div class="posts-list" id="postsList"></div>
     </div>
 
@@ -1605,6 +1662,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 
 </div><!-- /content -->
 
+<!-- STATUS POPOVER -->
+<div class="status-pop" id="statusPop">
+  <div class="status-pop-opt" data-s="rascunho" onclick="setStatus('rascunho')"><span class="sp-dot" style="background:var(--text4)"></span>Rascunho</div>
+  <div class="status-pop-opt" data-s="revisao" onclick="setStatus('revisao')"><span class="sp-dot" style="background:var(--teal)"></span>Em revisão</div>
+  <div class="status-pop-opt" data-s="agendado" onclick="setStatus('agendado')"><span class="sp-dot" style="background:var(--amber)"></span>Agendado</div>
+  <div class="status-pop-opt" data-s="publicado" onclick="setStatus('publicado')"><span class="sp-dot" style="background:var(--green)"></span>Publicado</div>
+  <div class="status-pop-date" id="statusPopDate" style="display:none">
+    <div class="status-pop-date-lbl">Data de publicação</div>
+    <input type="date" id="statusDateInput" onchange="setStatusDate(this.value)"/>
+  </div>
+</div>
+
 <!-- LIGHTBOX v2 -->
 <div class="rs2-lb" id="rs2Lb" onclick="rs2CloseLb()">
   <div class="rs2-lb-wrap" onclick="event.stopPropagation()">
@@ -1637,14 +1706,19 @@ lucide.createIcons();
 
 /* ═══ REDES SOCIAIS v2 ═══ */
 const RS2_POSTS = [
-  {id:'p1',postIdx:0,titulo:'Como escolher a oficina certa',plataformas:['instagram'],status:'publicado',data:'15/03/2026',slides:5,redator:'Juliana Costa',designer:'Rafael Mota'},
-  {id:'p2',postIdx:1,titulo:'5 sinais que seu carro precisa de revisão',plataformas:['instagram'],status:'revisao',data:'24/03/2026',slides:6,redator:'Juliana Costa',designer:'Rafael Mota'},
-  {id:'p3',postIdx:2,titulo:'Depoimento: Eduardo resolveu em 1 hora',plataformas:['instagram','facebook'],status:'publicado',data:'20/03/2026',slides:4,redator:'Bruno Leal',designer:'Camila Ferreira'},
-  {id:'p4',postIdx:3,titulo:'Officina App em 3 passos',plataformas:['instagram'],status:'rascunho',data:'—',slides:3,redator:'Bruno Leal',designer:'Camila Ferreira'},
-  {id:'p5',postIdx:4,titulo:'Por que revisão preventiva vale a pena',plataformas:['facebook'],status:'agendado',data:'01/04/2026',slides:5,redator:'Juliana Costa',designer:'Rafael Mota'},
-  {id:'p6',postIdx:0,titulo:'Como funciona o diagnóstico pelo app',plataformas:['instagram'],status:'proposta',data:'—',slides:4,redator:'Juliana Costa',designer:'Camila Ferreira'},
-  {id:'p7',postIdx:1,titulo:'Orçamento transparente: entenda como',plataformas:['instagram','facebook'],status:'proposta',data:'—',slides:3,redator:'Bruno Leal',designer:'Rafael Mota'},
-  {id:'p8',postIdx:2,titulo:'Top 5 erros ao escolher oficina',plataformas:['instagram'],status:'proposta',data:'—',slides:5,redator:'Juliana Costa',designer:'Rafael Mota'},
+  {id:'p1',postIdx:0,titulo:'Como escolher a oficina certa',plataformas:['instagram'],status:'publicado',data:'15/03/2026',slides:5,redator:'Juliana Costa',designer:'Rafael Mota',
+   textoApoio:{legenda:'Escolher oficina por indicação é ótimo — mas e quando não tem ninguém pra perguntar? 3 critérios que o Officina App usa pra você não cair em furada.',hashtags:'#OfficinApp #mecânica #oficinaverificada #carro #manutenção',cta:'officinaapp.com.br — link na bio'}},
+  {id:'p2',postIdx:1,titulo:'5 sinais que seu carro precisa de revisão',plataformas:['instagram'],status:'revisao',data:'24/03/2026',slides:6,redator:'Juliana Costa',designer:'Rafael Mota',
+   textoApoio:{legenda:'Carro não fala, mas avisa. 5 sinais que você não pode ignorar — antes de ficar parado no meio da rua.',hashtags:'#revisãopreventiva #carro #mecânica #OfficinApp #manutençãoautomotiva',cta:'Agende uma revisão — link na bio'}},
+  {id:'p3',postIdx:2,titulo:'Depoimento: Eduardo resolveu em 1 hora',plataformas:['instagram','facebook'],status:'publicado',data:'20/03/2026',slides:4,redator:'Bruno Leal',designer:'Camila Ferreira',
+   textoApoio:{legenda:'Eduardo ia no mecânico da sogra. Resolveu em 1 hora e economizou R$200. Essa é a diferença de ter transparência no orçamento antes de entregar o carro.',hashtags:'#depoimento #OfficinApp #oficina #carro #resultado',cta:'officinaapp.com.br'}},
+  {id:'p4',postIdx:3,titulo:'Officina App em 3 passos',plataformas:['instagram'],status:'rascunho',data:'—',slides:3,redator:'Bruno Leal',designer:'Camila Ferreira',
+   textoApoio:{legenda:'Resolver um problema no carro não precisa ser complicado. 3 passos e está feito — sem sair de casa para pesquisar.',hashtags:'#OfficinApp #carro #tecnologia #oficinaverificada',cta:'Baixe grátis — link na bio'}},
+  {id:'p5',postIdx:4,titulo:'Por que revisão preventiva vale a pena',plataformas:['facebook'],status:'agendado',data:'01/04/2026',slides:5,redator:'Juliana Costa',designer:'Rafael Mota',
+   textoApoio:{legenda:'Motor fundido custa entre R$3.000 e R$8.000. Uma revisão preventiva custa R$80. A conta é simples — e você já sabe qual vale mais.',hashtags:'#revisãopreventiva #carro #manutenção #OfficinApp #economia',cta:'Agende agora — officinaapp.com.br'}},
+  {id:'p6',postIdx:0,titulo:'Como funciona o diagnóstico pelo app',plataformas:['instagram'],status:'proposta',data:'—',slides:4,redator:'Juliana Costa',designer:'Camila Ferreira',textoApoio:{legenda:'',hashtags:'',cta:''}},
+  {id:'p7',postIdx:1,titulo:'Orçamento transparente: entenda como',plataformas:['instagram','facebook'],status:'proposta',data:'—',slides:3,redator:'Bruno Leal',designer:'Rafael Mota',textoApoio:{legenda:'',hashtags:'',cta:''}},
+  {id:'p8',postIdx:2,titulo:'Top 5 erros ao escolher oficina',plataformas:['instagram'],status:'proposta',data:'—',slides:5,redator:'Juliana Costa',designer:'Rafael Mota',textoApoio:{legenda:'',hashtags:'',cta:''}},
 ];
 
 const DH_HISTORY = [
@@ -1676,6 +1750,108 @@ const DH_HISTORY = [
 let rs2FilterAtivo = 'todos', rs2OpenPost = null;
 let rs2LbPost = null, rs2LbIdx = 0;
 let dhSending = false, dhRespIdx = 0;
+let calYear = 2026, calMonth = 2, calFilterDay = null; // month 0-indexed
+let _statusPostId = null;
+
+/* ── HELPERS ── */
+function parseData(str) {
+  if(!str||str==='—') return null;
+  const pts = str.split('/');
+  if(pts.length!==3) return null;
+  return new Date(+pts[2],+pts[1]-1,+pts[0]);
+}
+
+/* ── CALENDÁRIO ── */
+function toggleCal() {
+  const cal = document.getElementById('rsCal');
+  const btn = document.getElementById('calToggleBtn');
+  const open = cal.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  if(open) renderCal();
+}
+function calNav(dir) { calMonth+=dir; if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;} renderCal(); }
+function calSelectDay(dateStr) {
+  calFilterDay = calFilterDay===dateStr ? null : dateStr;
+  const lbl = document.getElementById('calFilterLbl');
+  const clr = document.getElementById('calClearBtn');
+  if(calFilterDay) {
+    const [y,m,d] = calFilterDay.split('-');
+    lbl.textContent = d+'/'+m+'/'+y; lbl.style.display=''; clr.style.display='';
+  } else { lbl.style.display='none'; clr.style.display='none'; }
+  renderCal(); renderPosts();
+}
+function calClear() { calFilterDay=null; document.getElementById('calFilterLbl').style.display='none'; document.getElementById('calClearBtn').style.display='none'; renderCal(); renderPosts(); }
+function renderCal() {
+  const el = document.getElementById('rsCal');
+  if(!el||!el.classList.contains('open')) return;
+  const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const DIAS = ['D','S','T','Q','Q','S','S'];
+  const today = new Date(); const todayStr = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  // Post dates set
+  const postDates = new Set(RS2_POSTS.map(p=>{ const d=parseData(p.data); if(!d) return null; return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }).filter(Boolean));
+  const first = new Date(calYear, calMonth, 1);
+  const startDow = first.getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  let grid = DIAS.map(d=>`<div class="rs-cal-dow">${d}</div>`).join('');
+  for(let i=0;i<startDow;i++) grid+=`<div class="rs-cal-day empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const ds = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const hasDot = postDates.has(ds);
+    const isToday = ds===todayStr;
+    const isActive = ds===calFilterDay;
+    const dot = hasDot?`<span class="rs-cal-dot"></span>`:'';
+    grid+=`<div class="rs-cal-day cur${isToday?' today':''}${isActive?' active':''}" onclick="calSelectDay('${ds}')">${d}${dot}</div>`;
+  }
+  el.innerHTML = `<div class="rs-cal-head"><button class="rs-cal-nav" onclick="calNav(-1)">‹</button><span class="rs-cal-month">${MESES[calMonth]} ${calYear}</span><button class="rs-cal-nav" onclick="calNav(1)">›</button></div><div class="rs-cal-grid">${grid}</div>`;
+}
+
+/* ── STATUS POPOVER ── */
+function openStatusPop(postId, e) {
+  e.stopPropagation();
+  _statusPostId = postId;
+  const pop = document.getElementById('statusPop');
+  const p = RS2_POSTS.find(x=>x.id===postId);
+  pop.querySelectorAll('.status-pop-opt').forEach(o=>o.classList.toggle('active', o.dataset.s===p.status));
+  const dateDiv = document.getElementById('statusPopDate');
+  dateDiv.style.display = p.status==='agendado' ? '' : 'none';
+  if(p.status==='agendado' && p.data!=='—') {
+    const pts=p.data.split('/'); document.getElementById('statusDateInput').value=pts[2]+'-'+pts[1]+'-'+pts[0];
+  }
+  const rect = e.currentTarget.getBoundingClientRect();
+  pop.style.top = (rect.bottom+6)+'px';
+  pop.style.left = Math.min(rect.left, window.innerWidth-190)+'px';
+  pop.classList.add('open');
+}
+function setStatus(s) {
+  const p = RS2_POSTS.find(x=>x.id===_statusPostId); if(!p) return;
+  p.status = s;
+  const dateDiv = document.getElementById('statusPopDate');
+  dateDiv.style.display = s==='agendado'?'':'none';
+  if(s!=='agendado') p.data='—';
+  document.getElementById('statusPop').querySelectorAll('.status-pop-opt').forEach(o=>o.classList.toggle('active',o.dataset.s===s));
+  renderPosts(); renderCal();
+}
+function setStatusDate(val) {
+  const p = RS2_POSTS.find(x=>x.id===_statusPostId); if(!p) return;
+  const [y,m,d]=val.split('-'); p.data=d+'/'+m+'/'+y; renderPosts(); renderCal();
+}
+document.addEventListener('click',e=>{
+  const pop=document.getElementById('statusPop');
+  if(pop&&!pop.contains(e.target)&&!e.target.classList.contains('pst')) pop.classList.remove('open');
+});
+
+/* ── TEXTOS DE APOIO ── */
+function saveTexto(postId, field, val) {
+  const p=RS2_POSTS.find(x=>x.id===postId); if(!p||!p.textoApoio) return; p.textoApoio[field]=val;
+}
+function copyTexto(inputId, btn) {
+  const el=document.getElementById(inputId); if(!el) return;
+  const txt=el.value||el.textContent||'';
+  navigator.clipboard.writeText(txt).then(()=>{
+    btn.classList.add('copied');
+    setTimeout(()=>btn.classList.remove('copied'),1500);
+  }).catch(()=>{el.select&&el.select();document.execCommand('copy');btn.classList.add('copied');setTimeout(()=>btn.classList.remove('copied'),1500);});
+}
 
 const DH_RESPS = [
   t => `Entendido! Apliquei o ajuste solicitado. Confira o preview abaixo.`,
@@ -1700,7 +1876,13 @@ function renderPosts() {
   const list = document.getElementById('postsList');
   const countEl = document.getElementById('postsCount');
   if(!list) return;
-  const filtered = RS2_POSTS.filter(p => {
+  let filtered = RS2_POSTS.filter(p => {
+    if(calFilterDay) {
+      const d = parseData(p.data);
+      if(!d) return false;
+      const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+      if(ds !== calFilterDay) return false;
+    }
     if(rs2FilterAtivo==='todos') return true;
     if(rs2FilterAtivo==='instagram') return p.plataformas.includes('instagram');
     if(rs2FilterAtivo==='facebook') return p.plataformas.includes('facebook');
@@ -1708,10 +1890,13 @@ function renderPosts() {
   });
   countEl.textContent = filtered.length + ' post' + (filtered.length!==1?'s':'');
   const statusLabel = {publicado:'Publicado',revisao:'Em revisão',rascunho:'Rascunho',agendado:'Agendado',proposta:'Proposta'};
-  list.innerHTML = filtered.map(p => {
+  const statusDot = {publicado:'var(--green)',revisao:'var(--teal)',rascunho:'var(--text4)',agendado:'var(--amber)',proposta:'var(--amber-dark)'};
+  list.innerHTML = filtered.map((p, idx) => {
     const isOpen = rs2OpenPost === p.id;
     const plat = p.plataformas.map(pl=>pl.charAt(0).toUpperCase()+pl.slice(1)).join(' · ');
+    const num = String(idx+1).padStart(2,'0');
     let slidesHtml = '';
+    let textoHtml = '';
     if(isOpen) {
       const cards = Array.from({length:p.slides},(_,i) =>
         `<div class="slide-card" onclick="rs2OpenLb('${p.id}',${i})" title="Slide ${i+1}">
@@ -1720,6 +1905,27 @@ function renderPosts() {
           <span class="slide-card-brand">O</span>
         </div>`).join('');
       slidesHtml = `<div class="post-slides-inner"><div class="slides-row-label">Slides</div><div class="slides-row">${cards}</div></div>`;
+      const ta = p.textoApoio||{};
+      textoHtml = `<div class="post-texto-section">
+        <div class="post-texto-head">Textos de apoio</div>
+        <div class="post-texto-fields">
+          <div class="post-texto-row">
+            <span class="post-texto-label">Legenda</span>
+            <textarea class="post-texto-input" rows="3" id="ta-legenda-${p.id}" onchange="saveTexto('${p.id}','legenda',this.value)">${ta.legenda||''}</textarea>
+            <button class="post-texto-copy" onclick="copyTexto('ta-legenda-${p.id}',this)" title="Copiar"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+          </div>
+          <div class="post-texto-row">
+            <span class="post-texto-label">Hashtags</span>
+            <input class="post-texto-input" id="ta-hashtags-${p.id}" value="${(ta.hashtags||'').replace(/"/g,'&quot;')}" onchange="saveTexto('${p.id}','hashtags',this.value)"/>
+            <button class="post-texto-copy" onclick="copyTexto('ta-hashtags-${p.id}',this)" title="Copiar"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+          </div>
+          <div class="post-texto-row">
+            <span class="post-texto-label">CTA / Link</span>
+            <input class="post-texto-input" id="ta-cta-${p.id}" value="${(ta.cta||'').replace(/"/g,'&quot;')}" onchange="saveTexto('${p.id}','cta',this.value)"/>
+            <button class="post-texto-copy" onclick="copyTexto('ta-cta-${p.id}',this)" title="Copiar"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+          </div>
+        </div>
+      </div>`;
     }
     const creditsHtml = p.redator || p.designer ? `
       <div class="post-credits">
@@ -1729,19 +1935,20 @@ function renderPosts() {
       </div>` : '';
     return `<div class="post-item${isOpen?' open':''}" id="pi-${p.id}">
       <div class="post-row" onclick="rs2Toggle('${p.id}')">
+        <div style="font-size:10px;font-weight:700;color:var(--text4);width:22px;flex-shrink:0;text-align:right">${num}</div>
         <div class="post-thumb"><div class="post-thumb-frame"><iframe class="post-thumb-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=0" scrolling="no" loading="lazy"></iframe></div></div>
         <div class="post-info">
           <div class="post-title">${p.titulo}</div>
           <div class="post-meta">
             <span class="post-plat"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>${plat}</span>
-            <span class="pst ${p.status}">${statusLabel[p.status]||p.status}${p.status==='agendado'?' · '+p.data:''}</span>
+            <span class="pst ${p.status}" style="cursor:pointer" onclick="openStatusPop('${p.id}',event)"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${statusDot[p.status]||'var(--text4)'};margin-right:4px;vertical-align:middle"></span>${statusLabel[p.status]||p.status}${p.status==='agendado'&&p.data!=='—'?' · '+p.data:''}</span>
           </div>
           ${creditsHtml}
         </div>
         <span class="post-slides-count">${p.slides} slides</span>
         <div class="post-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
       </div>
-      <div class="post-slides-wrap">${slidesHtml}</div>
+      <div class="post-slides-wrap">${slidesHtml}${textoHtml}</div>
     </div>`;
   }).join('');
 }
