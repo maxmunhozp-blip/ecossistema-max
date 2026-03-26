@@ -1688,13 +1688,31 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <div class="chat-col">
       <div class="dh-head">
         <div class="dh-avatar"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-        <div>
+        <div style="flex:1">
           <div class="dh-name">Lucas Lobato</div>
           <div class="dh-sub">
             <span class="dh-dot online"></span>
             <span>Online</span>
             &nbsp;·&nbsp;Estratégico de Conteúdo
           </div>
+        </div>
+        <button id="dhCfgBtn" onclick="dhToggleCfg()" title="Configurações" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--text3);display:flex;align-items:center;border-radius:6px;transition:.15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+      <!-- Config overlay -->
+      <div id="dhCfgPanel" style="display:none;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface2)">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Configurações do time de criação</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div>
+            <label style="font-size:11px;color:var(--text3);display:block;margin-bottom:3px">Chave Gemini (chat + imagens)</label>
+            <input id="dhCfgGemini" type="password" placeholder="AIza..." style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Inter',sans-serif;background:var(--surface);color:var(--text);box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--text3);display:block;margin-bottom:3px">GitHub Token (execução de ajustes)</label>
+            <input id="dhCfgGh" type="password" placeholder="ghp_..." style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Inter',sans-serif;background:var(--surface);color:var(--text);box-sizing:border-box">
+          </div>
+          <button onclick="dhSaveCfg()" style="padding:6px 12px;background:var(--teal);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;align-self:flex-start">Salvar</button>
         </div>
       </div>
       <div class="dh-msgs" id="dhMsgs">
@@ -1817,13 +1835,21 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 
 <script>
 function showTab(name, btn) {
+  localStorage.setItem('officina_tab', name);
   if(name==='videos') { setTimeout(vdInit,50); }
   if(name==='redes') { setTimeout(rs2Init,50); }
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   (btn || event.currentTarget).classList.add('active');
-  if(name === 'redes') rs2Init();
+  if(name === 'redes') {
+    rs2Init();
+    // Scroll chat to bottom após tab ficar visível
+    setTimeout(()=>{
+      const msgs = document.getElementById('dhMsgs');
+      if(msgs) msgs.scrollTop = msgs.scrollHeight;
+    }, 80);
+  }
 }
 
 const RS2_POSTS = [
@@ -2200,7 +2226,7 @@ let dhChatHistory = [];
 
 function dhBuildSystemPrompt() {
   const postsCtx = RS2_POSTS.map((p,i)=>
-    `Post ${i+1}: "${p.titulo}" — ${p.slides} slides — Status: ${p.status}`
+    `Post ${i+1} (postIdx=${p.postIdx}): "${p.titulo}" — ${p.slides} slides — Status: ${p.status}`
   ).join('\n');
   return `Você é Lucas Lobato, estrategista de conteúdo digital do Officina App (marketplace automotivo que conecta motoristas a oficinas verificadas em São Paulo).
 
@@ -2209,16 +2235,82 @@ Você conversa diretamente com Max, o gestor do projeto. Seu papel: ajudar com c
 POSTS ATUAIS NO PIPELINE:
 ${postsCtx}
 
+ARQUIVO DOS CARROSSÉIS: clientes/officina-app/carrosseis-officina.html
+Cada slide é um div.slide com data-post="X" (postIdx 0-4). A logo é injetada via JS na função _injectLogos() — first slide top-right (top:64px;right:72px), last slide bottom-right.
+
 REGRAS OBRIGATÓRIAS:
 - Português brasileiro informal, direto — sem enrolação, sem formalismo
 - Máximo 2 frases por resposta (salvo quando listar slides de uma proposta)
 - Mantenha contexto: se o usuário mencionou "post 01" ou "slide 1", lembre nas próximas mensagens
 - NUNCA pergunte algo que já foi respondido na mesma conversa
-- Se o usuário descreve um problema específico ("logo sobrepondo texto no slide 1 do post 1"), confirme e diga que vai resolver — não faça mais perguntas
-- Para pedidos de ajuste de layout/design, responda: "Entendido, vou ajustar [o que foi pedido]. Pode aguardar."
-- Para nova proposta de carrossel, apresente título + número de slides + resumo dos slides (1 linha cada)
-- Para aprovação de post, confirme o título e diga que passou para produção
-- Responda como profissional experiente, não como assistente virtual`;
+- Se o usuário descreve um ajuste visual/textual específico, confirme e diga que vai executar
+- Responda como profissional experiente, não como assistente virtual
+
+AÇÕES EXECUTÁVEIS:
+Quando o usuário pedir uma mudança visual ou textual nos slides, inclua EXATAMENTE ao final da sua resposta (numa nova linha):
+---ACTION:{"instruction":"INSTRUÇÃO DETALHADA PARA CLAUDE CODE"}
+
+A instrução deve especificar: arquivo exato, qual post (postIdx), qual slide (índice 0-based dentro do post), o que mudar. Seja preciso para o Claude Code poder executar sem ambiguidade.
+Exemplo: "Em clientes/officina-app/carrosseis-officina.html, na função _injectLogos(), para slides do post com postIdx=0, mude a posição da logo do primeiro slide de top:64px para top:140px para não sobrepor o badge teal."
+
+Se não houver ação de código, NÃO inclua ---ACTION.`;
+}
+
+function dhToggleCfg() {
+  const p = document.getElementById('dhCfgPanel');
+  if(p.style.display === 'none') {
+    p.style.display = 'block';
+    const gKey = localStorage.getItem('gemini_api_key')||'';
+    const ghKey = localStorage.getItem('officina_gh_token')||'';
+    document.getElementById('dhCfgGemini').value = gKey;
+    document.getElementById('dhCfgGh').value = ghKey;
+  } else {
+    p.style.display = 'none';
+  }
+}
+
+function dhSaveCfg() {
+  const gem = document.getElementById('dhCfgGemini').value.trim();
+  const gh  = document.getElementById('dhCfgGh').value.trim();
+  if(gem) localStorage.setItem('gemini_api_key', gem);
+  if(gh)  localStorage.setItem('officina_gh_token', gh);
+  document.getElementById('dhCfgPanel').style.display = 'none';
+  dhAppendAgentMsg('Configurações salvas.');
+}
+
+function dhAppendAgentMsg(html) {
+  const msgs = document.getElementById('dhMsgs');
+  const typing = document.getElementById('dhTyping');
+  const el = document.createElement('div');
+  el.className = 'dh-bbl agent';
+  el.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div><div class="dh-bbl-text">${html}</div><div class="dh-bbl-time">agora</div>`;
+  msgs.insertBefore(el, typing);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function dhTriggerAction(action) {
+  const ghToken = localStorage.getItem('officina_gh_token');
+  if(!ghToken) {
+    dhAppendAgentMsg('Para executar ajustes automáticos, salve o <strong>GitHub Token</strong> nas configurações (ícone de engrenagem acima).');
+    return;
+  }
+  dhAppendAgentMsg('<span style="color:var(--text3)">Enviando para o time de criação... aguarda ~60s para o deploy.</span>');
+  try {
+    const resp = await fetch(
+      'https://api.github.com/repos/maxmunhozp-blip/ecossistema-max/actions/workflows/ajuste.yml/dispatches',
+      {method:'POST',
+       headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+       body: JSON.stringify({ref:'main', inputs:{instruction: action.instruction}})}
+    );
+    if(resp.status === 204) {
+      setTimeout(()=> dhAppendAgentMsg('Ajuste em produção. Deploy automático em ~60s.'), 1200);
+    } else {
+      const d = await resp.json();
+      dhAppendAgentMsg('Erro ao acionar workflow: ' + (d.message||resp.status));
+    }
+  } catch(e) {
+    dhAppendAgentMsg('Erro: ' + e.message);
+  }
 }
 
 async function dhEnviar() {
@@ -2263,7 +2355,7 @@ async function dhEnviar() {
 
   try {
     const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
       {method:'POST', headers:{'Content-Type':'application/json'},
        body: JSON.stringify({
          system_instruction: {parts:[{text: dhBuildSystemPrompt()}]},
@@ -2273,28 +2365,31 @@ async function dhEnviar() {
     const data = await resp.json();
     if(data.error) throw new Error(data.error.message);
 
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Não consegui gerar resposta.';
-    dhChatHistory.push({role:'model', parts:[{text: reply}]});
+    const rawReply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Não consegui gerar resposta.';
+    dhChatHistory.push({role:'model', parts:[{text: rawReply}]});
 
-    // Detecta ação de aprovação na resposta para atualizar UI
-    const approvalMatch = text.toLowerCase().match(/aprovo|aprovad|confirm|pode ir|tá bom|ficou bom/);
-    if(approvalMatch && dhCtxPost && dhCtxPost.status !== 'criado') {
-      dhCtxPost.status = 'criado';
-      const idx = RS2_POSTS.indexOf(dhCtxPost);
-      if(idx > 0) { RS2_POSTS.splice(idx,1); RS2_POSTS.unshift(dhCtxPost); }
-      renderPosts();
+    // Separa reply visível de ação de código
+    const actionSplit = rawReply.split(/\n?---ACTION:/);
+    const reply = actionSplit[0].trim();
+    let action = null;
+    if(actionSplit[1]) {
+      try { action = JSON.parse(actionSplit[1].trim()); } catch(e) {}
     }
 
     typing.classList.remove('show');
     const agentEl = document.createElement('div');
     agentEl.className = 'dh-bbl agent';
-    // Converte markdown básico para HTML
     const html = reply
       .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
       .replace(/\n/g,'<br>');
     agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div><div class="dh-bbl-text">${html}</div><div class="dh-bbl-time">agora</div>`;
     msgs.insertBefore(agentEl, typing);
     msgs.scrollTop = msgs.scrollHeight;
+
+    // Executa ação se houver
+    if(action?.instruction) {
+      setTimeout(()=> dhTriggerAction(action), 400);
+    }
 
   } catch(e) {
     typing.classList.remove('show');
@@ -2844,6 +2939,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(ta) ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,96)+'px';});
   const ta2 = document.getElementById('bbInput');
   if(ta2) ta2.addEventListener('input',()=>{ta2.style.height='auto';ta2.style.height=Math.min(ta2.scrollHeight,96)+'px';});
+
+  // Restaurar aba ativa salva
+  const savedTab = localStorage.getItem('officina_tab');
+  if(savedTab && savedTab !== 'persona') {
+    const tabBtn = document.querySelector(`.tab[onclick*="'${savedTab}'"]`);
+    if(tabBtn) showTab(savedTab, tabBtn);
+  }
 });
 
 document.addEventListener('keydown',e=>{

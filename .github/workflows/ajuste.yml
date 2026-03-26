@@ -1,0 +1,64 @@
+name: Ajuste via Chat LL
+
+on:
+  workflow_dispatch:
+    inputs:
+      instruction:
+        description: 'Instrução para Claude Code'
+        required: true
+        type: string
+
+jobs:
+  executar-ajuste:
+    name: Claude Code no VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Executa ajuste via Claude Code
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 76.13.172.151
+          username: root
+          password: ${{ secrets.VPS_PASSWORD }}
+          command_timeout: 8m
+          script: |
+            set -e
+            cd /opt/ecosistema-max-repo
+            git pull origin main --quiet
+
+            # Escreve instrução em arquivo temporário para evitar problemas de escaping
+            cat > /tmp/ajuste-instruction.txt << 'ENDINSTR'
+            ${{ github.event.inputs.instruction }}
+            ENDINSTR
+
+            echo "=== Instrução recebida ==="
+            cat /tmp/ajuste-instruction.txt
+
+            # Executa Claude Code em modo não-interativo
+            /usr/bin/claude -p "$(cat /tmp/ajuste-instruction.txt)" || \
+              cat /tmp/ajuste-instruction.txt | /usr/bin/claude --print
+
+            rm -f /tmp/ajuste-instruction.txt
+
+            # Commit e push se houver mudanças
+            git add -A
+            if git diff --staged --quiet; then
+              echo "Nenhuma mudança detectada."
+            else
+              git commit -m "ajuste(chat-ll): $(date '+%d/%m/%Y %H:%M')"
+              git push origin main
+            fi
+
+      - name: Notifica Telegram
+        if: always()
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          STATUS="${{ job.status }}"
+          ICON=$([ "$STATUS" = "success" ] && echo "✅" || echo "❌")
+          INSTR=$(echo "${{ github.event.inputs.instruction }}" | head -c 80)
+          curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\":\"${CHAT_ID}\",\"text\":\"${ICON} Ajuste via chat: ${INSTR}\"}" || true
