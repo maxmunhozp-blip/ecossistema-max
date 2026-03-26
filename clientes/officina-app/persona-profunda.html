@@ -2221,6 +2221,44 @@ function dhBubble(m) {
   </div>`;
 }
 
+// ── Fala Humana — skill-fala-humana ──────────────────────────────
+const FALA_PERSONAS = {
+  'lucas-lobato': {
+    abbrevs: [
+      [/\bvocê\b/gi, 'vc'], [/\btambém\b/gi, 'tb'], [/\bporque\b/gi, 'pq'],
+      [/\bestou\b/gi, 'tô'], [/\bmesmo\b/gi, 'msm'],
+    ],
+    typoRate: 0.10,
+  },
+  'default': { abbrevs: [[/\bvocê\b/gi, 'vc']], typoRate: 0.05 }
+};
+const DH_TYPOS = [
+  [/\bestá\b/g,'ta'], [/\btambém\b/g,'tbm'], [/\bnão\b/g,'nao'], [/\bé\b/g,'e']
+];
+function humanizarFala(text, personaId = 'lucas-lobato') {
+  if(!text) return text;
+  const p = FALA_PERSONAS[personaId] || FALA_PERSONAS.default;
+  // Remove ponto final de frases
+  text = text.replace(/\.(\s*<\/|$)/gm, '$1').replace(/\.\s*$/, '');
+  // Remove travessão — vira ...
+  text = text.replace(/\s*[—–]\s*/g, '... ');
+  // Abreviações da persona
+  for(const [pat, rep] of p.abbrevs) text = text.replace(pat, rep);
+  // Remove abertura robótica
+  text = text.replace(/^(Olá[,!]?\s*|Certo[,!]?\s*|Entendido[,!]?\s*|Com certeza[,!]?\s*|Perfeito[,!]?\s*)/i, '');
+  text = text.replace(/\bQualquer coisa.*$/gim, '').replace(/\bfique à vontade.*$/gim, '');
+  // Erro leve ocasional
+  if(Math.random() < p.typoRate) {
+    const typo = DH_TYPOS[Math.floor(Math.random() * DH_TYPOS.length)];
+    text = text.replace(typo[0], typo[1]);
+  }
+  // Minúscula no início se curto
+  const clean = text.replace(/<[^>]+>/g,'').trim();
+  if(clean.length < 60) text = text.replace(/^([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ])/, c => c.toLowerCase());
+  return text.trim();
+}
+// ─────────────────────────────────────────────────────────────────
+
 // Histórico multi-turn para o Gemini
 let dhChatHistory = [];
 
@@ -2238,13 +2276,19 @@ ${postsCtx}
 ARQUIVO DOS CARROSSÉIS: clientes/officina-app/carrosseis-officina.html
 Cada slide é um div.slide com data-post="X" (postIdx 0-4). A logo é injetada via JS na função _injectLogos() — first slide top-right (top:64px;right:72px), last slide bottom-right.
 
-REGRAS OBRIGATÓRIAS:
-- Português brasileiro informal, direto — sem enrolação, sem formalismo
-- Máximo 2 frases por resposta (salvo quando listar slides de uma proposta)
-- Mantenha contexto: se o usuário mencionou "post 01" ou "slide 1", lembre nas próximas mensagens
-- NUNCA pergunte algo que já foi respondido na mesma conversa
-- Se o usuário descreve um ajuste visual/textual específico, confirme e diga que vai executar
-- Responda como profissional experiente, não como assistente virtual
+PERSONALIDADE E FALA (obrigatório):
+- Você é Lucas Lobato, 31 anos, estrategista de conteúdo. Escreve como manda mensagem no WhatsApp
+- sem ponto no final das frases
+- sem travessão de forma alguma, use "..." quando precisar de pausa
+- use "vc", "tb", "pq", "né", "tá", "tô", "msm" naturalmente
+- use "show", "top", "massa", "bora", "fechou", "vlw", "beleza" com naturalidade
+- respostas curtas: 1-2 frases no máximo
+- erros leves ocasionais: "ta" sem acento, "q" em vez de "que"
+- nunca começa com "Olá", "Certo", "Entendido", "Perfeito", "Com certeza"
+- quando o usuário corrigiu algo 3+ vezes: fica mais seco, tipo "ok", "entendi", "tá, vou refazer"
+- quando aprovam algo: "show", "massa", "top demais"
+- mantenha contexto: se mencionou "post 01" ou "slide 1", lembra nas próximas mensagens
+- NUNCA pergunta algo que já foi respondido na mesma conversa
 
 AÇÕES EXECUTÁVEIS:
 Quando o usuário pedir uma mudança visual ou textual nos slides, inclua EXATAMENTE ao final da sua resposta (numa nova linha):
@@ -2355,7 +2399,7 @@ async function dhEnviar() {
 
   try {
     const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key=${key}`,
       {method:'POST', headers:{'Content-Type':'application/json'},
        body: JSON.stringify({
          system_instruction: {parts:[{text: dhBuildSystemPrompt()}]},
@@ -2365,12 +2409,12 @@ async function dhEnviar() {
     const data = await resp.json();
     if(data.error) throw new Error(data.error.message);
 
-    const rawReply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Não consegui gerar resposta.';
+    const rawReply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'não consegui gerar resposta';
     dhChatHistory.push({role:'model', parts:[{text: rawReply}]});
 
     // Separa reply visível de ação de código
     const actionSplit = rawReply.split(/\n?---ACTION:/);
-    const reply = actionSplit[0].trim();
+    let reply = humanizarFala(actionSplit[0].trim(), 'lucas-lobato');
     let action = null;
     if(actionSplit[1]) {
       try { action = JSON.parse(actionSplit[1].trim()); } catch(e) {}
