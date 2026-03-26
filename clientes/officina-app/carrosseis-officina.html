@@ -805,8 +805,8 @@ Object.values(_postSlides).forEach(slides => {
       ||cls.includes('p2-s6')||cls.includes('p3-s1')||cls.includes('p4-s1')
       ||cls.includes('p5-s2')||cls.includes('p5-s5');
     // Dark bg → logo-amber (amber icon + white text legível)
-    // Light bg → logo-black (ícone + texto preto, mais legível que wordmark teal)
-    const logoSrc = isDark ? 'logo-amber.png' : 'logo-black.png';
+    // Light bg → logo-teal (ícone teal, mais adequado para fundo claro)
+    const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
     const logo = document.createElement('div');
     logo.className = 'slide-logo-inject';
     // First slide: top-right (evita sobrepor conteúdo que fica no lado esquerdo)
