@@ -2195,199 +2195,118 @@ function dhBubble(m) {
   </div>`;
 }
 
-function dhFindPostInText(text) {
-  // Tenta identificar post pelo nome/número no texto
-  const t = text.toLowerCase();
-  // Por número: "post 01", "post 1", "carrossel 2", "card 3"
-  const numMatch = t.match(/(?:post|carrossel|número|no)\s*0?(\d)/);
-  if(numMatch) {
-    const idx = parseInt(numMatch[1]) - 1;
-    const criados = RS2_POSTS.filter(p=>p.status!=='proposta');
-    if(criados[idx]) return criados[idx];
-  }
-  // Por trecho do título
-  const sorted = [...RS2_POSTS].sort((a,b)=>b.titulo.length-a.titulo.length);
-  for(const p of sorted) {
-    const words = p.titulo.toLowerCase().split(/\s+/).filter(w=>w.length>4);
-    if(words.some(w=>t.includes(w))) return p;
-  }
-  return null;
+// Histórico multi-turn para o Gemini
+let dhChatHistory = [];
+
+function dhBuildSystemPrompt() {
+  const postsCtx = RS2_POSTS.map((p,i)=>
+    `Post ${i+1}: "${p.titulo}" — ${p.slides} slides — Status: ${p.status}`
+  ).join('\n');
+  return `Você é Lucas Lobato, estrategista de conteúdo digital do Officina App (marketplace automotivo que conecta motoristas a oficinas verificadas em São Paulo).
+
+Você conversa diretamente com Max, o gestor do projeto. Seu papel: ajudar com carrosséis do Instagram — revisar textos, sugerir novos posts, registrar ajustes, acompanhar aprovações.
+
+POSTS ATUAIS NO PIPELINE:
+${postsCtx}
+
+REGRAS OBRIGATÓRIAS:
+- Português brasileiro informal, direto — sem enrolação, sem formalismo
+- Máximo 2 frases por resposta (salvo quando listar slides de uma proposta)
+- Mantenha contexto: se o usuário mencionou "post 01" ou "slide 1", lembre nas próximas mensagens
+- NUNCA pergunte algo que já foi respondido na mesma conversa
+- Se o usuário descreve um problema específico ("logo sobrepondo texto no slide 1 do post 1"), confirme e diga que vai resolver — não faça mais perguntas
+- Para pedidos de ajuste de layout/design, responda: "Entendido, vou ajustar [o que foi pedido]. Pode aguardar."
+- Para nova proposta de carrossel, apresente título + número de slides + resumo dos slides (1 linha cada)
+- Para aprovação de post, confirme o título e diga que passou para produção
+- Responda como profissional experiente, não como assistente virtual`;
 }
 
-function dhDetectIntent(text) {
-  const t = text.toLowerCase();
-  // Dismissal — usuário mandando parar de cobrar/lembrar
-  if(/esquece|ignora|não precisa lembrar|deixa pra lá|eu sei|eu que mando|para de (cobrar|lembrar|ficar)|chega de (pendência|lembrar)/i.test(t)) return 'dismissal';
-  // Nova proposta
-  if(/propon|proposta|novo post|novo carrossel|nova ideia|mais um|suger|criar|crie|quero (um|mais|outro)|outro carrossel|mais conteúdo|mais post/i.test(t)) return 'nova_proposta';
-  // Refazer / não gostou
-  if(/não gost|não curti|não ficou|ruim|errado|refaz|recome|do zero|não era isso|não é isso|ainda não (corrigiu|fez|ajustou)/i.test(t)) return 'refazer';
-  // Ajuste — inclui "ajudar", "consegue", "pode" + card/slide/post
-  if(/ajust|muda|altera|corrig|encurt|simples|longo|slide \d|card \d|tira|coloca|troca|ficou (grande|pequen)|(ajudar|ajuda|consegue|pode) (o |com |n[oa] )?(?:card|post|slide|carrossel)/i.test(t)) return 'ajuste';
-  // Aprovação
-  if(/aprovo|aprovad|confirm|pode ir|tá bom|ficou bom|gostei|show|topz|isso mesmo|perfeito|ótimo/i.test(t)) return 'aprovacao';
-  // Prazo
-  if(/quando|prazo|data|entrega|semana|dia|publicar|agendar|cronogram/i.test(t)) return 'prazo';
-  // Saudação
-  if(/^(oi|olá|boa|bom dia|boa tarde|boa noite|e aí|tudo bem|tudo certo)/i.test(t)) return 'saudacao';
-  // Opinião
-  if(/o que acha|você acha|sua (opinião|sugestão|ideia)|me indica|qual (formato|tema|assunto|tipo)|você recomenda/i.test(t)) return 'opiniao';
-  return 'geral';
-}
-
-function dhEnviar() {
+async function dhEnviar() {
   if(dhSending) return;
   const ta = document.getElementById('dhInput');
   const text = ta.value.trim();
   if(!text) return;
+  dhSending = true;
+
   const msgs = document.getElementById('dhMsgs');
   const typing = document.getElementById('dhTyping');
+
+  // Bubble do usuário
   const userEl = document.createElement('div');
   userEl.className = 'dh-bbl user';
   userEl.innerHTML = `<div class="dh-bbl-who">Você</div><div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
   msgs.insertBefore(userEl, typing);
   ta.value = ''; ta.style.height = 'auto';
   msgs.scrollTop = msgs.scrollHeight;
-  dhSending = true;
   document.getElementById('dhSendBtn').disabled = true;
 
-  const intent = dhDetectIntent(text);
+  // Typing indicator
+  setTimeout(()=>{ typing.classList.add('show'); msgs.scrollTop = msgs.scrollHeight; }, 300);
 
-  setTimeout(()=>{
-    typing.classList.add('show');
-    msgs.scrollTop = msgs.scrollHeight;
+  const key = localStorage.getItem('gemini_api_key');
+  if(!key) {
     setTimeout(()=>{
       typing.classList.remove('show');
-      const agentEl = document.createElement('div');
-      agentEl.className = 'dh-bbl agent';
-
-      // Tenta identificar o post no texto para atualizar o contexto
-      const postMentioned = dhFindPostInText(text);
-      if(postMentioned) dhCtxPost = postMentioned;
-      const ctxPost = dhCtxPost || RS2_POSTS.find(p=>p.status==='criado'||p.status==='revisao') || RS2_POSTS[0];
-
-      if(intent === 'dismissal') {
-        dhPendingDismissed = true;
-        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-          <div class="dh-bbl-text">Entendido. Me fala quando precisar.</div>
-          <div class="dh-bbl-time">agora</div>`;
-
-      } else if(intent === 'saudacao') {
-        const propostas = RS2_POSTS.filter(p=>p.status==='proposta');
-        const emRevisao = RS2_POSTS.filter(p=>p.status==='revisao');
-        let reply = 'Oi! Tudo certo.';
-        if(emRevisao.length) reply += ` Tenho <strong>${emRevisao.length} post${emRevisao.length>1?'s':''} em revisão</strong> esperando sua aprovação.`;
-        if(propostas.length) reply += ` Também há <strong>${propostas.length} proposta${propostas.length>1?'s':''} de texto</strong> para você ver quando quiser.`;
-        if(!emRevisao.length && !propostas.length) reply += ` Tudo aprovado até aqui. Me fala se quiser um conteúdo novo ou algum ajuste.`;
-        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div><div class="dh-bbl-text">${reply}</div><div class="dh-bbl-time">agora</div>`;
-
-      } else if(intent === 'nova_proposta') {
-        const propData = DH_NEW_PROPOSALS[dhNewPropIdx % DH_NEW_PROPOSALS.length];
-        dhNewPropIdx++;
-        const newId = 'p_dyn_' + Date.now();
-        const newPostIdx = (RS2_POSTS.filter(p=>p.status!=='proposta').length) % 5;
-        const newPost = {id:newId, postIdx:newPostIdx, titulo:propData.titulo,
-          plataformas:propData.plataformas, status:'proposta', data:'—',
-          slides:propData.slides, redator:propData.redator, designer:propData.designer,
-          textoApoio:{legenda:'',hashtags:'',cta:''}};
-        RS2_POSTS.push(newPost);
-        dhCtxPost = newPost;
-        const slidesEl = propData.slidesTexto.map(s=>`
-          <div style="padding:8px 10px;border-left:3px solid var(--teal);background:var(--bg2);border-radius:0 6px 6px 0;margin-bottom:6px">
-            <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px">Slide ${s.num}${s.label?' — '+s.label:''}</div>
-            <div style="font-size:12px;color:var(--text1);line-height:1.5">${s.copy}</div>
-          </div>`).join('');
-        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-          <div class="dh-bbl-text">${propData.texto}</div>
-          <div class="dh-tprop" style="border-color:var(--teal)">
-            <div class="dh-tprop-title" style="color:var(--teal)">${propData.titulo}</div>
-            <div style="font-size:10px;color:var(--text3);margin-bottom:8px">${propData.slides} slides · ${propData.plataformas.map(p=>p.charAt(0).toUpperCase()+p.slice(1)).join(' + ')}</div>
-            ${slidesEl}
-            <div style="margin-top:10px">
-              <button class="dh-btn-tx-ok" onclick="dhAprovarNovaProposta(this,'${newId}')">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Aprovar e criar carrossel
-              </button>
-            </div>
-          </div>
-          <div class="dh-bbl-time">agora</div>`;
-        renderPosts();
-
-      } else if(intent === 'ajuste') {
-        const alvo = postMentioned || ctxPost;
-        if(postMentioned) {
-          agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-            <div class="dh-bbl-text">Certo, estou olhando o <strong>"${alvo.titulo}"</strong>. Me descreve o que exatamente precisa mudar — é texto, posição de algum elemento, ou algo visual?</div>
-            <div class="dh-bbl-time">agora</div>`;
-        } else {
-          agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-            <div class="dh-bbl-text">Qual post você quer ajustar? Me passa o nome ou o número e me diz o que mudar.</div>
-            <div class="dh-bbl-time">agora</div>`;
-        }
-
-      } else if(intent === 'refazer') {
-        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-          <div class="dh-bbl-text">Entendido, me desculpe. Vou refazer${ctxPost?' o <strong>"'+ctxPost.titulo+'"</strong>':''}. Me conta exatamente o que não ficou bom — texto, design, algum slide específico?</div>
-          <div class="dh-bbl-time">agora</div>`;
-
-      } else if(intent === 'aprovacao') {
-        if(ctxPost && ctxPost.status !== 'criado') {
-          ctxPost.status = 'criado';
-          const idx = RS2_POSTS.indexOf(ctxPost);
-          if(idx>0){RS2_POSTS.splice(idx,1);RS2_POSTS.unshift(ctxPost);}
-          renderPosts();
-          agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-            <div class="dh-bbl-text">Perfeito! <strong>"${ctxPost.titulo}"</strong> aprovado e movido para produção. Aparece na lista ao lado agora.</div>
-            <div class="dh-bbl-time">agora</div>`;
-        } else {
-          agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-            <div class="dh-bbl-text">Ótimo! Me fala qual post você está aprovando — assim eu confirmo e passo pra produção.</div>
-            <div class="dh-bbl-time">agora</div>`;
-        }
-
-      } else if(intent === 'prazo') {
-        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-          <div class="dh-bbl-text">Depois que o texto é aprovado, o carrossel fica pronto em até <strong>24h úteis</strong>. Se quiser agendar uma data específica de publicação me fala que eu marco.</div>
-          <div class="dh-bbl-time">agora</div>`;
-
-      } else if(intent === 'opiniao') {
-        const opinioes = [
-          `Olhando o perfil, o formato que mais engaja aqui é o carrossel de <strong>listas e comparativos</strong>. "Antes x Depois" e "Top 5 erros" têm salvamento alto. Quer que eu monte uma proposta nessa linha?`,
-          `Minha sugestão: conteúdo educativo com dados concretos. O público que usa o app está no momento de decisão — mostrar números reais (R$280 vs R$480, por exemplo) converte mais do que storytelling genérico.`,
-          `Para o próximo post, eu apostaria em um formato mais direto — uma lista rápida, 4 slides no máximo. Posts menores têm mais chance de ser lidos até o fim. Posso montar uma proposta assim se quiser.`,
-        ];
-        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-          <div class="dh-bbl-text">${opinioes[dhRespIdx%opinioes.length]}</div>
-          <div class="dh-bbl-time">agora</div>`;
-        dhRespIdx++;
-
-      } else {
-        const pool = [
-          `Me fala o que precisa — nova peça, ajuste, o que for.`,
-          `Pode mandar.`,
-          `Estou por aqui. O que você precisa?`,
-          `Só falar.`,
-        ];
-        // Só menciona pendências se o usuário não dismissou e ainda não foi dita
-        const pendentes = RS2_POSTS.filter(p=>p.status==='proposta'||p.status==='revisao');
-        let resposta;
-        if(!dhPendingDismissed && pendentes.length > 0 && dhRespIdx === 0) {
-          resposta = `Tem <strong>${pendentes.length} item${pendentes.length>1?'s':''} pendente${pendentes.length>1?'s':''}</strong> quando quiser ver — <strong>${pendentes[0].titulo}</strong>${pendentes.length>1?' entre outros':''}. Me fala o que precisa.`;
-          dhRespIdx++;
-        } else {
-          resposta = pool[dhRespIdx % pool.length];
-          dhRespIdx++;
-        }
-        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-          <div class="dh-bbl-text">${resposta}</div>
-          <div class="dh-bbl-time">agora</div>`;
-      }
-
-      msgs.insertBefore(agentEl, typing);
+      const el = document.createElement('div');
+      el.className = 'dh-bbl agent';
+      el.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div><div class="dh-bbl-text">Para responder com IA real, preciso de uma chave Gemini. Vai em <strong>Gerador de Imagens</strong> e salva a chave lá — eu uso a mesma.</div><div class="dh-bbl-time">agora</div>`;
+      msgs.insertBefore(el, typing);
       msgs.scrollTop = msgs.scrollHeight;
       dhSending = false;
       document.getElementById('dhSendBtn').disabled = false;
-    },1800);
-  },600);
+    }, 800);
+    return;
+  }
+
+  // Adiciona ao histórico
+  dhChatHistory.push({role:'user', parts:[{text}]});
+
+  try {
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+      {method:'POST', headers:{'Content-Type':'application/json'},
+       body: JSON.stringify({
+         system_instruction: {parts:[{text: dhBuildSystemPrompt()}]},
+         contents: dhChatHistory
+       })}
+    );
+    const data = await resp.json();
+    if(data.error) throw new Error(data.error.message);
+
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Não consegui gerar resposta.';
+    dhChatHistory.push({role:'model', parts:[{text: reply}]});
+
+    // Detecta ação de aprovação na resposta para atualizar UI
+    const approvalMatch = text.toLowerCase().match(/aprovo|aprovad|confirm|pode ir|tá bom|ficou bom/);
+    if(approvalMatch && dhCtxPost && dhCtxPost.status !== 'criado') {
+      dhCtxPost.status = 'criado';
+      const idx = RS2_POSTS.indexOf(dhCtxPost);
+      if(idx > 0) { RS2_POSTS.splice(idx,1); RS2_POSTS.unshift(dhCtxPost); }
+      renderPosts();
+    }
+
+    typing.classList.remove('show');
+    const agentEl = document.createElement('div');
+    agentEl.className = 'dh-bbl agent';
+    // Converte markdown básico para HTML
+    const html = reply
+      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\n/g,'<br>');
+    agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div><div class="dh-bbl-text">${html}</div><div class="dh-bbl-time">agora</div>`;
+    msgs.insertBefore(agentEl, typing);
+    msgs.scrollTop = msgs.scrollHeight;
+
+  } catch(e) {
+    typing.classList.remove('show');
+    const agentEl = document.createElement('div');
+    agentEl.className = 'dh-bbl agent';
+    agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div><div class="dh-bbl-text">Erro na API: ${e.message}</div><div class="dh-bbl-time">agora</div>`;
+    msgs.insertBefore(agentEl, typing);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  dhSending = false;
+  document.getElementById('dhSendBtn').disabled = false;
 }
 
 function dhAprovarNovaProposta(btn, postId) {
