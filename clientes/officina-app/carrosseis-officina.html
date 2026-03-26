@@ -115,20 +115,131 @@ body{font-family:'Inter',sans-serif;background:#0F1A1A;color:var(--text);min-hei
 .p5-s3-bg{background:#fff}
 .p5-s4-bg{background:var(--bg)}
 .p5-s5-bg{background:var(--teal)}
+
+/* ── PAGE TABS ── */
+.page-tabs{display:flex;gap:0;background:rgba(0,0,0,.35);border-bottom:1px solid rgba(255,255,255,.07);padding:0 28px}
+.page-tab{padding:10px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:.15s;font-family:'Inter',sans-serif;letter-spacing:.2px}
+.page-tab:hover{color:rgba(255,255,255,.7)}
+.page-tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+
+/* ── GENERATOR PANEL ── */
+#tab-gen{display:none;padding:28px;height:calc(100vh - 110px);overflow-y:auto;gap:24px;flex-direction:column}
+#tab-gen.active{display:flex}
+#tab-car{flex:1;display:flex;flex-direction:column}
+.gen-row{display:flex;gap:20px;flex-wrap:wrap}
+.gen-col-left{flex:1;min-width:280px;display:flex;flex-direction:column;gap:16px}
+.gen-col-right{width:340px;flex-shrink:0;display:flex;flex-direction:column;gap:12px}
+.gen-section-title{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.gen-templates{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gen-tpl{padding:12px;border-radius:10px;border:1.5px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);cursor:pointer;transition:.15s;text-align:left}
+.gen-tpl:hover,.gen-tpl.sel{border-color:var(--teal);background:rgba(61,169,165,.1)}
+.gen-tpl-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:3px}
+.gen-tpl-sub{font-size:10px;color:rgba(255,255,255,.4);line-height:1.4}
+.gen-prompt-ta{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;padding:12px;resize:vertical;min-height:90px;outline:none;box-sizing:border-box;line-height:1.55;transition:.15s}
+.gen-prompt-ta:focus{border-color:var(--teal)}
+.gen-fmt-btns{display:flex;gap:6px}
+.gen-fmt-btn{flex:1;padding:7px 10px;border-radius:8px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:11px;font-weight:600;cursor:pointer;transition:.15s;font-family:'Inter',sans-serif}
+.gen-fmt-btn.active{border-color:var(--teal);background:rgba(61,169,165,.12);color:#fff}
+.gen-api-input{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;padding:9px 12px;outline:none;box-sizing:border-box;transition:.15s}
+.gen-api-input:focus{border-color:var(--teal)}
+.gen-gen-btn{width:100%;padding:12px;border-radius:10px;background:var(--teal);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.gen-gen-btn:hover{background:#2e9490}
+.gen-gen-btn:disabled{opacity:.5;cursor:not-allowed}
+.gen-preview{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:16px;gap:10px;min-height:260px;justify-content:center}
+.gen-preview img{border-radius:8px;max-width:100%;max-height:340px;object-fit:contain}
+.gen-preview-placeholder{text-align:center;color:rgba(255,255,255,.2);font-size:12px}
+.gen-save-btn{width:100%;padding:9px;border-radius:8px;background:rgba(245,166,35,.15);border:1.5px solid rgba(245,166,35,.3);color:var(--amber);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s}
+.gen-save-btn:hover{background:rgba(245,166,35,.25)}
+.gen-log{font-size:10px;color:rgba(255,255,255,.3);font-style:italic;min-height:18px;text-align:center}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
 <div class="top-nav">
   <span class="nav-logo">Officina App</span>
-  <span class="nav-sub">Carrosséis · 1080 × 1440px</span>
+  <span class="nav-sub">Studio de Conteúdo</span>
   <span class="nav-count" id="slideCount"></span>
 </div>
+<div class="page-tabs">
+  <button class="page-tab active" id="ptCarrossel" onclick="showPageTab('car')">Carrosséis</button>
+  <button class="page-tab" id="ptGen" onclick="showPageTab('gen')">Gerador de Imagens</button>
+</div>
 
+<div id="tab-car">
 <div class="car-tabs" id="carTabs"></div>
 <div class="grid-wrap">
   <div class="car-label" id="carLabel"></div>
   <div class="thumbs-grid" id="thumbsGrid"></div>
+</div>
+
+</div><!-- /tab-car -->
+
+<!-- GERADOR DE IMAGENS -->
+<div id="tab-gen">
+  <div class="gen-row">
+    <div class="gen-col-left">
+      <div>
+        <div class="gen-section-title">Templates de cena</div>
+        <div class="gen-templates" id="genTemplates">
+          <button class="gen-tpl sel" onclick="selectTpl(this,0)">
+            <div class="gen-tpl-title">Oficina profissional</div>
+            <div class="gen-tpl-sub">Interior clean, equipamentos, luz natural</div>
+          </button>
+          <button class="gen-tpl" onclick="selectTpl(this,1)">
+            <div class="gen-tpl-title">Mecânico (mãos)</div>
+            <div class="gen-tpl-sub">Close nas mãos trabalhando no motor</div>
+          </button>
+          <button class="gen-tpl" onclick="selectTpl(this,2)">
+            <div class="gen-tpl-title">Motor / Peças</div>
+            <div class="gen-tpl-sub">Detalhe de motor, tons metálicos</div>
+          </button>
+          <button class="gen-tpl" onclick="selectTpl(this,3)">
+            <div class="gen-tpl-title">Freio / Segurança</div>
+            <div class="gen-tpl-sub">Disco e pinça, iluminação dramática</div>
+          </button>
+          <button class="gen-tpl" onclick="selectTpl(this,4)">
+            <div class="gen-tpl-title">Cliente satisfeito</div>
+            <div class="gen-tpl-sub">Pessoa ao lado do carro, vista de trás</div>
+          </button>
+          <button class="gen-tpl" onclick="selectTpl(this,5)">
+            <div class="gen-tpl-title">Diagnóstico digital</div>
+            <div class="gen-tpl-sub">Tablet com diagnóstico, luz teal</div>
+          </button>
+        </div>
+      </div>
+      <div>
+        <div class="gen-section-title">Prompt personalizado</div>
+        <textarea class="gen-prompt-ta" id="genPrompt" rows="4" placeholder="Descreva a cena em inglês ou português..."></textarea>
+      </div>
+      <div>
+        <div class="gen-section-title">Formato</div>
+        <div class="gen-fmt-btns">
+          <button class="gen-fmt-btn active" id="fmt34" onclick="setFmt('3:4',this)">3:4 Portrait (1080×1440)</button>
+          <button class="gen-fmt-btn" id="fmt11" onclick="setFmt('1:1',this)">1:1 Quadrado (1080×1080)</button>
+        </div>
+      </div>
+    </div>
+    <div class="gen-col-right">
+      <div>
+        <div class="gen-section-title">Chave da API Gemini</div>
+        <input type="password" class="gen-api-input" id="genApiKey" placeholder="AIza..." autocomplete="off"/>
+        <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:5px">Salva localmente · nunca sai deste navegador</div>
+      </div>
+      <button class="gen-gen-btn" id="genBtn" onclick="gerarImagem()">
+        <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:#fff;stroke-width:2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Gerar imagem
+      </button>
+      <div class="gen-log" id="genLog"></div>
+      <div class="gen-preview" id="genPreview">
+        <div class="gen-preview-placeholder">
+          <svg viewBox="0 0 24 24" style="width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:1.5;margin-bottom:8px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <div>Imagem gerada aparece aqui</div>
+        </div>
+      </div>
+      <button class="gen-save-btn" id="genSaveBtn" style="display:none" onclick="downloadGen()">Baixar imagem</button>
+    </div>
+  </div>
 </div>
 
 <!-- LIGHTBOX -->
@@ -207,15 +318,22 @@ body{font-family:'Inter',sans-serif;background:#0F1A1A;color:var(--text);min-hei
       <div style="width:80px;height:4px;background:var(--amber);border-radius:2px;margin-bottom:32px"></div>
       <div class="s-body" style="color:var(--text2);max-width:840px">O Officina App só lista oficinas que passaram por verificação — <strong>endereço real, CNPJ ativo</strong> e histórico real de atendimentos.</div>
     </div>
-    <div style="border-radius:24px;overflow:hidden;height:380px;position:relative;flex-shrink:0">
-      <img src="https://images.unsplash.com/photo-1599256872237-5dcc0fbe9668?w=1080&q=85" style="width:100%;height:100%;object-fit:cover;display:block" alt="Mecânico profissional em oficina verificada"/>
-      <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(61,169,165,.55) 0%,transparent 60%)"></div>
-      <div style="position:absolute;bottom:0;left:0;right:0;display:flex;gap:20px;padding:28px 36px">
-        <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.3);border-radius:12px;padding:16px 28px">
+    <div style="border-radius:24px;overflow:hidden;height:380px;position:relative;flex-shrink:0;background:linear-gradient(135deg,#1A2424 0%,#2D4444 50%,#3DA9A5 100%)">
+      <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(61,169,165,.4) 0%,transparent 70%)"></div>
+      <div style="position:absolute;top:40px;left:48px;right:48px;display:flex;gap:12px">
+        <div style="width:64px;height:64px;border-radius:12px;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center">
+          <div style="width:24px;height:24px;border:3px solid rgba(255,255,255,.5);border-radius:50%"></div>
+        </div>
+        <div style="width:64px;height:64px;border-radius:12px;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center">
+          <div style="width:0;height:0;border-left:20px solid rgba(255,255,255,.5);border-top:10px solid transparent;border-bottom:10px solid transparent"></div>
+        </div>
+      </div>
+      <div style="position:absolute;bottom:0;left:0;right:0;display:flex;gap:16px;padding:28px 36px">
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:16px 24px">
           <div style="width:12px;height:12px;border-radius:50%;background:#3DB87A;flex-shrink:0"></div>
           <span style="font-size:26px;font-weight:700;color:#fff">CNPJ verificado</span>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.3);border-radius:12px;padding:16px 28px">
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:16px 24px">
           <div style="width:12px;height:12px;border-radius:50%;background:#3DB87A;flex-shrink:0"></div>
           <span style="font-size:26px;font-weight:700;color:#fff">Endereço físico</span>
         </div>
@@ -262,9 +380,11 @@ body{font-family:'Inter',sans-serif;background:#0F1A1A;color:var(--text);min-hei
       <div style="width:80px;height:4px;background:var(--teal);border-radius:2px;margin-bottom:32px"></div>
       <div class="s-body" style="color:var(--text2);max-width:860px">Qualquer som novo — rangido, batida, assobio — merece atenção imediata. <strong>Carro saudável é carro silencioso.</strong></div>
     </div>
-    <div style="border-radius:24px;overflow:hidden;flex:1;min-height:0;position:relative">
-      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&q=85" style="width:100%;height:100%;object-fit:cover;display:block" alt="Detalhe de motor — atenção aos sinais do carro"/>
-      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(26,36,36,.78) 0%,transparent 50%)"></div>
+    <div style="border-radius:24px;overflow:hidden;flex:1;min-height:0;position:relative;background:linear-gradient(160deg,#1A2424 0%,#2a3a3a 60%,#3DA9A5 100%)">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:.08">
+        <div style="width:320px;height:320px;border-radius:50%;border:2px solid #fff"></div>
+      </div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(26,36,36,.9) 0%,transparent 55%)"></div>
       <div style="position:absolute;bottom:36px;left:48px;right:48px;font-size:32px;font-weight:600;color:#fff;font-style:italic;line-height:1.45">"Se tem dúvida,<br/>já é hora de verificar."</div>
     </div>
   </div>
@@ -654,6 +774,114 @@ if(_qp.get('single')==='1') {
 } else {
   selectPost(0);
 }
+
+// Inject Officina App logo on all slides
+// Use logo-amber on dark/teal slides, logo-teal on white/light slides
+document.querySelectorAll('.slide').forEach(slide => {
+  if(slide.querySelector('.slide-logo-inject')) return;
+  const bg = getComputedStyle(slide).backgroundColor;
+  // Determine if slide bg is light or dark/teal
+  const isDark = bg.includes('61, 169, 165') || bg.includes('26, 36') || bg.includes('245, 166') 
+    || slide.className.includes('p1-s2') || slide.className.includes('p1-s5')
+    || slide.className.includes('p2-s3') || slide.className.includes('p3-s1')
+    || slide.className.includes('p4-s1') || slide.className.includes('p5-s2') || slide.className.includes('p5-s5');
+  const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
+  const logo = document.createElement('div');
+  logo.className = 'slide-logo-inject';
+  logo.style.cssText = 'position:absolute;bottom:48px;right:56px;opacity:.55;pointer-events:none;z-index:10';
+  logo.innerHTML = `<img src="${logoSrc}" style="height:48px;object-fit:contain;display:block"/>`;
+  slide.appendChild(logo);
+});
+
+
+/* ═══════ GENERATOR JS ═══════ */
+const GEN_TEMPLATES = [
+  `Professional modern car service workshop interior, clean and organized, teal accent lighting, white walls, professional mechanic equipment, no people, editorial automotive photography, natural light, 4k`,
+  `Close-up of professional mechanic hands working on car engine, clean workshop, natural light, editorial style, no face visible, professional automotive service, sharp focus on hands and tools`,
+  `Car engine bay detail, clean modern vehicle, professional automotive photography, sharp focus, teal and metallic tones, editorial style, high contrast, magazine quality`,
+  `Car brake disc and caliper close-up, professional automotive photography, metallic tones, sharp focus, editorial style, safety theme, dark background with dramatic lighting`,
+  `Person standing next to clean modern car at professional auto service center, shot from behind, lifestyle photography, teal accent in environment, natural light, editorial automotive magazine style`,
+  `Mechanic using digital tablet diagnostics near modern car, professional automotive technology, clean workshop, teal accent lighting, hands visible with device, no face, editorial photography`
+];
+let genFmt = '3:4', genImg = null;
+
+function showPageTab(tab) {
+  const isCar = tab==='car';
+  document.getElementById('tab-car').style.display = isCar ? 'flex' : 'none';
+  document.getElementById('tab-car').style.flexDirection = 'column';
+  document.getElementById('tab-gen').classList.toggle('active', !isCar);
+  document.getElementById('ptCarrossel').classList.toggle('active', isCar);
+  document.getElementById('ptGen').classList.toggle('active', !isCar);
+  if(!isCar) {
+    const saved = localStorage.getItem('gemini_api_key');
+    if(saved) document.getElementById('genApiKey').value = saved;
+  }
+}
+
+function selectTpl(btn, idx) {
+  document.querySelectorAll('.gen-tpl').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('genPrompt').value = GEN_TEMPLATES[idx];
+}
+
+function setFmt(fmt, btn) {
+  genFmt = fmt;
+  document.querySelectorAll('.gen-fmt-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+async function gerarImagem() {
+  const key = document.getElementById('genApiKey').value.trim();
+  const prompt = document.getElementById('genPrompt').value.trim();
+  if(!key) { document.getElementById('genLog').textContent='Insira a chave da API Gemini.'; return; }
+  if(!prompt) { document.getElementById('genLog').textContent='Escreva ou selecione um prompt.'; return; }
+  localStorage.setItem('gemini_api_key', key);
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2;animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0"/></svg> Gerando...';
+  document.getElementById('genLog').textContent = 'Conectando ao Gemini Imagen 3...';
+  document.getElementById('genSaveBtn').style.display='none';
+  try {
+    const resp = await fetch(
+      \`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=\${key}\`,
+      {method:'POST', headers:{'Content-Type':'application/json'},
+       body: JSON.stringify({
+         instances:[{prompt}],
+         parameters:{sampleCount:1,aspectRatio:genFmt,safetyFilterLevel:'block_few',personGeneration:'allow_adult'}
+       })}
+    );
+    const data = await resp.json();
+    if(data.error) throw new Error(data.error.message);
+    const b64 = data.predictions?.[0]?.bytesBase64Encoded;
+    if(!b64) throw new Error('Sem imagem na resposta');
+    genImg = 'data:image/jpeg;base64,'+b64;
+    const prev = document.getElementById('genPreview');
+    prev.innerHTML = \`<img src="\${genImg}" style="border-radius:8px;max-width:100%;max-height:360px;object-fit:contain"/>\`;
+    document.getElementById('genSaveBtn').style.display='block';
+    document.getElementById('genLog').textContent = 'Imagem gerada com sucesso.';
+  } catch(e) {
+    document.getElementById('genLog').textContent = 'Erro: '+e.message;
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:#fff;stroke-width:2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Gerar imagem';
+}
+
+function downloadGen() {
+  if(!genImg) return;
+  const a = document.createElement('a');
+  a.href = genImg;
+  a.download = 'officina-gen-'+Date.now()+'.jpg';
+  a.click();
+}
+
+// Init: select first template
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('genPrompt');
+  if(ta) ta.value = GEN_TEMPLATES[0];
+  const saved = localStorage.getItem('gemini_api_key');
+  if(saved) { const k=document.getElementById('genApiKey'); if(k) k.value=saved; }
+});
+
 </script>
 </body>
 </html>
