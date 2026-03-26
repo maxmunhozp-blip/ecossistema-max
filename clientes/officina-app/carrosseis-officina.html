@@ -14,7 +14,7 @@
   --text:#1A2424;--text2:#3A5050;--text3:#6A8888;
   --border:#E2EEEE;
 }
-body{font-family:'Inter',sans-serif;background:#0F1A1A;color:var(--text);min-height:100vh}
+body{font-family:'Inter',sans-serif;background:transparent;color:var(--text);min-height:100vh}
 
 /* ── NAV ── */
 .top-nav{display:none;align-items:center;gap:16px;padding:16px 28px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.3)}
@@ -780,7 +780,8 @@ if(_qp.get('single')==='1') {
   }
   document.body.style.cssText = 'margin:0;padding:0;overflow:hidden;background:transparent';
 } else {
-  // Show nav only in full page mode
+  // Full page mode — apply dark theme
+  document.body.style.background = '#0F1A1A';
   document.querySelector('.top-nav').style.display = 'flex';
   document.querySelector('#carTabs').style.display = 'flex';
   selectPost(0);
@@ -803,12 +804,15 @@ Object.values(_postSlides).forEach(slides => {
     const isDark = cls.includes('p1-s2')||cls.includes('p1-s5')||cls.includes('p2-s3')
       ||cls.includes('p2-s6')||cls.includes('p3-s1')||cls.includes('p4-s1')
       ||cls.includes('p5-s2')||cls.includes('p5-s5');
-    const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
+    // Dark bg → logo-amber (amber icon + white text legível)
+    // Light bg → logo-black (ícone + texto preto, mais legível que wordmark teal)
+    const logoSrc = isDark ? 'logo-amber.png' : 'logo-black.png';
     const logo = document.createElement('div');
     logo.className = 'slide-logo-inject';
-    // First slide: top-left; Last slide: bottom-right (visual balance)
+    // First slide: top-right (evita sobrepor conteúdo que fica no lado esquerdo)
+    // Last slide: bottom-right
     const pos = isFirst
-      ? 'top:64px;left:72px'
+      ? 'top:64px;right:72px'
       : 'bottom:72px;right:72px';
     logo.style.cssText = `position:absolute;${pos};opacity:1;pointer-events:none;z-index:10`;
     logo.innerHTML = `<img src="${logoSrc}" style="height:126px;object-fit:contain;display:block"/>`;

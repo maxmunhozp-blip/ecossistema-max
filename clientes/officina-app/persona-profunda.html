@@ -1881,7 +1881,7 @@ const DH_ROLE = 'Estratégico de Conteúdo';
 
 let rs2FilterAtivo = 'todos', rs2OpenPost = null;
 let rs2LbPost = null, rs2LbIdx = 0;
-let dhSending = false, dhRespIdx = 0;
+let dhSending = false, dhRespIdx = 0, dhCtxPost = null; // dhCtxPost = post em contexto atual
 let calYear = 2026, calMonth = 2, calFilterDay = null; // month 0-indexed
 let _statusPostId = null;
 
@@ -2195,12 +2195,34 @@ function dhBubble(m) {
   </div>`;
 }
 
+function dhFindPostInText(text) {
+  // Tenta identificar post pelo nome/número no texto
+  const t = text.toLowerCase();
+  // Por número: "post 01", "post 1", "carrossel 2", "card 3"
+  const numMatch = t.match(/(?:post|carrossel|número|no)\s*0?(\d)/);
+  if(numMatch) {
+    const idx = parseInt(numMatch[1]) - 1;
+    const criados = RS2_POSTS.filter(p=>p.status!=='proposta');
+    if(criados[idx]) return criados[idx];
+  }
+  // Por trecho do título
+  const sorted = [...RS2_POSTS].sort((a,b)=>b.titulo.length-a.titulo.length);
+  for(const p of sorted) {
+    const words = p.titulo.toLowerCase().split(/\s+/).filter(w=>w.length>4);
+    if(words.some(w=>t.includes(w))) return p;
+  }
+  return null;
+}
+
 function dhDetectIntent(text) {
   const t = text.toLowerCase();
-  if(/propon|proposta|novo post|novo carrossel|nova ideia|mais um|suger|cri(ar|e)|quero (um|mais)|conteúdo (novo|diferente)|outro carrossel/i.test(t)) return 'nova_proposta';
-  if(/ajust|muda|altera|corrig|reduzi|encurt|simples|longo|grande|pequen|slide \d|frase|texto|copy/i.test(t)) return 'ajuste';
-  if(/obrigad|aprovo|aprovad|ótim|perfeito|ótimo|ok|confirmo|gostei|ficou bom|ficou ótim/i.test(t)) return 'aprovacao';
-  if(/quando|prazo|data|entrega|semana|publicar|agendar/i.test(t)) return 'prazo';
+  if(/propon|proposta|novo post|novo carrossel|nova ideia|mais um|suger|criar|crie|quero (um|mais|outro)|outro carrossel|mais conteúdo|mais post/i.test(t)) return 'nova_proposta';
+  if(/não gost|não curti|não ficou|ruim|errado|refaz|recome|do zero|não era isso|não é isso|voce ainda nao|ainda nao (corrigiu|fez|ajustou)/i.test(t)) return 'refazer';
+  if(/ajust|muda|altera|corrig|encurt|simples|longo|slide \d|tira|coloca|troca|ficou (grande|pequen)|logo (sobrepôs|encavalou|em cima|sobrepondo)/i.test(t)) return 'ajuste';
+  if(/aprovo|aprovad|confirm|pode ir|tá bom|ficou bom|gostei|show|topz|isso mesmo|perfeito|ótimo/i.test(t)) return 'aprovacao';
+  if(/quando|prazo|data|entrega|semana|dia|publicar|agendar|cronogram/i.test(t)) return 'prazo';
+  if(/^(oi|olá|boa|bom dia|boa tarde|boa noite|e aí|tudo bem|tudo certo)/i.test(t)) return 'saudacao';
+  if(/o que acha|você acha|sua (opinião|sugestão|ideia)|me indica|qual (formato|tema|assunto|tipo)|você recomenda/i.test(t)) return 'opiniao';
   return 'geral';
 }
 
@@ -2230,17 +2252,31 @@ function dhEnviar() {
       const agentEl = document.createElement('div');
       agentEl.className = 'dh-bbl agent';
 
-      if(intent === 'nova_proposta') {
-        // Create new proposal and add to RS2_POSTS
+      // Tenta identificar o post no texto para atualizar o contexto
+      const postMentioned = dhFindPostInText(text);
+      if(postMentioned) dhCtxPost = postMentioned;
+      const ctxPost = dhCtxPost || RS2_POSTS.find(p=>p.status==='criado'||p.status==='revisao') || RS2_POSTS[0];
+
+      if(intent === 'saudacao') {
+        const propostas = RS2_POSTS.filter(p=>p.status==='proposta');
+        const emRevisao = RS2_POSTS.filter(p=>p.status==='revisao');
+        let reply = 'Oi! Tudo certo.';
+        if(emRevisao.length) reply += ` Tenho <strong>${emRevisao.length} post${emRevisao.length>1?'s':''} em revisão</strong> esperando sua aprovação.`;
+        if(propostas.length) reply += ` Também há <strong>${propostas.length} proposta${propostas.length>1?'s':''} de texto</strong> para você ver quando quiser.`;
+        if(!emRevisao.length && !propostas.length) reply += ` Tudo aprovado até aqui. Me fala se quiser um conteúdo novo ou algum ajuste.`;
+        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div><div class="dh-bbl-text">${reply}</div><div class="dh-bbl-time">agora</div>`;
+
+      } else if(intent === 'nova_proposta') {
         const propData = DH_NEW_PROPOSALS[dhNewPropIdx % DH_NEW_PROPOSALS.length];
         dhNewPropIdx++;
         const newId = 'p_dyn_' + Date.now();
-        const newPostIdx = (RS2_POSTS.reduce((mx,p)=>Math.max(mx,p.postIdx),0) + 1) % 5; // reuse slide template 0-4
+        const newPostIdx = (RS2_POSTS.filter(p=>p.status!=='proposta').length) % 5;
         const newPost = {id:newId, postIdx:newPostIdx, titulo:propData.titulo,
           plataformas:propData.plataformas, status:'proposta', data:'—',
           slides:propData.slides, redator:propData.redator, designer:propData.designer,
           textoApoio:{legenda:'',hashtags:'',cta:''}};
         RS2_POSTS.push(newPost);
+        dhCtxPost = newPost;
         const slidesEl = propData.slidesTexto.map(s=>`
           <div style="padding:8px 10px;border-left:3px solid var(--teal);background:var(--bg2);border-radius:0 6px 6px 0;margin-bottom:6px">
             <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px">Slide ${s.num}${s.label?' — '+s.label:''}</div>
@@ -2262,31 +2298,71 @@ function dhEnviar() {
         renderPosts();
 
       } else if(intent === 'ajuste') {
-        const lastPost = RS2_POSTS.find(p=>p.status==='criado'||p.status==='revisao') || RS2_POSTS[0];
+        const alvo = postMentioned || ctxPost;
+        if(postMentioned) {
+          agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
+            <div class="dh-bbl-text">Certo, estou olhando o <strong>"${alvo.titulo}"</strong>. Me descreve o que exatamente precisa mudar — é texto, posição de algum elemento, ou algo visual?</div>
+            <div class="dh-bbl-time">agora</div>`;
+        } else {
+          agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
+            <div class="dh-bbl-text">Qual post você quer ajustar? Me passa o nome ou o número e me diz o que mudar.</div>
+            <div class="dh-bbl-time">agora</div>`;
+        }
+
+      } else if(intent === 'refazer') {
         agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-          <div class="dh-bbl-text">Entendido. Vou aplicar o ajuste no <strong>"${lastPost.titulo}"</strong>. Confirma que é esse post?</div>
+          <div class="dh-bbl-text">Entendido, me desculpe. Vou refazer${ctxPost?' o <strong>"'+ctxPost.titulo+'"</strong>':''}. Me conta exatamente o que não ficou bom — texto, design, algum slide específico?</div>
           <div class="dh-bbl-time">agora</div>`;
 
       } else if(intent === 'aprovacao') {
-        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-          <div class="dh-bbl-text">Ótimo! Produção iniciada. Assim que o carrossel estiver pronto aparece na lista ao lado.</div>
-          <div class="dh-bbl-time">agora</div>`;
+        if(ctxPost && ctxPost.status !== 'criado') {
+          ctxPost.status = 'criado';
+          const idx = RS2_POSTS.indexOf(ctxPost);
+          if(idx>0){RS2_POSTS.splice(idx,1);RS2_POSTS.unshift(ctxPost);}
+          renderPosts();
+          agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
+            <div class="dh-bbl-text">Perfeito! <strong>"${ctxPost.titulo}"</strong> aprovado e movido para produção. Aparece na lista ao lado agora.</div>
+            <div class="dh-bbl-time">agora</div>`;
+        } else {
+          agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
+            <div class="dh-bbl-text">Ótimo! Me fala qual post você está aprovando — assim eu confirmo e passo pra produção.</div>
+            <div class="dh-bbl-time">agora</div>`;
+        }
 
       } else if(intent === 'prazo') {
         agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-          <div class="dh-bbl-text">Após a aprovação do texto, o carrossel fica pronto em até <strong>24h úteis</strong>. Posso agendar a entrega para uma data específica se precisar.</div>
+          <div class="dh-bbl-text">Depois que o texto é aprovado, o carrossel fica pronto em até <strong>24h úteis</strong>. Se quiser agendar uma data específica de publicação me fala que eu marco.</div>
           <div class="dh-bbl-time">agora</div>`;
 
-      } else {
-        const respostas = [
-          `Pode falar — estou acompanhando o perfil e tenho algumas ideias novas quando quiser.`,
-          `Entendido. Qualquer ajuste nos posts existentes ou nova proposta é só pedir aqui.`,
-          `Certo. Posso propor novos conteúdos baseados no que está performando melhor ou trabalhar em algum ajuste específico.`,
+      } else if(intent === 'opiniao') {
+        const opinioes = [
+          `Olhando o perfil, o formato que mais engaja aqui é o carrossel de <strong>listas e comparativos</strong>. "Antes x Depois" e "Top 5 erros" têm salvamento alto. Quer que eu monte uma proposta nessa linha?`,
+          `Minha sugestão: conteúdo educativo com dados concretos. O público que usa o app está no momento de decisão — mostrar números reais (R$280 vs R$480, por exemplo) converte mais do que storytelling genérico.`,
+          `Para o próximo post, eu apostaria em um formato mais direto — uma lista rápida, 4 slides no máximo. Posts menores têm mais chance de ser lidos até o fim. Posso montar uma proposta assim se quiser.`,
         ];
         agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
-          <div class="dh-bbl-text">${respostas[dhRespIdx%respostas.length]}</div>
+          <div class="dh-bbl-text">${opinioes[dhRespIdx%opinioes.length]}</div>
           <div class="dh-bbl-time">agora</div>`;
         dhRespIdx++;
+
+      } else {
+        // Respostas genéricas mas contextuais
+        const pendentes = RS2_POSTS.filter(p=>p.status==='proposta'||p.status==='revisao');
+        let resposta;
+        if(pendentes.length > 0) {
+          resposta = `Só lembrando que ainda tem ${pendentes.length} ${pendentes.length>1?'itens pendentes':'item pendente'} aqui — <strong>${pendentes[0].titulo}</strong>${pendentes.length>1?' entre outros':''}. Quer ver ou prefere falar de outra coisa?`;
+        } else {
+          const pool = [
+            `Pode mandar — estou de olho no calendário e tenho algumas ideias na manga quando quiser.`,
+            `Estamos em dia com a produção. Quer pautar mais conteúdo ou tem algum ajuste pendente?`,
+            `Me fala o que você precisa — nova peça, ajuste em algo existente, o que for.`,
+          ];
+          resposta = pool[dhRespIdx % pool.length];
+          dhRespIdx++;
+        }
+        agentEl.innerHTML = `<div class="dh-bbl-who">${DH_NOME}</div>
+          <div class="dh-bbl-text">${resposta}</div>
+          <div class="dh-bbl-time">agora</div>`;
       }
 
       msgs.insertBefore(agentEl, typing);
@@ -2530,7 +2606,7 @@ function renderVideos() {
     if(isOpen) {
       const aspectW = p.formato==='9:16' ? 60 : 108;
       const aspectH = p.formato==='9:16' ? 107 : 61;
-      const scenePalette = {abertura:'#3DA9A5',problema:'#e05252',solucao:'#3DA9A5',destaque:'#F5A623',lista:'#3DA9A5',cta:'#F5A623'};
+      const scenePalette = {abertura:'#3DA9A5',problema:'#1A2424',solucao:'#3DA9A5',destaque:'#F5A623',lista:'#3DA9A5',cta:'#F5A623'};
       const scenes = p.roteiro.map((c,i) => {
         const bg = scenePalette[c.tipo]||'#6A8888';
         return `<div style="flex-shrink:0;cursor:pointer" title="${c.desc}">
@@ -2623,7 +2699,7 @@ function renderBbHistory() {
       if(h.textProp) {
         // Roteiro proposal card
         const vd = VD_POSTS.find(v=>v.id===h.videoId);
-        const scenePalette = {abertura:'#3DA9A5',problema:'#e05252',solucao:'#3DA9A5',destaque:'#F5A623',lista:'#3DA9A5',cta:'#F5A623'};
+        const scenePalette = {abertura:'#3DA9A5',problema:'#1A2424',solucao:'#3DA9A5',destaque:'#F5A623',lista:'#3DA9A5',cta:'#F5A623'};
         const scenes = vd ? vd.roteiro.map(c=>`<div style="padding:8px 10px;border-left:3px solid ${scenePalette[c.tipo]||'#6A8888'};background:var(--bg1);border-radius:0 6px 6px 0;margin-bottom:6px">
           <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.4px">Cena ${c.cena} — ${c.label}</div>
           <div style="font-size:12px;color:var(--text1);line-height:1.5;margin-top:2px">${c.desc}</div>
@@ -2780,67 +2856,49 @@ async function rsGerar() {
   localStorage.setItem('gemini_api_key', key);
   const btn = document.getElementById('rsGenBtn');
   if(btn) { btn.disabled=true; btn.textContent='Gerando...'; }
-  if(log) log.textContent='Conectando...';
+  if(log) log.textContent='Gerando imagem...';
   document.getElementById('rsGenDlBtn').style.display='none';
-  let lastError = null;
   let generated = false;
 
-  // Strategy 1: Gemini 2.0 Flash image generation (generateContent, same key as text)
-  const FLASH_MODELS = ['gemini-2.0-flash-preview-image-generation','gemini-2.0-flash-exp-image-generation'];
-  for(const model of FLASH_MODELS) {
-    if(generated) break;
-    if(log) log.textContent=`Gerando via ${model}...`;
-    try {
-      const resp = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
-        {method:'POST',headers:{'Content-Type':'application/json'},
-         body:JSON.stringify({
-           contents:[{parts:[{text:prompt}]}],
-           generationConfig:{responseModalities:['IMAGE','TEXT']}
-         })}
+  try {
+    // Gemini 2.0 Flash — geração de imagem nativa
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+      {method:'POST', headers:{'Content-Type':'application/json'},
+       body: JSON.stringify({
+         contents:[{parts:[{text: prompt}]}],
+         generationConfig:{responseModalities:['IMAGE','TEXT']}
+       })}
+    );
+    if(!resp.ok) {
+      // Try Imagen 3 as fallback
+      const r2 = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${key}`,
+        {method:'POST', headers:{'Content-Type':'application/json'},
+         body: JSON.stringify({instances:[{prompt}], parameters:{sampleCount:1,aspectRatio:rsGenFmt,safetyFilterLevel:'block_few',personGeneration:'allow_adult'}})}
       );
+      const d2 = await r2.json();
+      if(d2.error) throw new Error(d2.error.message);
+      const b64 = d2.predictions?.[0]?.bytesBase64Encoded;
+      if(!b64) throw new Error('Sem imagem na resposta do Imagen');
+      rsGenImg = 'data:image/jpeg;base64,'+b64;
+      generated = true;
+    } else {
       const data = await resp.json();
-      if(data.error){lastError=data.error.message;continue;}
+      if(data.error) throw new Error(data.error.message);
       const parts = data.candidates?.[0]?.content?.parts||[];
       const imgPart = parts.find(p=>p.inlineData?.mimeType?.startsWith('image'));
-      if(!imgPart){lastError='Sem imagem na resposta';continue;}
+      if(!imgPart) throw new Error('Nenhuma imagem retornada — verifique se sua chave tem acesso ao Gemini 2.0 Flash');
       rsGenImg = `data:${imgPart.inlineData.mimeType};base64,${imgPart.inlineData.data}`;
-      const prev = document.getElementById('rsGenPreview');
-      if(prev) prev.innerHTML = `<img src="${rsGenImg}" style="width:100%;border-radius:8px;display:block"/>`;
-      document.getElementById('rsGenDlBtn').style.display='block';
-      if(log) log.textContent='Imagem gerada.';
       generated = true;
-    } catch(e){lastError=e.message;}
-  }
-
-  // Strategy 2: Imagen 3 via predict endpoint (requires billing)
-  if(!generated) {
-    const IMAGEN_MODELS = ['imagen-3.0-generate-001','imagen-3.0-fast-generate-001'];
-    outer2: for(const model of IMAGEN_MODELS) {
-      for(const ver of ['v1beta','v1']) {
-        if(log) log.textContent=`Tentando ${model} (${ver})...`;
-        try {
-          const resp = await fetch(
-            `https://generativelanguage.googleapis.com/${ver}/models/${model}:predict?key=${key}`,
-            {method:'POST',headers:{'Content-Type':'application/json'},
-             body:JSON.stringify({instances:[{prompt}],parameters:{sampleCount:1,aspectRatio:rsGenFmt,safetyFilterLevel:'block_few',personGeneration:'allow_adult'}})}
-          );
-          const data = await resp.json();
-          if(data.error){lastError=data.error.message;continue;}
-          const b64 = data.predictions?.[0]?.bytesBase64Encoded;
-          if(!b64){lastError='Sem imagem';continue;}
-          rsGenImg='data:image/jpeg;base64,'+b64;
-          document.getElementById('rsGenPreview').innerHTML=`<img src="${rsGenImg}" style="width:100%;border-radius:8px;display:block"/>`;
-          document.getElementById('rsGenDlBtn').style.display='block';
-          if(log) log.textContent='Imagem gerada via Imagen.';
-          generated=true; break outer2;
-        } catch(e){lastError=e.message;}
-      }
     }
-  }
-
-  if(!generated) {
-    if(log) log.innerHTML=`<span style="color:var(--red)">Erro: ${lastError}</span>`;
+    if(generated) {
+      document.getElementById('rsGenPreview').innerHTML = `<img src="${rsGenImg}" style="width:100%;border-radius:8px;display:block"/>`;
+      document.getElementById('rsGenDlBtn').style.display = 'block';
+      if(log) log.textContent = 'Imagem gerada.';
+    }
+  } catch(e) {
+    if(log) log.innerHTML = `<span style="color:var(--red)">Erro: ${e.message}</span>`;
   }
   if(btn) { btn.disabled=false; btn.innerHTML='<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:#fff;stroke-width:2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Gerar imagem'; }
 }
