@@ -62,6 +62,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .equipe-nome{font-size:11px;font-weight:700}
 .equipe-cargo{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
 .equipe-status{font-size:10px;color:var(--muted)}
+/* ── TICKER LÚDICO ── */
+.ticker-wrap{border-top:1px solid var(--border);overflow:hidden;padding:6px 0;background:rgba(0,0,0,.15);flex-shrink:0;white-space:nowrap;position:relative}
+.ticker-track{display:inline-flex;gap:0;animation:tickerScroll 38s linear infinite;will-change:transform}
+.ticker-wrap:hover .ticker-track{animation-play-state:paused}
+@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{display:inline-flex;align-items:center;gap:6px;padding:0 32px;font-size:10px;color:var(--dim)}
+.ticker-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;opacity:.7}
+.ticker-nome{font-weight:800;letter-spacing:.03em}
+.ticker-sep{opacity:.25;margin:0 4px}
+.ticker-frase{font-style:italic;opacity:.75}
 
 .sse-badge{
   display:inline-flex;align-items:center;gap:5px;
@@ -194,6 +204,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <canvas id="escritorio-canvas"></canvas>
     </div>
     <div class="equipe-row" id="equipe-row"></div>
+    <div class="ticker-wrap">
+      <div class="ticker-track" id="tickerTrack"></div>
+    </div>
   </div>
 
   <aside class="chat-panel">
@@ -849,6 +862,31 @@ agentes.forEach(ag => {
   filhaEquipe.appendChild(card);
   elsCards[ag.id] = card;
 });
+
+/* ── TICKER LÚDICO ── */
+const TICKER_FRASES = {
+  lucas:    'Desenhando o mapa antes de sair andando',
+  camila:   'Procurando a cor que faz o olho parar',
+  rafael:   'Sintonizando o rádio até o sinal ficar limpo',
+  juliana:  'Escolhendo cada palavra antes de apertar enviar',
+  bruno:    'Colocando os números no microscópio',
+  fernanda: 'Puxando os fios até tudo se conectar',
+};
+(function buildTicker(){
+  const track = document.getElementById('tickerTrack');
+  if(!track) return;
+  const items = DEFS_AGENTES.map(d => {
+    const frase = TICKER_FRASES[d.id] || 'trabalhando';
+    return `<span class="ticker-item">
+      <span class="ticker-dot" style="background:${d.cor}"></span>
+      <span class="ticker-nome" style="color:${d.cor}">${d.nome}</span>
+      <span class="ticker-sep">—</span>
+      <span class="ticker-frase">${frase}</span>
+    </span>`;
+  }).join('');
+  // duplicar para loop contínuo sem salto
+  track.innerHTML = items + items;
+})();
 
 function atualizarCards() {
   agentes.forEach(ag => {
