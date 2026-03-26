@@ -352,6 +352,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 </style>
 <style id="redes-style">
 /* ═══ REDES SOCIAIS v2 ═══ */
+.rs-col-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:14px;flex-shrink:0}
+.rs-col-tab{padding:7px 14px;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:.15s;font-family:'Inter',sans-serif}
+.rs-col-tab:hover{color:var(--teal)}
+.rs-col-tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+.rs-col-panel{display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto}
+.rs-gen-tpl{padding:10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;transition:.15s;text-align:left}
+.rs-gen-tpl:hover,.rs-gen-tpl.sel{border-color:var(--teal);background:var(--teal-dim)}
 .redes-layout{display:grid;grid-template-columns:1fr 370px;gap:20px;height:calc(100vh - 200px);min-height:560px}
 .posts-col{display:flex;flex-direction:column;min-height:0;overflow:hidden}
 .posts-col-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;flex-shrink:0}
@@ -1617,8 +1624,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <div class="posts-col">
       <div class="posts-col-head">
         <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:30px;height:30px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--bg2)">
-            <img src="logo-teal.png" style="height:30px;width:auto;object-fit:none;object-position:left center;max-width:none"/>
+          <div style="flex-shrink:0;display:flex;align-items:center">
+            <img src="logo-teal.png" style="height:20px;width:auto;display:block"/>
           </div>
           <div>
             <div class="posts-col-title">Conteúdo criado</div>
@@ -1627,14 +1634,51 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
         </div>
         <span class="posts-count" id="postsCount">5 posts</span>
       </div>
-      <div class="rs-pills" id="rsPills">
-        <button class="rs-pill active" onclick="rsFilter('todos',this)">Todos</button>
-        <button class="rs-pill" onclick="rsFilter('instagram',this)">Instagram</button>
-        <button class="rs-pill" onclick="rsFilter('facebook',this)">Facebook</button>
-        <button class="rs-pill" onclick="rsFilter('proposta',this)">Propostas</button>
+      <div class="rs-col-tabs">
+        <button class="rs-col-tab active" id="rct-posts" onclick="rsColTab('posts',this)">Posts</button>
+        <button class="rs-col-tab" id="rct-gen" onclick="rsColTab('gen',this)">Gerar Imagem</button>
       </div>
 
-      <div class="posts-list" id="postsList"></div>
+      <div id="rs-panel-posts" class="rs-col-panel">
+        <div class="posts-list" id="postsList"></div>
+      </div>
+
+      <div id="rs-panel-gen" class="rs-col-panel" style="display:none;flex-direction:column;gap:14px;overflow-y:auto;padding-right:2px">
+        <div class="gen-section-title" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3)">Templates de cena</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="rsGenTemplates">
+          <button class="rs-gen-tpl sel" onclick="rsGenSelTpl(this,0)"><div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">Oficina</div><div style="font-size:10px;color:var(--text3)">Interior clean, luz natural</div></button>
+          <button class="rs-gen-tpl" onclick="rsGenSelTpl(this,1)"><div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">Mecânico</div><div style="font-size:10px;color:var(--text3)">Close nas mãos, motor</div></button>
+          <button class="rs-gen-tpl" onclick="rsGenSelTpl(this,2)"><div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">Motor</div><div style="font-size:10px;color:var(--text3)">Detalhe de peças, metalic</div></button>
+          <button class="rs-gen-tpl" onclick="rsGenSelTpl(this,3)"><div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">Freio</div><div style="font-size:10px;color:var(--text3)">Disco e pinça, contraste</div></button>
+          <button class="rs-gen-tpl" onclick="rsGenSelTpl(this,4)"><div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">Cliente</div><div style="font-size:10px;color:var(--text3)">Pessoa ao lado do carro</div></button>
+          <button class="rs-gen-tpl" onclick="rsGenSelTpl(this,5)"><div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">Diagnóstico</div><div style="font-size:10px;color:var(--text3)">Tablet + tecnologia automotiva</div></button>
+        </div>
+        <div>
+          <div class="gen-section-title" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:6px">Prompt</div>
+          <textarea id="rsGenPrompt" style="width:100%;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:10px;resize:vertical;min-height:72px;outline:none;box-sizing:border-box;line-height:1.55;transition:.15s" placeholder="Descreva a cena..."></textarea>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="rs-fmt-btn active" id="rsfmt34" onclick="rsSetFmt('3:4',this)" style="flex:1;padding:6px 8px;border-radius:7px;border:1.5px solid var(--border);background:var(--teal);color:#fff;font-size:10px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">3:4 Portrait</button>
+          <button class="rs-fmt-btn" id="rsfmt11" onclick="rsSetFmt('1:1',this)" style="flex:1;padding:6px 8px;border-radius:7px;border:1.5px solid var(--border);background:transparent;color:var(--text3);font-size:10px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">1:1 Quadrado</button>
+        </div>
+        <div>
+          <div class="gen-section-title" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:6px">API Gemini</div>
+          <input type="password" id="rsGenKey" style="width:100%;background:var(--bg2);border:1.5px solid var(--border);border-radius:7px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:8px 10px;outline:none;box-sizing:border-box" placeholder="AIza..."/>
+          <div style="font-size:10px;color:var(--text4);margin-top:4px">Salva no navegador · não sai daqui</div>
+        </div>
+        <button onclick="rsGerar()" id="rsGenBtn" style="width:100%;padding:10px;border-radius:8px;background:var(--teal);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:#fff;stroke-width:2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Gerar imagem
+        </button>
+        <div id="rsGenLog" style="font-size:10px;color:var(--text3);font-style:italic;text-align:center;min-height:14px"></div>
+        <div id="rsGenPreview" style="border-radius:10px;overflow:hidden;background:var(--bg2);min-height:120px;display:flex;align-items:center;justify-content:center">
+          <div style="text-align:center;color:var(--text4);font-size:11px;padding:20px">
+            <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;display:block;margin:0 auto 8px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            Imagem aparece aqui
+          </div>
+        </div>
+        <button id="rsGenDlBtn" style="display:none;width:100%;padding:8px;border-radius:7px;background:rgba(245,166,35,.1);border:1.5px solid rgba(245,166,35,.3);color:var(--amber-dark);font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif" onclick="rsGenDownload()">Baixar imagem</button>
+      </div>
     </div>
 
     <!-- COLUNA DIREITA: chat -->
@@ -1680,8 +1724,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <div class="posts-col">
       <div class="posts-col-head">
         <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:30px;height:30px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--bg2)">
-            <img src="logo-teal.png" style="height:30px;width:auto;object-fit:none;object-position:left center;max-width:none"/>
+          <div style="flex-shrink:0;display:flex;align-items:center">
+            <img src="logo-teal.png" style="height:20px;width:auto;display:block"/>
           </div>
           <div>
             <div class="posts-col-title">Vídeos criados</div>
@@ -1782,6 +1826,13 @@ function showTab(name, btn) {
 lucide.createIcons();
 
 /* ═══ REDES SOCIAIS v2 ═══ */
+.rs-col-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:14px;flex-shrink:0}
+.rs-col-tab{padding:7px 14px;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:.15s;font-family:'Inter',sans-serif}
+.rs-col-tab:hover{color:var(--teal)}
+.rs-col-tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+.rs-col-panel{display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto}
+.rs-gen-tpl{padding:10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;transition:.15s;text-align:left}
+.rs-gen-tpl:hover,.rs-gen-tpl.sel{border-color:var(--teal);background:var(--teal-dim)}
 const RS2_POSTS = [
   {id:'p1',postIdx:0,titulo:'Como escolher a oficina certa',plataformas:['instagram'],status:'publicado',data:'15/03/2026',slides:5,redator:'Juliana Costa',designer:'Rafael Mota',
    textoApoio:{legenda:'Escolher oficina por indicação é ótimo — mas e quando não tem ninguém pra perguntar? 3 critérios que o Officina App usa pra você não cair em furada.',hashtags:'#OfficinApp #mecânica #oficinaverificada #carro #manutenção',cta:'officinaapp.com.br — link na bio'}},
@@ -2591,6 +2642,84 @@ function bbAprovarRoteiro(btn, videoId) {
 }
 
 /* ── init video tab on tab switch ── */
+
+
+/* ── Redes col tabs + Gemini generator ── */
+const RS_GEN_TEMPLATES = ['Professional modern car service workshop interior, clean and organized, teal accent lighting, white walls, professional mechanic equipment, no people, editorial automotive photography, natural light, 4k', 'Close-up of professional mechanic hands working on car engine, clean workshop, natural light, editorial style, no face visible, professional automotive service, sharp focus on hands and tools', 'Car engine bay detail, clean modern vehicle, professional automotive photography, sharp focus, teal and metallic tones, editorial style, high contrast, magazine quality', 'Car brake disc and caliper close-up, professional automotive photography, metallic tones, sharp focus, editorial style, safety theme, dark background with dramatic lighting', 'Person standing next to clean modern car at professional auto service center, shot from behind, lifestyle photography, teal accent in environment, natural light, editorial automotive magazine style', 'Mechanic using digital tablet diagnostics near modern car, professional automotive technology, clean workshop, teal accent lighting, hands visible with device, no face, editorial photography'];
+let rsGenFmt = '3:4', rsGenImg = null;
+
+function rsColTab(tab, btn) {
+  document.querySelectorAll('.rs-col-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const posts = document.getElementById('rs-panel-posts');
+  const gen   = document.getElementById('rs-panel-gen');
+  if(posts) posts.style.display = tab==='posts' ? 'flex' : 'none';
+  if(gen)   gen.style.display   = tab==='gen'   ? 'flex' : 'none';
+  if(tab==='gen') {
+    const saved = localStorage.getItem('gemini_api_key');
+    const k = document.getElementById('rsGenKey');
+    if(saved && k) k.value = saved;
+  }
+}
+
+function rsGenSelTpl(btn, idx) {
+  document.querySelectorAll('.rs-gen-tpl').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  const ta = document.getElementById('rsGenPrompt');
+  if(ta) ta.value = RS_GEN_TEMPLATES[idx];
+}
+
+function rsSetFmt(fmt, btn) {
+  rsGenFmt = fmt;
+  document.querySelectorAll('#rs-panel-gen .rs-fmt-btn').forEach(b=>{
+    b.style.background = b===btn ? 'var(--teal)' : 'transparent';
+    b.style.color      = b===btn ? '#fff' : 'var(--text3)';
+  });
+}
+
+async function rsGerar() {
+  const key    = (document.getElementById('rsGenKey')||{}).value?.trim();
+  const prompt = (document.getElementById('rsGenPrompt')||{}).value?.trim();
+  const log    = document.getElementById('rsGenLog');
+  if(!key)    { if(log) log.textContent='Insira a chave Gemini.'; return; }
+  if(!prompt) { if(log) log.textContent='Selecione um template ou escreva o prompt.'; return; }
+  localStorage.setItem('gemini_api_key', key);
+  const btn = document.getElementById('rsGenBtn');
+  if(btn) { btn.disabled=true; btn.textContent='Gerando...'; }
+  if(log) log.textContent='Conectando ao Gemini Imagen 3...';
+  document.getElementById('rsGenDlBtn').style.display='none';
+  try {
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${key}`,
+      {method:'POST',headers:{'Content-Type':'application/json'},
+       body:JSON.stringify({instances:[{prompt}],parameters:{sampleCount:1,aspectRatio:rsGenFmt,safetyFilterLevel:'block_few',personGeneration:'allow_adult'}})}
+    );
+    const data = await resp.json();
+    if(data.error) throw new Error(data.error.message);
+    const b64 = data.predictions?.[0]?.bytesBase64Encoded;
+    if(!b64) throw new Error('Sem imagem na resposta');
+    rsGenImg = 'data:image/jpeg;base64,'+b64;
+    const prev = document.getElementById('rsGenPreview');
+    if(prev) prev.innerHTML = `<img src="${rsGenImg}" style="width:100%;border-radius:8px;display:block"/>`;
+    document.getElementById('rsGenDlBtn').style.display='block';
+    if(log) log.textContent='Imagem gerada.';
+  } catch(e) {
+    if(log) log.textContent='Erro: '+e.message;
+  }
+  if(btn) { btn.disabled=false; btn.innerHTML='<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:#fff;stroke-width:2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Gerar imagem'; }
+}
+
+function rsGenDownload() {
+  if(!rsGenImg) return;
+  const a=document.createElement('a'); a.href=rsGenImg;
+  a.download='officina-gen-'+Date.now()+'.jpg'; a.click();
+}
+
+// Init gen template
+document.addEventListener('DOMContentLoaded',()=>{
+  const ta=document.getElementById('rsGenPrompt');
+  if(ta) ta.value=RS_GEN_TEMPLATES[0];
+});
 
 document.addEventListener('DOMContentLoaded',()=>{
   const ta = document.getElementById('dhInput');
