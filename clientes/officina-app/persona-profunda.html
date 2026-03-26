@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Officina App — Biblioteca de Persona</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -46,13 +47,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .nav-url{font-size:11px;color:var(--text3)}
 
 /* ── TABS ── */
-.tabs-wrap{background:rgba(247,250,250,.97);border-bottom:1px solid var(--border);position:sticky;top:58px;z-index:90}
-.tabs{display:flex;padding:0 28px;overflow-x:auto;scrollbar-width:none;max-width:1200px;margin:0 auto}
+.tabs-wrap{background:rgba(247,250,250,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:58px;z-index:90;padding:10px 28px 0}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;max-width:1200px;margin:0 auto}
 .tabs::-webkit-scrollbar{display:none}
-.tab{padding:13px 16px;font-size:13px;font-weight:500;color:var(--text3);border:none;background:none;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:6px}
-.tab:hover{color:var(--text)}
-.tab.active{color:var(--teal);border-bottom-color:var(--teal);font-weight:600}
-.tab-dot{width:7px;height:7px;border-radius:50%}
+.tab{padding:10px 18px 12px;font-size:13px;font-weight:500;color:var(--text3);border:none;background:none;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:all .18s;display:flex;align-items:center;gap:8px;border-radius:8px 8px 0 0;position:relative}
+.tab:hover{color:var(--text);background:rgba(61,169,165,.06)}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal);font-weight:700;background:rgba(61,169,165,.08)}
+.tab svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;transition:inherit}
+.tab.t-amber.active{color:var(--amber-dark);border-bottom-color:var(--amber)}
+.tab.t-amber:hover{background:rgba(245,166,35,.07)}
+.tab.t-amber svg{stroke:currentColor}
+.tab.t-red.active{color:#c0392b;border-bottom-color:var(--red)}
+.tab.t-red:hover{background:rgba(224,82,82,.06)}
+.tab.t-gray.active{color:var(--text2);border-bottom-color:var(--text3)}
+.tab.t-gray:hover{background:rgba(0,0,0,.04)}
 
 /* ── LAYOUT ── */
 .content{max-width:1200px;margin:0 auto;padding:32px 28px}
@@ -231,10 +239,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 <!-- ── TABS ── -->
 <div class="tabs-wrap">
   <div class="tabs">
-    <button class="tab active" onclick="showTab('persona')"><span class="tab-dot" style="background:var(--teal)"></span>Persona Profunda</button>
-    <button class="tab" onclick="showTab('dimensoes')"><span class="tab-dot" style="background:var(--amber)"></span>30 Dimensões</button>
-    <button class="tab" onclick="showTab('canvas')"><span class="tab-dot" style="background:var(--red)"></span>Sexy Canvas</button>
-    <button class="tab" onclick="showTab('identidade')"><span class="tab-dot" style="background:var(--text3)"></span>Identidade Visual</button>
+    <button class="tab active" onclick="showTab('persona', this)">
+      <i data-lucide="user-round"></i>Persona Profunda
+    </button>
+    <button class="tab t-amber" onclick="showTab('dimensoes', this)">
+      <i data-lucide="brain"></i>30 Dimensões
+    </button>
+    <button class="tab t-red" onclick="showTab('canvas', this)">
+      <i data-lucide="layout-template"></i>Sexy Canvas
+    </button>
+    <button class="tab t-gray" onclick="showTab('identidade', this)">
+      <i data-lucide="palette"></i>Identidade Visual
+    </button>
   </div>
 </div>
 
@@ -1221,12 +1237,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 </div><!-- /content -->
 
 <script>
-function showTab(name) {
+function showTab(name, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
-  event.currentTarget.classList.add('active');
+  (btn || event.currentTarget).classList.add('active');
 }
+lucide.createIcons();
 </script>
 
 </body>
