@@ -1020,10 +1020,12 @@ function _injectLogos() {
     const injectLogo = (slide, isFirst) => {
       if(!slide || slide.querySelector('.slide-logo-inject')) return;
       const cls = slide.className;
+      const st = slide.getAttribute('style') || '';
       const isDark = cls.includes('p1-s2')||cls.includes('p1-s5')||cls.includes('p2-s3')
         ||cls.includes('p2-s6')||cls.includes('p3-s1')||cls.includes('p4-s1')
         ||cls.includes('p5-s2')||cls.includes('p5-s5')
-        ||cls.includes('p6-s1')||cls.includes('p6-s2')||cls.includes('p6-s5')||cls.includes('p6-s8');
+        ||cls.includes('p6-s1')||cls.includes('p6-s2')||cls.includes('p6-s5')||cls.includes('p6-s8')
+        ||/background\s*:\s*(var\(--teal\)|var\(--amber\)|#1[Aa]2424|#00494[Ff]|#000000)/i.test(st);
       const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
       const pos = isFirst ? 'top:64px;right:72px' : 'bottom:72px;right:72px';
       const logo = document.createElement('div');
@@ -1057,7 +1059,7 @@ if(!_singleMode && _urlP.get('p') !== null && _urlP.get('export') !== '1') {
 
 </script>
 <!-- design-review: p6-idx4 cor proibida #E74C3C→#fff; p6-idx7 SVG carrinho órfão removido do s-pad -->
-<!-- design-review: p8-idx0 s-body cor herdada invisível em fundo escuro→rgba(255,255,255,0.8); p8-idx1/3/5 s-tag rgba(0,0,0,.4) proibido→.dark; p8-idx2/4/6 s-tag rgba(255,255,255,.7)→.white + s-body cor escura em fundo teal→rgba(255,255,255,0.85); p8-idx7 .s-cta-dark inexistente→.s-cta.teal -->
+<!-- design-review: p8-idx0 s-body cor herdada invisível em fundo escuro→rgba(255,255,255,0.8); p8-idx1/3/5 s-tag rgba(0,0,0,.4) proibido→.dark; p8-idx2/4/6 s-tag rgba(255,255,255,.7)→.white + s-body cor escura em fundo teal→rgba(255,255,255,0.85); p8-idx7 .s-cta-dark inexistente→.s-cta.teal; p7-idx5 .s-cta sem modificador→.s-cta.amber; p7-idx5+p8-idx7 domínio officinaapp.com.br ausente→adicionado; _injectLogos isDark expandido para detectar inline style (posts 7/8 usam style attr em vez de classes) -->
 
 <!-- Post Roleta Russa - Estrutura -->
 <div data-post="6" data-idx="0" class="slide"><div class="s-pad"><!-- Slide 1/5 --></div></div>
@@ -1127,6 +1129,7 @@ if(!_singleMode && _urlP.get('p') !== null && _urlP.get('export') !== '1') {
     <p class="s-title" style="color:var(--text);">A diferença é clara. A escolha é sua.</p>
     <p class="s-body" style="color:var(--text);">Baixe o Officina App e assuma o controle da manutenção do seu carro.</p>
     <button class="s-cta teal">Experimente o Jeito Officina</button>
+    <div style="font-size:26px;font-weight:600;color:rgba(26,36,36,.45)">officinaapp.com.br</div>
   </div>
 </div>
 
@@ -1172,7 +1175,8 @@ if(!_singleMode && _urlP.get('p') !== null && _urlP.get('export') !== '1') {
   <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:40px;text-align:center">
     <p class="s-title" style="color:#fff;">Chega de surpresas.</p>
     <p class="s-body" style="color:#fff; max-width:80%; margin:0 auto;">Baixe o Officina App e agende sua próxima revisão com a certeza do melhor negócio.</p>
-    <button class="s-cta">Baixar o app</button>
+    <button class="s-cta amber">Baixar o app</button>
+    <div style="font-size:26px;color:rgba(255,255,255,.4);font-weight:500">officinaapp.com.br</div>
   </div>
 </div>
 </body>
