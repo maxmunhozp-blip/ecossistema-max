@@ -3328,14 +3328,45 @@ A instrução dentro do JSON deve ser autocontida — o Claude Code vai executar
 Se não houver ação de código, NÃO inclua ---ACTION.`;
 }
 
+// ── Config storage — cookie cross-subdomain + localStorage fallback ──────
+function _cfgCookieDomain() {
+  const h = location.hostname;
+  // Para tracktor.com.br e qualquer subdomain → .tracktor.com.br
+  if(h === 'tracktor.com.br' || h.endsWith('.tracktor.com.br')) return '.tracktor.com.br';
+  if(h === 'localhost' || h === '127.0.0.1') return h;
+  return h; // qualquer outro domínio
+}
+function cfgSet(name, value) {
+  // Salva no cookie (cross-subdomain) E no localStorage (fallback)
+  try {
+    const domain = _cfgCookieDomain();
+    const maxAge = 365 * 24 * 3600; // 1 ano
+    document.cookie = `${name}=${encodeURIComponent(value)}; domain=${domain}; path=/; max-age=${maxAge}; SameSite=Lax`;
+  } catch(e) {}
+  try { localStorage.setItem(name, value); } catch(e) {}
+}
+function cfgGet(name) {
+  // Tenta cookie primeiro (cross-subdomain), depois localStorage
+  try {
+    const match = document.cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith(name+'='));
+    if(match) return decodeURIComponent(match.split('=').slice(1).join('='));
+  } catch(e) {}
+  try { return localStorage.getItem(name) || ''; } catch(e) { return ''; }
+}
+// Migra chaves antigas do localStorage para cookies (roda uma vez)
+(function _migrateCfgKeys() {
+  ['gemini_api_key','officina_gh_token'].forEach(k => {
+    const fromLs = localStorage.getItem(k);
+    if(fromLs && !cfgGet(k)) cfgSet(k, fromLs);
+  });
+})();
+
 function dhToggleCfg() {
   const p = document.getElementById('dhCfgPanel');
   if(p.style.display === 'none') {
     p.style.display = 'block';
-    const gKey = localStorage.getItem('gemini_api_key')||'';
-    const ghKey = localStorage.getItem('officina_gh_token')||'';
-    document.getElementById('dhCfgGemini').value = gKey;
-    document.getElementById('dhCfgGh').value = ghKey;
+    document.getElementById('dhCfgGemini').value = cfgGet('gemini_api_key');
+    document.getElementById('dhCfgGh').value     = cfgGet('officina_gh_token');
   } else {
     p.style.display = 'none';
   }
@@ -3344,10 +3375,10 @@ function dhToggleCfg() {
 function dhSaveCfg() {
   const gem = document.getElementById('dhCfgGemini').value.trim();
   const gh  = document.getElementById('dhCfgGh').value.trim();
-  if(gem) localStorage.setItem('gemini_api_key', gem);
-  if(gh)  localStorage.setItem('officina_gh_token', gh);
+  if(gem) cfgSet('gemini_api_key', gem);
+  if(gh)  cfgSet('officina_gh_token', gh);
   document.getElementById('dhCfgPanel').style.display = 'none';
-  dhAppendAgentMsg('Configurações salvas.');
+  dhAppendAgentMsg('Configurações salvas — chaves persistem em todas as URLs do ecossistema.');
 }
 
 function dhAppendAgentMsg(html) {
@@ -3361,7 +3392,7 @@ function dhAppendAgentMsg(html) {
 }
 
 async function dhTriggerAction(action) {
-  const ghToken = localStorage.getItem('officina_gh_token');
+  const ghToken = cfgGet('officina_gh_token');
   if(!ghToken) {
     dhAppendAgentMsg('pra executar os ajustes automáticos, salva o <strong>GitHub Token</strong> nas configurações (ícone de engrenagem acima)');
     return;
@@ -3530,7 +3561,7 @@ async function dhEnviar() {
   // Typing indicator
   setTimeout(()=>{ typing.classList.add('show'); msgs.scrollTop = msgs.scrollHeight; }, 300);
 
-  const key = localStorage.getItem('gemini_api_key');
+  const key = cfgGet('gemini_api_key');
   if(!key) {
     setTimeout(()=>{
       typing.classList.remove('show');
@@ -4056,7 +4087,7 @@ function rsColTab(tab, btn) {
   if(posts) posts.style.display = tab==='posts' ? 'flex' : 'none';
   if(gen)   gen.style.display   = tab==='gen'   ? 'flex' : 'none';
   if(tab==='gen') {
-    const saved = localStorage.getItem('gemini_api_key');
+    const saved = cfgGet('gemini_api_key');
     const k = document.getElementById('rsGenKey');
     if(saved && k) k.value = saved;
   }
@@ -4083,7 +4114,7 @@ async function rsGerar() {
   const log    = document.getElementById('rsGenLog');
   if(!key)    { if(log) log.textContent='Insira a chave Gemini.'; return; }
   if(!prompt) { if(log) log.textContent='Selecione um template ou escreva o prompt.'; return; }
-  localStorage.setItem('gemini_api_key', key);
+  cfgSet('gemini_api_key', key);
   const btn = document.getElementById('rsGenBtn');
   if(btn) { btn.disabled=true; btn.textContent='Gerando...'; }
   if(log) log.textContent='Gerando imagem...';
