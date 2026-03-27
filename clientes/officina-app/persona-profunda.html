@@ -609,6 +609,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <button class="tab t-green" onclick="showTab('videos', this)" style="--t-color:#3DA9A5">
       <i data-lucide="video"></i>Produção de Vídeos
     </button>
+    <button class="tab" onclick="showTab('oficina', this)" style="--t-color:#F5A623;border-color:var(--amber)">
+      <i data-lucide="wrench" style="color:var(--amber)"></i><span style="color:var(--amber)">Dono de Oficina</span>
+    </button>
   </div>
 </div>
 
@@ -1806,6 +1809,665 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 
   </div>
 </div><!-- /tab-videos -->
+
+<!-- ════════════════ DONO DE OFICINA ════════════════ -->
+<div id="tab-oficina" class="section">
+
+  <!-- HERO -->
+  <div class="hero-card" style="background:linear-gradient(135deg,#2D1F0A 0%,#3D2A0D 50%,#1A2424 100%)">
+    <div class="hero-inner">
+      <div class="avatar" style="background:linear-gradient(145deg,#F5A623,#D48A10);overflow:hidden;padding:0;display:flex;align-items:flex-end;justify-content:center">
+        <svg viewBox="0 0 88 88" style="width:88px;height:88px;display:block">
+          <circle cx="44" cy="32" r="18" fill="rgba(255,255,255,.9)"/>
+          <ellipse cx="44" cy="90" rx="30" ry="22" fill="rgba(255,255,255,.9)"/>
+        </svg>
+      </div>
+      <div class="hero-info" style="flex:1">
+        <div style="font-size:12px;opacity:.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;color:#F5A623">ICP B2B — Dono de Oficina Mecânica</div>
+        <h1 style="color:#fff">Rodrigo Almeida</h1>
+        <div class="sub" style="color:rgba(255,255,255,.7)">44 anos · Dono de oficina há 12 anos · Santo André, SP</div>
+        <div class="hero-quote" style="border-left-color:#F5A623;color:rgba(255,255,255,.85)">
+          "Trabalho há 12 anos, tenho clientes fixos, meu serviço é bom — mas na internet parece que não existo. O vizinho abriu uma oficina faz dois anos e aparece antes de mim no Google."
+        </div>
+        <div class="hero-tags">
+          <span class="hero-tag" style="background:rgba(245,166,35,.15);color:#F5A623;border-color:rgba(245,166,35,.3)">Oficina própria há 12 anos</span>
+          <span class="hero-tag" style="background:rgba(245,166,35,.15);color:#F5A623;border-color:rgba(245,166,35,.3)">2–4 funcionários</span>
+          <span class="hero-tag" style="background:rgba(245,166,35,.15);color:#F5A623;border-color:rgba(245,166,35,.3)">Agenda irregular</span>
+          <span class="hero-tag" style="background:rgba(245,166,35,.15);color:#F5A623;border-color:rgba(245,166,35,.3)">Desconfia de app</span>
+          <span class="hero-tag" style="background:rgba(245,166,35,.15);color:#F5A623;border-color:rgba(245,166,35,.3)">Quer crescer</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-pill" style="background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.2)"><strong style="color:#F5A623">R$18k</strong><span>Faturamento médio/mês</span></div>
+        <div class="stat-pill" style="background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.2)"><strong style="color:#F5A623">60%</strong><span>Clientes por indicação</span></div>
+        <div class="stat-pill" style="background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.2)"><strong style="color:#F5A623">3–5</strong><span>Carros por dia</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRASE -->
+  <div class="frase-box" style="border-left-color:#F5A623">
+    <strong>"Bom serviço não é mais suficiente — quem não aparece, não existe."</strong><br/>
+    Rodrigo construiu a reputação dele no boca a boca. Funciona — mas não escala. Ele sabe que o mercado está mudando, que os clientes pesquisam no celular antes de decidir, e que precisar aparecer no digital sem saber como é uma das maiores frustrações da vida dele. O Officina App não vende sistema. Vende <strong>clientes novos e reputação visível</strong>.
+  </div>
+
+  <!-- PERFIL + ROTINA -->
+  <div class="profile-grid">
+    <div class="profile-card">
+      <div class="card-header" style="border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:14px">
+        <div class="card-icon amber"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div><div class="card-title">Perfil Demográfico</div><div class="card-subtitle">Quem é na vida real</div></div>
+      </div>
+      <div class="profile-row"><span class="profile-label">Idade</span><span class="profile-value">38–55 anos (média 44)</span></div>
+      <div class="profile-row"><span class="profile-label">Cidade</span><span class="profile-value">Grande SP e cidades satélite</span></div>
+      <div class="profile-row"><span class="profile-label">Faturamento</span><span class="profile-value">R$10.000–R$35.000/mês</span></div>
+      <div class="profile-row"><span class="profile-label">Equipe</span><span class="profile-value">1–5 funcionários (mecânico + aux)</span></div>
+      <div class="profile-row"><span class="profile-label">Tipo de oficina</span><span class="profile-value">Geral ou semi-especializada</span></div>
+      <div class="profile-row"><span class="profile-label">Tempo de mercado</span><span class="profile-value">5–20 anos</span></div>
+      <div class="profile-row"><span class="profile-label">Origem dos clientes</span><span class="profile-value">60–80% por indicação</span></div>
+      <div class="profile-row"><span class="profile-label">Presença digital</span><span class="profile-value">Google Maps básico ou nenhuma</span></div>
+      <div class="profile-row"><span class="profile-label">Usa app no trabalho?</span><span class="profile-value">WhatsApp, nada mais</span></div>
+    </div>
+
+    <div class="profile-card">
+      <div class="card-header" style="border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:14px">
+        <div class="card-icon amber"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div><div class="card-title">Dia Típico do Rodrigo</div><div class="card-subtitle">Como o app aparece na vida dele</div></div>
+      </div>
+      <div class="rotina-list">
+        <div class="rotina-item"><span class="rotina-hora">07h00</span><span class="rotina-text">Abre a oficina. Olha a agenda do dia — 2 carros certos, 1 incerto. Segunda-feira pesada, sexta folgada. Gostaria de estabilidade.</span></div>
+        <div class="rotina-item"><span class="rotina-hora">09h30</span><span class="rotina-text">Entra um cliente novo — perguntou o preço, foi embora. "Deve ter achado mais barato." Não sabe que o preço era justo, só não tinha dados para comparar.</span></div>
+        <div class="rotina-item"><span class="rotina-hora">12h00</span><span class="rotina-text">Almoço rápido. Abre o WhatsApp: 3 mensagens de clientes perguntando status. Responde um por um, na mão, sem sistema.</span></div>
+        <div class="rotina-item"><span class="rotina-hora">15h00</span><span class="rotina-text">Termina um serviço. O cliente pede desconto de última hora. Dá — por medo de perder. Sai com menos do que deveria ganhar.</span></div>
+        <div class="rotina-item"><span class="rotina-hora">18h30</span><span class="rotina-text">Fecha a oficina. Pensa: "Trabalhei o dia todo, ganho o suficiente, mas não cresce." Vê o concorrente novo cheio de carro. Fica inquieto.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DORES + DESEJOS -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon red"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div>
+        <div><div class="card-title">Dores Principais</div><div class="card-subtitle">O que tira o sono</div></div>
+      </div>
+      <ul class="list-items">
+        <li>Agenda irregular — semanas cheias, semanas vazias sem previsão</li>
+        <li>Depender 100% de indicação para ter clientes novos</li>
+        <li>Concorrente menor ou mais novo aparecendo antes no Google</li>
+        <li>Cliente que vem, pede orçamento e some sem explicação</li>
+        <li>Não saber cobrar o preço justo sem perder o cliente</li>
+        <li>Uma avaliação ruim no Google que não consegue remover</li>
+        <li>Funcionário que aprende tudo e abre oficina do lado</li>
+        <li>Mês fraco sem reserva para pagar aluguel e folha</li>
+        <li>Não ter como provar que o serviço é bom para quem não conhece</li>
+        <li>Plataformas digitais que cobram caro e não entregam cliente</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/></svg></div>
+        <div><div class="card-title">Desejos Principais</div><div class="card-subtitle">O que ele quer conquistar</div></div>
+      </div>
+      <ul class="list-items">
+        <li>Agenda cheia e previsível — saber o que vem na semana que vem</li>
+        <li>Clientes novos chegando sem precisar pedir indicação</li>
+        <li>Ser reconhecido pela qualidade do serviço, não só pelo preço</li>
+        <li>Ter reputação visível — que apareça quando alguém pesquisar</li>
+        <li>Poder cobrar o preço justo sem precisar justificar</li>
+        <li>Sistema simples que não tire o foco do trabalho</li>
+        <li>Fidelizar clientes — que o Thiago volte sempre e indique</li>
+        <li>Crescer sem precisar contratar mais gente imediatamente</li>
+        <li>Sentir que o negócio é sólido e vai passar para o filho</li>
+        <li>Ser visto como referência de confiança no bairro</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- GATILHOS + FRASES -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon teal"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <div><div class="card-title">Gatilhos para Entrar no App</div><div class="card-subtitle">O que faz ele agir agora</div></div>
+      </div>
+      <ul class="list-items">
+        <li>Mês fraco — agenda vazia por mais de uma semana</li>
+        <li>Outro dono de oficina mostrou que está recebendo clientes pelo app</li>
+        <li>Recebeu uma avaliação ruim e quer mais reviews positivos para equilibrar</li>
+        <li>Concorrente novo aparecendo antes dele no Google Maps</li>
+        <li>Cliente perguntou se ele está "naquele app de oficina verificada"</li>
+        <li>Cansou de pagar Google Ads sem retorno claro</li>
+        <li>Filho ou funcionário disse "precisa entrar no digital"</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon amber"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div><div class="card-title">Frases Reais do Rodrigo</div><div class="card-subtitle">Como ele fala sobre o problema</div></div>
+      </div>
+      <ul class="list-items">
+        <li>"Trabalho há 12 anos e meu serviço é bom — mas ninguém sabe"</li>
+        <li>"Semana passada veio dois carros só. Não tenho como planejar assim"</li>
+        <li>"O vizinho abriu faz dois anos e aparece antes de mim no Google"</li>
+        <li>"Já tentei impulsionar no Instagram, jogou dinheiro fora"</li>
+        <li>"Cliente quer saber o preço antes — mas como eu passo preço sem ver o carro?"</li>
+        <li>"Tenho medo de colocar no app e vir reclamação de cliente ruim"</li>
+        <li>"Se vier cliente novo e eu atender bem, ele volta e indica"</li>
+        <li>"Cobro o preço justo — mas o cara vai embora por R$30"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ANTI-PERSONA -->
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-header">
+      <div class="card-icon red"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+      <div><div class="card-title">Anti-Persona — Quem NÃO é o parceiro ideal</div><div class="card-subtitle">Oficinas que não devem entrar na plataforma</div></div>
+    </div>
+    <div class="grid-2" style="margin:0">
+      <ul class="list-items">
+        <li>Oficina com histórico de reclamações no Procon ou Reclame Aqui</li>
+        <li>Dono que quer entrar só para captar e não pretende avaliar atendimento</li>
+        <li>Oficina sem CNPJ ativo ou endereço fixo verificável</li>
+        <li>Quem quer negociar comissão para zero e não investe em qualidade</li>
+      </ul>
+      <ul class="list-items">
+        <li>Mecânico que muda preço depois de combinado — destrói a proposta do app</li>
+        <li>Oficina que não tem capacidade de atender aumento de demanda</li>
+        <li>Dono que trata reclamação de cliente com hostilidade pública</li>
+        <li>Quem entra para espionar concorrentes, não para crescer</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 30 DIMENSÕES DONO DE OFICINA -->
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:16px;padding-top:8px">30 Dimensões Psicológicas — Dono de Oficina</div>
+
+  <!-- BLOCO A -->
+  <div class="dim-section">
+    <div class="dim-block-title">Bloco A — Sombras e Medos</div>
+    <div class="dim-grid">
+
+      <div class="dim-card">
+        <div class="dim-num">01</div>
+        <div class="dim-label">Sombras Existenciais</div>
+        <ul class="dim-list">
+          <li>Medo de ter construído um negócio que não consegue passar para o filho</li>
+          <li>Sensação de que o mercado está mudando mais rápido do que consegue acompanhar</li>
+          <li>Angústia de depender de indicação até o fim — sem saída para escalar</li>
+          <li>Vergonha silenciosa de não saber lidar com o digital</li>
+          <li>Dúvida se o que construiu nos últimos 12 anos vai durar mais 12</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">02</div>
+        <div class="dim-label">Medos Fundamentais</div>
+        <ul class="dim-list">
+          <li>Agenda vazia por mais de 2 semanas seguidas</li>
+          <li>Uma avaliação ruim que derrube a reputação construída em anos</li>
+          <li>Funcionário bom pedir demissão para abrir oficina do lado</li>
+          <li>Concorrente novo capturar seus clientes fiéis pelo digital</li>
+          <li>Mês sem movimento e sem reserva para pagar compromissos fixos</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">03</div>
+        <div class="dim-label">Medos Ocultos</div>
+        <ul class="dim-list">
+          <li>Que o filho não queira dar continuidade ao negócio</li>
+          <li>Que a digitalização torne o mecânico especialista irrelevante</li>
+          <li>Que a reputação que construiu não valha nada no mundo online</li>
+          <li>Ser colocado lado a lado com oficinas ruins numa plataforma</li>
+          <li>Que o cliente compare preço e escolha sempre pelo mais barato</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">04</div>
+        <div class="dim-label">Medos Primordiais</div>
+        <ul class="dim-list">
+          <li>Perder o controle do próprio negócio para um sistema ou plataforma</li>
+          <li>Ser julgado por pessoas que não entendem o trabalho</li>
+          <li>Depender de uma nota online para sobreviver</li>
+          <li>Invisibilidade — trabalhar bem e não ser encontrado</li>
+          <li>Instabilidade financeira que volta todo mês como ameaça</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">05</div>
+        <div class="dim-label">Feridas Ancestrais</div>
+        <ul class="dim-list">
+          <li>Pai ou avô também era mecânico e "sempre foi assim" — resistência à mudança herdada</li>
+          <li>Cresceu com mentalidade de que bom trabalho fala por si mesmo</li>
+          <li>Aprendeu que vender é "empurrar" — aversão ao marketing</li>
+          <li>Nunca viu exemplo de oficina que cresceu de verdade pelo digital</li>
+          <li>Acostumado a resolver tudo na raça — pedir ajuda é fraqueza</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">06</div>
+        <div class="dim-label">Feridas Emocionais</div>
+        <ul class="dim-list">
+          <li>Já investiu em panfleto, outdoor, Google Ads — nenhum deu retorno claro</li>
+          <li>Já atendeu bem um cliente que virou cliente fiel e depois sumiu sem explicação</li>
+          <li>Já recebeu avaliação ruim injusta e não soube como responder</li>
+          <li>Já deu desconto para não perder cliente e saiu no prejuízo</li>
+          <li>Já formou mecânico bom que foi trabalhar no concorrente</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BLOCO B -->
+  <div class="dim-section">
+    <div class="dim-block-title">Bloco B — Desejos e Necessidades</div>
+    <div class="dim-grid">
+
+      <div class="dim-card">
+        <div class="dim-num">07</div>
+        <div class="dim-label">Necessidades Primais</div>
+        <ul class="dim-list">
+          <li>Previsibilidade — saber o que vem na semana que vem</li>
+          <li>Reconhecimento — que a qualidade do serviço seja visível</li>
+          <li>Segurança financeira — reserva para cobrir meses fracos</li>
+          <li>Controle — não depender de uma plataforma para sobreviver</li>
+          <li>Simplicidade — sistema que não tire foco do trabalho real</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">08</div>
+        <div class="dim-label">Fantasias Não Realizadas</div>
+        <ul class="dim-list">
+          <li>Agenda cheia por 3 meses consecutivos sem esforço de captação</li>
+          <li>Cliente que lê as avaliações e já chega confiante — sem precisar convencer</li>
+          <li>Ser a oficina de referência do bairro — aquela que todos indicam</li>
+          <li>Passar o negócio para o filho com reputação sólida e carteira fiel</li>
+          <li>Crescer sem precisar contratar imediatamente mais gente</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">09</div>
+        <div class="dim-label">Desejos Inconfessáveis</div>
+        <ul class="dim-list">
+          <li>Cobrar mais do que cobra hoje sem perder clientes</li>
+          <li>Que a concorrência não saiba que entrou numa plataforma nova</li>
+          <li>Ser mais seletivo — poder recusar cliente difícil sem prejuízo</li>
+          <li>Que o cliente entenda que preço justo não é o mais barato</li>
+          <li>Provar para o cunhado que tem empresa de consultoria que mecânico também pode crescer</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">10</div>
+        <div class="dim-label">Desejos Nucleares</div>
+        <ul class="dim-list">
+          <li>Orgulho — que o negócio seja reconhecido como referência</li>
+          <li>Legado — construir algo que dure além dele</li>
+          <li>Estabilidade — nunca mais mês com medo de não fechar as contas</li>
+          <li>Liberdade — poder tirar férias sem o negócio parar</li>
+          <li>Respeito — ser tratado como profissional, não como "mecânico"</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">11</div>
+        <div class="dim-label">Necessidades Emocionais Não Expressas</div>
+        <ul class="dim-list">
+          <li>Ser visto como empresário, não só como mecânico</li>
+          <li>Sentir que o trabalho de 12 anos tem valor além do boca a boca</li>
+          <li>Ter apoio de uma plataforma que torça pelo seu sucesso</li>
+          <li>Pertencer a uma rede de profissionais sérios como ele</li>
+          <li>Alívio de não carregar sozinho a pressão de captar cliente</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">12</div>
+        <div class="dim-label">Buscas Infinitas</div>
+        <ul class="dim-list">
+          <li>O canal de captação perfeito que encha a agenda sem custo absurdo</li>
+          <li>O sistema que organize tudo sem exigir que ele aprenda tecnologia</li>
+          <li>A forma definitiva de mostrar que seu serviço é melhor que o do concorrente</li>
+          <li>O momento em que vai poder descansar sabendo que o negócio está seguro</li>
+          <li>O cliente ideal — que paga justo, volta sempre e indica sem pedir</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BLOCO C -->
+  <div class="dim-section">
+    <div class="dim-block-title">Bloco C — Mecanismos e Padrões</div>
+    <div class="dim-grid">
+
+      <div class="dim-card">
+        <div class="dim-num">13</div>
+        <div class="dim-label">Compensações Inconscientes</div>
+        <ul class="dim-list">
+          <li>Dá desconto para manter cliente em vez de resolver o problema de captação</li>
+          <li>Trabalha mais horas para compensar a falta de clientes — desgaste sem solução</li>
+          <li>Aceita serviços abaixo do valor para não ficar com mecânico parado</li>
+          <li>Cria promoções de última hora em semanas fracas — educa cliente a esperar desconto</li>
+          <li>Faz tudo sozinho para "economizar" — gargalo de crescimento</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">14</div>
+        <div class="dim-label">Mecanismos de Defesa</div>
+        <ul class="dim-list">
+          <li>"Meu cliente me conhece — não preciso de app"</li>
+          <li>"Já tentei coisa assim antes e não funcionou"</li>
+          <li>"Cliente de app não fideliza, só vai pelo preço"</li>
+          <li>"Vou entrar quando tiver mais tempo para aprender"</li>
+          <li>Culpa o cliente por não entender o valor do serviço</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">15</div>
+        <div class="dim-label">Comportamentos Compensatórios</div>
+        <ul class="dim-list">
+          <li>Posta no Instagram esporadicamente — sem estratégia, sem resultado</li>
+          <li>Coloca placa nova na frente da oficina achando que vai trazer cliente</li>
+          <li>Pede para clientes fiéis postarem avaliação — poucos fazem</li>
+          <li>Testa uma plataforma por 30 dias, não tem resultado imediato, desiste</li>
+          <li>Guarda cartão de visita na gaveta para "distribuir depois"</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">16</div>
+        <div class="dim-label">Ciclos Viciosos</div>
+        <ul class="dim-list">
+          <li>Mês fraco → dá desconto → cliente aprende a barganhar → margem cai → mês mais fraco</li>
+          <li>Sem sistema → responde no WhatsApp → perde contato → cliente some → sem follow-up</li>
+          <li>Sem avaliações → não aparece no digital → sem cliente novo → sem avaliação</li>
+          <li>Trabalha mais → não tem tempo para pensar o negócio → não melhora → trabalha mais</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">17</div>
+        <div class="dim-label">Crenças Limitantes</div>
+        <ul class="dim-list">
+          <li>"Marketing é coisa de empresa grande — pequena oficina não precisa"</li>
+          <li>"Se abaixar o preço vendo mais — se subir perco o cliente"</li>
+          <li>"Cliente de internet não fideliza — só quer o mais barato"</li>
+          <li>"Bom serviço fala por si mesmo — não preciso me promover"</li>
+          <li>"Plataforma cobra uma fortuna e não entrega o que promete"</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">18</div>
+        <div class="dim-label">Prisões Invisíveis</div>
+        <ul class="dim-list">
+          <li>Identidade de "mecânico" que bloqueia de se ver como empresário</li>
+          <li>Lealdade ao modelo de negócio do pai — resiste a mudar o que sempre funcionou</li>
+          <li>Necessidade de controle total — não delega, não escala</li>
+          <li>Aversão ao risco — prefere estabilidade medíocre a aposta com potencial</li>
+          <li>Crença de que precisar de ajuda para captar clientes é sinal de fraqueza</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BLOCO D -->
+  <div class="dim-section">
+    <div class="dim-block-title">Bloco D — Identidade e Poder</div>
+    <div class="dim-grid">
+
+      <div class="dim-card">
+        <div class="dim-num">19</div>
+        <div class="dim-label">Questões de Identidade</div>
+        <ul class="dim-list">
+          <li>Tensão entre se ver como mecânico ou como empresário</li>
+          <li>Orgulho do trabalho técnico — mas frustração com o lado comercial</li>
+          <li>Quer ser reconhecido como profissional, não como mão de obra</li>
+          <li>Confunde preço com valor — difícil cobrar o que o serviço vale</li>
+          <li>Identidade construída no "trabalho pesado" — marketing parece desonesto</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">20</div>
+        <div class="dim-label">Dinâmicas de Poder</div>
+        <ul class="dim-list">
+          <li>Cliente leigo tem o dinheiro — Rodrigo tem o conhecimento. Tensão constante</li>
+          <li>Plataforma tem os clientes — ele tem a mão de obra. Relação de dependência que teme</li>
+          <li>Concorrente com mais reviews tem vantagem de visibilidade independente da qualidade</li>
+          <li>O cliente que pesquisa tem poder que o cliente antigo não tinha</li>
+          <li>Avaliação negativa de um único cliente pode custar mais que anos de bom serviço</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">21</div>
+        <div class="dim-label">Traumas Profissionais</div>
+        <ul class="dim-list">
+          <li>Já investiu em franquia ou parceria que não deu retorno e saiu no prejuízo</li>
+          <li>Já formou mecânico especialista que foi trabalhar para o concorrente com salário maior</li>
+          <li>Já deu crédito a cliente que nunca pagou e nunca mais voltou</li>
+          <li>Já recebeu calúnia de cliente que tentou exigir serviço fora do combinado</li>
+          <li>Já perdeu 3 clientes no mesmo mês sem entender o motivo</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">22</div>
+        <div class="dim-label">Inseguranças Profissionais</div>
+        <ul class="dim-list">
+          <li>Não sabe precificar — cobra por intuição, não por cálculo</li>
+          <li>Não sabe responder avaliação negativa no Google sem piorar a situação</li>
+          <li>Não sabe qual canal digital realmente funciona para oficina</li>
+          <li>Inseguro para expandir — e se vier mais serviço do que consegue atender?</li>
+          <li>Não sabe contratar mecânico bom sem pagar mais do que pode</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">23</div>
+        <div class="dim-label">Relacionamentos Tóxicos</div>
+        <ul class="dim-list">
+          <li>Cliente que vem só quando tem promoção e nunca paga preço cheio</li>
+          <li>Fornecedor de peças que promete prazo e sempre atrasa</li>
+          <li>Funcionário que faz hora extra e depois reclamar de sobrecarga</li>
+          <li>Plataforma que cobrou mensalidade e não entregou nenhum cliente</li>
+          <li>Parceiro de indicação que encaminha só os clientes problemáticos</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">24</div>
+        <div class="dim-label">Conflitos Internos</div>
+        <ul class="dim-list">
+          <li>Quer crescer mas tem medo de perder o controle da qualidade</li>
+          <li>Quer cobrar mais mas tem medo de perder clientes fiéis</li>
+          <li>Quer entrar no digital mas não quer depender de plataforma</li>
+          <li>Quer contratar mais mas não confia na capacidade de pagar a folha</li>
+          <li>Quer tirar férias mas sabe que sem ele a oficina para</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BLOCO E -->
+  <div class="dim-section">
+    <div class="dim-block-title">Bloco E — Existência e Transcendência</div>
+    <div class="dim-grid">
+
+      <div class="dim-card">
+        <div class="dim-num">25</div>
+        <div class="dim-label">Vazios Primordiais</div>
+        <ul class="dim-list">
+          <li>Sensação de que trabalhou muito e construiu pouco — comparado ao que imaginava</li>
+          <li>Isolamento de dono — não tem sócio, não tem rede, decide tudo sozinho</li>
+          <li>Ausência de mentoria — ninguém que já passou por isso e possa orientar</li>
+          <li>Falta de reconhecimento além do bairro — invisible para o mundo maior</li>
+          <li>Vazio de não saber se o que constrói hoje vai ter valor amanhã</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">26</div>
+        <div class="dim-label">Sombras Arquetípicas</div>
+        <ul class="dim-list">
+          <li>Inveja velada do concorrente que cresceu mais rápido com menos experiência</li>
+          <li>Raiva do mercado que não valoriza o profissional técnico</li>
+          <li>Parte que quer desistir e "só trabalhar como mecânico mesmo, sem responsabilidade"</li>
+          <li>Desejo de poder rejeitante — dizer não para cliente difícil sem medo</li>
+          <li>Arrogância técnica que impede de ouvir sugestão de quem não é mecânico</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">27</div>
+        <div class="dim-label">Feridas da Alma</div>
+        <ul class="dim-list">
+          <li>A vez que o cliente preferiu ir para a concorrência por R$50 a menos após 3 anos de fidelidade</li>
+          <li>Quando o banco negou o crédito para expandir — sentiu que o negócio não tinha credibilidade</li>
+          <li>Quando a avaliação ruim injusta ficou sem resposta e ele não soube o que fazer</li>
+          <li>Quando o filho disse que não quer ser mecânico — sentiu que o legado acabava ali</li>
+          <li>Quando trabalhou o mês inteiro e no final não sobrou nada além das contas pagas</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">28</div>
+        <div class="dim-label">Abismos Existenciais</div>
+        <ul class="dim-list">
+          <li>"Se eu parar de trabalhar amanhã, o negócio acaba. Construí ou só sobrevivi?"</li>
+          <li>"Quanto tempo ainda o boca a boca vai ser suficiente?"</li>
+          <li>"Meu serviço é bom — mas o mundo não sabe. Isso me basta?"</li>
+          <li>"Se eu entrar numa plataforma e não der certo, confirma que não tenho saída"</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">29</div>
+        <div class="dim-label">Paradoxos Fundamentais</div>
+        <ul class="dim-list">
+          <li>Quer mais clientes mas teme não conseguir atender bem com volume maior</li>
+          <li>Quer cobrar o preço justo mas o cliente compara com quem cobra menos e é pior</li>
+          <li>Quer estar no digital mas tem medo de avaliação que não consegue controlar</li>
+          <li>Quer crescer sozinho mas sozinho nunca vai além do limite atual</li>
+          <li>Quer reputação online mas desconfia de tudo que vem da internet</li>
+        </ul>
+      </div>
+
+      <div class="dim-card">
+        <div class="dim-num">30</div>
+        <div class="dim-label">Tensões Primordiais</div>
+        <ul class="dim-list">
+          <li>Qualidade vs. Volume — mais clientes pode significar serviço pior</li>
+          <li>Controle vs. Crescimento — delegar é a única forma de crescer mas é o que mais teme</li>
+          <li>Tradição vs. Modernidade — o que sempre funcionou vs. o que o mercado exige</li>
+          <li>Preço justo vs. Competitividade — não quer baixar mas o cliente compara</li>
+          <li>Independência vs. Plataforma — quer cliente novo sem depender de terceiro para isso</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- VALUE PROPOSITION PARA O DONO DE OFICINA -->
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:16px;padding-top:8px">Proposta de Valor — O que o Officina App entrega para o Rodrigo</div>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card" style="border-left:3px solid var(--amber)">
+      <div class="card-header">
+        <div class="card-icon amber"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div><div class="card-title">O que ele ganha</div><div class="card-subtitle">Benefícios reais da plataforma</div></div>
+      </div>
+      <ul class="list-items">
+        <li><strong>Clientes novos qualificados</strong> — quem chega pelo app já viu as avaliações e quer ir. Não é comparação de preço puro.</li>
+        <li><strong>Reputação visível</strong> — avaliações reais que aparecem quando o Thiago pesquisar</li>
+        <li><strong>Orçamento digital antes</strong> — reduz cliente que some após ver o preço pessoalmente</li>
+        <li><strong>Verificação como diferencial</strong> — "oficina verificada Officina App" é credencial que concorrente não-verificado não tem</li>
+        <li><strong>Agenda mais previsível</strong> — agendamento com antecedência vs. cliente que chega de surpresa</li>
+        <li><strong>Fidelização facilitada</strong> — histórico do cliente no app, revisão preventiva como serviço recorrente</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left:3px solid var(--red)">
+      <div class="card-header">
+        <div class="card-icon red"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div><div class="card-title">Objeções a Quebrar</div><div class="card-subtitle">O que ele vai dizer antes de entrar</div></div>
+      </div>
+      <ul class="list-items">
+        <li><strong>"Já tentei plataforma antes e não funcionou"</strong> — mostrar dados reais de oficinas que entraram e encheram a agenda</li>
+        <li><strong>"Tenho medo de avaliação ruim"</strong> — mostrar que avaliações verificadas são de clientes reais, não anônimos; e que responder bem a negativas aumenta credibilidade</li>
+        <li><strong>"Meu cliente não usa app"</strong> — 87% dos motoristas pesquisam serviço no celular antes de decidir</li>
+        <li><strong>"Não tenho tempo para aprender"</strong> — onboarding em 30min, suporte ativo nos primeiros 30 dias</li>
+        <li><strong>"Vai custar caro"</strong> — modelo de sucesso: paga só quando recebe cliente, sem mensalidade fixa alta</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- JORNADA DO DONO DE OFICINA -->
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-header">
+      <div class="card-icon teal"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div><div class="card-title">Jornada do Dono de Oficina no Officina App</div><div class="card-subtitle">Do ceticismo à dependência positiva</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:4px">
+      <div style="text-align:center;padding:12px 8px;background:var(--bg2);border-radius:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;margin-bottom:6px">Descoberta</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.5">Mês fraco ou cliente pergunta se está "no app". Ouve falar da plataforma.</div>
+      </div>
+      <div style="text-align:center;padding:12px 8px;background:var(--bg2);border-radius:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;margin-bottom:6px">Ceticismo</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.5">"Já tentei coisa assim." Pesquisa, lê sobre, demora para decidir. Objeções.</div>
+      </div>
+      <div style="text-align:center;padding:12px 8px;background:var(--bg2);border-radius:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;margin-bottom:6px">Cadastro</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.5">Entra na plataforma. Preenche perfil. Aguarda verificação. Ansioso.</div>
+      </div>
+      <div style="text-align:center;padding:12px 8px;background:var(--bg2);border-radius:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;margin-bottom:6px">1º cliente</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.5">Primeiro agendamento pelo app. Atende bem. Recebe avaliação 5 estrelas. Vira crente.</div>
+      </div>
+      <div style="text-align:center;padding:12px 8px;background:var(--bg2);border-radius:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;margin-bottom:6px">Dependência positiva</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.5">30% da agenda vem do app. Reputação crescendo. Indica para outros donos.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENSAGENS QUE VENDEM PARA O RODRIGO -->
+  <div class="card" style="margin-bottom:32px">
+    <div class="card-header">
+      <div class="card-icon amber"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+      <div><div class="card-title">Headlines que Param o Rodrigo</div><div class="card-subtitle">O que faz ele prestar atenção</div></div>
+    </div>
+    <div class="grid-2" style="margin:0">
+      <ul class="list-items">
+        <li>"Oficinas verificadas no Officina App recebem em média 8 clientes novos por mês"</li>
+        <li>"Seu serviço é bom. O problema é que ninguém que não te conhece sabe disso."</li>
+        <li>"A Oficina do Souza está recebendo cliente novo todo dia pelo app. Você está?"</li>
+        <li>"Chega de semana vazia. Agenda previsível começa com visibilidade digital."</li>
+      </ul>
+      <ul class="list-items">
+        <li>"Verificação gratuita. Você aparece. Cliente chega. Simples assim."</li>
+        <li>"12 anos de bom serviço merecem aparecer quando o cliente pesquisar."</li>
+        <li>"O cliente já viu suas avaliações antes de ligar. Ele já quer ir."</li>
+        <li>"Oficina verificada Officina App cobra o preço justo — e o cliente aceita."</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /tab-oficina -->
 
 </div><!-- /content -->
 
