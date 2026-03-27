@@ -362,7 +362,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .rs-col-panel{display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto}
 .rs-gen-tpl{padding:10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;transition:.15s;text-align:left}
 .rs-gen-tpl:hover,.rs-gen-tpl.sel{border-color:var(--teal);background:var(--teal-dim)}
-.redes-layout{display:grid;grid-template-columns:1fr 370px;gap:20px;height:calc(100vh - 200px);min-height:560px}
+.redes-layout{display:grid;grid-template-columns:1fr 370px;gap:20px;height:calc(100vh - 200px);min-height:560px;transition:grid-template-columns .3s ease}
+.redes-layout.chat-off{grid-template-columns:1fr 0}
 .posts-col{display:flex;flex-direction:column;min-height:0;overflow:hidden}
 .posts-col-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;flex-shrink:0}
 .posts-col-title{font-size:17px;font-weight:800;color:var(--text)}
@@ -408,7 +409,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .slide-card svg{width:20px;height:20px;stroke:var(--text4);fill:none;stroke-width:1.5}
 .slide-card-num{position:absolute;bottom:5px;font-size:9px;font-weight:700;color:var(--text4)}
 /* Chat column */
-.chat-col{display:flex;flex-direction:column;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;min-height:0}
+.chat-col{display:flex;flex-direction:column;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;min-height:0;transition:opacity .25s,transform .25s}
+.redes-layout.chat-off .chat-col{opacity:0;pointer-events:none;transform:translateX(12px)}
+/* Botão colapsar chat */
+.btn-chat-toggle{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
+.btn-chat-toggle:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-dim)}
+.btn-chat-toggle svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;transition:transform .25s}
+.redes-layout.chat-off .posts-col .btn-chat-toggle svg{transform:rotate(180deg)}
 .dh-head{display:flex;align-items:center;gap:12px;padding:15px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
 .dh-avatar{width:36px;height:36px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;letter-spacing:.3px}
 .dh-name{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:2px}
@@ -451,7 +458,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .dh-typing-lbl{font-size:11px;color:var(--text3);margin-left:4px}
 .dh-input-area{border-top:1px solid var(--border);padding:10px 12px;flex-shrink:0}
 .dh-input-row{display:flex;gap:8px;align-items:flex-end}
-.dh-ta{flex:1;min-height:40px;max-height:260px;resize:none;border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;line-height:1.5;overflow-y:auto}
+.dh-ta{flex:1;min-height:56px;max-height:320px;resize:none;border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;line-height:1.5;overflow-y:auto;field-sizing:content}
 .dh-ta:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(61,169,165,.07)}
 .dh-ta::placeholder{color:var(--text4)}
 .dh-send{width:40px;height:40px;border-radius:10px;background:var(--teal);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
@@ -1647,7 +1654,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
             <div style="font-size:10px;color:var(--text3);margin-top:1px;font-weight:500">Officina App</div>
           </div>
         </div>
-        <span class="posts-count" id="postsCount">5 posts</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="posts-count" id="postsCount">5 posts</span>
+          <button class="btn-chat-toggle" id="btnChatToggle" onclick="toggleChat()" title="Colapsar/expandir Lucas">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+        </div>
       </div>
       <div class="rs-col-tabs">
         <button class="rs-col-tab active" id="rct-posts" onclick="rsColTab('posts',this)">Posts</button>
@@ -1710,6 +1722,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
         </div>
         <button id="dhCfgBtn" onclick="dhToggleCfg()" title="Configurações" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--text3);display:flex;align-items:center;border-radius:6px;transition:.15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
           <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <button id="dhCollapseBtn" onclick="toggleChat()" title="Recolher chat" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--text3);display:flex;align-items:center;border-radius:6px;transition:.15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
         </button>
       </div>
       <!-- Config overlay -->
@@ -2952,7 +2967,7 @@ function renderPosts() {
     let slidesHtml = '';
     let textoHtml = '';
     if(isOpen) {
-      const coverImg = localStorage.getItem('rs_cover_'+p.id);
+      const coverImg = rs2GetCover(p.id);
       // Card de capa separado — fica à esquerda de todos os slides
       const coverCard = coverImg
         ? `<div class="slide-card" onclick="event.stopPropagation()" title="Capa do post" style="position:relative;border-color:var(--teal)">
@@ -2970,7 +2985,7 @@ function renderPosts() {
           </label>`;
       const cards = Array.from({length:p.slides},(_,i) => {
         return `<div class="slide-card" onclick="rs2OpenLb('${p.id}',${i})" title="Slide ${i+1}" style="position:relative">
-          <div class="slide-card-frame"><iframe class="slide-card-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=${i}" scrolling="no" loading="lazy"></iframe></div>
+          <div class="slide-card-frame"><iframe class="slide-card-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=${i}" scrolling="no"></iframe></div>
           <span class="slide-card-num">${i+1}</span>
         </div>`;
       }).join('');
@@ -2993,10 +3008,9 @@ function renderPosts() {
     return `<div class="post-item${isOpen?' open':''}" id="pi-${p.id}">
       <div class="post-row" onclick="rs2Toggle('${p.id}')">
         <div style="font-size:10px;font-weight:700;color:var(--text4);width:22px;flex-shrink:0;text-align:right">${num}</div>
-        <div class="post-thumb"><div class="post-thumb-frame">${localStorage.getItem('rs_cover_'+p.id)?`<img src="${localStorage.getItem('rs_cover_'+p.id)}" style="width:100%;height:100%;object-fit:cover;display:block"/>`:`<iframe class="post-thumb-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=0" scrolling="no" loading="lazy"></iframe>`}</div></div>
+        <div class="post-thumb"><div class="post-thumb-frame">${rs2GetCover(p.id)?`<img src="${rs2GetCover(p.id)}" style="width:100%;height:100%;object-fit:cover;display:block"/>`:`<iframe class="post-thumb-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=0" scrolling="no"></iframe>`}</div></div>
         <div class="post-info">
           <div class="post-title">${p.titulo}</div>
-          <div class="post-meta"></div>
           ${creditsHtml}
         </div>
         <span class="post-slides-count">${p.slides} slides</span>
@@ -3024,8 +3038,25 @@ function rs2SetCover(postId, input) {
   if(!file) return;
   const reader = new FileReader();
   reader.onload = e => {
-    localStorage.setItem('rs_cover_'+postId, e.target.result);
-    renderPosts();
+    // Comprime para max 400px antes de salvar (evita estourar localStorage)
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 400;
+      const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      const compressed = canvas.toDataURL('image/jpeg', 0.82);
+      try {
+        localStorage.setItem('rs_cover_'+postId, compressed);
+      } catch(err) {
+        console.warn('localStorage cheio, usando sessionStorage', err);
+        try { sessionStorage.setItem('rs_cover_'+postId, compressed); } catch(_){}
+      }
+      renderPosts();
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -3046,6 +3077,10 @@ function rs2RefreshSlides(postId, btn) {
   }, 900);
 }
 
+function rs2GetCover(postId) {
+  return localStorage.getItem('rs_cover_'+postId) || sessionStorage.getItem('rs_cover_'+postId) || null;
+}
+
 function rs2Toggle(id) {
   rs2OpenPost = rs2OpenPost===id ? null : id;
   renderPosts();
@@ -3054,6 +3089,32 @@ function rs2Toggle(id) {
     if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
   },50);
 }
+
+/* ── Chat collapse ── */
+let _chatCollapsed = localStorage.getItem('chatCollapsed') === '1';
+function toggleChat() {
+  _chatCollapsed = !_chatCollapsed;
+  localStorage.setItem('chatCollapsed', _chatCollapsed ? '1' : '0');
+  _applyChatState();
+}
+function _applyChatState() {
+  const layout = document.querySelector('.redes-layout');
+  if(layout) layout.classList.toggle('chat-off', _chatCollapsed);
+  // sync botão no posts-col
+  const toggleBtn = document.getElementById('btnChatToggle');
+  if(toggleBtn) toggleBtn.title = _chatCollapsed ? 'Expandir Lucas' : 'Recolher Lucas';
+}
+
+function _dhAutoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 320) + 'px';
+}
+document.addEventListener('DOMContentLoaded', () => {
+  ['dhInput','bbInput'].forEach(id => {
+    const ta = document.getElementById(id);
+    if(ta) ta.addEventListener('input', () => _dhAutoResize(ta));
+  });
+});
 
 /* Lightbox */
 function rs2OpenLb(postId, idx) {
