@@ -3647,8 +3647,11 @@ async function dhEnviar() {
   const msgs = document.getElementById('dhMsgs');
   const typing = document.getElementById('dhTyping');
 
+  // Captura imagem antes de limpar UI
+  const imgCapture = dhImgData ? {...dhImgData} : null;
+
   // Bubble do usuário
-  const imgPreviewHtml = dhImgData ? `<img src="data:${dhImgData.mimeType};base64,${dhImgData.base64}" style="max-width:160px;border-radius:6px;margin-top:6px;display:block"/>` : '';
+  const imgPreviewHtml = imgCapture ? `<img src="data:${imgCapture.mimeType};base64,${imgCapture.base64}" style="max-width:160px;border-radius:6px;margin-top:6px;display:block"/>` : '';
   const userHtml = `<div class="dh-bbl-who">Você</div><div class="dh-bbl-text">${text||''}${imgPreviewHtml}</div><div class="dh-bbl-time">agora</div>`;
   const userEl = document.createElement('div');
   userEl.className = 'dh-bbl user';
@@ -3682,7 +3685,7 @@ async function dhEnviar() {
   // Monta parts — suporta texto + imagem (multimodal)
   const parts = [];
   if(text) parts.push({text});
-  if(dhImgData) parts.push({inlineData:{mimeType:dhImgData.mimeType, data:dhImgData.base64}});
+  if(imgCapture) parts.push({inlineData:{mimeType:imgCapture.mimeType, data:imgCapture.base64}});
 
   // Adiciona ao histórico
   dhChatHistory.push({role:'user', parts});
