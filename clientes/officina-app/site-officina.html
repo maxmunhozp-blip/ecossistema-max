@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Officina App — O marketplace que coloca você no controle</title>
+<meta name="description" content="Mais de 500 oficinas verificadas em São Paulo. Orçamento digital antes de qualquer serviço começar. Transparência total."/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#3DA9A5;
+  --teal-dark:#00494f;
+  --teal-dim:rgba(61,169,165,.12);
+  --amber:#F5A623;
+  --amber-dark:#D48A10;
+  --bg:#F0F7F7;
+  --text:#1A2424;
+  --text2:#3A5050;
+  --text3:#6A8888;
+  --white:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--white);color:var(--text);overflow-x:hidden}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5%;height:72px;display:flex;align-items:center;justify-content:space-between;transition:.3s}
+nav.scrolled{background:rgba(255,255,255,.97);backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(0,0,0,.06)}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo img{height:36px;object-fit:contain}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--white);text-decoration:none;opacity:.85;transition:.2s}
+nav.scrolled .nav-links a{color:var(--text2)}
+.nav-links a:hover{opacity:1}
+.nav-cta{background:var(--amber);color:var(--text)!important;opacity:1!important;padding:10px 22px;border-radius:100px;font-weight:700!important;font-size:13px!important;transition:.2s!important}
+.nav-cta:hover{background:var(--amber-dark);transform:translateY(-1px)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:var(--teal-dark);position:relative;overflow:hidden;display:flex;align-items:center}
+.hero-bg{position:absolute;inset:0}
+.hero-photo{position:absolute;right:0;bottom:0;width:55%;height:95%;object-fit:cover;object-position:top center;mask-image:linear-gradient(to left,rgba(0,0,0,1) 50%,transparent 100%),linear-gradient(to top,transparent 0%,black 15%);-webkit-mask-image:linear-gradient(to left,rgba(0,0,0,.9) 55%,transparent 100%)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(105deg,var(--teal-dark) 40%,transparent 75%)}
+.hero-content{position:relative;z-index:2;padding:140px 5% 100px;max-width:640px}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);border-radius:100px;padding:6px 16px;font-size:12px;font-weight:600;color:var(--amber);letter-spacing:.5px;text-transform:uppercase;margin-bottom:28px}
+.hero-tag span{width:6px;height:6px;background:var(--amber);border-radius:50%;display:inline-block}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(56px,7vw,88px);font-weight:900;line-height:.95;color:var(--white);letter-spacing:-1px;margin-bottom:24px}
+.hero h1 em{font-style:normal;color:var(--amber)}
+.hero-sub{font-size:18px;color:rgba(255,255,255,.72);line-height:1.65;max-width:480px;margin-bottom:44px;font-weight:400}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{background:var(--amber);color:var(--text);font-weight:700;font-size:15px;padding:16px 32px;border-radius:100px;text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:.2s;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.btn-primary:hover{background:var(--amber-dark);transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,166,35,.35)}
+.btn-secondary{background:transparent;color:var(--white);font-weight:600;font-size:15px;padding:16px 32px;border-radius:100px;text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:.2s;border:1.5px solid rgba(255,255,255,.3)}
+.btn-secondary:hover{border-color:rgba(255,255,255,.8);background:rgba(255,255,255,.06)}
+.hero-stats{position:relative;z-index:2;display:flex;gap:0;padding:0 5% 52px;margin-top:-2px}
+.hero-stat{flex:1;border-top:1px solid rgba(255,255,255,.1);padding-top:24px}
+.hero-stat-num{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:800;color:var(--white);line-height:1}
+.hero-stat-num span{color:var(--amber)}
+.hero-stat-label{font-size:12px;color:rgba(255,255,255,.5);font-weight:500;margin-top:4px;text-transform:uppercase;letter-spacing:.4px}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* ── SECTION ── */
+section{padding:100px 5%}
+.section-tag{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,56px);font-weight:800;line-height:1.05;color:var(--text);margin-bottom:20px;letter-spacing:-.5px}
+.section-title em{font-style:normal;color:var(--teal)}
+.section-sub{font-size:17px;color:var(--text3);line-height:1.7;max-width:520px}
+
+/* ── PROBLEMA ── */
+.problema{background:var(--bg)}
+.problema-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.stat-grande{font-family:'Barlow Condensed',sans-serif;font-size:clamp(80px,12vw,160px);font-weight:900;color:var(--teal);line-height:.85;letter-spacing:-4px;margin-bottom:16px}
+.stat-grande span{color:var(--amber)}
+.problema-foto{border-radius:20px;overflow:hidden;height:520px}
+.problema-foto img{width:100%;height:100%;object-fit:cover;object-position:top}
+.dores-list{margin-top:36px;display:flex;flex-direction:column;gap:12px}
+.dor-item{display:flex;align-items:flex-start;gap:12px;padding:16px;background:var(--white);border-radius:12px;border-left:3px solid transparent;transition:.2s}
+.dor-item:hover{border-left-color:var(--teal)}
+.dor-icon{width:32px;height:32px;background:var(--teal-dim);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dor-icon svg{width:15px;height:15px;stroke:var(--teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dor-text{font-size:14px;color:var(--text2);line-height:1.5;padding-top:6px}
+
+/* ── COMO FUNCIONA ── */
+.como{background:var(--white)}
+.como-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.steps{display:flex;flex-direction:column;gap:8px;margin-top:40px}
+.step{display:flex;gap:20px;align-items:flex-start;padding:20px;border-radius:16px;cursor:default;transition:.2s;position:relative}
+.step.active{background:var(--teal-dark);box-shadow:0 4px 24px rgba(0,73,79,.2)}
+.step-num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--teal);opacity:.3;line-height:1;width:36px;flex-shrink:0}
+.step.active .step-num{color:var(--amber);opacity:1}
+.step-info h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
+.step.active .step-info h3{color:var(--white)}
+.step-info p{font-size:13px;color:var(--text3);line-height:1.6}
+.step.active .step-info p{color:rgba(255,255,255,.65)}
+.mockup-wrap{position:relative;display:flex;justify-content:center}
+.mockup-wrap img{width:80%;max-width:360px;border-radius:24px;box-shadow:0 24px 80px rgba(0,73,79,.25);position:relative;z-index:2}
+.mockup-deco{position:absolute;width:300px;height:300px;background:var(--teal-dim);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1}
+
+/* ── PLANOS ── */
+.planos{background:var(--teal-dark);padding:100px 5%}
+.planos .section-title{color:var(--white)}
+.planos .section-tag{color:var(--amber)}
+.planos .section-sub{color:rgba(255,255,255,.6)}
+.planos-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:56px}
+.plano-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:36px;transition:.3s;position:relative;overflow:hidden}
+.plano-card:hover{background:rgba(255,255,255,.1);transform:translateY(-4px)}
+.plano-card.destaque{background:var(--amber);border-color:var(--amber)}
+.plano-card.destaque:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(245,166,35,.35)}
+.plano-tag{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px}
+.plano-card.destaque .plano-tag{color:rgba(26,36,36,.5)}
+.plano-nome{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;color:var(--white);margin-bottom:8px}
+.plano-card.destaque .plano-nome{color:var(--text)}
+.plano-preco{font-family:'Barlow Condensed',sans-serif;font-size:52px;font-weight:900;color:var(--amber);line-height:1;margin-bottom:4px}
+.plano-card.destaque .plano-preco{color:var(--text)}
+.plano-periodo{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:28px}
+.plano-card.destaque .plano-periodo{color:rgba(26,36,36,.5)}
+.plano-desc{font-size:14px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:24px}
+.plano-card.destaque .plano-desc{color:rgba(26,36,36,.7)}
+.plano-itens{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.plano-itens li{display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.8)}
+.plano-card.destaque .plano-itens li{color:var(--text)}
+.plano-itens li::before{content:'';width:18px;height:18px;background:rgba(255,255,255,.15);border-radius:50%;display:inline-block;flex-shrink:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");background-size:10px;background-repeat:no-repeat;background-position:center}
+.plano-card.destaque .plano-itens li::before{background-color:rgba(26,36,36,.15);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231A2424' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E")}
+.btn-plano{display:block;text-align:center;padding:14px;border-radius:100px;font-weight:700;font-size:14px;text-decoration:none;transition:.2s;background:rgba(255,255,255,.12);color:var(--white);border:1.5px solid rgba(255,255,255,.2)}
+.btn-plano:hover{background:rgba(255,255,255,.2)}
+.plano-card.destaque .btn-plano{background:var(--text);color:var(--white);border-color:var(--text)}
+.plano-card.destaque .btn-plano:hover{background:#2A3838}
+.plano-nota{font-size:12px;color:rgba(255,255,255,.35);text-align:center;margin-top:24px}
+
+/* ── DEPOIMENTOS ── */
+.depoimentos{background:var(--bg)}
+.depos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.depo-card{background:var(--white);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:16px;box-shadow:0 2px 16px rgba(61,169,165,.06)}
+.depo-stars{display:flex;gap:3px}
+.depo-stars span{color:var(--amber);font-size:16px}
+.depo-texto{font-size:15px;color:var(--text2);line-height:1.7;font-style:italic}
+.depo-texto::before{content:'"';font-family:'Barlow Condensed',sans-serif;font-size:48px;color:var(--teal);opacity:.3;line-height:.5;display:block;margin-bottom:8px}
+.depo-autor{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:16px;border-top:1px solid var(--bg)}
+.depo-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:top}
+.depo-nome{font-size:14px;font-weight:700;color:var(--text)}
+.depo-cid{font-size:12px;color:var(--text3)}
+
+/* ── OFICINAS B2B ── */
+.b2b{background:var(--white)}
+.b2b-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.b2b-foto{border-radius:20px;overflow:hidden;height:500px}
+.b2b-foto img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.beneficios{display:flex;flex-direction:column;gap:20px;margin-top:36px}
+.beneficio{display:flex;gap:16px;align-items:flex-start}
+.beneficio-icon{width:44px;height:44px;background:var(--teal-dim);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.beneficio-icon svg{width:20px;height:20px;stroke:var(--teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.beneficio h4{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
+.beneficio p{font-size:13px;color:var(--text3);line-height:1.6}
+
+/* ── CTA FINAL ── */
+.cta-final{background:var(--teal);padding:100px 5%;text-align:center;position:relative;overflow:hidden}
+.cta-final::before{content:'';position:absolute;top:-160px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:rgba(255,255,255,.04);border-radius:50%}
+.cta-final::after{content:'';position:absolute;bottom:-120px;right:-100px;width:500px;height:500px;background:rgba(0,73,79,.3);border-radius:50%}
+.cta-final-inner{position:relative;z-index:2}
+.cta-final .section-tag{color:rgba(255,255,255,.6)}
+.cta-final h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(44px,7vw,80px);font-weight:900;color:var(--white);line-height:.95;letter-spacing:-1px;margin-bottom:20px}
+.cta-final h2 em{font-style:normal;color:var(--amber)}
+.cta-final p{font-size:18px;color:rgba(255,255,255,.7);max-width:500px;margin:0 auto 48px;line-height:1.65}
+.cta-final-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.cta-mockups{margin-top:64px;display:flex;justify-content:center;gap:32px;align-items:flex-end}
+.cta-mockups img{border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.cta-mockups img:first-child{width:200px;transform:rotate(-4deg) translateY(12px)}
+.cta-mockups img:last-child{width:200px;transform:rotate(4deg) translateY(12px)}
+
+/* ── FOOTER ── */
+footer{background:var(--teal-dark);padding:60px 5% 40px}
+.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-brand img{height:36px;margin-bottom:16px;opacity:.9}
+.footer-brand p{font-size:13px;color:rgba(255,255,255,.4);line-height:1.7;max-width:260px}
+.footer-col h5{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px}
+.footer-col a{display:block;font-size:13px;color:rgba(255,255,255,.55);text-decoration:none;margin-bottom:10px;transition:.2s}
+.footer-col a:hover{color:var(--white)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:28px;display:flex;justify-content:space-between;align-items:center}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,.3)}
+.footer-social{display:flex;gap:12px}
+.social-btn{width:36px;height:36px;background:rgba(255,255,255,.07);border-radius:8px;display:flex;align-items:center;justify-content:center;transition:.2s;text-decoration:none}
+.social-btn:hover{background:rgba(255,255,255,.14)}
+.social-btn svg{width:16px;height:16px;stroke:rgba(255,255,255,.6);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── CONFIANCA BAR ── */
+.confianca{padding:32px 5%;background:var(--white);border-bottom:1px solid rgba(61,169,165,.1)}
+.confianca-inner{display:flex;align-items:center;gap:48px;justify-content:center;flex-wrap:wrap}
+.conf-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text3);font-weight:500}
+.conf-item svg{width:18px;height:18px;stroke:var(--teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.conf-sep{width:1px;height:20px;background:var(--bg)}
+
+@media(max-width:900px){
+  .nav-links{display:none}
+  .problema-inner,.como-inner,.b2b-inner{grid-template-columns:1fr}
+  .planos-grid{grid-template-columns:1fr}
+  .depos-grid{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .hero-photo{width:100%;opacity:.25}
+  .hero-stats{flex-wrap:wrap}
+  .cta-mockups{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <img src="logo-amber.png" alt="Officina App"/>
+  </div>
+  <div class="nav-links">
+    <a href="#como">Como funciona</a>
+    <a href="#planos">Planos PMP</a>
+    <a href="#oficinas">Para Oficinas</a>
+    <a href="#acesso" class="nav-cta">Acessar grátis</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img class="hero-photo" src="foto-mulher-carro.png" alt=""/>
+    <div class="hero-overlay"></div>
+  </div>
+  <div style="width:100%">
+    <div class="hero-content">
+      <div class="hero-tag reveal"><span></span>Marketplace automotivo verificado</div>
+      <h1 class="reveal reveal-delay-1">Você no<br/><em>controle</em><br/>do seu carro.</h1>
+      <p class="hero-sub reveal reveal-delay-2">Orçamento no celular antes de qualquer serviço começar. Mais de 500 oficinas verificadas em São Paulo — sem surpresa, sem enganação.</p>
+      <div class="hero-btns reveal reveal-delay-3">
+        <a href="#acesso" class="btn-primary">
+          <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Acessar grátis
+        </a>
+        <a href="#como" class="btn-secondary">
+          <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          Ver como funciona
+        </a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat reveal">
+        <div class="hero-stat-num">500<span>+</span></div>
+        <div class="hero-stat-label">Oficinas verificadas</div>
+      </div>
+      <div class="hero-stat reveal reveal-delay-1">
+        <div class="hero-stat-num">47<span>M</span></div>
+        <div class="hero-stat-label">Carros no Brasil</div>
+      </div>
+      <div class="hero-stat reveal reveal-delay-2">
+        <div class="hero-stat-num">1<span>/3</span></div>
+        <div class="hero-stat-label">Motoristas já foi enganado</div>
+      </div>
+      <div class="hero-stat reveal reveal-delay-3">
+        <div class="hero-stat-num">R$89<span>B</span></div>
+        <div class="hero-stat-label">Mercado automotivo/ano</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIANÇA BAR -->
+<div class="confianca">
+  <div class="confianca-inner">
+    <div class="conf-item"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>CNPJ verificado</div>
+    <div class="conf-sep"></div>
+    <div class="conf-item"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Histórico de atendimentos</div>
+    <div class="conf-sep"></div>
+    <div class="conf-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Avaliações reais</div>
+    <div class="conf-sep"></div>
+    <div class="conf-item"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Orçamento digital</div>
+    <div class="conf-sep"></div>
+    <div class="conf-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Tempo real</div>
+  </div>
+</div>
+
+<!-- O PROBLEMA -->
+<section class="problema" id="problema">
+  <div class="problema-inner">
+    <div class="reveal">
+      <div class="section-tag">O problema</div>
+      <div class="stat-grande">1<span>/3</span></div>
+      <div class="section-title" style="margin-top:0">Motoristas já pagaram por serviços que <em>não precisavam</em></div>
+      <p class="section-sub">Sem transparência, sem histórico, sem preço antes — o motorista entra na oficina no escuro. O Officina App muda isso.</p>
+      <div class="dores-list" style="margin-top:32px">
+        <div class="dor-item">
+          <div class="dor-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="dor-text"><strong>Cobranças surpresa</strong> na hora de buscar o carro — sem orçamento prévio</div>
+        </div>
+        <div class="dor-item">
+          <div class="dor-icon"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><line x1="1" y1="1" x2="23" y2="23"/></svg></div>
+          <div class="dor-text"><strong>Avaliações falsas</strong> ou genéricas que não dizem nada sobre honestidade</div>
+        </div>
+        <div class="dor-item">
+          <div class="dor-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="dor-text"><strong>Horas perdidas</strong> esperando retorno de orçamento que nunca chega</div>
+        </div>
+        <div class="dor-item">
+          <div class="dor-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="dor-text"><strong>Pagar o dobro</strong> sem ter como comparar preços antes de entrar</div>
+        </div>
+      </div>
+    </div>
+    <div class="problema-foto reveal reveal-delay-2">
+      <img src="foto-homem-volvo.png" alt="Cliente usando Officina App"/>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="como" id="como">
+  <div class="como-inner">
+    <div class="mockup-wrap reveal">
+      <div class="mockup-deco"></div>
+      <img src="mockup-registro.png" alt="App Officina"/>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div class="section-tag">Como funciona</div>
+      <div class="section-title">Simples como<br/>pedir um <em>Uber</em></div>
+      <p class="section-sub">Três passos e o orçamento está no seu celular — antes de sair de casa.</p>
+      <div class="steps">
+        <div class="step active">
+          <div class="step-num">01</div>
+          <div class="step-info">
+            <h3>Descreva o problema ou serviço</h3>
+            <p>Escreva o que aconteceu com o carro ou escolha na lista de serviços. Sem jargão técnico.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-info">
+            <h3>Compare oficinas verificadas</h3>
+            <p>Veja avaliações reais, localização, histórico de atendimentos e preços antes de decidir.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-info">
+            <h3>Receba o orçamento e aprove</h3>
+            <p>O orçamento chega no celular. Você aprova — só então o serviço começa. Zero surpresa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANOS PMP -->
+<section class="planos" id="planos">
+  <div class="reveal">
+    <div class="section-tag">Plano de Manutenção Preventiva</div>
+    <div class="section-title">Pare de pagar pelo<br/><em style="color:var(--amber)">inesperado.</em></div>
+    <p class="section-sub">O PMP cobre as principais falhas mecânicas do seu carro. Funciona como um seguro preventivo — você paga uma mensalidade e fica protegido.</p>
+  </div>
+  <div class="planos-grid">
+    <div class="plano-card reveal reveal-delay-1">
+      <div class="plano-tag">Plano PMP</div>
+      <div class="plano-nome">Motor</div>
+      <div class="plano-preco">R$500</div>
+      <div class="plano-periodo">por mês · sujeito a vistoria</div>
+      <div class="plano-desc">Cobre falhas mecânicas e defeitos inesperados no motor. Mais segurança e tranquilidade para manter seu carro sempre em movimento.</div>
+      <ul class="plano-itens">
+        <li>Proteção contra falhas no motor</li>
+        <li>Assistência em oficinas credenciadas</li>
+        <li>Evita gastos inesperados com reparos</li>
+        <li>Acompanhamento em tempo real</li>
+      </ul>
+      <a href="#acesso" class="btn-plano">Contratar plano Motor</a>
+    </div>
+    <div class="plano-card destaque reveal reveal-delay-2">
+      <div class="plano-tag">Plano PMP</div>
+      <div class="plano-nome">Suspensão</div>
+      <div class="plano-preco">R$500</div>
+      <div class="plano-periodo">por mês · sujeito a vistoria</div>
+      <div class="plano-desc">Cobre falhas e desgastes no sistema de suspensão. Dirija com confiança e conforto — seu carro pronto para qualquer estrada.</div>
+      <ul class="plano-itens">
+        <li>Manutenção preventiva e corretiva</li>
+        <li>Proteção de amortecedores e molas</li>
+        <li>Atendimento em oficinas credenciadas</li>
+        <li>Rode com mais segurança</li>
+      </ul>
+      <a href="#acesso" class="btn-plano">Contratar plano Suspensão</a>
+    </div>
+  </div>
+  <p class="plano-nota reveal">Ambos os planos incluem agendamento de vistoria prévia. Consulte termos e condições.</p>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="depoimentos" id="depoimentos">
+  <div class="reveal">
+    <div class="section-tag">Quem já usou</div>
+    <div class="section-title">Motoristas que<br/>encontraram a <em>oficina certa</em></div>
+  </div>
+  <div class="depos-grid">
+    <div class="depo-card reveal reveal-delay-1">
+      <div class="depo-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <div class="depo-texto">Abri o app, escolhi uma oficina pelo histórico de avaliações e resolvi meu problema em menos de uma hora. Mais barato do que eu esperava.</div>
+      <div class="depo-autor">
+        <img class="depo-avatar" src="foto-homem-guincho.png" alt="Eduardo"/>
+        <div>
+          <div class="depo-nome">Eduardo Faria</div>
+          <div class="depo-cid">São Paulo, SP · Motorista</div>
+        </div>
+      </div>
+    </div>
+    <div class="depo-card reveal reveal-delay-2">
+      <div class="depo-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <div class="depo-texto">Nunca mais fui enganada em oficina. Chego já sabendo o preço. Isso muda completamente a relação com o mecânico.</div>
+      <div class="depo-autor">
+        <img class="depo-avatar" src="foto-mulher-carro.png" alt="Camila"/>
+        <div>
+          <div class="depo-nome">Camila Rodrigues</div>
+          <div class="depo-cid">São Paulo, SP · Analista</div>
+        </div>
+      </div>
+    </div>
+    <div class="depo-card reveal reveal-delay-3">
+      <div class="depo-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <div class="depo-texto">O orçamento chegou no celular em 20 minutos. Aprovei sem sair do trabalho. Quando fui buscar o carro estava pronto e com o preço combinado.</div>
+      <div class="depo-autor">
+        <img class="depo-avatar" src="foto-homem-volvo.png" alt="Marcos"/>
+        <div>
+          <div class="depo-nome">Marcos Pereira</div>
+          <div class="depo-cid">São Paulo, SP · Engenheiro</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARA OFICINAS -->
+<section class="b2b" id="oficinas">
+  <div class="b2b-inner">
+    <div class="b2b-foto reveal">
+      <img src="foto-mecanico-cliente.png" alt="Mecânico e cliente"/>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div class="section-tag">Para oficinas</div>
+      <div class="section-title">Conecte sua oficina a<br/><em>mais clientes</em> qualificados</div>
+      <p class="section-sub">Faça parte da rede de oficinas verificadas do Officina App e receba clientes que já chegam confiando no seu trabalho.</p>
+      <div class="beneficios">
+        <div class="beneficio">
+          <div class="beneficio-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div>
+            <h4>Mais clientes, mais recorrência</h4>
+            <p>Apareça para motoristas que estão ativamente buscando uma oficina de confiança na sua região.</p>
+          </div>
+        </div>
+        <div class="beneficio">
+          <div class="beneficio-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <div>
+            <h4>Gestão digital de orçamentos</h4>
+            <p>Envie orçamentos pelo app e elimine chamadas perdidas e mal-entendidos sobre preço.</p>
+          </div>
+        </div>
+        <div class="beneficio">
+          <div class="beneficio-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div>
+            <h4>Credencial de confiança</h4>
+            <p>O selo de oficina verificada do Officina App aumenta a percepção de qualidade e diferencia você da concorrência.</p>
+          </div>
+        </div>
+      </div>
+      <a href="#acesso" class="btn-primary" style="margin-top:32px;text-decoration:none;display:inline-flex">
+        Cadastrar minha oficina
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final" id="acesso">
+  <div class="cta-final-inner">
+    <div class="section-tag reveal">Comece agora</div>
+    <h2 class="reveal reveal-delay-1">Chega de<br/>ser pego de<br/><em>surpresa.</em></h2>
+    <p class="reveal reveal-delay-2">Acesse grátis, encontre uma oficina verificada e chegue sabendo o preço. É assim que a manutenção do carro deveria ser.</p>
+    <div class="cta-final-btns reveal reveal-delay-3">
+      <a href="https://officinaapp.com.br" target="_blank" class="btn-primary">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Acessar officinaapp.com.br
+      </a>
+      <a href="https://api.whatsapp.com/send?phone=55" class="btn-secondary" style="color:var(--white)">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Falar pelo WhatsApp
+      </a>
+    </div>
+    <div class="cta-mockups reveal reveal-delay-4">
+      <img src="mockup-registro.png" alt="App Officina"/>
+      <img src="mockup-sucesso.png" alt="App Officina"/>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="logo-amber.png" alt="Officina App"/>
+      <p>O marketplace que coloca o motorista no controle da manutenção do carro. Mais de 500 oficinas verificadas em São Paulo.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Produto</h5>
+      <a href="#como">Como funciona</a>
+      <a href="#planos">Planos PMP</a>
+      <a href="#depoimentos">Depoimentos</a>
+    </div>
+    <div class="footer-col">
+      <h5>Para Oficinas</h5>
+      <a href="#oficinas">Seja parceiro</a>
+      <a href="#">Cadastrar oficina</a>
+      <a href="#">Central de ajuda</a>
+    </div>
+    <div class="footer-col">
+      <h5>Legal</h5>
+      <a href="#">Termos de uso</a>
+      <a href="#">Política de privacidade</a>
+      <a href="#">Contato</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Officina App. Todos os direitos reservados. CNPJ ativo e verificado.</p>
+    <div class="footer-social">
+      <a href="#" class="social-btn"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="#" class="social-btn"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="#" class="social-btn"><svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.47a2.78 2.78 0 0 0-1.95 1.95A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Navbar scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, {threshold: 0.12});
+reveals.forEach(el => io.observe(el));
+
+// Hero reveals on load
+window.addEventListener('load', () => {
+  document.querySelectorAll('.hero .reveal').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 200 + i * 150);
+  });
+  document.querySelectorAll('.hero-stat.reveal').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 600 + i * 100);
+  });
+});
+
+// Step hover
+document.querySelectorAll('.step').forEach(step => {
+  step.addEventListener('mouseenter', () => {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    step.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
