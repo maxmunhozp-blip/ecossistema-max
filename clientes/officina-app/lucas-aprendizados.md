@@ -11,6 +11,11 @@
 - Linha amber decorativa (width:120px; height:6px) após título principal — elemento de assinatura da marca
 - Fundo teal com numeração 01/02/03 em rgba(255,255,255,.25) — padrão aprovado para slides de lista
 
+## CORES APROVADAS ESPECIAIS
+
+- `#000000` (preto puro) — aprovado por Max para slides de impacto máximo
+- O SVG do carro/caminhão da logo Officina é o Font Awesome truck (viewBox 0 0 640 512) — NUNCA usar shopping cart ou ícone genérico no lugar
+
 ## ERROS A EVITAR
 
 - NUNCA criar slide com texto colado na borda — mínimo 80px de padding

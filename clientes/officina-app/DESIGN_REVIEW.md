@@ -26,7 +26,7 @@ Ao revisar, aplique os princípios das seguintes skills instaladas:
 - Superfície: `#FFFFFF`
 - Texto principal: `#1A2424` ou `var(--text)`
 - Texto suave: `#6A8888` ou `var(--text3)`
-- Variações de escuridão aprovadas: `#00494f` (teal escuro para capas especiais)
+- Variações de escuridão aprovadas: `#00494f` (teal escuro para capas especiais), `#000000` (preto puro — aprovado por Max para slides de impacto máximo)
 - **PROIBIDO**: qualquer outra cor que não seja variação das acima — se encontrar, substituir pela mais próxima aprovada
 
 ### Tipografia
