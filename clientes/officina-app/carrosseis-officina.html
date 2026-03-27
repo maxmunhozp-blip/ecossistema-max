@@ -591,17 +591,17 @@ body{font-family:'Inter',sans-serif;background:transparent;color:var(--text);min
 
 
 <!-- ══ POST 6: 8 em cada 10 motoristas já desconfiaram do mecânico ══ -->
-<div data-post="5" data-idx="0" class="slide p6-s1-bg" style="background:#fff">
-  <div style="position:absolute;top:0;left:0;right:0;height:12px;background:var(--teal)"></div>
+<div data-post="5" data-idx="0" class="slide p6-s1-bg" style="background:#00494f">
+  <div style="position:absolute;top:0;left:0;right:0;height:12px;background:var(--amber)"></div>
   <div class="s-pad" style="padding-top:120px;display:flex;flex-direction:column;height:100%;justify-content:space-between">
     <div>
-      <div class="s-tag teal" style="margin-bottom:72px">Pesquisa Officina App</div>
-      <div style="font-size:196px;font-weight:900;color:var(--teal);line-height:.82;letter-spacing:-6px;margin-bottom:32px">8 em 10</div>
+      <div class="s-tag white" style="margin-bottom:72px">Pesquisa Officina App</div>
+      <div style="font-size:196px;font-weight:900;color:#fff;line-height:.82;letter-spacing:-6px;margin-bottom:32px">8 em 10</div>
       <div style="width:120px;height:6px;background:var(--amber);border-radius:3px;margin-bottom:48px"></div>
-      <div class="s-title" style="color:var(--text);margin-bottom:48px">motoristas já<br/>desconfiaram<br/>do mecânico</div>
-      <div class="s-body" style="color:var(--text3);font-weight:600">E você?</div>
+      <div class="s-title" style="color:rgba(255,255,255,.9);margin-bottom:48px">motoristas já<br/>desconfiaram<br/>do mecânico</div>
+      <div class="s-body" style="color:rgba(255,255,255,.6);font-weight:600">E você?</div>
     </div>
-    <div style="font-size:26px;font-weight:700;color:var(--teal)">officinaapp.com.br</div>
+    <div style="font-size:26px;font-weight:700;color:rgba(255,255,255,.4)">officinaapp.com.br</div>
   </div>
 </div>
 
@@ -894,7 +894,7 @@ function _injectLogos() {
       const isDark = cls.includes('p1-s2')||cls.includes('p1-s5')||cls.includes('p2-s3')
         ||cls.includes('p2-s6')||cls.includes('p3-s1')||cls.includes('p4-s1')
         ||cls.includes('p5-s2')||cls.includes('p5-s5')
-        ||cls.includes('p6-s2')||cls.includes('p6-s5');
+        ||cls.includes('p6-s1')||cls.includes('p6-s2')||cls.includes('p6-s5');
       const logoSrc = isDark ? 'logo-amber.png' : 'logo-teal.png';
       const pos = isFirst ? 'top:64px;right:72px' : 'bottom:72px;right:72px';
       const logo = document.createElement('div');

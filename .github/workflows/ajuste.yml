@@ -27,9 +27,11 @@ jobs:
           command_timeout: 8m
           script: |
             export HOME=/root
-            # Não exportar ANTHROPIC_API_KEY — VPS usa OAuth armazenado em /root/.claude/.credentials.json
             cd /opt/ecossistema-max-repo
-            git pull origin main --quiet || true
+
+            # Garante que o repo está limpo e sincronizado com origin antes de qualquer alteração
+            git fetch origin main --quiet
+            git reset --hard origin/main --quiet
 
             echo "=== Instrução recebida ==="
             echo "$INSTRUCTION"
