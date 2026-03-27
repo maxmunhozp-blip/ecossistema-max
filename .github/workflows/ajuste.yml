@@ -19,16 +19,15 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         env:
           INSTRUCTION: ${{ github.event.inputs.instruction }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         with:
           host: 76.13.172.151
           username: root
           password: ${{ secrets.VPS_PASSWORD }}
-          envs: INSTRUCTION,ANTHROPIC_API_KEY
+          envs: INSTRUCTION
           command_timeout: 8m
           script: |
             export HOME=/root
-            export ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY"
+            # Não exportar ANTHROPIC_API_KEY — VPS usa OAuth armazenado em /root/.claude/.credentials.json
             cd /opt/ecossistema-max-repo
             git pull origin main --quiet || true
 
