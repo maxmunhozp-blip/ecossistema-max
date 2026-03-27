@@ -1044,9 +1044,13 @@ const _urlP = new URLSearchParams(location.search);
 _singleMode = _urlP.get('single') === '1';
 if(_urlP.get('export') === '1') {
   const _ep = parseInt(_urlP.get('p') || '0');
-  document.addEventListener('DOMContentLoaded', () => {});
-  // Aguarda html2canvas carregar e fontes estarem prontas
   window.addEventListener('load', () => setTimeout(() => exportPostPNGs(_ep), 400));
+}
+
+// Preview mode: ?p=N abre lightbox direto no post N
+if(!_singleMode && _urlP.get('p') !== null && _urlP.get('export') !== '1') {
+  const _pp = parseInt(_urlP.get('p') || '0');
+  window.addEventListener('load', () => setTimeout(() => openLb(_pp, 0), 300));
 }
 
 // Init: select first template
