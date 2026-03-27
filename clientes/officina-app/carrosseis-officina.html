@@ -741,6 +741,9 @@ const POSTS = [
   {nome:'Officina App em 3 passos', total:3},
   {nome:'Por que revisão preventiva vale a pena', total:5},
   {nome:'8 em cada 10 motoristas já desconfiaram do mecânico', total:8},
+  {nome:'Roleta Russa', total:5},
+  {nome:'Nunca mais pague por serviços que não precisava', total:6},
+  {nome:'O Jeito Antigo vs. O Jeito Officina', total:8},
 ];
 
 let activePost = 0;
@@ -1061,12 +1064,49 @@ if(!_singleMode && _urlP.get('p') !== null && _urlP.get('export') !== '1') {
 <!-- design-review: p6-idx4 cor proibida #E74C3C→#fff; p6-idx7 SVG carrinho órfão removido do s-pad -->
 <!-- design-review: p8-idx0 s-body cor herdada invisível em fundo escuro→rgba(255,255,255,0.8); p8-idx1/3/5 s-tag rgba(0,0,0,.4) proibido→.dark; p8-idx2/4/6 s-tag rgba(255,255,255,.7)→.white + s-body cor escura em fundo teal→rgba(255,255,255,0.85); p8-idx7 .s-cta-dark inexistente→.s-cta.teal; p7-idx5 .s-cta sem modificador→.s-cta.amber; p7-idx5+p8-idx7 domínio officinaapp.com.br ausente→adicionado; _injectLogos isDark expandido para detectar inline style (posts 7/8 usam style attr em vez de classes) -->
 
-<!-- Post Roleta Russa - Estrutura -->
-<div data-post="6" data-idx="0" class="slide"><div class="s-pad"><!-- Slide 1/5 --></div></div>
-<div data-post="6" data-idx="1" class="slide"><div class="s-pad"><!-- Slide 2/5 --></div></div>
-<div data-post="6" data-idx="2" class="slide"><div class="s-pad"><!-- Slide 3/5 --></div></div>
-<div data-post="6" data-idx="3" class="slide"><div class="s-pad"><!-- Slide 4/5 --></div></div>
-<div data-post="6" data-idx="4" class="slide"><div class="s-pad"><!-- Slide 5/5 --></div></div>
+<!-- Post Roleta Russa -->
+<div data-post="6" data-idx="0" class="slide" style="background:#1A2424;color:#fff">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:40px">
+    <span class="s-tag white">TODA VEZ QUE VOCÊ ESCOLHE UMA OFICINA SEM INFORMAÇÃO</span>
+    <p class="s-title-lg" style="color:#fff">Você está jogando na <span style="color:var(--amber)">roleta russa</span> com o seu carro.</p>
+  </div>
+</div>
+
+<div data-post="6" data-idx="1" class="slide" style="background:var(--bg)">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:36px">
+    <span class="s-tag dark">A APOSTA MAIS ARRISCADA</span>
+    <p class="s-title">Mecânico desconhecido.</p>
+    <div style="width:100px;height:6px;background:var(--amber)"></div>
+    <p class="s-body">Você entrega as chaves, cruza os dedos e torce para que o preço e o diagnóstico sejam honestos. <br><br>Às vezes dá certo. Às vezes não.</p>
+  </div>
+</div>
+
+<div data-post="6" data-idx="2" class="slide" style="background:#fff">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:36px">
+    <p class="s-num" style="color:var(--amber);line-height:1">7<span style="font-size:60px;font-weight:700"> em 10</span></p>
+    <p class="s-title">motoristas já pagaram por um serviço que o carro não precisava.</p>
+    <div style="width:100px;height:6px;background:var(--teal)"></div>
+    <p class="s-body" style="color:var(--text2)">E a maioria nunca soube que foi enganada.</p>
+  </div>
+</div>
+
+<div data-post="6" data-idx="3" class="slide" style="background:var(--teal);color:#fff">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:36px">
+    <span class="s-tag white">A SAÍDA DA ROLETA</span>
+    <p class="s-title" style="color:#fff">Com o Officina App, você sabe tudo antes de aprovar qualquer serviço.</p>
+    <div style="width:100px;height:6px;background:rgba(255,255,255,.4)"></div>
+    <p class="s-body" style="color:rgba(255,255,255,0.85)">Orçamento detalhado. Fotos do diagnóstico. Oficinas verificadas. Aprovação item por item — direto no celular.</p>
+  </div>
+</div>
+
+<div data-post="6" data-idx="4" class="slide" style="background:#1A2424;color:#fff">
+  <div class="s-pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;gap:36px;text-align:center">
+    <p class="s-title-lg" style="color:#fff">Pare de adivinhar. <br>Comece a <span style="color:var(--amber)">decidir.</span></p>
+    <p class="s-body" style="color:rgba(255,255,255,0.7)">Baixe o Officina App e nunca mais entre em uma oficina no escuro.</p>
+    <button class="s-cta amber">Baixar o app</button>
+    <div style="font-size:26px;color:rgba(255,255,255,.35);font-weight:500">officinaapp.com.br</div>
+  </div>
+</div>
 
 <!-- Post Jeito Antigo vs Officina -->
 <div data-post="8" data-idx="0" class="slide" style="background:#1A2424;color:#fff">
