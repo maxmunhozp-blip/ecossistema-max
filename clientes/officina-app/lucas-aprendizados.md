@@ -14,14 +14,14 @@
 ## CORES APROVADAS ESPECIAIS
 
 - `#000000` (preto puro) — aprovado por Max para slides de impacto máximo
-- O SVG do carro/caminhão da logo Officina é o Font Awesome truck (viewBox 0 0 640 512) — NUNCA usar shopping cart ou ícone genérico no lugar
 
 ## ERROS A EVITAR
 
 - NUNCA criar slide com texto colado na borda — mínimo 80px de padding
 - NUNCA usar cor fora da paleta aprovada sem consultar palettes.json
 - NUNCA colocar mais de 5 linhas de corpo em um slide
-- NUNCA usar SVG genérico no lugar da logo — usar logo-teal.png ou logo-amber.png
+- NUNCA JAMAIS usar SVG ou ícone genérico quando o Max pedir "logo", "carro da logo" ou qualquer elemento visual da marca — SEMPRE usar os arquivos reais: `logo-amber.png` (fundos escuros/teal), `logo-teal.png` (fundos claros), `logo-black.png` (fundo amber). A logo foi desenhada como identidade visual da marca, SVG genérico é insulto à marca
+- NUNCA usar shopping cart, truck SVG ou qualquer ícone quando Max pede o carro/carrinho da logo
 - NUNCA criar carrossel sem atualizar os DOIS arquivos (carrosseis-officina.html + RS2_POSTS)
 
 ## PREFERÊNCIAS DE COPY
