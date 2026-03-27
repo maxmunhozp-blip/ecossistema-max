@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Plano de Manutenção Preventiva — Officina App</title>
+<meta name="description" content="Proteja seu carro por R$1,63 por dia. Manutenção preventiva antes de virar conserto caro. Plano motor e câmbio com oficinas verificadas em SP."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#3DA9A5;
+  --teal-dark:#00494f;
+  --teal-mid:#1a5f5a;
+  --amber:#F5A623;
+  --amber-dark:#D48A10;
+  --amber-pale:#FFF3D4;
+  --red:#E84C4C;
+  --bg-dark:#040D0C;
+  --bg-card:#0A1A18;
+  --bg-mid:#0F2220;
+  --surface:#142824;
+  --border:rgba(61,169,165,.15);
+  --border-amber:rgba(245,166,35,.2);
+  --text:#F4F9F9;
+  --text2:rgba(244,249,249,.7);
+  --text3:rgba(244,249,249,.42);
+  --white:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg-dark);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg-dark)}
+::-webkit-scrollbar-thumb{background:var(--teal-dark);border-radius:2px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;transition:.35s}
+nav.scrolled{background:rgba(4,13,12,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo img{height:32px;object-fit:contain}
+.nav-badge{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--amber);background:rgba(245,166,35,.1);border:1px solid var(--border-amber);padding:3px 10px;border-radius:4px}
+.nav-cta{background:var(--amber);color:#1A2424;font-weight:700;font-size:13px;padding:10px 24px;border-radius:6px;text-decoration:none;transition:.2s;letter-spacing:.2px}
+.nav-cta:hover{background:var(--amber-dark);transform:translateY(-1px)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:var(--bg-dark);position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:0 6% 80px;overflow:hidden}
+.hero-noise{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(61,169,165,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(61,169,165,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%)}
+.hero-glow{position:absolute;top:-20%;left:-10%;width:70%;height:120%;background:radial-gradient(ellipse at 20% 40%,rgba(0,73,79,.45) 0%,transparent 65%);pointer-events:none}
+.hero-glow2{position:absolute;top:30%;right:-5%;width:50%;height:70%;background:radial-gradient(ellipse at 80% 50%,rgba(245,166,35,.08) 0%,transparent 60%);pointer-events:none}
+
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;position:relative;z-index:2}
+.eyebrow-dot{width:8px;height:8px;background:var(--amber);border-radius:50%;animation:pulse-amber 2s ease-in-out infinite}
+@keyframes pulse-amber{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.6)}50%{box-shadow:0 0 0 8px rgba(245,166,35,0)}}
+.eyebrow-text{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--amber)}
+
+.hero-headline{font-family:'Barlow Condensed',sans-serif;font-size:clamp(62px,8.5vw,130px);font-weight:900;line-height:.9;letter-spacing:-2px;margin-bottom:0;position:relative;z-index:2;color:var(--text)}
+.hero-headline .line-1{display:block;color:rgba(244,249,249,.25);font-size:clamp(22px,3vw,42px);font-weight:600;letter-spacing:0;margin-bottom:8px}
+.hero-headline em{font-style:normal;color:var(--amber);display:block}
+.hero-headline .slash{color:var(--teal);font-style:italic}
+
+.hero-bottom{display:grid;grid-template-columns:1fr auto;gap:60px;align-items:flex-end;margin-top:52px;position:relative;z-index:2;padding-top:40px;border-top:1px solid var(--border)}
+.hero-desc{font-size:clamp(16px,1.8vw,20px);color:var(--text2);line-height:1.65;max-width:520px;font-weight:300}
+.hero-desc strong{color:var(--text);font-weight:600}
+.hero-actions{display:flex;flex-direction:column;align-items:flex-end;gap:14px;flex-shrink:0}
+.btn-hero{background:var(--amber);color:#1A2424;font-weight:700;font-size:16px;padding:18px 36px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:.2s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.btn-hero:hover{background:var(--amber-dark);transform:translateY(-2px);box-shadow:0 12px 32px rgba(245,166,35,.3)}
+.btn-hero svg{transition:.2s}
+.btn-hero:hover svg{transform:translateX(3px)}
+.hero-micro{font-size:12px;color:var(--text3);text-align:right}
+.hero-micro span{color:var(--teal)}
+
+/* ── TICKER ── */
+.ticker{background:var(--teal-dark);padding:0;overflow:hidden;height:44px;display:flex;align-items:center;border-top:1px solid rgba(61,169,165,.3);border-bottom:1px solid rgba(61,169,165,.3)}
+.ticker-track{display:flex;gap:0;animation:ticker 30s linear infinite;width:max-content}
+.ticker-item{display:flex;align-items:center;gap:10px;padding:0 40px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.7);white-space:nowrap}
+.ticker-item .sep{color:var(--amber);font-size:18px}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── SECTIONS ── */
+section{padding:100px 6%}
+.s-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.s-label::before{content:'';display:block;width:28px;height:2px;background:var(--teal)}
+
+/* ── VERDADE SECTION ── */
+.verdade{background:var(--bg-dark)}
+.verdade-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:60px}
+.v-card{background:var(--bg-card);padding:40px 36px;position:relative;overflow:hidden;transition:.3s}
+.v-card:hover{background:var(--surface)}
+.v-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:transparent;transition:.3s}
+.v-card.red::before{background:var(--red)}
+.v-card.amber::before{background:var(--amber)}
+.v-card.teal::before{background:var(--teal)}
+.v-card.mid::before{background:var(--teal-mid)}
+.v-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(64px,8vw,110px);font-weight:900;line-height:.85;letter-spacing:-3px;margin-bottom:12px}
+.v-num.red{color:var(--red)}
+.v-num.amber{color:var(--amber)}
+.v-num.teal{color:var(--teal)}
+.v-label{font-size:17px;color:var(--text2);line-height:1.5;font-weight:400}
+.v-label strong{color:var(--text);display:block;font-size:20px;margin-bottom:4px;font-weight:600}
+.v-source{font-size:11px;color:var(--text3);margin-top:16px;letter-spacing:.3px}
+
+/* ── MATH SECTION (the "nunca pensei nisso" moment) ── */
+.math-section{background:var(--bg-mid);position:relative;overflow:hidden}
+.math-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 50%,rgba(0,73,79,.4) 0%,transparent 70%)}
+.math-wrap{position:relative;z-index:2}
+.math-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(42px,6vw,78px);font-weight:900;line-height:.95;letter-spacing:-2px;margin-bottom:16px}
+.math-title em{font-style:normal;color:var(--amber)}
+.math-sub{font-size:18px;color:var(--text2);max-width:540px;line-height:1.65;margin-bottom:60px;font-weight:300}
+
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:0;top:12px;bottom:12px;width:2px;background:linear-gradient(var(--teal-dark),var(--red))}
+.tl-item{display:flex;gap:28px;margin-bottom:0;position:relative;padding:32px 0;border-bottom:1px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{position:absolute;left:-34px;top:36px;width:14px;height:14px;border-radius:50%;flex-shrink:0;border:2px solid var(--bg-mid)}
+.tl-dot.ok{background:var(--teal)}
+.tl-dot.warn{background:var(--amber)}
+.tl-dot.bad{background:var(--red)}
+.tl-time{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);min-width:80px;padding-top:4px;flex-shrink:0}
+.tl-content{flex:1}
+.tl-event{font-size:18px;font-weight:600;color:var(--text);margin-bottom:6px}
+.tl-detail{font-size:14px;color:var(--text2);line-height:1.55}
+.tl-cost{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;margin-top:10px}
+.tl-cost.ok{color:var(--teal)}
+.tl-cost.warn{color:var(--amber)}
+.tl-cost.bad{color:var(--red)}
+.tl-cost .label{font-size:12px;font-weight:500;color:var(--text3);font-family:'DM Sans',sans-serif;display:block;margin-bottom:2px;letter-spacing:.3px}
+
+.math-reveal{margin-top:60px;background:var(--bg-card);border:1px solid var(--border-amber);border-radius:12px;padding:40px;display:grid;grid-template-columns:1fr auto 1fr;gap:40px;align-items:center}
+.math-side{text-align:center}
+.math-side-label{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px}
+.math-side-label.bad{color:var(--red)}
+.math-side-label.good{color:var(--teal)}
+.math-big{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,6vw,80px);font-weight:900;line-height:1}
+.math-big.bad{color:var(--red)}
+.math-big.good{color:var(--teal)}
+.math-small-desc{font-size:14px;color:var(--text2);margin-top:10px;line-height:1.5}
+.math-vs{font-family:'Barlow Condensed',sans-serif;font-size:72px;font-weight:900;color:var(--border);text-align:center;line-height:1}
+.math-save-badge{background:rgba(61,169,165,.12);border:1px solid rgba(61,169,165,.3);border-radius:8px;padding:12px 20px;text-align:center;margin-top:20px}
+.math-save-badge span{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--teal)}
+.math-save-badge p{font-size:12px;color:var(--text3);margin-top:2px}
+
+/* ── CALCULADORA ── */
+.calc-section{background:var(--bg-dark)}
+.calc-box{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:52px 48px;max-width:820px;margin:60px auto 0}
+.calc-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;margin-bottom:8px;line-height:1}
+.calc-sub{font-size:15px;color:var(--text2);margin-bottom:40px}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.calc-field{display:flex;flex-direction:column;gap:8px}
+.calc-field label{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+.calc-field select,.calc-field input{background:var(--bg-mid);border:1.5px solid var(--border);border-radius:8px;padding:14px 16px;font-size:15px;color:var(--text);font-family:'DM Sans',sans-serif;appearance:none;outline:none;transition:.2s}
+.calc-field select:focus,.calc-field input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(61,169,165,.1)}
+.calc-field select option{background:#0A1A18}
+.calc-result{background:var(--bg-mid);border:1px solid var(--border-amber);border-radius:12px;padding:32px 36px;margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;opacity:0;transform:translateY(12px);transition:.4s}
+.calc-result.show{opacity:1;transform:none}
+.calc-res-item{text-align:center}
+.calc-res-val{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,3vw,42px);font-weight:900;line-height:1;margin-bottom:6px}
+.calc-res-val.bad{color:var(--red)}
+.calc-res-val.mid{color:var(--amber)}
+.calc-res-val.good{color:var(--teal)}
+.calc-res-label{font-size:12px;color:var(--text3);letter-spacing:.3px;line-height:1.4}
+.calc-btn{width:100%;background:var(--amber);color:#1A2424;font-weight:700;font-size:16px;padding:18px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s;margin-top:12px}
+.calc-btn:hover{background:var(--amber-dark);transform:translateY(-1px)}
+.calc-note{font-size:12px;color:var(--text3);text-align:center;margin-top:16px}
+
+/* ── PLANOS ── */
+.planos{background:var(--bg-mid)}
+.planos-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:60px;max-width:900px}
+.plano-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:44px 40px;position:relative;transition:.3s;cursor:pointer}
+.plano-card:hover{border-color:var(--border-amber);transform:translateY(-4px)}
+.plano-card.destaque{border-color:var(--amber);background:linear-gradient(135deg,var(--bg-card) 0%,rgba(245,166,35,.06) 100%)}
+.plano-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--amber);color:#1A2424;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:5px 20px;border-radius:20px;white-space:nowrap}
+.plano-icon{width:52px;height:52px;background:rgba(61,169,165,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;font-size:24px}
+.plano-name{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.5px;margin-bottom:6px}
+.plano-desc{font-size:14px;color:var(--text2);margin-bottom:28px;line-height:1.55}
+.plano-price{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+.plano-price .currency{font-size:18px;font-weight:600;color:var(--amber);margin-top:8px}
+.plano-price .value{font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,5vw,68px);font-weight:900;color:var(--text);letter-spacing:-2px;line-height:1}
+.plano-price .period{font-size:14px;color:var(--text3);font-weight:400;align-self:flex-end;margin-bottom:8px}
+.plano-day{font-size:13px;color:var(--teal);margin-bottom:28px;font-weight:500}
+.plano-items{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.plano-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text2);line-height:1.4}
+.plano-item::before{content:'✓';color:var(--teal);font-weight:700;flex-shrink:0;margin-top:1px}
+.plano-item.off{color:var(--text3)}
+.plano-item.off::before{content:'✗';color:rgba(244,249,249,.2)}
+.btn-plano{width:100%;padding:16px;border-radius:8px;font-weight:700;font-size:15px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:.2s;text-align:center;text-decoration:none;display:block}
+.btn-plano.amber{background:var(--amber);color:#1A2424;border:none}
+.btn-plano.amber:hover{background:var(--amber-dark);transform:translateY(-1px)}
+.btn-plano.outline{background:transparent;color:var(--text);border:1.5px solid var(--border)}
+.btn-plano.outline:hover{border-color:var(--teal);color:var(--teal)}
+.plano-garantia{margin-top:16px;text-align:center;font-size:12px;color:var(--text3)}
+.plano-garantia span{color:var(--teal)}
+
+/* ── COBERTURA ── */
+.cobertura{background:var(--bg-dark)}
+.cob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:52px}
+.cob-item{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:28px 24px;transition:.25s}
+.cob-item:hover{border-color:rgba(61,169,165,.3);background:var(--surface)}
+.cob-icon{font-size:28px;margin-bottom:16px;display:block}
+.cob-name{font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px}
+.cob-detail{font-size:13px;color:var(--text2);line-height:1.5}
+.cob-price{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;color:var(--red);margin-top:14px}
+.cob-price .label{font-size:11px;color:var(--text3);font-family:'DM Sans',sans-serif;font-weight:400;display:block;margin-bottom:2px}
+
+/* ── COMPARATIVO ── */
+.comparativo{background:var(--bg-mid)}
+.comp-table{margin-top:52px;border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.comp-head{display:grid;grid-template-columns:2fr 1fr 1fr;background:var(--surface)}
+.comp-th{padding:20px 24px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+.comp-th:first-child{color:var(--text3)}
+.comp-th.sem{color:var(--red);text-align:center}
+.comp-th.com{color:var(--amber);text-align:center}
+.comp-row{display:grid;grid-template-columns:2fr 1fr 1fr;border-top:1px solid var(--border);transition:.2s}
+.comp-row:hover{background:rgba(61,169,165,.03)}
+.comp-cell{padding:18px 24px;font-size:14px;display:flex;align-items:center;justify-content:center}
+.comp-cell:first-child{justify-content:flex-start;color:var(--text2)}
+.comp-cell .x{color:var(--red);font-size:18px;font-weight:700}
+.comp-cell .o{color:var(--teal);font-size:18px;font-weight:700}
+.comp-cell.highlight{color:var(--amber);font-weight:600}
+
+/* ── DEPOIMENTOS ── */
+.depoimentos{background:var(--bg-dark)}
+.dep-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
+.dep-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:32px 28px;position:relative;transition:.25s}
+.dep-card:hover{border-color:var(--border-amber)}
+.dep-quote{font-size:40px;font-family:'Barlow Condensed',sans-serif;font-weight:900;color:rgba(245,166,35,.2);line-height:1;margin-bottom:12px;display:block}
+.dep-text{font-size:15px;color:var(--text2);line-height:1.65;margin-bottom:24px;font-style:italic}
+.dep-text em{font-style:normal;color:var(--amber);font-weight:600}
+.dep-autor{display:flex;align-items:center;gap:12px;border-top:1px solid var(--border);padding-top:20px}
+.dep-avatar{width:40px;height:40px;border-radius:50%;background:var(--teal-dark);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--amber);flex-shrink:0}
+.dep-name{font-size:14px;font-weight:600;color:var(--text)}
+.dep-info{font-size:12px;color:var(--text3);margin-top:2px}
+.dep-stars{color:var(--amber);font-size:12px;margin-top:4px;letter-spacing:1px}
+
+/* ── SEXY CANVAS ── */
+.sexy{background:var(--bg-mid);position:relative;overflow:hidden}
+.sexy::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 80% 50%,rgba(245,166,35,.06) 0%,transparent 60%)}
+.sexy-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.sexy-left{}
+.sexy-right{}
+.sexy-canvas-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(38px,5vw,60px);font-weight:900;line-height:.95;letter-spacing:-2px;margin-bottom:24px}
+.sexy-canvas-title em{font-style:normal;color:var(--amber)}
+.sexy-canvas-desc{font-size:16px;color:var(--text2);line-height:1.7;margin-bottom:36px;font-weight:300}
+.sexy-list{display:flex;flex-direction:column;gap:16px}
+.sexy-item{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}
+.sexy-item:last-child{border-bottom:none}
+.sexy-num{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:var(--teal);line-height:1;min-width:40px}
+.sexy-text{flex:1}
+.sexy-text strong{font-size:16px;color:var(--text);display:block;margin-bottom:4px;font-weight:600}
+.sexy-text p{font-size:13px;color:var(--text2);line-height:1.55}
+
+.insight-cards{display:flex;flex-direction:column;gap:16px}
+.insight{background:var(--bg-card);border-left:3px solid var(--teal);border-radius:0 10px 10px 0;padding:20px 22px}
+.insight.amber{border-color:var(--amber)}
+.insight.red{border-color:var(--red)}
+.insight-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px}
+.insight.amber .insight-label{color:var(--amber)}
+.insight.teal .insight-label,.insight .insight-label{color:var(--teal)}
+.insight.red .insight-label{color:var(--red)}
+.insight-text{font-size:15px;color:var(--text2);line-height:1.55}
+.insight-text strong{color:var(--text);font-weight:600}
+
+/* ── FAQ ── */
+.faq{background:var(--bg-dark)}
+.faq-list{max-width:780px;margin-top:52px}
+.faq-item{border-bottom:1px solid var(--border);overflow:hidden}
+.faq-q{width:100%;background:none;border:none;text-align:left;padding:24px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:20px;font-family:'DM Sans',sans-serif}
+.faq-q-text{font-size:17px;font-weight:500;color:var(--text);line-height:1.4}
+.faq-icon{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.25s;font-size:16px;color:var(--text3)}
+.faq-item.open .faq-icon{background:var(--teal);border-color:var(--teal);color:var(--white);transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:.35s ease}
+.faq-item.open .faq-a{max-height:300px}
+.faq-a-inner{padding:0 0 24px;font-size:15px;color:var(--text2);line-height:1.7;font-weight:300}
+.faq-a-inner strong{color:var(--text);font-weight:600}
+
+/* ── CTA FINAL ── */
+.cta-final{background:var(--teal-dark);position:relative;overflow:hidden;padding:120px 6%}
+.cta-final::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 100% at 50% 0%,rgba(61,169,165,.3) 0%,transparent 60%)}
+.cta-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:44px 44px}
+.cta-inner{position:relative;z-index:2;text-align:center;max-width:720px;margin:0 auto}
+.cta-pre{font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:24px}
+.cta-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,7vw,96px);font-weight:900;line-height:.9;letter-spacing:-3px;color:var(--white);margin-bottom:24px}
+.cta-title em{font-style:normal;color:var(--amber)}
+.cta-sub{font-size:18px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:52px;font-weight:300}
+.cta-sub strong{color:var(--white);font-weight:600}
+.cta-actions{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}
+.btn-cta-main{background:var(--amber);color:#1A2424;font-weight:800;font-size:18px;padding:20px 44px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:.2s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-cta-main:hover{background:var(--amber-dark);transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.3)}
+.btn-cta-sec{background:transparent;color:rgba(255,255,255,.7);font-weight:500;font-size:15px;padding:20px 32px;border-radius:8px;text-decoration:none;border:1.5px solid rgba(255,255,255,.2);transition:.2s;font-family:'DM Sans',sans-serif}
+.btn-cta-sec:hover{border-color:rgba(255,255,255,.6);color:var(--white)}
+.cta-guarantee{margin-top:32px;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+.cta-g-item{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,.55)}
+.cta-g-item span{color:rgba(61,169,165,.9)}
+
+/* ── FOOTER ── */
+footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px 6%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.footer-logo img{height:28px;opacity:.7}
+.footer-links{display:flex;gap:28px}
+.footer-links a{font-size:13px;color:var(--text3);text-decoration:none;transition:.2s}
+.footer-links a:hover{color:var(--text2)}
+.footer-copy{font-size:12px;color:var(--text3)}
+
+/* ── STICKY CTA BAR ── */
+.sticky-bar{position:fixed;bottom:0;left:0;right:0;z-index:150;background:rgba(4,13,12,.95);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:16px 6%;display:flex;align-items:center;justify-content:space-between;gap:20px;transform:translateY(100%);transition:.4s cubic-bezier(.4,0,.2,1)}
+.sticky-bar.show{transform:none}
+.sticky-left strong{font-size:16px;font-weight:600;color:var(--text)}
+.sticky-left p{font-size:13px;color:var(--text3);margin-top:2px}
+.sticky-right{display:flex;align-items:center;gap:16px;flex-shrink:0}
+.sticky-price{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:var(--amber)}
+.sticky-price span{font-size:14px;font-weight:400;color:var(--text3);font-family:'DM Sans',sans-serif}
+.btn-sticky{background:var(--amber);color:#1A2424;font-weight:700;font-size:14px;padding:12px 28px;border-radius:6px;text-decoration:none;transition:.2s;white-space:nowrap}
+.btn-sticky:hover{background:var(--amber-dark)}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-d1{transition-delay:.08s}
+.reveal-d2{transition-delay:.16s}
+.reveal-d3{transition-delay:.24s}
+.reveal-d4{transition-delay:.32s}
+.reveal-d5{transition-delay:.40s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-bottom{grid-template-columns:1fr;gap:40px}
+  .hero-actions{align-items:flex-start}
+  .hero-micro{text-align:left}
+  .verdade-grid,.comparativo .comp-table{grid-template-columns:1fr}
+  .dep-grid,.cob-grid{grid-template-columns:1fr 1fr}
+  .calc-row{grid-template-columns:1fr}
+  .sexy-inner,.planos-grid{grid-template-columns:1fr}
+  .math-reveal{grid-template-columns:1fr;text-align:center}
+  .math-vs{display:none}
+  .comp-head,.comp-row{grid-template-columns:2fr 1fr 1fr}
+}
+@media(max-width:600px){
+  section{padding:72px 5%}
+  .dep-grid,.cob-grid{grid-template-columns:1fr}
+  .hero{padding:0 5% 60px}
+  .hero-headline{font-size:clamp(52px,13vw,80px)}
+  .calc-box{padding:32px 24px}
+  .cta-actions{flex-direction:column;align-items:stretch;text-align:center}
+  footer{flex-direction:column;align-items:flex-start;gap:24px}
+  .comp-cell:first-child{font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">
+    <img src="logo-amber.png" alt="Officina App"/>
+    <div class="nav-badge">PMP</div>
+  </div>
+  <a href="#planos" class="nav-cta">Ver planos →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-eyebrow reveal">
+    <span class="eyebrow-dot"></span>
+    <span class="eyebrow-text">Plano de Manutenção Preventiva</span>
+  </div>
+
+  <h1 class="hero-headline reveal reveal-d1">
+    <span class="line-1">Você não paga manutenção preventiva.</span>
+    Você paga<br/><em>conserto.</em>
+    <br/><span class="slash">Todo. Mês.</span>
+  </h1>
+
+  <div class="hero-bottom reveal reveal-d2">
+    <p class="hero-desc">
+      O motorista brasileiro gasta em média <strong>R$3.200 por ano em consertos evitáveis.</strong>
+      Com o PMP do Officina App, você protege motor e câmbio por <strong>menos de R$1,63 por dia.</strong>
+      Não é seguro. É controle.
+    </p>
+    <div class="hero-actions">
+      <a href="#planos" class="btn-hero">
+        Quero proteger meu carro
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <p class="hero-micro">Cancele quando quiser &nbsp;·&nbsp; <span>30 dias de garantia</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="sep">⚡</span> 1 em 3 motoristas já foi enganado em oficina <span class="sep">·</span></div>
+    <div class="ticker-item"><span class="sep">⚡</span> Conserto de câmbio: até R$4.800 <span class="sep">·</span></div>
+    <div class="ticker-item"><span class="sep">⚡</span> R$89B/ano no mercado automotivo <span class="sep">·</span></div>
+    <div class="ticker-item"><span class="sep">⚡</span> 47 milhões de carros no Brasil <span class="sep">·</span></div>
+    <div class="ticker-item"><span class="sep">⚡</span> 68% das falhas mecânicas são preveníveis <span class="sep">·</span></div>
+    <div class="ticker-item"><span class="sep">⚡</span> 1 em 3 motoristas já foi enganado em oficina <span class="sep">·</span></div>
+    <div class="ticker-item"><span class="sep">⚡</span> Conserto de câmbio: até R$4.800 <span class="sep">·</span></div>
+    <div class="ticker-item"><span class="sep">⚡</span> R$89B/ano no mercado automotivo <span class="sep">·</span></div>
+    <div class="ticker-item"><span class="sep">⚡</span> 47 milhões de carros no Brasil <span class="sep">·</span></div>
+    <div class="ticker-item"><span class="sep">⚡</span> 68% das falhas mecânicas são preveníveis <span class="sep">·</span></div>
+  </div>
+</div>
+
+<!-- VERDADE — 4 stats que assustam -->
+<section class="verdade" id="verdade">
+  <div class="s-label reveal">A conta que você não faz</div>
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1;max-width:700px" class="reveal reveal-d1">
+    O carro que você financia<br/>pode virar <em style="font-style:normal;color:var(--amber)">sua maior dívida.</em>
+  </h2>
+
+  <div class="verdade-grid">
+    <div class="v-card red reveal reveal-d1">
+      <div class="v-num red">R$3.200</div>
+      <div class="v-label">
+        <strong>Gasto médio anual em consertos evitáveis</strong>
+        Quando a manutenção preventiva é ignorada, problemas pequenos viram falhas caras.
+      </div>
+      <div class="v-source">Fonte: FENABRAVE, 2024</div>
+    </div>
+    <div class="v-card amber reveal reveal-d2">
+      <div class="v-num amber">68%</div>
+      <div class="v-label">
+        <strong>Das falhas mecânicas são preveníveis</strong>
+        Mais de 2 em cada 3 consertos que acontecem poderiam ter sido evitados com revisão periódica.
+      </div>
+      <div class="v-source">Fonte: SENAI Automotivo, 2023</div>
+    </div>
+    <div class="v-card teal reveal reveal-d3">
+      <div class="v-num teal">1/3</div>
+      <div class="v-label">
+        <strong>Dos motoristas já foram cobrados indevidamente</strong>
+        Um em cada três motoristas pagou por serviços que não precisava — sem saber na hora.
+      </div>
+      <div class="v-source">Fonte: Officina App Survey, 2024</div>
+    </div>
+    <div class="v-card mid reveal reveal-d4">
+      <div class="v-num amber">R$4.800</div>
+      <div class="v-label">
+        <strong>Custo médio de um câmbio quebrado</strong>
+        O câmbio é a segunda peça mais cara do carro. E a mais negligenciada na manutenção preventiva.
+      </div>
+      <div class="v-source">Média SP, 2024</div>
+    </div>
+  </div>
+</section>
+
+<!-- MATH — O "nunca pensei nisso" -->
+<section class="math-section" id="math">
+  <div class="math-wrap">
+    <div class="s-label reveal">O momento que muda tudo</div>
+    <h2 class="math-title reveal reveal-d1">
+      Veja o que acontece<br/>com um carro <em>sem plano.</em>
+    </h2>
+    <p class="math-sub reveal reveal-d2">
+      Esta é a história real do Thiago — analista, Zona Leste, Onix 2021.
+      Ele achava que "tava tudo bem". Não estava.
+    </p>
+
+    <div class="timeline reveal reveal-d3">
+      <div class="tl-item">
+        <div class="tl-dot ok"></div>
+        <div class="tl-time">Mês 1</div>
+        <div class="tl-content">
+          <div class="tl-event">Tudo parece normal</div>
+          <div class="tl-detail">Carro rodando bem. Nenhum barulho evidente. Thiago acha que não precisa de revisão. "Só fui trocar o óleo no ano passado."</div>
+          <div class="tl-cost ok"><span class="label">Gasto</span> R$0</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot ok"></div>
+        <div class="tl-time">Mês 3</div>
+        <div class="tl-content">
+          <div class="tl-event">Primeiro sinal aparece — ignorado</div>
+          <div class="tl-detail">Uma leve vibração na frenagem. Thiago acha que é "frescura" ou problema na pista. Adia a visita à oficina por mais dois meses.</div>
+          <div class="tl-cost ok"><span class="label">Gasto</span> R$0</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot warn"></div>
+        <div class="tl-time">Mês 5</div>
+        <div class="tl-content">
+          <div class="tl-event">Pastilha de freio no limite</div>
+          <div class="tl-detail">O que seria uma troca simples de pastilha começa a desgastar o disco. Thiago finalmente leva o carro. Mas o dano já começou.</div>
+          <div class="tl-cost warn"><span class="label">Pastilha + disco danificado</span> R$420</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot warn"></div>
+        <div class="tl-time">Mês 8</div>
+        <div class="tl-content">
+          <div class="tl-event">Óleo vencido desde fevereiro</div>
+          <div class="tl-detail">O óleo ultrapassou o prazo de troca. O motor começa a trabalhar com lubrificação inadequada. Desgaste silencioso nas peças internas.</div>
+          <div class="tl-cost warn"><span class="label">Troca de óleo + filtro atrasado</span> R$240</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot bad"></div>
+        <div class="tl-time">Mês 11</div>
+        <div class="tl-content">
+          <div class="tl-event">Motor faz barulho em semáforo</div>
+          <div class="tl-detail">O desgaste acumulado chega à correia dentada e ao tensor. Uma peça de R$180 preventiva se tornará um risco de quebra total do motor.</div>
+          <div class="tl-cost bad"><span class="label">Correia + tensor + mão de obra</span> R$680</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot bad"></div>
+        <div class="tl-time">Mês 14</div>
+        <div class="tl-content">
+          <div class="tl-event">Câmbio automático começa a falhar</div>
+          <div class="tl-detail">A troca de marcha engasga. Sintoma claro de fluido do câmbio vencido há mais de um ano. O que era preventivo de R$200 já evoluiu para um reparo de R$1.800+.</div>
+          <div class="tl-cost bad"><span class="label">Reparo parcial no câmbio</span> R$1.800</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="math-reveal reveal">
+      <div class="math-side">
+        <div class="math-side-label bad">Sem o plano</div>
+        <div class="math-big bad">R$3.140</div>
+        <div class="math-small-desc">Gastos inesperados em 14 meses.<br/>Todos evitáveis.</div>
+      </div>
+      <div class="math-vs">VS</div>
+      <div class="math-side">
+        <div class="math-side-label good">Com o PMP</div>
+        <div class="math-big good">R$598</div>
+        <div class="math-small-desc">12 meses de proteção completa.<br/>Motor e câmbio cobertos.</div>
+        <div class="math-save-badge">
+          <span>Economia de R$2.542</span>
+          <p>no mesmo período</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section class="calc-section" id="calculadora">
+  <div class="s-label reveal">Sua realidade</div>
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1" class="reveal reveal-d1">
+    Quanto seu carro<br/><em style="font-style:normal;color:var(--amber)">já vai te custar?</em>
+  </h2>
+
+  <div class="calc-box reveal reveal-d2">
+    <div class="calc-title">Simule sua economia</div>
+    <div class="calc-sub">Preencha os dados do seu carro e veja o risco real.</div>
+    <div class="calc-row">
+      <div class="calc-field">
+        <label>Tipo de veículo</label>
+        <select id="cTipo" onchange="calcular()">
+          <option value="popular">Hatch popular (Onix, HB20, Polo)</option>
+          <option value="sedan">Sedan médio (Corolla, Jetta, Civic)</option>
+          <option value="suv">SUV (HRV, Creta, Compass)</option>
+          <option value="pickupLeve">Pickup leve (S10, Frontier)</option>
+        </select>
+      </div>
+      <div class="calc-field">
+        <label>Ano do veículo</label>
+        <select id="cAno" onchange="calcular()">
+          <option value="new">2022 a 2025</option>
+          <option value="mid" selected>2018 a 2021</option>
+          <option value="old">2014 a 2017</option>
+          <option value="older">Até 2013</option>
+        </select>
+      </div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-field">
+        <label>Km rodados por mês</label>
+        <select id="cKm" onchange="calcular()">
+          <option value="low">Até 1.000 km</option>
+          <option value="mid" selected>1.000 a 2.500 km</option>
+          <option value="high">2.500 a 4.000 km</option>
+          <option value="xhigh">Acima de 4.000 km</option>
+        </select>
+      </div>
+      <div class="calc-field">
+        <label>Última revisão completa</label>
+        <select id="cRev" onchange="calcular()">
+          <option value="recent">Menos de 6 meses</option>
+          <option value="ok">6 a 12 meses</option>
+          <option value="late" selected>Mais de 1 ano</option>
+          <option value="never">Nunca fiz revisão completa</option>
+        </select>
+      </div>
+    </div>
+    <button class="calc-btn" onclick="calcular()">Calcular meu risco →</button>
+    <div class="calc-result" id="calcResult">
+      <div class="calc-res-item">
+        <div class="calc-res-val bad" id="resRisco">—</div>
+        <div class="calc-res-label">Risco de conserto<br/>nos próximos 12 meses</div>
+      </div>
+      <div class="calc-res-item">
+        <div class="calc-res-val mid" id="resCusto">—</div>
+        <div class="calc-res-label">Custo estimado<br/>sem proteção</div>
+      </div>
+      <div class="calc-res-item">
+        <div class="calc-res-val good" id="resEco">—</div>
+        <div class="calc-res-label">Economia estimada<br/>com PMP Motor</div>
+      </div>
+    </div>
+    <p class="calc-note">* Estimativas baseadas em média de oficinas parceiras em São Paulo.</p>
+  </div>
+</section>
+
+<!-- PLANOS -->
+<section class="planos" id="planos">
+  <div class="s-label reveal">Escolha sua proteção</div>
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:16px" class="reveal reveal-d1">
+    Dois planos.<br/><em style="font-style:normal;color:var(--amber)">Uma decisão simples.</em>
+  </h2>
+  <p style="font-size:17px;color:var(--text2);max-width:520px;line-height:1.65;font-weight:300" class="reveal reveal-d2">
+    Menos do que você gasta por mês com streaming. E protege algo que vale 30 vezes mais.
+  </p>
+
+  <div class="planos-grid">
+    <div class="plano-card reveal reveal-d2">
+      <div class="plano-icon">🔧</div>
+      <div class="plano-name">PMP Motor</div>
+      <div class="plano-desc">Para quem quer o essencial coberto. Motor saudável é carro na estrada.</div>
+      <div class="plano-price">
+        <span class="currency">R$</span>
+        <span class="value">49</span>
+        <span class="period">,90/mês</span>
+      </div>
+      <div class="plano-day">R$1,63 por dia — menos que um café</div>
+      <div class="plano-items">
+        <div class="plano-item">Revisão de motor completa (2x/ano)</div>
+        <div class="plano-item">Troca de óleo e filtro incluída</div>
+        <div class="plano-item">Verificação de correia dentada</div>
+        <div class="plano-item">Diagnóstico eletrônico (OBD)</div>
+        <div class="plano-item">Prioridade no agendamento</div>
+        <div class="plano-item">Histórico digital do carro</div>
+        <div class="plano-item off">Câmbio e transmissão</div>
+        <div class="plano-item off">Suspensão e direção</div>
+      </div>
+      <a href="https://officinaapp.com.br" target="_blank" class="btn-plano outline">Começar com Motor →</a>
+      <div class="plano-garantia">✓ <span>30 dias de garantia</span> ou seu dinheiro de volta</div>
+    </div>
+
+    <div class="plano-card destaque reveal reveal-d3">
+      <div class="plano-badge">Mais escolhido</div>
+      <div class="plano-icon">🛡️</div>
+      <div class="plano-name">PMP Completo</div>
+      <div class="plano-desc">Motor + câmbio + suspensão. Para quem financia o carro e depende dele para trabalhar.</div>
+      <div class="plano-price">
+        <span class="currency">R$</span>
+        <span class="value">89</span>
+        <span class="period">,90/mês</span>
+      </div>
+      <div class="plano-day">R$2,99 por dia — menos que você gasta no café da manhã</div>
+      <div class="plano-items">
+        <div class="plano-item">Revisão de motor completa (3x/ano)</div>
+        <div class="plano-item">Troca de óleo e filtro incluída</div>
+        <div class="plano-item">Verificação de correia dentada</div>
+        <div class="plano-item">Diagnóstico eletrônico (OBD)</div>
+        <div class="plano-item">Prioridade no agendamento</div>
+        <div class="plano-item">Histórico digital do carro</div>
+        <div class="plano-item">Câmbio e fluido de transmissão</div>
+        <div class="plano-item">Suspensão, freios e direção</div>
+      </div>
+      <a href="https://officinaapp.com.br" target="_blank" class="btn-plano amber">Proteger tudo por R$89,90 →</a>
+      <div class="plano-garantia">✓ <span>30 dias de garantia</span> ou seu dinheiro de volta</div>
+    </div>
+  </div>
+</section>
+
+<!-- O QUE COBRE -->
+<section class="cobertura" id="cobertura">
+  <div class="s-label reveal">O que está incluso</div>
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:16px" class="reveal reveal-d1">
+    Cada item coberto <em style="font-style:normal;color:var(--amber)">já pagou</em><br/>o plano inteiro.
+  </h2>
+  <p style="font-size:16px;color:var(--text2);max-width:540px;line-height:1.65;font-weight:300" class="reveal reveal-d2">
+    Veja o custo real de cada serviço se você fosse pagar avulso. E quanto você paga com o PMP.
+  </p>
+
+  <div class="cob-grid">
+    <div class="cob-item reveal reveal-d1">
+      <span class="cob-icon">🔩</span>
+      <div class="cob-name">Troca de óleo + filtro</div>
+      <div class="cob-detail">Inclui óleo sintético 5W30 ou conforme manual do fabricante, filtro de óleo original e inspeção de nível de fluidos.</div>
+      <div class="cob-price"><span class="label">Avulso em SP</span>R$180–R$320</div>
+    </div>
+    <div class="cob-item reveal reveal-d2">
+      <span class="cob-icon">⚡</span>
+      <div class="cob-name">Diagnóstico eletrônico (OBD)</div>
+      <div class="cob-detail">Leitura de todas as falhas armazenadas no computador do veículo. Identifica problemas antes de virarem barulho.</div>
+      <div class="cob-price"><span class="label">Avulso em SP</span>R$120–R$200</div>
+    </div>
+    <div class="cob-item reveal reveal-d3">
+      <span class="cob-icon">🔗</span>
+      <div class="cob-name">Verificação de correia dentada</div>
+      <div class="cob-detail">Inspeção visual e por km rodado. Uma correia que estoura pode destruir o motor inteiro. Prevenção custa R$180. Conserto, R$4.000+.</div>
+      <div class="cob-price"><span class="label">Avulso em SP</span>R$800–R$1.600</div>
+    </div>
+    <div class="cob-item reveal reveal-d1">
+      <span class="cob-icon">🔄</span>
+      <div class="cob-name">Fluido do câmbio (Completo)</div>
+      <div class="cob-detail">Troca do fluido de transmissão automática ou CVT. Componente mais caro do carro — fluido vencido leva a falhas de R$3.000+.</div>
+      <div class="cob-price"><span class="label">Avulso em SP</span>R$300–R$600</div>
+    </div>
+    <div class="cob-item reveal reveal-d2">
+      <span class="cob-icon">🛑</span>
+      <div class="cob-name">Inspeção de freios</div>
+      <div class="cob-detail">Medição de espessura das pastilhas, inspeção dos discos e verificação do fluido de freio. Freio falho é risco de acidente.</div>
+      <div class="cob-price"><span class="label">Avulso em SP</span>R$250–R$480</div>
+    </div>
+    <div class="cob-item reveal reveal-d3">
+      <span class="cob-icon">📱</span>
+      <div class="cob-name">Histórico digital do veículo</div>
+      <div class="cob-detail">Todos os serviços registrados no app. Na hora de vender o carro, histórico documentado vale R$3.000–R$8.000 a mais na negociação.</div>
+      <div class="cob-price"><span class="label">Valor na revenda</span>+R$3.000–R$8.000</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARATIVO -->
+<section class="comparativo">
+  <div class="s-label reveal">Comparação honesta</div>
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:16px" class="reveal reveal-d1">
+    O que você <em style="font-style:normal;color:var(--red)">perde</em> quando<br/>não tem plano.
+  </h2>
+
+  <div class="comp-table reveal reveal-d2">
+    <div class="comp-head">
+      <div class="comp-th"></div>
+      <div class="comp-th sem">Sem PMP</div>
+      <div class="comp-th com">Com PMP</div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Sabe quando trocar o óleo</div>
+      <div class="comp-cell"><span class="x">✗</span></div>
+      <div class="comp-cell"><span class="o">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Recebe alerta antes de problema virar conserto</div>
+      <div class="comp-cell"><span class="x">✗</span></div>
+      <div class="comp-cell"><span class="o">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Orçamento aprovado antes do serviço começar</div>
+      <div class="comp-cell"><span class="x">✗</span></div>
+      <div class="comp-cell"><span class="o">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Histórico digital documentado</div>
+      <div class="comp-cell"><span class="x">✗</span></div>
+      <div class="comp-cell"><span class="o">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Oficinas verificadas — endereço real, CNPJ ativo</div>
+      <div class="comp-cell"><span class="x">✗</span></div>
+      <div class="comp-cell"><span class="o">✓</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Custo anual previsível</div>
+      <div class="comp-cell highlight">R$1.800–R$4.500</div>
+      <div class="comp-cell highlight" style="color:var(--teal)">R$599–R$1.079</div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Probabilidade de conserto inesperado</div>
+      <div class="comp-cell"><span style="color:var(--red);font-weight:600;font-size:14px">Alta — 68%</span></div>
+      <div class="comp-cell"><span style="color:var(--teal);font-weight:600;font-size:14px">Reduzida em 76%</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEXY CANVAS — Posicionamento e insight -->
+<section class="sexy" id="canvas">
+  <div class="sexy-inner">
+    <div class="sexy-left reveal">
+      <div class="s-label">Por que funciona</div>
+      <h2 class="sexy-canvas-title">
+        Você não está<br/>comprando revisão.<br/>Está comprando<br/><em>paz de espírito.</em>
+      </h2>
+      <p class="sexy-canvas-desc">
+        O motorista brasileiro não evita manutenção por falta de dinheiro.
+        Evita por falta de <strong style="color:var(--text)">clareza, controle e confiança</strong>.
+        O PMP entrega os três de uma vez.
+      </p>
+      <div class="sexy-list">
+        <div class="sexy-item">
+          <span class="sexy-num">01</span>
+          <div class="sexy-text">
+            <strong>Você aprova antes de pagar</strong>
+            <p>Orçamento digital enviado no app antes de qualquer serviço começar. Zero surpresa na hora de buscar o carro.</p>
+          </div>
+        </div>
+        <div class="sexy-item">
+          <span class="sexy-num">02</span>
+          <div class="sexy-text">
+            <strong>Só oficinas que passaram pela nossa verificação</strong>
+            <p>CNPJ ativo, endereço físico confirmado, histórico de avaliações reais. Não é Google Maps. É curadoria.</p>
+          </div>
+        </div>
+        <div class="sexy-item">
+          <span class="sexy-num">03</span>
+          <div class="sexy-text">
+            <strong>Seu carro tem um prontuário</strong>
+            <p>Cada serviço registrado digitalmente. Quando você vender o carro, esse histórico vale dinheiro real na negociação.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sexy-right reveal reveal-d2">
+      <div class="insight-cards">
+        <div class="insight amber">
+          <div class="insight-label">Insight de mercado</div>
+          <div class="insight-text">
+            <strong>O motorista típico gasta R$267/mês em aplicativos, streaming e assinaturas.</strong>
+            Menos de 0,3% desse valor é gasto com proteção do bem que vale R$60.000+.
+          </div>
+        </div>
+        <div class="insight teal">
+          <div class="insight-label">Comportamento real</div>
+          <div class="insight-text">
+            <strong>"Se pudesse, pagava para não precisar pensar nisso."</strong>
+            — Frase real de proprietários de veículos pesquisados pelo Officina App, 2024.
+          </div>
+        </div>
+        <div class="insight red">
+          <div class="insight-label">O custo da procrastinação</div>
+          <div class="insight-text">
+            Cada mês sem revisão não é neutro. É acúmulo de desgaste silencioso.
+            <strong>O Thiago demorou 14 meses para gastar R$3.140 que custaria R$598 proteger.</strong>
+          </div>
+        </div>
+        <div class="insight teal">
+          <div class="insight-label">O momento da decisão</div>
+          <div class="insight-text">
+            A melhor hora para contratar um plano preventivo é <strong>antes de ouvir o barulho</strong>.
+            Quando o barulho aparece, o preventivo já virou corretivo.
+          </div>
+        </div>
+        <div class="insight amber">
+          <div class="insight-label">Prova de valor</div>
+          <div class="insight-text">
+            <strong>Na venda do carro, histórico documentado de manutenção representa 5–12% a mais no preço de negociação</strong> — dados de revendas em SP, 2024.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="depoimentos">
+  <div class="s-label reveal">Quem já protegeu o carro</div>
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:16px" class="reveal reveal-d1">
+    Eles acharam caro.<br/><em style="font-style:normal;color:var(--amber)">Até entenderem a conta.</em>
+  </h2>
+
+  <div class="dep-grid">
+    <div class="dep-card reveal reveal-d1">
+      <span class="dep-quote">"</span>
+      <p class="dep-text">Fiquei 2 anos sem fazer revisão achando que ia economizar. O câmbio deu problema e gastei <em>R$2.400 em uma semana</em>. Com o PMP pago R$89 por mês. Fiz as contas e chorei.</p>
+      <div class="dep-autor">
+        <div class="dep-avatar">RM</div>
+        <div>
+          <div class="dep-name">Ricardo M.</div>
+          <div class="dep-info">HB20 2020 · Santo André, SP</div>
+          <div class="dep-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="dep-card reveal reveal-d2">
+      <span class="dep-quote">"</span>
+      <p class="dep-text">O melhor é que <em>você aprova o orçamento antes</em>. Fui numa oficina pelo app, mandaram o orçamento no celular, confirmei, e o carro ficou pronto no prazo. Nunca tinha vivido isso antes.</p>
+      <div class="dep-autor">
+        <div class="dep-avatar">JS</div>
+        <div>
+          <div class="dep-name">Juliana S.</div>
+          <div class="dep-info">Polo 2019 · Tatuapé, SP</div>
+          <div class="dep-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="dep-card reveal reveal-d3">
+      <span class="dep-quote">"</span>
+      <p class="dep-text">Comprei um Onix usado e logo no primeiro mês o app identificou que a correia dentada estava no limite. Troquei por <em>R$420 antes de quebrar</em>. O mecânico disse que poderia ter virado R$5.000 de motor.</p>
+      <div class="dep-autor">
+        <div class="dep-avatar">CA</div>
+        <div>
+          <div class="dep-name">Carlos A.</div>
+          <div class="dep-info">Onix 2018 · Itaquera, SP</div>
+          <div class="dep-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="s-label reveal">Dúvidas comuns</div>
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,60px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:48px" class="reveal reveal-d1">
+    Respondendo as<br/>perguntas que você<br/><em style="font-style:normal;color:var(--amber)">está pensando.</em>
+  </h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">O plano é um seguro? Cobre quando o carro quebra?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Não é seguro. O PMP é um <strong>plano de manutenção preventiva</strong> — ele age antes da quebra, não depois. O objetivo é que você nunca chegue ao ponto de precisar de conserto caro. Diferente do seguro, você usa o plano todo mês, não só em emergências.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Meu carro já tem mais de 5 anos. Vale a pena?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Vale ainda mais. <strong>Carros mais velhos têm mais probabilidade de falha</strong> e as peças custam proporcionalmente mais por já estarem desgastadas. O PMP é mais eficiente como prevenção em veículos entre 3 e 10 anos de uso.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Posso usar qualquer oficina ou sou obrigado a ir nas do app?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Com o PMP você agenda nas <strong>mais de 500 oficinas verificadas</strong> da rede Officina App em São Paulo. A vantagem é que todas passaram por nossa verificação — endereço real, CNPJ ativo, histórico de avaliações. Você não precisa mais confiar em indicação de amigo ou review genérico do Google.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">E se eu quiser cancelar?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Cancele quando quiser, direto pelo app, sem ligar para ninguém. <strong>Sem fidelidade, sem multa</strong>. E se no primeiro mês você não sentir valor, devolvemos 100% do valor pago — sem perguntas.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Já tenho o carro na garantia da concessionária. Preciso do PMP?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        A garantia da concessionária cobre defeitos de fabricação — não cobre desgaste por uso ou falta de manutenção. <strong>O PMP cobre exatamente o que a garantia não cobre</strong>: óleo, filtros, correia, fluidos, freios. E você pode usar qualquer oficina verificada da rede, não só a concessionária.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">R$49,90 por mês parece caro para manutenção preventiva.</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Olha assim: <strong>uma troca de óleo avulsa em SP custa entre R$180 e R$320</strong>. Com o PMP Motor você faz 2 trocas por ano — já valeu R$360–R$640. Mais diagnóstico OBD (R$120–R$200 avulso). Mais verificação de correia. <strong>O plano se paga na primeira revisão.</strong> O resto do ano é lucro puro.
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="cta-grid-bg"></div>
+  <div class="cta-inner">
+    <div class="cta-pre">Plano de Manutenção Preventiva</div>
+    <h2 class="cta-title">
+      Seu carro está<br/>esperando.<br/><em>E o barulho vai chegar.</em>
+    </h2>
+    <p class="cta-sub">
+      A questão não é <strong>se</strong> vai precisar de manutenção.<br/>
+      É se você vai pagar R$49,90/mês agora<br/>
+      ou R$3.000+ quando for tarde demais.
+    </p>
+    <div class="cta-actions">
+      <a href="https://officinaapp.com.br" target="_blank" class="btn-cta-main">
+        Contratar agora por R$49,90/mês
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="#planos" class="btn-cta-sec">Ver todos os planos</a>
+    </div>
+    <div class="cta-guarantee">
+      <div class="cta-g-item"><span>✓</span> 30 dias de garantia</div>
+      <div class="cta-g-item"><span>✓</span> Cancele quando quiser</div>
+      <div class="cta-g-item"><span>✓</span> 500+ oficinas verificadas em SP</div>
+      <div class="cta-g-item"><span>✓</span> Sem fidelidade</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><img src="logo-amber.png" alt="Officina App"/></div>
+  <div class="footer-links">
+    <a href="site-officina.html">Sobre o app</a>
+    <a href="#faq">Dúvidas</a>
+    <a href="https://officinaapp.com.br" target="_blank">officinaapp.com.br</a>
+  </div>
+  <div class="footer-copy">© 2026 Officina App · Todos os direitos reservados</div>
+</footer>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar" id="stickyBar">
+  <div class="sticky-left">
+    <strong>PMP Motor — Plano de Manutenção Preventiva</strong>
+    <p>Proteja seu carro antes do barulho aparecer.</p>
+  </div>
+  <div class="sticky-right">
+    <div class="sticky-price">R$49<span>,90/mês</span></div>
+    <a href="#planos" class="btn-sticky">Ver planos →</a>
+  </div>
+</div>
+
+<script>
+// ── NAV SCROLL ──
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── STICKY BAR ──
+const stickyBar = document.getElementById('stickyBar');
+window.addEventListener('scroll', () => {
+  stickyBar.classList.toggle('show', window.scrollY > window.innerHeight * .7);
+});
+
+// ── REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, {threshold:.12});
+reveals.forEach(r => obs.observe(r));
+
+// ── FAQ ──
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+// ── CALCULADORA ──
+function calcular() {
+  const tipo = document.getElementById('cTipo').value;
+  const ano = document.getElementById('cAno').value;
+  const km = document.getElementById('cKm').value;
+  const rev = document.getElementById('cRev').value;
+
+  // Base risk %
+  let risk = 30;
+  const costs = { popular: 1400, sedan: 2200, suv: 2800, pickupLeve: 3200 };
+  let custo = costs[tipo] || 1400;
+
+  if(ano === 'old') { risk += 20; custo *= 1.3; }
+  else if(ano === 'older') { risk += 35; custo *= 1.6; }
+  else if(ano === 'mid') { risk += 10; custo *= 1.1; }
+
+  if(km === 'high') { risk += 15; custo *= 1.15; }
+  else if(km === 'xhigh') { risk += 25; custo *= 1.3; }
+
+  if(rev === 'late') { risk += 25; custo *= 1.25; }
+  else if(rev === 'never') { risk += 40; custo *= 1.5; }
+  else if(rev === 'ok') risk += 10;
+
+  risk = Math.min(risk, 96);
+  custo = Math.round(custo / 100) * 100;
+  const eco = Math.round((custo - 599) / 100) * 100;
+
+  document.getElementById('resRisco').textContent = risk + '%';
+  document.getElementById('resCusto').textContent = 'R$' + custo.toLocaleString('pt-BR');
+  document.getElementById('resEco').textContent = eco > 0 ? 'R$' + eco.toLocaleString('pt-BR') : 'Já coberto';
+
+  document.getElementById('calcResult').classList.add('show');
+}
+
+// Hero auto-reveal
+document.querySelectorAll('.hero .reveal').forEach((el, i) => {
+  setTimeout(() => el.classList.add('visible'), i * 120 + 200);
+});
+</script>
+</body>
+</html>
