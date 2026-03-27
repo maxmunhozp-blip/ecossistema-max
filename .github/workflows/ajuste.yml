@@ -38,7 +38,13 @@ jobs:
             echo "=========================="
 
             echo "=== Passo 1: Aplicando instrução ==="
-            /usr/bin/claude -p "$INSTRUCTION" --allowedTools "Edit,Write,Read,Bash,Glob,Grep" < /dev/null
+            CLAUDE_OUT=$(/usr/bin/claude -p "$INSTRUCTION" --allowedTools "Edit,Write,Read,Bash,Glob,Grep" < /dev/null 2>&1)
+            echo "$CLAUDE_OUT"
+            if echo "$CLAUDE_OUT" | grep -qi "credit balance\|not logged in\|authentication\|unauthorized"; then
+              echo "AUTH_FAILED=true" >> $GITHUB_ENV 2>/dev/null || export AUTH_FAILED=true
+              echo "=== ERRO: Claude sem autenticação ==="
+              exit 1
+            fi
 
             echo "=== Passo 2: Design review automático ==="
             REVIEW_PROMPT=$(cat clientes/officina-app/DESIGN_REVIEW.md)
@@ -65,9 +71,15 @@ jobs:
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           STATUS: ${{ job.status }}
           INSTRUCTION: ${{ github.event.inputs.instruction }}
+          AUTH_FAILED: ${{ env.AUTH_FAILED }}
         run: |
-          ICON=$([ "$STATUS" = "success" ] && echo "✅" || echo "❌")
           INSTR=$(printf '%s' "$INSTRUCTION" | head -c 80)
+          if [ "$STATUS" != "success" ] && [ "$AUTH_FAILED" = "true" ]; then
+            MSG="🔑 Lucas perdeu o login — autentique agora:%0A1. ssh root@76.13.172.151%0A2. claude%0A3. Abra o link e logue no Claude.ai%0A%0APedido que falhou: ${INSTR}"
+          else
+            ICON=$([ "$STATUS" = "success" ] && echo "✅" || echo "❌")
+            MSG="${ICON} Ajuste via chat: ${INSTR}"
+          fi
           curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
             -H "Content-Type: application/json" \
-            -d "{\"chat_id\":\"${CHAT_ID}\",\"text\":\"${ICON} Ajuste via chat: ${INSTR}\"}" || true
+            -d "{\"chat_id\":\"${CHAT_ID}\",\"text\":\"${MSG}\"}" || true

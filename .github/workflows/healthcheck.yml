@@ -1,0 +1,46 @@
+name: Healthcheck Lucas (semanal)
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # toda segunda-feira às 09h (UTC) = 06h BRT
+  workflow_dispatch:      # permite rodar manualmente se quiser testar
+
+jobs:
+  healthcheck:
+    name: Verifica auth do Claude no VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Testa Claude Code no VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 76.13.172.151
+          username: root
+          password: ${{ secrets.VPS_PASSWORD }}
+          command_timeout: 2m
+          script: |
+            export HOME=/root
+            OUT=$(/usr/bin/claude -p "responda apenas: ok" < /dev/null 2>&1)
+            echo "$OUT"
+            if echo "$OUT" | grep -qi "credit balance\|not logged in\|authentication\|unauthorized"; then
+              echo "AUTH_CHECK=failed" > /tmp/hc_result
+            else
+              echo "AUTH_CHECK=ok" > /tmp/hc_result
+            fi
+
+      - name: Lê resultado e notifica Telegram
+        if: always()
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          # Verifica se o step anterior falhou (exit code != 0 já indica auth problem)
+          if [ "${{ job.status }}" = "failure" ] || [ "${{ steps.*.outcome }}" = "failure" ]; then
+            MSG="🔑 ALERTA: Lucas perdeu o login no VPS!%0A%0AO que fazer:%0A1. ssh root@76.13.172.151%0A   Senha: ver secrets%0A2. claude%0A3. Abra o link e logue no Claude.ai%0A%0AHealthcheck automático — $(date '+%d/%m/%Y')"
+          else
+            MSG="✅ Lucas OK — autenticação verificada em $(date '+%d/%m/%Y')"
+          fi
+          curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\":\"${CHAT_ID}\",\"text\":\"${MSG}\"}" || true
