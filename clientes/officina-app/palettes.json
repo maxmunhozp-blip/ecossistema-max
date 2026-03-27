@@ -1,0 +1,65 @@
+{
+  "_info": "Paletas aprovadas para carrosséis Officina App. Adicione novas variações testadas aqui. O Lucas consulta este arquivo ao propor novos carrosséis.",
+  "_base": {
+    "teal": "#3DA9A5",
+    "amber": "#F5A623",
+    "bg": "#F0F7F7",
+    "surface": "#FFFFFF",
+    "text": "#1A2424",
+    "text-soft": "#6A8888"
+  },
+  "palettes": [
+    {
+      "id": "default",
+      "nome": "Officina Clássica",
+      "descricao": "Paleta padrão — teal claro, amber, fundo off-white",
+      "status": "ativo",
+      "slides": {
+        "capa": { "bg": "#FFFFFF", "texto": "#1A2424", "acento": "#3DA9A5", "logo": "logo-teal.png" },
+        "conteudo-claro": { "bg": "#FFFFFF", "texto": "#1A2424", "acento": "#3DA9A5", "logo": "logo-teal.png" },
+        "conteudo-destaque": { "bg": "#3DA9A5", "texto": "#FFFFFF", "acento": "#F5A623", "logo": "logo-amber.png" },
+        "dados": { "bg": "#F0F7F7", "texto": "#1A2424", "acento": "#3DA9A5", "logo": "logo-teal.png" },
+        "cta": { "bg": "#3DA9A5", "texto": "#FFFFFF", "acento": "#F5A623", "logo": "logo-amber.png" }
+      }
+    },
+    {
+      "id": "deep-teal",
+      "nome": "Officina Deep",
+      "descricao": "Variação escura com teal profundo #00494f — mais premium e impactante",
+      "status": "ativo",
+      "slides": {
+        "capa": { "bg": "#00494f", "texto": "#FFFFFF", "acento": "#F5A623", "logo": "logo-amber.png" },
+        "conteudo-claro": { "bg": "#FFFFFF", "texto": "#1A2424", "acento": "#00494f", "logo": "logo-teal.png" },
+        "conteudo-destaque": { "bg": "#00494f", "texto": "#FFFFFF", "acento": "#F5A623", "logo": "logo-amber.png" },
+        "dados": { "bg": "#F0F7F7", "texto": "#1A2424", "acento": "#00494f", "logo": "logo-teal.png" },
+        "cta": { "bg": "#00494f", "texto": "#FFFFFF", "acento": "#F5A623", "logo": "logo-amber.png" }
+      }
+    },
+    {
+      "id": "amber-hero",
+      "nome": "Officina Amber",
+      "descricao": "Capa em amber com texto escuro — chamativo para posts de estatística ou impacto",
+      "status": "proposta",
+      "slides": {
+        "capa": { "bg": "#F5A623", "texto": "#1A2424", "acento": "#1A2424", "logo": "logo-black.png" },
+        "conteudo-claro": { "bg": "#FFFFFF", "texto": "#1A2424", "acento": "#F5A623", "logo": "logo-teal.png" },
+        "conteudo-destaque": { "bg": "#3DA9A5", "texto": "#FFFFFF", "acento": "#F5A623", "logo": "logo-amber.png" },
+        "dados": { "bg": "#F0F7F7", "texto": "#1A2424", "acento": "#3DA9A5", "logo": "logo-teal.png" },
+        "cta": { "bg": "#3DA9A5", "texto": "#FFFFFF", "acento": "#F5A623", "logo": "logo-amber.png" }
+      }
+    },
+    {
+      "id": "dark-editorial",
+      "nome": "Officina Noturna",
+      "descricao": "Fundo escuro #1A2424 editorial — para conteúdo premium ou depoimentos",
+      "status": "proposta",
+      "slides": {
+        "capa": { "bg": "#1A2424", "texto": "#FFFFFF", "acento": "#3DA9A5", "logo": "logo-amber.png" },
+        "conteudo-claro": { "bg": "#1A2424", "texto": "#FFFFFF", "acento": "#3DA9A5", "logo": "logo-amber.png" },
+        "conteudo-destaque": { "bg": "#3DA9A5", "texto": "#FFFFFF", "acento": "#F5A623", "logo": "logo-amber.png" },
+        "dados": { "bg": "#212E2E", "texto": "#FFFFFF", "acento": "#F5A623", "logo": "logo-amber.png" },
+        "cta": { "bg": "#3DA9A5", "texto": "#FFFFFF", "acento": "#F5A623", "logo": "logo-amber.png" }
+      }
+    }
+  ]
+}
