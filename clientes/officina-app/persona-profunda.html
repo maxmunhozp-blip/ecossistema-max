@@ -2994,9 +2994,7 @@ function renderPosts() {
         <div class="post-thumb"><div class="post-thumb-frame">${localStorage.getItem('rs_cover_'+p.id)?`<img src="${localStorage.getItem('rs_cover_'+p.id)}" style="width:100%;height:100%;object-fit:cover;display:block"/>`:`<iframe class="post-thumb-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=0" scrolling="no" loading="lazy"></iframe>`}</div></div>
         <div class="post-info">
           <div class="post-title">${p.titulo}</div>
-          <div class="post-meta">
-${p.status==='proposta'?'<span style="font-size:10px;font-weight:600;color:var(--amber-dark);background:rgba(245,166,35,.12);padding:2px 7px;border-radius:4px">Proposta</span>':''}
-          </div>
+          <div class="post-meta"></div>
           ${creditsHtml}
         </div>
         <span class="post-slides-count">${p.slides} slides</span>
