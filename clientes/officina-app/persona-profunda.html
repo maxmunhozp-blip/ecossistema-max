@@ -3001,11 +3001,23 @@ ${p.status==='proposta'?'<span style="font-size:10px;font-weight:600;color:var(-
           ${creditsHtml}
         </div>
         <span class="post-slides-count">${p.slides} slides</span>
+        <button onclick="event.stopPropagation();rs2DeletePost('${p.id}')" title="Deletar post" style="width:28px;height:28px;border-radius:7px;border:none;background:transparent;color:var(--text4);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s" onmouseover="this.style.background='rgba(224,82,82,.1)';this.style.color='var(--red)'" onmouseout="this.style.background='transparent';this.style.color='var(--text4)'"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
         <div class="post-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
       </div>
       <div class="post-slides-wrap">${slidesHtml}${textoHtml}</div>
     </div>`;
   }).join('');
+}
+
+function rs2DeletePost(postId) {
+  const p = RS2_POSTS.find(x => x.id === postId);
+  if(!p) return;
+  if(!confirm(`Deletar "${p.titulo}"?`)) return;
+  const idx = RS2_POSTS.indexOf(p);
+  RS2_POSTS.splice(idx, 1);
+  localStorage.removeItem('rs_cover_' + postId);
+  if(rs2OpenPost === postId) rs2OpenPost = null;
+  renderPosts();
 }
 
 function rs2SetCover(postId, input) {
