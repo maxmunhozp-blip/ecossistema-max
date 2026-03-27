@@ -66,6 +66,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .content{max-width:1200px;margin:0 auto;padding:32px 28px}
 .section{display:none}.section.active{display:block;animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes rs2Spin{to{transform:rotate(360deg)}}
+.rs2-refresh-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;background:var(--surface2);border:1.5px solid var(--border);cursor:pointer;transition:.15s;color:var(--text3);flex-shrink:0}
+.rs2-refresh-btn:hover{border-color:var(--teal);color:var(--teal);background:rgba(61,169,165,.06)}
+.rs2-refresh-btn.spinning svg{animation:rs2Spin .7s linear infinite}
+.rs2-refresh-btn.done{border-color:var(--green);color:var(--green)}
 
 /* ── HERO PERSONA ── */
 .hero-card{background:linear-gradient(135deg,var(--teal) 0%,var(--teal-dark) 100%);border-radius:20px;padding:36px;margin-bottom:28px;color:#fff;position:relative;overflow:hidden}
@@ -2948,7 +2953,7 @@ function renderPosts() {
           ${uploadBtn}
         </div>`;
       }).join('');
-      slidesHtml = `<div class="post-slides-inner"><div class="slides-row-label" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span>Slides</span><a href="carrosseis-officina.html" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:7px;background:var(--teal);color:#fff;font-size:11px;font-weight:600;text-decoration:none;font-family:'Inter',sans-serif;letter-spacing:.1px"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Baixar slides</a></div><div class="slides-row">${cards}</div></div>`;
+      slidesHtml = `<div class="post-slides-inner"><div class="slides-row-label" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span>Slides</span><div style="display:flex;align-items:center;gap:7px"><button class="rs2-refresh-btn" onclick="event.stopPropagation();rs2RefreshSlides('${p.id}',this)" title="Atualizar slides"><svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button><a href="carrosseis-officina.html" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:7px;background:var(--teal);color:#fff;font-size:11px;font-weight:600;text-decoration:none;font-family:'Inter',sans-serif;letter-spacing:.1px"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Baixar slides</a></div></div><div class="slides-row">${cards}</div></div>`;
       const ta = p.textoApoio||{};
       textoHtml = `<div class="post-texto-section">
         <div class="post-texto-head">Legenda</div>
@@ -2993,6 +2998,22 @@ function rs2SetCover(postId, input) {
     renderPosts();
   };
   reader.readAsDataURL(file);
+}
+
+function rs2RefreshSlides(postId, btn) {
+  btn.classList.add('spinning');
+  btn.classList.remove('done');
+  const post = document.getElementById('pi-' + postId);
+  const t = Date.now();
+  post.querySelectorAll('iframe').forEach(ifr => {
+    const clean = ifr.src.replace(/&t=\d+/, '');
+    ifr.src = clean + '&t=' + t;
+  });
+  setTimeout(() => {
+    btn.classList.remove('spinning');
+    btn.classList.add('done');
+    setTimeout(() => btn.classList.remove('done'), 1500);
+  }, 900);
 }
 
 function rs2Toggle(id) {
@@ -3315,9 +3336,9 @@ async function dhTriggerAction(action) {
     return;
   }
 
-  // Mensagem inicial — sem "Dev", linguagem natural
   dhAppendAgentMsg('já mandei pro time de criação... aguarda aí');
 
+  // Dispatch workflow
   try {
     const resp = await fetch(
       'https://api.github.com/repos/maxmunhozp-blip/ecossistema-max/actions/workflows/ajuste.yml/dispatches',
@@ -3335,31 +3356,122 @@ async function dhTriggerAction(action) {
     return;
   }
 
-  // Countdown com mensagens periódicas do Lucas acompanhando
-  const updates = [
-    {t: 15, msg: 'tá processando... uns 60s no total'},
-    {t: 30, msg: 'ainda aqui, acompanhando'},
-    {t: 45, msg: 'quase lá...'},
-    {t: 65, msg: 'pronto — dá um F5 pra ver a mudança no ar'},
-  ];
+  // Aguarda 3s para o run ser criado no GitHub
+  await new Promise(r => setTimeout(r, 3000));
 
-  // Elemento de countdown na última mensagem
-  const countdownId = 'dh-cd-' + Date.now();
-  dhAppendAgentMsg(`<span id="${countdownId}" style="color:var(--text3);font-size:11px">⏱ 0s</span>`);
-  const start = Date.now();
-  const ticker = setInterval(() => {
-    const el = document.getElementById(countdownId);
-    if(el) el.textContent = `⏱ ${Math.floor((Date.now()-start)/1000)}s`;
-  }, 1000);
+  // Busca o run ID mais recente
+  let runId = null;
+  try {
+    const runsResp = await fetch(
+      'https://api.github.com/repos/maxmunhozp-blip/ecossistema-max/actions/workflows/ajuste.yml/runs?per_page=1&branch=main',
+      {headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json'}}
+    );
+    const runsData = await runsResp.json();
+    runId = runsData.workflow_runs?.[0]?.id || null;
+  } catch(e) {}
 
-  for(const {t, msg} of updates) {
-    await new Promise(r => setTimeout(r, t * 1000));
-    dhAppendAgentMsg(msg);
+  // Progress bar no chat
+  const pid = 'dh-prog-' + Date.now();
+  dhAppendAgentMsg(
+    `<div id="${pid}" style="min-width:200px">` +
+      `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">` +
+        `<span id="${pid}-lbl" style="font-size:11px;color:var(--text3)">iniciando...</span>` +
+        `<span id="${pid}-pct" style="font-size:11px;font-weight:700;color:var(--teal)">0%</span>` +
+      `</div>` +
+      `<div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden">` +
+        `<div id="${pid}-bar" style="height:100%;width:0%;background:var(--teal);border-radius:3px;transition:width .6s ease"></div>` +
+      `</div>` +
+    `</div>`
+  );
+
+  const setProgress = (pct, label, color) => {
+    const bar = document.getElementById(pid+'-bar');
+    const lbl = document.getElementById(pid+'-lbl');
+    const pctEl = document.getElementById(pid+'-pct');
+    if(bar){ bar.style.width = pct+'%'; if(color) bar.style.background = color; }
+    if(lbl) lbl.textContent = label;
+    if(pctEl){ pctEl.textContent = pct+'%'; if(color) pctEl.style.color = color; }
+  };
+
+  const removeProgress = () => {
+    const el = document.getElementById(pid);
+    if(el) el.closest('.dh-bbl')?.remove();
+  };
+
+  setProgress(8, 'na fila...');
+
+  if(!runId) {
+    // Fallback sem run ID: progresso simulado
+    setProgress(15, 'processando...');
+    setTimeout(() => setProgress(45, 'claude code trabalhando...'), 20000);
+    setTimeout(() => setProgress(75, 'aplicando alterações...'), 45000);
+    setTimeout(() => {
+      setProgress(100, 'pronto!');
+      setTimeout(() => { removeProgress(); dhAppendAgentMsg('feito — atualiza a área dos slides pra ver'); }, 1200);
+    }, 70000);
+    return;
   }
 
-  clearInterval(ticker);
-  const el = document.getElementById(countdownId);
-  if(el) el.closest('.dh-bbl')?.remove();
+  // Polling real a cada 5s
+  const startTime = Date.now();
+  let fakeInProgress = 20;
+
+  const LABELS_IN_PROGRESS = [
+    [0,  'conectando ao servidor...'],
+    [15, 'claude code lendo os arquivos...'],
+    [30, 'aplicando as alterações...'],
+    [50, 'fazendo commit e push...'],
+    [65, 'sincronizando com o servidor...'],
+  ];
+
+  const pollRun = async () => {
+    try {
+      const r = await fetch(
+        `https://api.github.com/repos/maxmunhozp-blip/ecossistema-max/actions/runs/${runId}`,
+        {headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json'}}
+      );
+      const data = await r.json();
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+
+      if(data.status === 'queued') {
+        setProgress(8, 'na fila...');
+        return false;
+      }
+
+      if(data.status === 'in_progress') {
+        fakeInProgress = Math.min(88, 20 + Math.floor(elapsed / 90 * 68));
+        const lbl = [...LABELS_IN_PROGRESS].reverse().find(([t]) => elapsed >= t)?.[1] || 'processando...';
+        setProgress(fakeInProgress, lbl);
+        return false;
+      }
+
+      if(data.status === 'completed') {
+        if(data.conclusion === 'success') {
+          setProgress(100, 'pronto!');
+          setTimeout(() => {
+            removeProgress();
+            dhAppendAgentMsg('feito — clica no botão de atualizar nos slides pra ver as mudanças');
+          }, 1200);
+        } else {
+          setProgress(fakeInProgress, `falhou (${data.conclusion})`, 'var(--red)');
+          dhAppendAgentMsg(`deu erro no servidor (${data.conclusion}) — confere no GitHub Actions`);
+        }
+        return true;
+      }
+    } catch(e) {}
+    return false;
+  };
+
+  const timer = setInterval(async () => {
+    const done = await pollRun();
+    if(done) clearInterval(timer);
+  }, 5000);
+
+  // Safety: para de pollar após 10 minutos
+  setTimeout(() => {
+    clearInterval(timer);
+    setProgress(0, 'timeout', 'var(--text4)');
+  }, 600000);
 }
 
 async function dhEnviar() {
