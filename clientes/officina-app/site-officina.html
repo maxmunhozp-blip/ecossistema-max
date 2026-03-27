@@ -188,6 +188,19 @@ footer{background:var(--teal-dark);padding:60px 5% 40px}
 .social-btn:hover{background:rgba(255,255,255,.14)}
 .social-btn svg{width:16px;height:16px;stroke:rgba(255,255,255,.6);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
+/* ── PMP BANNER ── */
+.pmp-banner{background:var(--teal-dark);padding:0 5%;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:80px;border-bottom:2px solid rgba(245,166,35,.3)}
+.pmp-banner-left{display:flex;align-items:center;gap:20px}
+.pmp-pill{background:var(--amber);color:#1A2424;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.pmp-banner-text strong{font-size:15px;font-weight:700;color:var(--white);display:block}
+.pmp-banner-text span{font-size:13px;color:rgba(255,255,255,.55)}
+.pmp-banner-right{display:flex;align-items:center;gap:24px;flex-shrink:0}
+.pmp-price{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--amber);line-height:1}
+.pmp-price small{font-size:14px;font-weight:400;color:rgba(255,255,255,.4);font-family:'Plus Jakarta Sans',sans-serif}
+.btn-pmp{background:var(--amber);color:#1A2424;font-weight:700;font-size:14px;padding:12px 28px;border-radius:6px;text-decoration:none;white-space:nowrap;transition:.2s;display:inline-block}
+.btn-pmp:hover{background:var(--amber-dark);transform:translateY(-1px);box-shadow:0 6px 20px rgba(245,166,35,.3)}
+@media(max-width:700px){.pmp-price{display:none}.pmp-banner{flex-wrap:wrap;padding:16px 5%;gap:12px}}
+
 /* ── CONFIANCA BAR ── */
 .confianca{padding:32px 5%;background:var(--white);border-bottom:1px solid rgba(61,169,165,.1)}
 .confianca-inner{display:flex;align-items:center;gap:48px;justify-content:center;flex-wrap:wrap}
@@ -264,6 +277,21 @@ footer{background:var(--teal-dark);padding:60px 5% 40px}
     </div>
   </div>
 </section>
+
+<!-- PMP BANNER — SEGUNDA DOBRA -->
+<div class="pmp-banner">
+  <div class="pmp-banner-left">
+    <span class="pmp-pill">Novo</span>
+    <div class="pmp-banner-text">
+      <strong>Plano de Manutenção Preventiva — Motor protegido o ano todo</strong>
+      <span>Antes de quebrar. Antes de virar conserto de R$3.000.</span>
+    </div>
+  </div>
+  <div class="pmp-banner-right">
+    <div class="pmp-price">R$49<small>,90/mês</small></div>
+    <a href="lp-pmp.html" class="btn-pmp">Ver o plano →</a>
+  </div>
+</div>
 
 <!-- CONFIANÇA BAR -->
 <div class="confianca">
@@ -509,6 +537,7 @@ footer{background:var(--teal-dark);padding:60px 5% 40px}
       <h5>Produto</h5>
       <a href="#como">Como funciona</a>
       <a href="#planos">Planos PMP</a>
+      <a href="lp-pmp.html">Manutenção Preventiva</a>
       <a href="#depoimentos">Depoimentos</a>
     </div>
     <div class="footer-col">
