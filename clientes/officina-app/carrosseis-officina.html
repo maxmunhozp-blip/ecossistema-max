@@ -148,6 +148,46 @@ body{font-family:'Inter',sans-serif;background:transparent;color:var(--text);min
 .gen-log{font-size:10px;color:rgba(255,255,255,.3);font-style:italic;min-height:18px;text-align:center}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ══ PAINEL DE ESTILOS ══ */
+#stylesBtn{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;background:rgba(26,36,36,.85);border:1.5px solid rgba(61,169,165,.35);color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;backdrop-filter:blur(10px);transition:.2s;letter-spacing:.2px}
+#stylesBtn:hover{border-color:var(--teal);background:rgba(26,36,36,.95)}
+#stylesBtn svg{width:14px;height:14px;stroke:var(--teal);fill:none;stroke-width:2;stroke-linecap:round}
+#stylesPanel{position:fixed;inset:0;z-index:400;display:none;align-items:flex-end;justify-content:center;padding-bottom:0}
+#stylesPanel.open{display:flex}
+#stylesPanelBg{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
+#stylesPanelInner{position:relative;width:100%;max-width:900px;max-height:88vh;background:#0e1a1a;border-radius:20px 20px 0 0;border:1.5px solid rgba(61,169,165,.2);border-bottom:none;overflow-y:auto;font-family:'Inter',sans-serif}
+.sp-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sp-title{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px}
+.sp-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:2px}
+.sp-close{background:rgba(255,255,255,.08);border:none;color:#fff;cursor:pointer;width:30px;height:30px;border-radius:8px;font-size:16px;display:flex;align-items:center;justify-content:center}
+.sp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;padding:20px 24px}
+.sp-card{border-radius:12px;border:1.5px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);cursor:pointer;transition:.15s;overflow:hidden}
+.sp-card:hover{border-color:rgba(61,169,165,.45);background:rgba(61,169,165,.06)}
+.sp-card.active{border-color:var(--teal);background:rgba(61,169,165,.1)}
+.sp-seq{display:flex;height:40px;width:100%}
+.sp-seq-block{flex:1;height:100%}
+.sp-card-body{padding:10px 12px 12px}
+.sp-card-name{font-size:12px;font-weight:800;color:#fff;margin-bottom:3px}
+.sp-card-when{font-size:10px;color:rgba(255,255,255,.4);line-height:1.4}
+.sp-detail{padding:0 24px 24px;display:none}
+.sp-detail.open{display:block}
+.sp-detail-head{font-size:11px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.sp-rules{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.sp-rule{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 12px}
+.sp-rule-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.sp-rule-val{font-size:12px;font-weight:600;color:#fff}
+.sp-seq-full{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.sp-seq-pill{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.3px}
+.sp-copy-btn{width:100%;padding:10px;border-radius:8px;background:var(--teal);border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s}
+.sp-copy-btn:hover{background:var(--teal-d)}
+.sp-copy-btn.copied{background:rgba(61,169,165,.3);color:var(--teal)}
+.sp-rhythm{padding:16px 24px 20px;border-top:1px solid rgba(255,255,255,.07);margin-top:4px}
+.sp-rhythm-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.sp-rhythm-row{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.sp-rhythm-n{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);width:50px;flex-shrink:0}
+.sp-rhythm-seq{display:flex;gap:4px;flex:1}
+.sp-rblock{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:rgba(255,255,255,.7);flex-shrink:0}
+
 /* ══ DESIGN THEMES — rotacionam a cada 3 posts ══ */
 .theme-b .s-title{font-weight:900;letter-spacing:-3px;line-height:1.0}
 .theme-b .s-title-lg{font-weight:900;letter-spacing:-5px;line-height:.92}
@@ -194,6 +234,38 @@ body{font-family:'Inter',sans-serif;background:transparent;color:var(--text);min
   <div class="thumbs-grid" id="thumbsGrid"></div>
 </div>
 
+
+<!-- BOTÃO ESTILOS -->
+<button id="stylesBtn" onclick="toggleStyles()">
+  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  Estilos
+</button>
+
+<!-- PAINEL DE ESTILOS -->
+<div id="stylesPanel">
+  <div id="stylesPanelBg" onclick="toggleStyles()"></div>
+  <div id="stylesPanelInner">
+    <div class="sp-head">
+      <div>
+        <div class="sp-title">Estilos de Carrossel</div>
+        <div class="sp-sub">Escolha o estilo antes de pedir pro Lucas gerar</div>
+      </div>
+      <button class="sp-close" onclick="toggleStyles()">✕</button>
+    </div>
+    <div class="sp-grid" id="spGrid"></div>
+    <div class="sp-detail" id="spDetail">
+      <div class="sp-detail-head" id="spDetailName"></div>
+      <div class="sp-rules" id="spRules"></div>
+      <div style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Sequência de fundos</div>
+      <div class="sp-seq-full" id="spSeqFull"></div>
+      <button class="sp-copy-btn" id="spCopyBtn" onclick="spCopyInstrucao()">Copiar instrução pra Lucas</button>
+    </div>
+    <div class="sp-rhythm">
+      <div class="sp-rhythm-title">Regra de ritmo — nunca 3 do mesmo peso visual seguidos</div>
+      <div id="spRhythm"></div>
+    </div>
+  </div>
+</div>
 
 <!-- LIGHTBOX -->
 <input type="file" id="coverInput" accept="image/*" style="display:none" onchange="applyCoverUpload(this)"/>
@@ -1218,6 +1290,176 @@ if(!_singleMode && _urlP.get('p') !== null && _urlP.get('export') !== '1') {
 }
 
 // Init: select first template
+
+// ── Painel de Estilos ────────────────────────────────────────────────────────
+const SP_COLORS = {
+  escuro:  { bg:'#1A2424', label:'Escuro',  pill:'background:#1A2424;color:rgba(255,255,255,.7)' },
+  teal:    { bg:'#3DA9A5', label:'Teal',    pill:'background:#3DA9A5;color:#fff' },
+  branco:  { bg:'#FFFFFF', label:'Branco',  pill:'background:#fff;color:#1A2424;border:1px solid #e2eeee' },
+  claro:   { bg:'#F0F7F7', label:'Claro',   pill:'background:#F0F7F7;color:#3A5050;border:1px solid #e2eeee' },
+  amber:   { bg:'#F5A623', label:'Amber',   pill:'background:#F5A623;color:#1A2424' },
+};
+
+const SP_STYLES = [
+  {
+    id: 'padrao',
+    nome: 'Padrão',
+    quando: 'Conteúdo diário, dicas, educativo',
+    capa: 'teal',
+    tipografia: 'Inter normal, peso 800 nos títulos',
+    tag: '.s-tag.teal em fundos claros / .s-tag.white em fundos escuros',
+    cta: '.s-cta.teal no fechamento claro / .s-cta.amber no fechamento escuro',
+    seq5:  ['teal','branco','claro','branco','escuro'],
+    seq6:  ['teal','branco','claro','teal','branco','escuro'],
+    seq7:  ['teal','branco','claro','branco','teal','claro','escuro'],
+    seq8:  ['teal','branco','claro','teal','branco','claro','branco','escuro'],
+    instrucao: 'Use o **Estilo Padrão**.\nCapa: fundo teal.\nTipografia: Inter normal, títulos em .s-title ou .s-title-lg peso 800.\nTags: .s-tag.teal em fundos claros, .s-tag.white em fundos escuros.\nCTA final: .s-cta.amber com fundo escuro (#1A2424).\nSiga a sequência de fundos: Teal → Branco → Claro → Branco → Escuro (adapte para mais ou menos cards).\nNunca dois fundos claro/branco seguidos sem um escuro ou teal entre eles.'
+  },
+  {
+    id: 'editorial',
+    nome: 'Editorial',
+    quando: 'Depoimento, caso real, narrativa',
+    capa: 'teal',
+    tipografia: 'Títulos em itálico, corpo em peso 400 com line-height 1.65',
+    tag: '.s-tag.white na capa / .s-tag.teal no conteúdo',
+    cta: '.s-cta.teal com moldura sutil (border ao redor do slide)',
+    seq4:  ['teal','branco','claro','branco'],
+    seq5:  ['teal','branco','claro','branco','branco'],
+    seq6:  ['teal','branco','claro','branco','claro','branco'],
+    instrucao: 'Use o **Estilo Editorial**.\nCapa: fundo teal, título âncora na parte inferior do slide (justify-content:space-between).\nCard de depoimento: fundo branco, aspas gigantes decorativas (font-size:280px, opacity:.08), texto em itálico, nome e cargo abaixo da linha teal.\nCard de comparação: fundo claro (--bg), tabela lado a lado com divisor vertical, valores em .s-num.\nCTA: fundo branco com moldura border:3px solid var(--teal), border-radius:28px posicionado absolute inset:40px.\nCorpo do texto: font-style:italic, max-width:900px para respirar.\nSempre deixar espaço nas laterais — nunca encostar texto na borda.'
+  },
+  {
+    id: 'dados',
+    nome: 'Dados',
+    quando: 'Estatística, pesquisa, comparação numérica',
+    capa: 'branco',
+    tipografia: '.s-num como elemento hero, peso 900',
+    tag: '.s-tag.dark na capa / .s-tag.teal nos dados',
+    cta: '.s-cta.teal em fundo claro ou escuro',
+    seq5:  ['branco','claro','branco','claro','escuro'],
+    seq6:  ['branco','claro','teal','branco','claro','escuro'],
+    seq7:  ['branco','claro','teal','branco','claro','branco','escuro'],
+    seq8:  ['branco','claro','teal','branco','claro','teal','branco','escuro'],
+    instrucao: 'Use o **Estilo Dados**.\nCapa: fundo branco, número grande (.s-num) como elemento visual principal — pode cortar pela borda direita com position:absolute para efeito moderno.\nCards de dados: alternar fundo claro (--bg) e branco — nunca dois brancos puros seguidos.\nCard teal: reservar para o insight mais importante (a conclusão do dado).\nTabelas comparativas: usar divider vertical (width:2px, background:var(--border)) para separar colunas.\nValores em destaque: usar .s-num com color:var(--teal) para positivo, opacidade baixa para elemento fantasma decorativo.\nCTA: fundo escuro (#1A2424) com .s-cta.amber para contraste máximo.'
+  },
+  {
+    id: 'impacto',
+    nome: 'Impacto',
+    quando: 'Hook forte, mensagem direta, viral',
+    capa: 'escuro',
+    tipografia: '.s-title-lg peso 900, all-caps no subtítulo, .s-tag.white',
+    tag: '.s-tag.white em todos os fundos escuros / .s-tag.amber para alerta',
+    cta: '.s-cta.amber sempre',
+    seq5:  ['escuro','branco','escuro','claro','escuro'],
+    seq6:  ['escuro','branco','teal','branco','claro','escuro'],
+    seq7:  ['escuro','branco','teal','branco','teal','branco','escuro'],
+    seq8:  ['escuro','branco','teal','escuro','branco','teal','branco','escuro'],
+    instrucao: 'Use o **Estilo Impacto**.\nCapa: fundo preto (#1A2424), título em .s-title-lg peso 900, subtítulo em all-caps letra-espaçada (text-transform:uppercase, letter-spacing:.5px, color:rgba(255,255,255,.55)).\nAlternar entre fundos escuros e claros a cada card — o contraste abrupto cria impacto visual.\nNunca dois fundos escuros seguidos (exceto capa + CTA).\nTexto nos fundos escuros: sempre #fff ou rgba(255,255,255,0.85) — nunca herdar cor.\nDestaques de palavra: usar <span style="color:var(--amber)"> dentro do título.\nCTA: sempre .s-cta.amber, fundo #1A2424, domínio em rgba(255,255,255,.35).'
+  },
+  {
+    id: 'comparacao',
+    nome: 'Comparação',
+    quando: 'Antes vs depois, jeito antigo vs novo',
+    capa: 'escuro',
+    tipografia: '.s-tag.dark para "antes" / .s-tag.white para "depois"',
+    tag: '.s-tag.dark = problema / .s-tag.white = solução',
+    cta: '.s-cta.teal em fundo amber',
+    seq6:  ['escuro','claro','teal','claro','teal','amber'],
+    seq7:  ['escuro','claro','teal','claro','teal','claro','amber'],
+    seq8:  ['escuro','claro','teal','claro','teal','claro','teal','amber'],
+    instrucao: 'Use o **Estilo Comparação**.\nCapa: fundo escuro (#1A2424), título direto: "X vs Y" ou "O Jeito Antigo vs O Jeito Officina".\nCards alternados obrigatoriamente: fundo claro (--bg) para o lado negativo, fundo teal para o lado positivo.\nTag do lado negativo: .s-tag.dark com texto "O JEITO ANTIGO" ou equivalente.\nTag do lado positivo: .s-tag.white com texto "O JEITO OFFICINA".\nTítulo do lado positivo: sempre color:#fff explícito.\nCorpo do lado positivo: color:rgba(255,255,255,0.85).\nCTA final: fundo amber (--amber), .s-cta.teal para contraste, domínio em rgba(26,36,36,.45).'
+  }
+];
+
+let _spActive = null;
+
+function toggleStyles() {
+  const panel = document.getElementById('stylesPanel');
+  const isOpen = panel.classList.contains('open');
+  if(!isOpen) { _buildStylesPanel(); }
+  panel.classList.toggle('open', !isOpen);
+}
+
+function _buildStylesPanel() {
+  const grid = document.getElementById('spGrid');
+  if(grid.children.length > 0) return; // já construído
+
+  SP_STYLES.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'sp-card' + (_spActive === s.id ? ' active' : '');
+    card.onclick = () => spSelect(s.id);
+
+    // sequência de cor (usa seq5 ou a menor disponível)
+    const seqKey = Object.keys(s).find(k => k.startsWith('seq')) || 'seq5';
+    const seq = s[seqKey];
+    const seqHtml = seq.map(c => `<div class="sp-seq-block" style="background:${SP_COLORS[c].bg}"></div>`).join('');
+
+    card.innerHTML = `
+      <div class="sp-seq">${seqHtml}</div>
+      <div class="sp-card-body">
+        <div class="sp-card-name">${s.nome}</div>
+        <div class="sp-card-when">${s.quando}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  // Ritmo
+  const rhythmEl = document.getElementById('spRhythm');
+  const seqExamples = [
+    {n:'4 cards', seq:['teal','branco','claro','escuro']},
+    {n:'5 cards', seq:['teal','branco','claro','branco','escuro']},
+    {n:'6 cards', seq:['escuro','branco','teal','claro','branco','escuro']},
+    {n:'8 cards', seq:['escuro','branco','claro','teal','branco','claro','branco','escuro']},
+  ];
+  seqExamples.forEach(ex => {
+    const row = document.createElement('div');
+    row.className = 'sp-rhythm-row';
+    const blocks = ex.seq.map(c => {
+      const abbr = {escuro:'E',teal:'T',branco:'B',claro:'C',amber:'A'}[c];
+      return `<div class="sp-rblock" style="background:${SP_COLORS[c].bg};${c==='branco'||c==='claro'?'color:#6A8888':'color:rgba(255,255,255,.8)'}">${abbr}</div>`;
+    }).join('');
+    row.innerHTML = `<div class="sp-rhythm-n">${ex.n}</div><div class="sp-rhythm-seq">${blocks}</div>`;
+    rhythmEl.appendChild(row);
+  });
+}
+
+function spSelect(id) {
+  _spActive = id;
+  document.querySelectorAll('.sp-card').forEach((c,i) => c.classList.toggle('active', SP_STYLES[i].id === id));
+  const s = SP_STYLES.find(x => x.id === id);
+  const detail = document.getElementById('spDetail');
+  detail.classList.add('open');
+  document.getElementById('spDetailName').textContent = s.nome.toUpperCase() + ' — ' + s.quando;
+
+  const rules = document.getElementById('spRules');
+  rules.innerHTML = [
+    {l:'Capa', v: SP_COLORS[s.capa].label},
+    {l:'Tipografia', v: s.tipografia},
+    {l:'Tags', v: s.tag},
+    {l:'CTA', v: s.cta},
+  ].map(r => `<div class="sp-rule"><div class="sp-rule-label">${r.l}</div><div class="sp-rule-val">${r.v}</div></div>`).join('');
+
+  // sequência maior disponível
+  const seqKey = [...Object.keys(s)].filter(k=>k.startsWith('seq')).pop();
+  const seq = s[seqKey];
+  const seqEl = document.getElementById('spSeqFull');
+  seqEl.innerHTML = seq.map((c,i) => `<div class="sp-seq-pill" style="${SP_COLORS[c].pill}">Card ${i+1}: ${SP_COLORS[c].label}</div>`).join(
+    '<span style="color:rgba(255,255,255,.2);font-size:14px">→</span>');
+
+  document.getElementById('spCopyBtn').classList.remove('copied');
+  document.getElementById('spCopyBtn').textContent = 'Copiar instrução pra Lucas';
+}
+
+function spCopyInstrucao() {
+  if(!_spActive) return;
+  const s = SP_STYLES.find(x => x.id === _spActive);
+  navigator.clipboard.writeText(s.instrucao).then(() => {
+    const btn = document.getElementById('spCopyBtn');
+    btn.textContent = 'Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar instrução pra Lucas'; btn.classList.remove('copied'); }, 2000);
+  });
+}
 
 </script>
 </body>
