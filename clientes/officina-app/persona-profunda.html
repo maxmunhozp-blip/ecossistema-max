@@ -466,8 +466,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .slide-card-brand{position:absolute;bottom:3px;right:4px;font-size:7px;font-weight:900;color:var(--teal);opacity:.4;letter-spacing:.1px;pointer-events:none;z-index:2;line-height:1}
 /* ── Créditos de equipe por post ── */
 .post-credits{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap}
-.post-credit-item{font-size:10px;color:var(--text4);white-space:nowrap}
-.post-credit-sep{width:2px;height:2px;border-radius:50%;background:var(--border);flex-shrink:0}
+.post-credit-item{font-size:10px;color:var(--text4);white-space:nowrap;opacity:.45}
+.post-credit-sep{width:2px;height:2px;border-radius:50%;background:var(--border);flex-shrink:0;opacity:.45}
 /* ── Status proposta ── */
 .pst.proposta{color:var(--amber-dark)}
 /* ── Proposta de texto (DH) ── */
@@ -1739,8 +1739,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
         </div>
       </div>
       <div class="dh-input-area">
+        <div id="dhImgPreview" style="display:none;margin-bottom:6px;position:relative;width:fit-content">
+          <img id="dhImgThumb" style="height:56px;border-radius:6px;border:1.5px solid var(--teal);display:block"/>
+          <button onclick="dhRemoveImg()" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--text);color:#fff;border:none;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1">✕</button>
+        </div>
         <div class="dh-input-row">
-          <textarea class="dh-ta" id="dhInput" placeholder="Pedir alteração ou novo post..." rows="1"
+          <label title="Enviar imagem" style="width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--text3);transition:.15s" onmouseover="this.style.borderColor='var(--teal)';this.style.color='var(--teal)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text3)'">
+            <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <input type="file" accept="image/*" style="display:none" onchange="dhLoadImg(this)"/>
+          </label>
+          <textarea class="dh-ta" id="dhInput" placeholder="Pedir alteração, enviar imagem de referência..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();dhEnviar()}"></textarea>
           <button class="dh-send" id="dhSendBtn" onclick="dhEnviar()">
             <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
@@ -2897,10 +2905,13 @@ function rs2Init() {
   RS2_POSTS.forEach(p => {
     if(localStorage.getItem('rs_approved_'+p.id) && p.status==='proposta') p.status='criado';
   });
-  // Sort: non-proposta first (most recently created), propostas last
+  // Tag each post with original insertion index before sorting
+  RS2_POSTS.forEach((p,i) => { if(p._origIdx === undefined) p._origIdx = i; });
+  // Sort: propostas last; within non-proposta, newest (higher _origIdx) first
   RS2_POSTS.sort((a,b)=>{
     const ap=a.status==='proposta', bp=b.status==='proposta';
-    if(ap&&!bp) return 1; if(!ap&&bp) return -1; return 0;
+    if(ap&&!bp) return 1; if(!ap&&bp) return -1;
+    return b._origIdx - a._origIdx;
   });
   renderPosts();
   renderDhHistory();
@@ -3260,6 +3271,18 @@ function dhClearSession() {
   }
 }
 
+// ── Cache do arquivo de aprendizados do Lucas ─────────────────────────────
+let _dhAprendizados = '';
+async function _dhFetchAprendizados() {
+  const gh = cfgGet('officina_gh_token');
+  if(!gh || _dhAprendizados) return;
+  try {
+    const r = await fetch('https://api.github.com/repos/maxmunhozp-blip/ecossistema-max/contents/clientes/officina-app/lucas-aprendizados.md',
+      {headers:{Authorization:'token '+gh, Accept:'application/vnd.github.v3.raw'}});
+    if(r.ok) _dhAprendizados = await r.text();
+  } catch(e) {}
+}
+
 function dhBuildSystemPrompt() {
   const postsCtx = RS2_POSTS.map((p,i)=>
     `Post ${i+1} — id="${p.id}" postIdx=${p.postIdx}: "${p.titulo}" | ${p.slides} slides | ${p.status}`
@@ -3339,7 +3362,7 @@ Quando o usuário pedir criação ou edição de slides, inclua EXATAMENTE ao fi
 ---ACTION:{"instruction":"INSTRUÇÃO COMPLETA E DETALHADA PARA CLAUDE CODE"}
 
 A instrução dentro do JSON deve ser autocontida — o Claude Code vai executar sem ver essa conversa.
-Se não houver ação de código, NÃO inclua ---ACTION.`;
+Se não houver ação de código, NÃO inclua ---ACTION.${_dhAprendizados ? '\n\n' + _dhAprendizados : ''}`;
 }
 
 // ── Config storage — cookie cross-subdomain + localStorage fallback ──────
@@ -3550,18 +3573,64 @@ async function dhTriggerAction(action) {
   }, 600000);
 }
 
+// ── Imagem no chat ───────────────────────────────────────────────────────────
+let dhImgData = null; // {mimeType, base64}
+
+function dhLoadImg(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const base64 = e.target.result.split(',')[1];
+    dhImgData = {mimeType: file.type, base64};
+    document.getElementById('dhImgThumb').src = e.target.result;
+    document.getElementById('dhImgPreview').style.display = 'block';
+    input.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+function dhRemoveImg() {
+  dhImgData = null;
+  document.getElementById('dhImgPreview').style.display = 'none';
+  document.getElementById('dhImgThumb').src = '';
+}
+
+// ── Salvar aprendizado ────────────────────────────────────────────────────────
+async function dhSalvarAprendizado(texto) {
+  const ghToken = cfgGet('officina_gh_token');
+  if(!ghToken) { dhAppendAgentMsg('preciso do GitHub Token nas configurações pra salvar o aprendizado'); return; }
+  const data = new Date();
+  const dd = String(data.getDate()).padStart(2,'0');
+  const mm = String(data.getMonth()+1).padStart(2,'0');
+  const linha = `- [${dd}/${mm}] ${texto}`;
+  // Busca o arquivo atual
+  const fileResp = await fetch('https://api.github.com/repos/maxmunhozp-blip/ecossistema-max/contents/clientes/officina-app/lucas-aprendizados.md',
+    {headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json'}});
+  const fileData = await fileResp.json();
+  const conteudo = atob(fileData.content.replace(/\n/g,''));
+  const novoConteudo = conteudo.replace('<!-- Adicione aqui feedbacks específicos do Max com data -->\n<!-- Formato: - [DD/MM] Feedback recebido -->',
+    `<!-- Adicione aqui feedbacks específicos do Max com data -->\n<!-- Formato: - [DD/MM] Feedback recebido -->\n${linha}`);
+  // Salva o arquivo
+  await fetch('https://api.github.com/repos/maxmunhozp-blip/ecossistema-max/contents/clientes/officina-app/lucas-aprendizados.md',
+    {method:'PUT', headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+     body: JSON.stringify({message:`aprendizado(lucas): ${texto.slice(0,60)}`, content: btoa(unescape(encodeURIComponent(novoConteudo))), sha: fileData.sha})});
+  dhAppendAgentMsg(`anotei: <em>${texto}</em>`);
+}
+
 async function dhEnviar() {
   if(dhSending) return;
   const ta = document.getElementById('dhInput');
   const text = ta.value.trim();
-  if(!text) return;
+  if(!text && !dhImgData) return;
   dhSending = true;
 
   const msgs = document.getElementById('dhMsgs');
   const typing = document.getElementById('dhTyping');
 
   // Bubble do usuário
-  const userHtml = `<div class="dh-bbl-who">Você</div><div class="dh-bbl-text">${text}</div><div class="dh-bbl-time">agora</div>`;
+  const imgPreviewHtml = dhImgData ? `<img src="data:${dhImgData.mimeType};base64,${dhImgData.base64}" style="max-width:160px;border-radius:6px;margin-top:6px;display:block"/>` : '';
+  const userHtml = `<div class="dh-bbl-who">Você</div><div class="dh-bbl-text">${text||''}${imgPreviewHtml}</div><div class="dh-bbl-time">agora</div>`;
   const userEl = document.createElement('div');
   userEl.className = 'dh-bbl user';
   userEl.innerHTML = userHtml;
@@ -3569,6 +3638,7 @@ async function dhEnviar() {
   dhSaveSession();
   msgs.insertBefore(userEl, typing);
   ta.value = ''; ta.style.height = 'auto';
+  dhRemoveImg();
   msgs.scrollTop = msgs.scrollHeight;
   document.getElementById('dhSendBtn').disabled = true;
 
@@ -3590,8 +3660,13 @@ async function dhEnviar() {
     return;
   }
 
+  // Monta parts — suporta texto + imagem (multimodal)
+  const parts = [];
+  if(text) parts.push({text});
+  if(dhImgData) parts.push({inlineData:{mimeType:dhImgData.mimeType, data:dhImgData.base64}});
+
   // Adiciona ao histórico
-  dhChatHistory.push({role:'user', parts:[{text}]});
+  dhChatHistory.push({role:'user', parts});
 
   try {
     const textModel = await geminiPickTextModel(key);
@@ -4213,6 +4288,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 document.addEventListener('DOMContentLoaded',()=>{
   lucide.createIcons();
   rs2Init();
+  _dhFetchAprendizados(); // carrega aprendizados do Lucas no background
   const ta = document.getElementById('dhInput');
   if(ta) ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,96)+'px';});
   const ta2 = document.getElementById('bbInput');
