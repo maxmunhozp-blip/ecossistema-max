@@ -37,7 +37,12 @@ jobs:
             echo "$INSTRUCTION"
             echo "=========================="
 
+            echo "=== Passo 1: Aplicando instrução ==="
             /usr/bin/claude -p "$INSTRUCTION" --allowedTools "Edit,Write,Read,Bash,Glob,Grep" < /dev/null
+
+            echo "=== Passo 2: Design review automático ==="
+            REVIEW_PROMPT=$(cat clientes/officina-app/DESIGN_REVIEW.md)
+            /usr/bin/claude -p "$REVIEW_PROMPT" --allowedTools "Edit,Write,Read,Bash,Glob,Grep" < /dev/null
 
             git add -A
             if git diff --staged --quiet; then
