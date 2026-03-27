@@ -1744,8 +1744,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
           <button onclick="dhRemoveImg()" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--text);color:#fff;border:none;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1">✕</button>
         </div>
         <div class="dh-input-row">
-          <label title="Enviar imagem" style="width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--text3);transition:.15s" onmouseover="this.style.borderColor='var(--teal)';this.style.color='var(--teal)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text3)'">
-            <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <label title="Anexar imagem de referência" style="width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--text3);transition:.15s" onmouseover="this.style.borderColor='var(--teal)';this.style.color='var(--teal)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text3)'">
+            <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
             <input type="file" accept="image/*" style="display:none" onchange="dhLoadImg(this)"/>
           </label>
           <textarea class="dh-ta" id="dhInput" placeholder="Pedir alteração, enviar imagem de referência..." rows="1"
@@ -2951,21 +2951,28 @@ function renderPosts() {
     let textoHtml = '';
     if(isOpen) {
       const coverImg = localStorage.getItem('rs_cover_'+p.id);
+      // Card de capa separado — fica à esquerda de todos os slides
+      const coverCard = coverImg
+        ? `<div class="slide-card" onclick="event.stopPropagation()" title="Capa do post" style="position:relative;border-color:var(--teal)">
+            <div class="slide-card-frame"><img src="${coverImg}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:6px"/></div>
+            <span class="slide-card-num" style="color:var(--teal)">capa</span>
+            <label title="Trocar capa" onclick="event.stopPropagation()" style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5">
+              <svg viewBox="0 0 24 24" style="width:9px;height:9px;fill:none;stroke:#fff;stroke-width:2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <input type="file" accept="image/*" style="display:none" onchange="rs2SetCover('${p.id}',this)"/>
+            </label>
+          </div>`
+        : `<label class="slide-card" title="Subir capa do post" onclick="event.stopPropagation()" style="cursor:pointer;border-style:dashed;flex-direction:column;gap:4px">
+            <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:var(--text4);stroke-width:1.5;stroke-linecap:round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span style="font-size:8px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.3px">Capa</span>
+            <input type="file" accept="image/*" style="display:none" onchange="rs2SetCover('${p.id}',this)"/>
+          </label>`;
       const cards = Array.from({length:p.slides},(_,i) => {
-        const isFirst = i === 0;
-        const frameContent = (isFirst && coverImg)
-          ? `<img src="${coverImg}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:6px"/>`
-          : `<iframe class="slide-card-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=${i}" scrolling="no" loading="lazy"></iframe>`;
-        const uploadBtn = isFirst
-          ? `<label title="Trocar capa" onclick="event.stopPropagation()" style="position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;box-shadow:0 1px 4px rgba(0,0,0,.25)"><svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:none;stroke:#fff;stroke-width:2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><input type="file" accept="image/*" style="display:none" onchange="rs2SetCover('${p.id}',this)"/></label>`
-          : '';
         return `<div class="slide-card" onclick="rs2OpenLb('${p.id}',${i})" title="Slide ${i+1}" style="position:relative">
-          <div class="slide-card-frame">${frameContent}</div>
+          <div class="slide-card-frame"><iframe class="slide-card-iframe" src="carrosseis-officina.html?single=1&p=${p.postIdx}&s=${i}" scrolling="no" loading="lazy"></iframe></div>
           <span class="slide-card-num">${i+1}</span>
-          ${uploadBtn}
         </div>`;
       }).join('');
-      slidesHtml = `<div class="post-slides-inner"><div class="slides-row-label" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span>Slides</span><div style="display:flex;align-items:center;gap:7px"><button class="rs2-refresh-btn" onclick="event.stopPropagation();rs2RefreshSlides('${p.id}',this)" title="Atualizar slides"><svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button><a href="carrosseis-officina.html" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;background:transparent;color:var(--teal);border:1.5px solid var(--teal);font-size:11px;font-weight:600;text-decoration:none;font-family:'Inter',sans-serif;letter-spacing:.1px"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Preview</a><a href="carrosseis-officina.html?export=1&p=${p.postIdx}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;background:var(--teal);color:#fff;font-size:11px;font-weight:600;text-decoration:none;font-family:'Inter',sans-serif;letter-spacing:.1px"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Baixar PNGs</a></div></div><div class="slides-row">${cards}</div></div>`;
+      slidesHtml = `<div class="post-slides-inner"><div class="slides-row-label" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span>Slides</span><div style="display:flex;align-items:center;gap:7px"><button class="rs2-refresh-btn" onclick="event.stopPropagation();rs2RefreshSlides('${p.id}',this)" title="Atualizar slides"><svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button><a href="carrosseis-officina.html" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;background:transparent;color:var(--teal);border:1.5px solid var(--teal);font-size:11px;font-weight:600;text-decoration:none;font-family:'Inter',sans-serif;letter-spacing:.1px"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Preview</a><a href="carrosseis-officina.html?export=1&p=${p.postIdx}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;background:var(--teal);color:#fff;font-size:11px;font-weight:600;text-decoration:none;font-family:'Inter',sans-serif;letter-spacing:.1px"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Baixar PNGs</a></div></div><div class="slides-row">${coverCard}${cards}</div></div>`;
       const ta = p.textoApoio||{};
       textoHtml = `<div class="post-texto-section">
         <div class="post-texto-head">Legenda</div>
