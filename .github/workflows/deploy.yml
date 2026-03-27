@@ -42,6 +42,7 @@ jobs:
   deploy-hostinger:
     name: Deploy → Hostinger
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
@@ -89,12 +90,9 @@ jobs:
           VPS="${{ needs.deploy-vps.result }}"
           HST="${{ needs.deploy-hostinger.result }}"
           COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -1)
-          if [ "$HST" = "success" ]; then
-            VPS_ICON="$([ "$VPS" = "success" ] && echo "✅" || echo "⚠️")"
-            TEXT="${VPS_ICON} VPS | ✅ Hostinger — ${COMMIT_MSG}"
-          else
-            TEXT="❌ Deploy falhou — ${COMMIT_MSG}"
-          fi
+          VPS_ICON="$([ "$VPS" = "success" ] && echo "✅" || echo "❌")"
+          HST_ICON="$([ "$HST" = "success" ] && echo "✅" || echo "⚠️")"
+          TEXT="${VPS_ICON} VPS | ${HST_ICON} Hostinger — ${COMMIT_MSG}"
           curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
             -H "Content-Type: application/json" \
             -d "{\"chat_id\":\"${CHAT_ID}\",\"text\":\"${TEXT}\"}"

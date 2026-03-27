@@ -1,6 +1,44 @@
 # ASSETS — Officina App
-> Este arquivo documenta todos os assets de marca disponíveis para o cliente Officina App.
-> **OBRIGATÓRIO**: Leia este arquivo antes de qualquer alteração que envolva logo, identidade visual ou imagens neste cliente.
+> Este arquivo documenta assets de marca e regras críticas para o cliente Officina App.
+> **OBRIGATÓRIO**: Leia este arquivo antes de qualquer alteração que envolva logo, imagens, carrosséis ou novos posts.
+
+---
+
+## REGRA CRÍTICA — Criar ou editar carrossel
+
+Quando criar ou editar um carrossel, são **SEMPRE dois arquivos** que precisam ser atualizados:
+
+### 1. `carrosseis-officina.html`
+Contém os slides HTML dos posts. Cada post é um conjunto de divs `<div data-post="N" data-idx="S">`.
+- `data-post` = índice do post (0-based): Post 1 → 0, Post 2 → 1, etc.
+- `data-idx` = índice do slide dentro do post (0-based)
+
+### 2. `persona-profunda.html` — array `RS2_POSTS`
+Contém os metadados de cada post exibidos no dashboard de Redes Sociais. **Sem uma entrada aqui, o post não aparece no dashboard.**
+
+Estrutura de uma entrada (adicionar no final do array, antes do `];`):
+```javascript
+{
+  id: 'p9',                          // ID único — sequencial (p1, p2, p3...)
+  postIdx: 5,                        // Índice do post em carrosseis-officina.html (0-based)
+  titulo: 'Título do carrossel',
+  plataformas: ['instagram'],        // ['instagram'], ['facebook'], ou ambos
+  status: 'rascunho',                // rascunho | revisao | publicado | agendado | proposta
+  data: '—',                         // Data de publicação: 'DD/MM/AAAA' ou '—'
+  slides: 5,                         // Número de slides no carrossel
+  redator: 'Lucas Lobato',
+  designer: 'Rafael Mota',
+  textoApoio: {
+    legenda: '',                     // Legenda do post para Instagram/Facebook
+    hashtags: '',
+    cta: ''
+  }
+}
+```
+
+**Verificar o próximo `postIdx` disponível**: contar quantos posts distintos existem em `carrosseis-officina.html` pelos valores únicos de `data-post`. O próximo é o maior + 1.
+
+**Verificar o próximo `id` disponível**: verificar o maior `id` no array `RS2_POSTS` (ex: p8) e incrementar (p9).
 
 ---
 
