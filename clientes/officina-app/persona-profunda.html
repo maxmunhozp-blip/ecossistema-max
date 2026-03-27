@@ -451,7 +451,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 .dh-typing-lbl{font-size:11px;color:var(--text3);margin-left:4px}
 .dh-input-area{border-top:1px solid var(--border);padding:10px 12px;flex-shrink:0}
 .dh-input-row{display:flex;gap:8px;align-items:flex-end}
-.dh-ta{flex:1;min-height:40px;max-height:96px;resize:none;border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;line-height:1.4}
+.dh-ta{flex:1;min-height:40px;max-height:260px;resize:none;border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;line-height:1.5;overflow-y:auto}
 .dh-ta:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(61,169,165,.07)}
 .dh-ta::placeholder{color:var(--text4)}
 .dh-send{width:40px;height:40px;border-radius:10px;background:var(--teal);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
@@ -4309,7 +4309,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   rs2Init();
   _dhFetchAprendizados(); // carrega aprendizados do Lucas no background
   const ta = document.getElementById('dhInput');
-  if(ta) ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,96)+'px';});
+  if(ta) ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,260)+'px';});
   const ta2 = document.getElementById('bbInput');
   if(ta2) ta2.addEventListener('input',()=>{ta2.style.height='auto';ta2.style.height=Math.min(ta2.scrollHeight,96)+'px';});
 
