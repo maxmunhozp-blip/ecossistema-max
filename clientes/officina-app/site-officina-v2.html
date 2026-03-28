@@ -249,18 +249,8 @@
       gap: 32px;
     }
 
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .nav-logo-icon {
-      height: 16px;
-      width: auto;
-      transition: filter 0.4s ease;
-    }
-    .nav-logo-wordmark {
-      height: 18px;
+    .nav-logo img {
+      height: 36px;
       width: auto;
       transition: filter 0.4s ease;
     }
@@ -1866,8 +1856,7 @@
     <div class="nav-inner">
 
       <a href="#" class="nav-logo" aria-label="Officina App — Home">
-        <img src="icon-amber.png" id="nav-logo-icon" class="nav-logo-icon" alt="" />
-        <img src="logo-teal.png" id="nav-logo-img" class="nav-logo-wordmark" alt="Officina App" />
+        <img src="logo-amber.png" id="nav-logo-img" alt="Officina App" />
       </a>
 
       <ul class="nav-links">
@@ -2735,23 +2724,24 @@
     // NAV: scroll behavior + logo/cta swap
     // ============================================================
     (function() {
-      const navbar    = document.getElementById('navbar');
-      const logoImg   = document.getElementById('nav-logo-img');
-      const logoIcon  = document.getElementById('nav-logo-icon');
-      const ctaBtn    = document.getElementById('nav-cta-btn');
-      let scrolled    = false;
+      const navbar  = document.getElementById('navbar');
+      const logoImg = document.getElementById('nav-logo-img');
+      const ctaBtn  = document.getElementById('nav-cta-btn');
+      let scrolled  = false;
 
       function applyState(isScrolled) {
         navbar.classList.toggle('scrolled', isScrolled);
         if (isScrolled) {
-          // Nav branco: wordmark teal, ícone amber (natural)
+          // Nav branco: logo-teal.png (só texto, sem carro — limpo no branco)
+          logoImg.src = 'logo-teal.png';
           logoImg.style.filter = '';
-          logoIcon.style.filter = '';
+          logoImg.style.height = '20px';
           ctaBtn.style.cssText = 'padding:10px 22px;font-size:0.85rem;border-radius:8px;background:var(--teal);color:#fff;border:none;';
         } else {
-          // Nav transparente sobre hero teal: wordmark branco, ícone amber (contrasta bem no teal)
-          logoImg.style.filter = 'brightness(0) invert(1)';
-          logoIcon.style.filter = '';
+          // Nav teal: logo-amber.png (carro amber + texto branco — funciona no teal)
+          logoImg.src = 'logo-amber.png';
+          logoImg.style.filter = '';
+          logoImg.style.height = '36px';
           ctaBtn.style.cssText = 'padding:10px 22px;font-size:0.85rem;border-radius:8px;background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.4);';
         }
       }
