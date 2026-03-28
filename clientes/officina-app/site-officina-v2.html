@@ -15,7 +15,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
@@ -40,7 +40,7 @@
       --muted:     #6B7280;
       --border:    #E5E7EB;
 
-      --font-display: 'Sora', sans-serif;
+      --font-display: 'Barlow Condensed', sans-serif;
       --font-body:    'Inter', sans-serif;
 
       --radius-sm:  8px;
@@ -243,7 +243,7 @@
       max-width: 1160px;
       margin: 0 auto;
       padding: 0 24px;
-      height: 70px;
+      height: 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -251,7 +251,7 @@
     }
 
     .nav-logo img {
-      height: 38px;
+      height: 30px;
       width: auto;
       transition: opacity 0.3s ease;
     }
@@ -1420,10 +1420,10 @@
     }
 
     /* ============================================================
-       9. PARA OFICINAS — DARK SPLIT
+       9. PARA OFICINAS — TEAL SPLIT (não dark)
     ============================================================ */
     #para-oficinas {
-      background: var(--dark-2);
+      background: linear-gradient(135deg, #0D6B61 0%, #1A9E8F 100%);
       padding-top: 96px;
       padding-bottom: 96px;
     }
@@ -1472,13 +1472,13 @@
     .benefit-icon {
       width: 44px;
       height: 44px;
-      background: rgba(26,158,143,0.15);
-      border: 1px solid rgba(26,158,143,0.3);
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--teal-2);
+      color: var(--yellow);
       flex-shrink: 0;
     }
     .benefit-icon svg { width: 20px; height: 20px; }
@@ -1564,6 +1564,167 @@
 
     @media (max-width: 768px) {
       .depo-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       10.5 CALCULADORA DE ECONOMIA
+    ============================================================ */
+    #calculadora {
+      background: var(--bg);
+      padding: 96px 0;
+    }
+
+    .calc-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .calc-header {
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+      padding: 36px 48px;
+      color: #fff;
+      text-align: center;
+    }
+    .calc-header-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.12);
+      padding: 4px 12px;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.2);
+      margin-bottom: 12px;
+    }
+    .calc-header h2 {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+    .calc-header h2 span { color: var(--yellow); }
+    .calc-header p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.72);
+      margin-top: 10px;
+    }
+
+    .calc-body { padding: 40px 48px; }
+
+    .calc-input-group {
+      margin-bottom: 28px;
+    }
+    .calc-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-2);
+      margin-bottom: 10px;
+    }
+    .calc-label .calc-hint {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .calc-slider-wrap {
+      position: relative;
+    }
+    .calc-slider {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--border);
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+    .calc-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 2px 8px rgba(26,158,143,0.4);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .calc-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 4px 16px rgba(26,158,143,0.5);
+    }
+    .calc-value-display {
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--teal);
+      margin-top: 12px;
+      letter-spacing: -0.02em;
+    }
+    .calc-value-display small {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .calc-result {
+      background: linear-gradient(135deg, #F0FBF9, #E8F7F5);
+      border: 2px solid rgba(26,158,143,0.2);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      margin-top: 8px;
+    }
+    .calc-result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(26,158,143,0.12);
+      font-size: 0.9rem;
+    }
+    .calc-result-row:last-child { border-bottom: none; }
+    .calc-result-row .label { color: var(--muted); }
+    .calc-result-row .value { font-weight: 600; color: var(--text); }
+    .calc-result-row.highlight { background: none; }
+    .calc-result-row.highlight .label {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 1rem;
+    }
+    .calc-result-row.highlight .value {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--teal);
+    }
+
+    .calc-disclaimer {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 16px;
+    }
+    .calc-cta {
+      display: flex;
+      justify-content: center;
+      margin-top: 28px;
+    }
+    @media (max-width: 640px) {
+      .calc-header { padding: 28px 24px; }
+      .calc-body { padding: 28px 24px; }
     }
 
     /* ============================================================
@@ -2434,6 +2595,68 @@
 
 
   <!-- ============================================================
+       10.5 CALCULADORA DE ECONOMIA
+  ============================================================ -->
+  <section id="calculadora">
+    <div class="container">
+      <div class="calc-wrap reveal">
+        <div class="calc-header">
+          <div class="calc-header-label">
+            <i data-lucide="calculator" style="width:12px;height:12px"></i>
+            Calculadora de Economia
+          </div>
+          <h2>Quanto você está <span>pagando a mais?</span></h2>
+          <p>Simule a economia média de quem usa o Officina antes de qualquer serviço.</p>
+        </div>
+        <div class="calc-body">
+          <div class="calc-input-group">
+            <div class="calc-label">
+              <span>Valor do orçamento recebido</span>
+              <span class="calc-hint">Arraste para ajustar</span>
+            </div>
+            <div class="calc-slider-wrap">
+              <input type="range" class="calc-slider" id="calcSlider" min="100" max="5000" value="800" step="50" oninput="updateCalc()">
+            </div>
+            <div class="calc-value-display">
+              <span id="calcDisplay">R$800</span>
+              <small> cobrado pela oficina</small>
+            </div>
+          </div>
+
+          <div class="calc-result">
+            <div class="calc-result-row">
+              <span class="label">Valor original (sem Officina)</span>
+              <span class="value" id="resOriginal">R$800</span>
+            </div>
+            <div class="calc-result-row">
+              <span class="label">Serviços desnecessários (média 34%)</span>
+              <span class="value" style="color:#EF4444" id="resExtra">− R$272</span>
+            </div>
+            <div class="calc-result-row">
+              <span class="label">Com aprovação prévia via Officina</span>
+              <span class="value" style="color:var(--teal)" id="resAprovado">R$528</span>
+            </div>
+            <div class="calc-result-row highlight">
+              <span class="label">Sua economia estimada</span>
+              <span class="value" id="resEconomia">R$272</span>
+            </div>
+          </div>
+
+          <p class="calc-disclaimer">
+            * Estimativa baseada em pesquisa com 50.000 motoristas cadastrados. Valores reais podem variar.
+          </p>
+          <div class="calc-cta">
+            <a href="https://officinaapp.com.br" target="_blank" class="btn btn-yellow btn-yellow-lg">
+              <i data-lucide="user-plus"></i>
+              Criar conta grátis e economizar
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
        11. CTA FINAL
   ============================================================ -->
   <section id="cta-final">
@@ -2722,6 +2945,31 @@
     })();
 
     // ============================================================
+    // ============================================================
+    // CALCULADORA
+    // ============================================================
+    function updateCalc() {
+      const slider = document.getElementById('calcSlider');
+      const val = parseInt(slider.value);
+      const extra = Math.round(val * 0.34);
+      const aprovado = val - extra;
+
+      document.getElementById('calcDisplay').textContent = 'R$' + val.toLocaleString('pt-BR');
+      document.getElementById('resOriginal').textContent = 'R$' + val.toLocaleString('pt-BR');
+      document.getElementById('resExtra').textContent = '− R$' + extra.toLocaleString('pt-BR');
+      document.getElementById('resAprovado').textContent = 'R$' + aprovado.toLocaleString('pt-BR');
+      document.getElementById('resEconomia').textContent = 'R$' + extra.toLocaleString('pt-BR');
+
+      // Update slider gradient
+      const pct = ((val - 100) / (5000 - 100)) * 100;
+      slider.style.background = `linear-gradient(to right, #1A9E8F ${pct}%, #E5E7EB ${pct}%)`;
+    }
+    // Init slider
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCalc();
+    });
+    updateCalc();
+
     // Init Lucide Icons
     // ============================================================
     if (typeof lucide !== 'undefined') {
