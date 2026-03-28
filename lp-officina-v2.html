@@ -111,15 +111,8 @@ nav.scrolled{
   display:flex;align-items:center;gap:10px;
   text-decoration:none;
 }
-.nav-logo svg{width:32px;height:32px}
-.nav-logo span{
-  font-family:var(--font-display);
-  font-weight:800;font-size:1.35rem;
-  color:#fff;
-  letter-spacing:-0.02em;
-  transition:color 0.3s ease;
-}
-nav.scrolled .nav-logo span{color:var(--teal)}
+.nav-logo img{height:36px;width:auto;transition:filter 0.3s ease}
+nav.scrolled .nav-logo img{filter:none}
 .nav-links{
   display:flex;align-items:center;gap:32px;
   list-style:none;
@@ -1049,6 +1042,16 @@ nav.scrolled .nav-mobile-toggle i{color:var(--dark)}
 }
 .btn-yellow-lg:hover{background:var(--yellow-2);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.3)}
 .btn-yellow-lg i{width:22px;height:22px}
+.btn-outline-light{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:16px 32px;border-radius:50px;
+  font-family:var(--font-display);font-weight:700;font-size:1rem;
+  color:rgba(255,255,255,.85);
+  border:2px solid rgba(255,255,255,.3);
+  text-decoration:none;transition:all 0.3s ease;
+}
+.btn-outline-light:hover{color:#fff;border-color:#fff;transform:translateY(-2px);}
+.btn-outline-light i{width:18px;height:18px}
 .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
 .qr-label{font-size:.8rem;color:rgba(255,255,255,.7);font-weight:500}
 .qr-code{
@@ -1188,21 +1191,13 @@ footer{
 <!-- NAV -->
 <nav id="nav">
   <a href="#" class="nav-logo">
-    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="32" height="32" rx="8" fill="rgba(255,255,255,0.15)"/>
-      <path d="M6 20L8 14H24L26 20" stroke="#F5C518" stroke-width="2" stroke-linecap="round"/>
-      <rect x="5" y="20" width="22" height="5" rx="2" fill="#F5C518"/>
-      <circle cx="10" cy="25" r="2" fill="#1A1A2E"/>
-      <circle cx="22" cy="25" r="2" fill="#1A1A2E"/>
-      <path d="M10 17H22" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-    <span>officina</span>
+    <img src="clientes/officina-app/logo-amber.png" alt="Officina App" id="nav-logo-img"/>
   </a>
   <ul class="nav-links">
     <li><a href="#motoristas">Para Motoristas</a></li>
     <li><a href="#mecanicos">Para Oficinas</a></li>
     <li><a href="#planos">Planos PMP</a></li>
-    <li><a href="#baixar" class="nav-cta">Baixar App</a></li>
+    <li><a href="#acesso" class="nav-cta">Acessar Grátis</a></li>
   </ul>
   <button class="nav-mobile-toggle" onclick="openMenu()" aria-label="Menu">
     <i data-lucide="menu"></i>
@@ -1217,7 +1212,7 @@ footer{
   <a href="#motoristas" onclick="closeMenu()">Para Motoristas</a>
   <a href="#mecanicos" onclick="closeMenu()">Para Oficinas</a>
   <a href="#planos" onclick="closeMenu()">Planos PMP</a>
-  <a href="#baixar" onclick="closeMenu()" style="color:var(--yellow)">Baixar App Grátis</a>
+  <a href="#acesso" onclick="closeMenu()" style="color:var(--yellow)">Criar Conta Grátis</a>
 </div>
 
 <!-- HERO -->
@@ -1235,9 +1230,9 @@ footer{
       Receba orçamento no celular, compare entre oficinas, aprove só o necessário. Tudo transparente, do diagnóstico ao pagamento.
     </p>
     <div class="hero-actions reveal d3">
-      <a href="#baixar" class="btn-primary">
-        <i data-lucide="smartphone"></i>
-        Baixar App Grátis
+      <a href="#acesso" class="btn-primary">
+        <i data-lucide="user-plus"></i>
+        Criar Conta Grátis
       </a>
       <a href="#mecanicos" class="btn-secondary">
         Para Oficinas
@@ -1741,25 +1736,23 @@ footer{
 </section>
 
 <!-- FINAL CTA -->
-<section class="final-cta" id="baixar">
+<section class="final-cta" id="acesso">
   <div class="final-cta-inner">
     <div class="final-cta-tag reveal">
-      <i data-lucide="smartphone"></i>
-      Disponível para iOS e Android
+      <i data-lucide="shield-check"></i>
+      Acesso gratuito para motoristas
     </div>
-    <h2 class="reveal d1">Baixe agora. É grátis.</h2>
-    <p class="reveal d2">Cadastro em menos de 2 minutos. Sem taxa, sem mensalidade para motoristas. Comece a economizar na próxima revisão.</p>
+    <h2 class="reveal d1">Cadastre-se agora. É grátis.</h2>
+    <p class="reveal d2">Cadastro em menos de 2 minutos. Sem taxa, sem mensalidade. Comece a economizar na sua próxima revisão.</p>
     <div class="final-cta-actions reveal d3">
-      <a href="#" class="btn-yellow-lg">
-        <i data-lucide="smartphone"></i>
-        Baixar App Grátis
+      <a href="https://officinaapp.com.br" target="_blank" class="btn-yellow-lg">
+        <i data-lucide="user-plus"></i>
+        Criar Minha Conta
       </a>
-      <div class="qr-wrap">
-        <span class="qr-label">Ou escaneie o QR</span>
-        <div class="qr-code" id="qrCode">
-          <!-- QR code simulado em CSS/JS -->
-        </div>
-      </div>
+      <a href="#mecanicos" class="btn-outline-light">
+        Sou dono de oficina
+        <i data-lucide="arrow-right"></i>
+      </a>
     </div>
   </div>
 </section>
@@ -1769,15 +1762,7 @@ footer{
   <div class="footer-top">
     <div class="footer-brand">
       <a href="#" class="nav-logo">
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="8" fill="rgba(255,255,255,0.1)"/>
-          <path d="M6 20L8 14H24L26 20" stroke="#F5C518" stroke-width="2" stroke-linecap="round"/>
-          <rect x="5" y="20" width="22" height="5" rx="2" fill="#F5C518"/>
-          <circle cx="10" cy="25" r="2" fill="#1A1A2E"/>
-          <circle cx="22" cy="25" r="2" fill="#1A1A2E"/>
-          <path d="M10 17H22" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <span>officina</span>
+        <img src="clientes/officina-app/logo-amber.png" alt="Officina App" style="height:44px;width:auto;filter:brightness(0) invert(1)"/>
       </a>
       <p>Marketplace que conecta motoristas a oficinas credenciadas. Transparência do diagnóstico ao pagamento.</p>
     </div>
@@ -1785,7 +1770,7 @@ footer{
       <h4>Para Motoristas</h4>
       <ul>
         <li><a href="#">Como funciona</a></li>
-        <li><a href="#">Baixar app</a></li>
+        <li><a href="https://officinaapp.com.br" target="_blank">Acessar o app</a></li>
         <li><a href="#">Planos PMP</a></li>
         <li><a href="#">Avaliar oficina</a></li>
       </ul>
@@ -1823,11 +1808,14 @@ lucide.createIcons();
 
 // ─── NAV SCROLL ───────────────────────────────
 const nav = document.getElementById('nav');
+const navLogoImg = document.getElementById('nav-logo-img');
 window.addEventListener('scroll', () => {
   if (window.scrollY > 80) {
     nav.classList.add('scrolled');
+    if (navLogoImg) navLogoImg.src = 'clientes/officina-app/logo-teal.png';
   } else {
     nav.classList.remove('scrolled');
+    if (navLogoImg) navLogoImg.src = 'clientes/officina-app/logo-amber.png';
   }
 }, { passive: true });
 
