@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MeuFluxo — O único app de tarefas que não te faz sentir culpado</title>
+<meta name="description" content="MeuFluxo: Tempo Vivo. Dia em 3 blocos, cada um reinicia. Zero culpa. Feito por quem tem TDAH, pra quem tem TDAH.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07070A;
+  --accent: #575ECF;
+  --accent-rgb: 87, 94, 207;
+  --secondary: #A78BFA;
+  --text: #E8E8F0;
+  --muted: #8888A0;
+  --surface: rgba(87,94,207,0.06);
+  --border: rgba(87,94,207,0.15);
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+a { text-decoration: none; color: inherit; }
+
+/* ── CUSTOM CURSOR ── */
+#cursor-outer {
+  position: fixed;
+  width: 40px; height: 40px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .25s, height .25s, background .25s, border-color .25s;
+  mix-blend-mode: normal;
+}
+#cursor-dot {
+  position: fixed;
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+}
+body.cursor-hover #cursor-outer {
+  width: 60px; height: 60px;
+  background: rgba(var(--accent-rgb), 0.15);
+  mix-blend-mode: difference;
+}
+body.cursor-click #cursor-outer {
+  transform: translate(-50%,-50%) scaleX(0.8) scaleY(1.2);
+}
+
+/* ── SCROLL PROGRESS ── */
+#scroll-progress {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--secondary));
+  z-index: 300;
+  transition: none;
+}
+
+/* ── NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 64px; display: flex; align-items: center; padding: 0 40px;
+  justify-content: space-between;
+  transition: background .4s, backdrop-filter .4s;
+}
+.nav.scrolled {
+  background: rgba(7,7,10,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; font-size: 18px; color: #fff; letter-spacing: -.3px;
+}
+.nav-orb {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+}
+.nav-back {
+  font-size: 13px; color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+  transition: color .2s;
+}
+.nav-back:hover { color: var(--text); }
+.nav-back svg { width: 14px; height: 14px; }
+
+/* ── THREE.JS CANVAS ── */
+#hero-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity .5s;
+}
+
+/* ── SECTIONS BASE ── */
+section { position: relative; }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  height: 300vh;
+  z-index: 1;
+}
+.hero-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.hero-inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* SVG BLOB */
+.hero-blob {
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  transform: translateY(-50%);
+  width: 65vw; height: 65vh;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero-blob svg {
+  width: 100%; height: 100%;
+}
+
+.hero-left { position: relative; z-index: 2; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--secondary);
+  background: rgba(167,139,250,0.1);
+  border: 1px solid rgba(167,139,250,0.2);
+  padding: 6px 14px; border-radius: 100px;
+  margin-bottom: 28px;
+}
+.hero-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--secondary);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+.hero-headline {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(52px, 6vw, 88px);
+  line-height: 1.0;
+  letter-spacing: -2px;
+  color: #fff;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+.hero-headline .char {
+  display: inline-block;
+  transform-origin: 0% 50% -50px;
+  opacity: 0;
+}
+.hero-headline em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 17px; color: var(--muted); line-height: 1.65;
+  margin-bottom: 44px; max-width: 440px;
+  opacity: 0;
+}
+.hero-actions {
+  display: flex; align-items: center; gap: 20px;
+  flex-wrap: wrap;
+  opacity: 0;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--accent);
+  color: #fff; font-family: 'DM Sans', sans-serif;
+  font-weight: 600; font-size: 15px;
+  padding: 16px 32px; border-radius: 100px;
+  border: none; cursor: none;
+  transition: box-shadow .3s, transform .15s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.12), transparent);
+  transform: translateX(-100%);
+  transition: transform .5s;
+}
+.btn-primary:hover::before { transform: translateX(100%); }
+.btn-primary:hover {
+  box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.5), 0 8px 32px rgba(var(--accent-rgb), 0.3);
+}
+.btn-secondary {
+  font-size: 14px; color: var(--muted);
+  display: flex; align-items: center; gap: 7px;
+  transition: color .2s;
+  cursor: none;
+}
+.btn-secondary:hover { color: var(--text); }
+.price-hint {
+  font-size: 12px; color: var(--muted);
+  margin-top: 16px;
+}
+.price-hint strong { color: var(--text); }
+
+/* ── PHONE MOCKUP ── */
+.hero-right {
+  position: relative; z-index: 2;
+  display: flex; justify-content: center;
+  perspective: 1000px;
+}
+.phone-wrap {
+  transform-style: preserve-3d;
+  animation: phone-float 4s ease-in-out infinite;
+}
+@keyframes phone-float {
+  0%,100% { transform: translateY(0px) rotateY(20deg); }
+  50% { transform: translateY(-10px) rotateY(20deg); }
+}
+.phone {
+  width: 280px; height: 580px;
+  background: #0e0e14;
+  border-radius: 50px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 30px 80px rgba(0,0,0,0.8),
+    0 0 60px rgba(var(--accent-rgb), 0.2),
+    inset 0 0 0 1px rgba(255,255,255,0.04);
+  overflow: hidden;
+}
+.phone::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 51px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03), rgba(var(--accent-rgb),0.2));
+  z-index: -1;
+}
+.phone-notch {
+  width: 90px; height: 26px;
+  background: #07070A;
+  border-radius: 0 0 18px 18px;
+  margin: 0 auto;
+  position: relative; z-index: 10;
+}
+.phone-screen {
+  padding: 0 16px 16px;
+  height: calc(100% - 26px);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.phone-status {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 4px 10px;
+  font-size: 11px; color: var(--text); font-weight: 600;
+}
+.phone-status-icons {
+  display: flex; gap: 5px; align-items: center;
+}
+.phone-status-icons svg { width: 13px; height: 13px; fill: var(--text); }
+.phone-header {
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.15);
+  border-radius: 16px;
+  padding: 14px 14px 10px;
+  margin-bottom: 12px;
+}
+.phone-greeting {
+  font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 2px;
+}
+.phone-date {
+  font-size: 11px; color: var(--muted);
+}
+.tempo-vivo-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(var(--accent-rgb),0.2);
+  border-radius: 20px; padding: 3px 10px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent);
+  margin-top: 8px;
+}
+.phone-tasks { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.task-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex; align-items: center; gap: 10px;
+  border-left: 3px solid;
+}
+.task-card:nth-child(1) { border-left-color: var(--accent); }
+.task-card:nth-child(2) { border-left-color: #F97316; }
+.task-card:nth-child(3) { border-left-color: #EC4899; }
+.task-check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+.task-info { flex: 1; min-width: 0; }
+.task-name { font-size: 12px; color: var(--text); font-weight: 500; }
+.task-time { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.phone-tabs {
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 10px 0 4px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: auto;
+}
+.tab-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 9px; color: var(--muted);
+}
+.tab-item.active { color: var(--accent); }
+.tab-item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+/* ── PROOF STRIP ── */
+.proof {
+  position: relative; z-index: 2;
+  padding: 60px 40px;
+  background: rgba(var(--accent-rgb), 0.04);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.proof-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 20px;
+}
+.proof-item {
+  text-align: center; padding: 20px;
+}
+.proof-number {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; font-size: 48px; line-height: 1;
+  color: #fff; margin-bottom: 8px;
+}
+.proof-number span {
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.proof-label { font-size: 14px; color: var(--muted); }
+
+/* ── DOR ── */
+.dor {
+  position: relative; z-index: 2;
+  padding: 120px 40px;
+}
+.section-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--secondary);
+  background: rgba(167,139,250,0.08);
+  border: 1px solid rgba(167,139,250,0.15);
+  padding: 5px 14px; border-radius: 100px;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(36px, 4.5vw, 64px);
+  line-height: 1.05; letter-spacing: -1.5px;
+  color: #fff; margin-bottom: 16px;
+}
+.section-sub {
+  font-size: 17px; color: var(--muted); line-height: 1.6;
+  max-width: 520px; margin-bottom: 64px;
+}
+.dor-inner { max-width: 1100px; margin: 0 auto; }
+.dor-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 24px;
+}
+.dor-card {
+  background: rgba(var(--accent-rgb), 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(var(--accent-rgb), 0.15);
+  border-radius: 24px; padding: 36px 32px;
+  transition: transform .3s, box-shadow .3s;
+}
+.dor-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(var(--accent-rgb), 0.15);
+}
+.dor-icon {
+  width: 52px; height: 52px; border-radius: 16px;
+  background: rgba(var(--accent-rgb), 0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 20px;
+}
+.dor-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+.dor-text { font-size: 15px; color: var(--muted); line-height: 1.65; }
+.dor-vs {
+  display: flex; align-items: center; gap: 16px;
+  margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 13px;
+}
+.dor-vs-bad { color: #F87171; }
+.dor-vs-good { color: #34D399; }
+
+/* ── TEMPO VIVO (pinned) ── */
+.tempo-vivo {
+  position: relative;
+  height: 400vh;
+  z-index: 2;
+}
+.tempo-sticky {
+  position: sticky; top: 0; height: 100vh;
+  overflow: hidden;
+}
+.tv-panel {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  opacity: 0;
+  transition: background 1.5s ease;
+}
+.tv-panel.manha { background: #07070A; }
+.tv-panel.tarde  { background: #07070A; }
+.tv-panel.noite  { background: #07070A; }
+.tv-emoji {
+  font-size: 80px; margin-bottom: 24px;
+  transform: scale(0.5); opacity: 0;
+  display: block; text-align: center;
+}
+.tv-time {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(80px, 14vw, 140px);
+  letter-spacing: -4px;
+  color: #fff; line-height: 0.9;
+  text-align: center;
+}
+.tv-sub {
+  font-size: 18px; color: var(--muted);
+  text-align: center; margin-top: 20px;
+  max-width: 500px; line-height: 1.6;
+  opacity: 0;
+}
+.tv-reset {
+  margin-top: 28px;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(var(--accent-rgb), 0.15);
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  border-radius: 100px; padding: 8px 20px;
+  font-size: 13px; font-weight: 600; color: var(--accent);
+  opacity: 0;
+}
+.tv-dots {
+  position: fixed;
+  right: 40px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 10px;
+  z-index: 100;
+  opacity: 0;
+}
+.tv-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: background .3s, transform .3s;
+}
+.tv-dot.active {
+  background: var(--accent);
+  transform: scale(1.4);
+}
+
+/* ── FEATURES HORIZONTAL ── */
+.features {
+  position: relative;
+  height: 350vh;
+  z-index: 2;
+}
+.features-sticky {
+  position: sticky; top: 0; height: 100vh;
+  overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.features-header {
+  padding: 0 60px;
+  max-width: 600px;
+  margin-bottom: 48px;
+}
+.features-track-wrap {
+  overflow: hidden;
+  padding: 0 0 20px;
+}
+.features-track {
+  display: flex; gap: 24px;
+  padding: 0 60px;
+  width: max-content;
+}
+.feat-card {
+  width: 320px;
+  background: rgba(var(--accent-rgb), 0.06);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(var(--accent-rgb), 0.18);
+  border-radius: 24px;
+  padding: 36px 32px;
+  flex-shrink: 0;
+  transition: transform .3s, box-shadow .3s, border-color .3s;
+}
+.feat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 60px rgba(var(--accent-rgb), 0.2);
+  border-color: rgba(var(--accent-rgb), 0.4);
+}
+.feat-icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: rgba(var(--accent-rgb), 0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin-bottom: 24px;
+  transition: background .3s;
+}
+.feat-card:hover .feat-icon { background: rgba(var(--accent-rgb), 0.25); }
+.feat-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+.feat-text { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+/* ── APP SCREENS ── */
+.screens {
+  position: relative; z-index: 2;
+  padding: 120px 40px;
+  overflow: hidden;
+}
+.screens-inner { max-width: 1100px; margin: 0 auto; }
+.screens-title-row {
+  margin-bottom: 60px;
+}
+.screens-row {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 32px;
+  align-items: end;
+}
+.screen-mockup {
+  background: #0e0e14;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  transition: transform .4s;
+}
+.screen-mockup:nth-child(2) { transform: translateY(-24px); }
+.screen-mockup:hover { transform: translateY(-8px) !important; }
+.screen-bar {
+  background: rgba(var(--accent-rgb), 0.08);
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.screen-bar-dot { width: 8px; height: 8px; border-radius: 50%; }
+.screen-body { padding: 20px 16px; }
+.screen-heading { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.screen-sub-text { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+.screen-list { display: flex; flex-direction: column; gap: 8px; }
+.screen-item {
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex; align-items: center; gap: 10px;
+  border-left: 3px solid;
+}
+.screen-item:nth-child(odd) { border-left-color: var(--accent); }
+.screen-item:nth-child(even) { border-left-color: var(--secondary); }
+.screen-item-text { font-size: 12px; color: var(--text); }
+.screen-item-check {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.2); flex-shrink: 0;
+}
+.screen-item-check.done {
+  background: #34D399; border-color: #34D399;
+}
+
+/* ── DEPOIMENTOS ── */
+.depoimentos {
+  position: relative; z-index: 2;
+  padding: 120px 40px;
+  background: rgba(var(--accent-rgb), 0.02);
+}
+.depo-inner { max-width: 1100px; margin: 0 auto; }
+.depo-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 28px;
+  margin-top: 64px;
+}
+.depo-card {
+  background: rgba(var(--accent-rgb), 0.05);
+  border: 1px solid rgba(var(--accent-rgb), 0.12);
+  border-radius: 24px;
+  padding: 36px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.depo-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 72px; line-height: 0.8;
+  color: rgba(var(--accent-rgb), 0.3);
+  position: absolute; top: 20px; right: 28px;
+  font-weight: 900;
+}
+.depo-stars { color: #FBBF24; font-size: 13px; margin-bottom: 18px; letter-spacing: 2px; }
+.depo-text {
+  font-size: 15px; color: var(--text); line-height: 1.7;
+  margin-bottom: 24px; position: relative; z-index: 1;
+}
+.depo-author { display: flex; align-items: center; gap: 12px; }
+.depo-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 15px; color: #fff;
+}
+.depo-name { font-size: 14px; font-weight: 600; color: #fff; }
+.depo-role { font-size: 12px; color: var(--muted); }
+
+/* ── PREÇO ── */
+.preco {
+  position: relative; z-index: 2;
+  padding: 120px 40px;
+}
+.preco-inner {
+  max-width: 540px; margin: 0 auto; text-align: center;
+}
+.preco-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(52,211,153,0.1);
+  border: 1px solid rgba(52,211,153,0.25);
+  color: #34D399;
+  padding: 5px 14px; border-radius: 100px;
+  font-size: 12px; font-weight: 600; letter-spacing: 1px;
+  margin-bottom: 32px;
+}
+.preco-card {
+  background: rgba(var(--accent-rgb), 0.06);
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  border-radius: 32px; padding: 52px 48px;
+  position: relative; overflow: hidden;
+}
+.preco-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--secondary));
+}
+.preco-value {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; font-size: 72px; color: #fff;
+  line-height: 1; margin-bottom: 4px;
+}
+.preco-value span { font-size: 28px; color: var(--muted); vertical-align: super; }
+.preco-per { font-size: 15px; color: var(--muted); margin-bottom: 40px; }
+.preco-list { list-style: none; margin-bottom: 40px; text-align: left; }
+.preco-list li {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 15px; color: var(--text);
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.preco-list li:last-child { border: none; }
+.preco-list li::before {
+  content: '✓';
+  width: 22px; height: 22px;
+  background: rgba(52,211,153,0.15);
+  color: #34D399; font-size: 12px; font-weight: 700;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.preco-note { font-size: 13px; color: var(--muted); margin-top: 20px; }
+
+/* ── CTA FINAL ── */
+.cta-final {
+  position: relative;
+  height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  z-index: 2;
+  overflow: hidden;
+}
+.cta-final-bg {
+  position: absolute; inset: 0; z-index: 0;
+}
+.cta-orb {
+  position: absolute;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.3) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  animation: orb-pulse 4s ease-in-out infinite;
+}
+@keyframes orb-pulse {
+  0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%,-50%) scale(1.3); opacity: 1; }
+}
+.cta-orb-inner {
+  position: absolute;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.5) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  animation: orb-pulse 2.5s ease-in-out infinite reverse;
+}
+.cta-final-inner { position: relative; z-index: 1; max-width: 700px; }
+.cta-final-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(44px, 6vw, 80px);
+  color: #fff; line-height: 1.05;
+  letter-spacing: -2px; margin-bottom: 24px;
+}
+.cta-final-sub { font-size: 18px; color: var(--muted); margin-bottom: 48px; line-height: 1.6; }
+
+/* ── FOOTER ── */
+footer {
+  position: relative; z-index: 2;
+  padding: 48px 60px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; font-size: 16px; color: var(--muted);
+}
+.footer-links { display: flex; gap: 28px; }
+.footer-links a { font-size: 13px; color: var(--muted); transition: color .2s; }
+.footer-links a:hover { color: var(--text); }
+.footer-copy { font-size: 13px; color: var(--muted); }
+
+/* ── STARS (noite) ── */
+.tv-stars {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.tv-star {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0;
+  animation: star-twinkle 3s ease-in-out infinite;
+}
+@keyframes star-twinkle {
+  0%,100% { opacity: 0; }
+  50% { opacity: 0.8; }
+}
+
+/* ── REVEAL utils ── */
+.reveal { opacity: 0; transform: translateY(30px); }
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div id="cursor-outer"></div>
+<div id="cursor-dot"></div>
+
+<!-- SCROLL PROGRESS -->
+<div id="scroll-progress"></div>
+
+<!-- THREE.JS CANVAS -->
+<canvas id="hero-canvas"></canvas>
+
+<!-- NAV -->
+<nav class="nav" id="main-nav">
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    Ecossistema
+  </a>
+  <div class="nav-logo">
+    <div class="nav-orb">🌊</div>
+    MeuFluxo
+  </div>
+  <a href="#preco" class="btn-primary" style="padding:10px 24px;font-size:13px;">Começar grátis</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero-section">
+  <div class="hero-sticky">
+    <!-- SVG BLOB -->
+    <div class="hero-blob">
+      <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+        <path id="blob-path" fill="rgba(87,94,207,0.13)">
+          <animate
+            attributeName="d"
+            dur="14s"
+            repeatCount="indefinite"
+            values="
+              M400,100 C520,80 660,160 700,300 C740,440 640,560 500,580 C360,600 200,540 160,400 C120,260 180,120 400,100 Z;
+              M380,80 C520,60 680,180 720,320 C760,460 660,580 500,600 C340,620 180,540 140,380 C100,220 200,100 380,80 Z;
+              M420,120 C560,100 680,200 700,360 C720,520 600,600 440,580 C280,560 160,480 140,340 C120,200 220,140 420,120 Z;
+              M400,100 C520,80 660,160 700,300 C740,440 640,560 500,580 C360,600 200,540 160,400 C120,260 180,120 400,100 Z;
+            "
+          />
+        </path>
+      </svg>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-left" id="hero-left">
+        <div class="hero-tag">Novo jeito de fazer tarefas</div>
+        <h1 class="hero-headline" id="hero-headline">O único app<br>de tarefas que<br>não te faz<br><em>sentir culpado.</em></h1>
+        <p class="hero-sub" id="hero-sub">MeuFluxo foi feito com TDAH, pra quem tem TDAH. Cada bloco do dia reinicia. Nenhuma tarefa te persegue. Só o agora importa.</p>
+        <div class="hero-actions" id="hero-cta">
+          <a href="#preco" class="btn-primary magnetic-btn" id="hero-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Começar grátis 14 dias
+          </a>
+          <a href="#tempo-vivo" class="btn-secondary">
+            Ver como funciona
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <p class="price-hint">Depois dos 14 dias: <strong>R$29/mês</strong>. Cancele quando quiser.</p>
+      </div>
+
+      <!-- PHONE MOCKUP -->
+      <div class="hero-right" id="hero-phone-wrap">
+        <div class="phone-wrap" id="phone-wrap">
+          <div class="phone" id="phone-mockup">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-status">
+                <span>9:41</span>
+                <div class="phone-status-icons">
+                  <svg viewBox="0 0 24 24"><path d="M1 1l22 22M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01" stroke="#fff" fill="none" stroke-width="1.5"/></svg>
+                  <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01" stroke="#fff" fill="none" stroke-width="1.5"/></svg>
+                  <svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="11" rx="2" ry="2"/><path d="M22 11v3" stroke="none"/><rect x="22" y="9" width="1" height="7" rx=".5"/></svg>
+                </div>
+              </div>
+              <div class="phone-header">
+                <div class="phone-greeting">Boa tarde, Ana 🌤</div>
+                <div class="phone-date">Sábado, 22 de março</div>
+                <div class="tempo-vivo-label">⏱ TARDE</div>
+              </div>
+              <div class="phone-tasks">
+                <div class="task-card">
+                  <div class="task-check"></div>
+                  <div class="task-info">
+                    <div class="task-name">Responder e-mails</div>
+                    <div class="task-time">14:00 — 14:30</div>
+                  </div>
+                </div>
+                <div class="task-card">
+                  <div class="task-check"></div>
+                  <div class="task-info">
+                    <div class="task-name">Reunião cliente Ana</div>
+                    <div class="task-time">15:00 — 16:00</div>
+                  </div>
+                </div>
+                <div class="task-card">
+                  <div class="task-check done" style="background:#34D399;border-color:#34D399;"></div>
+                  <div class="task-info">
+                    <div class="task-name" style="text-decoration:line-through;color:var(--muted)">Revisar proposta</div>
+                    <div class="task-time" style="color:#34D399">✓ Concluído</div>
+                  </div>
+                </div>
+              </div>
+              <div class="phone-tabs">
+                <div class="tab-item active">
+                  <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  <span>Hoje</span>
+                </div>
+                <div class="tab-item">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <span>Semana</span>
+                </div>
+                <div class="tab-item">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>Foco</span>
+                </div>
+                <div class="tab-item">
+                  <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <span>Perfil</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF STRIP -->
+<section class="proof" id="proof">
+  <div class="proof-inner">
+    <div class="proof-item reveal">
+      <div class="proof-number"><span class="counter" data-target="47000" data-format="pt">0</span></div>
+      <div class="proof-label">usuários ativos</div>
+    </div>
+    <div class="proof-item reveal">
+      <div class="proof-number"><span class="counter" data-target="94" data-suffix="%">0</span></div>
+      <div class="proof-label">relatam menos culpa</div>
+    </div>
+    <div class="proof-item reveal">
+      <div class="proof-number"><span class="counter" data-target="3" data-suffix="x">0</span></div>
+      <div class="proof-label">mais foco comprovado</div>
+    </div>
+    <div class="proof-item reveal">
+      <div class="proof-number"><span style="background:linear-gradient(135deg,var(--accent),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">14</span></div>
+      <div class="proof-label">dias grátis pra testar</div>
+    </div>
+  </div>
+</section>
+
+<!-- DOR -->
+<section class="dor">
+  <div class="dor-inner">
+    <div class="section-tag reveal">A dor que você conhece</div>
+    <h2 class="section-title reveal">Outros apps te<br>punem por ser<br>você mesmo.</h2>
+    <p class="section-sub reveal">Se você tem TDAH, você sabe: ver uma lista enorme de tarefas atrasadas não gera ação — gera paralisia. MeuFluxo foi feito diferente.</p>
+    <div class="dor-grid">
+      <div class="dor-card reveal">
+        <div class="dor-icon">😤</div>
+        <div class="dor-title">Apps que te punem</div>
+        <div class="dor-text">Tarefa não feita ontem? Aparece hoje com cor vermelha. E anteontem? Também. Você abre o app e já sente peso antes de começar.</div>
+        <div class="dor-vs">
+          <span class="dor-vs-bad">❌ Outras ferramentas</span>
+          <span style="color:var(--muted)">→</span>
+          <span class="dor-vs-good">✓ MeuFluxo reseta</span>
+        </div>
+      </div>
+      <div class="dor-card reveal">
+        <div class="dor-icon">🧠</div>
+        <div class="dor-title">Culpa que não para</div>
+        <div class="dor-text">Cérebro com TDAH não funciona com pressão constante. Quanto mais você se cobra, mais trava. O ciclo da culpa é real — e nenhum app te ajuda a sair dele.</div>
+        <div class="dor-vs">
+          <span class="dor-vs-bad">❌ Culpa acumulada</span>
+          <span style="color:var(--muted)">→</span>
+          <span class="dor-vs-good">✓ Bloco a bloco</span>
+        </div>
+      </div>
+      <div class="dor-card reveal">
+        <div class="dor-icon">🧩</div>
+        <div class="dor-title">Método que não encaixa</div>
+        <div class="dor-text">GTD, Pomodoro, Kanban — todos criados por neurotipos pra neurotipos. Você tenta, funciona por 3 dias, abandona e se culpa mais ainda.</div>
+        <div class="dor-vs">
+          <span class="dor-vs-bad">❌ Método genérico</span>
+          <span style="color:var(--muted)">→</span>
+          <span class="dor-vs-good">✓ Feito pro seu cérebro</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMPO VIVO -->
+<section class="tempo-vivo" id="tempo-vivo">
+  <div class="tempo-sticky" id="tv-sticky">
+    <!-- MANHÃ -->
+    <div class="tv-panel manha" id="tv-manha">
+      <span class="tv-emoji" id="tv-emoji-manha">🌅</span>
+      <h2 class="tv-time">MANHÃ</h2>
+      <p class="tv-sub" id="tv-sub-manha">Começa do zero. Sem o peso de ontem.<br>Só o que você pode fazer agora.</p>
+      <div class="tv-reset" id="tv-reset-manha">↺ Reinicia às 12h automaticamente</div>
+    </div>
+    <!-- TARDE -->
+    <div class="tv-panel tarde" id="tv-tarde">
+      <span class="tv-emoji" id="tv-emoji-tarde">🌤</span>
+      <h2 class="tv-time">TARDE</h2>
+      <p class="tv-sub" id="tv-sub-tarde">Nova oportunidade. O que não foi feito<br>de manhã? Não importa mais.</p>
+      <div class="tv-reset" id="tv-reset-tarde">↺ Reinicia às 18h automaticamente</div>
+    </div>
+    <!-- NOITE -->
+    <div class="tv-panel noite" id="tv-noite">
+      <div class="tv-stars" id="tv-stars"></div>
+      <span class="tv-emoji" id="tv-emoji-noite">🌙</span>
+      <h2 class="tv-time">NOITE</h2>
+      <p class="tv-sub" id="tv-sub-noite">Termina o dia sem culpa. O que ficou<br>pra trás fica pra trás. Amanhã é novo.</p>
+      <div class="tv-reset" id="tv-reset-noite">↺ Amanhã começa limpo</div>
+    </div>
+
+    <!-- DOTS -->
+    <div class="tv-dots" id="tv-dots">
+      <div class="tv-dot active" id="dot-0"></div>
+      <div class="tv-dot" id="dot-1"></div>
+      <div class="tv-dot" id="dot-2"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES HORIZONTAL SCROLL -->
+<section class="features" id="features-section">
+  <div class="features-sticky">
+    <div class="features-header">
+      <div class="section-tag reveal">Funcionalidades</div>
+      <h2 class="section-title reveal" style="font-size:clamp(32px,4vw,52px)">Tudo que seu<br>cérebro precisa.</h2>
+    </div>
+    <div class="features-track-wrap">
+      <div class="features-track" id="features-track">
+        <div class="feat-card">
+          <div class="feat-icon">⏱</div>
+          <div class="feat-title">Tempo Vivo</div>
+          <div class="feat-text">Dia dividido em 3 blocos que reiniciam automaticamente. Tarde não carrega o peso da manhã. Noite não cobra a tarde.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🧘</div>
+          <div class="feat-title">Zero Culpa</div>
+          <div class="feat-text">Nenhum contador de dias perdidos. Nenhuma notificação agressiva. Só o que você pode fazer no bloco atual.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🎯</div>
+          <div class="feat-title">Foco Cirúrgico</div>
+          <div class="feat-text">Máximo 3 tarefas por bloco. Interface minimalista. Menos informação na tela = menos paralisia cognitiva.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🔔</div>
+          <div class="feat-title">Lembretes Gentis</div>
+          <div class="feat-text">Notificações que motivam, não cobram. Sem alarmes que geram ansiedade. Timing ajustado ao seu ritmo.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🎨</div>
+          <div class="feat-title">Projetos em Cores</div>
+          <div class="feat-text">Cada projeto tem uma cor. Visualização imediata sem precisar ler. Perfeito para o cérebro visual do TDAH.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📊</div>
+          <div class="feat-title">Insights Honestos</div>
+          <div class="feat-text">Relatórios que mostram progresso real, sem comparação cruel com "o ideal". Você evolui no seu ritmo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP SCREENS -->
+<section class="screens" id="screens">
+  <div class="screens-inner">
+    <div class="screens-title-row">
+      <div class="section-tag reveal">Interface</div>
+      <h2 class="section-title reveal">Simples porque<br>foi pensado pra você.</h2>
+    </div>
+    <div class="screens-row">
+      <div class="screen-mockup reveal">
+        <div class="screen-bar">
+          <div class="screen-bar-dot" style="background:#FF5F57"></div>
+          <div class="screen-bar-dot" style="background:#FEBC2E"></div>
+          <div class="screen-bar-dot" style="background:#28C840"></div>
+        </div>
+        <div class="screen-body">
+          <div class="screen-heading">🌅 Manhã</div>
+          <div class="screen-sub-text">3 de 3 tarefas disponíveis</div>
+          <div class="screen-list">
+            <div class="screen-item"><div class="screen-item-check done"></div><div class="screen-item-text">Ligar pra dentista</div></div>
+            <div class="screen-item"><div class="screen-item-check"></div><div class="screen-item-text">Pagar boleto</div></div>
+            <div class="screen-item"><div class="screen-item-check"></div><div class="screen-item-text">Responder e-mails</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-mockup reveal">
+        <div class="screen-bar">
+          <div class="screen-bar-dot" style="background:#FF5F57"></div>
+          <div class="screen-bar-dot" style="background:#FEBC2E"></div>
+          <div class="screen-bar-dot" style="background:#28C840"></div>
+        </div>
+        <div class="screen-body">
+          <div class="screen-heading">🌤 Tarde — Foco</div>
+          <div class="screen-sub-text">Modo concentração ativo</div>
+          <div style="background:rgba(87,94,207,0.15);border:1px solid rgba(87,94,207,0.3);border-radius:12px;padding:16px;text-align:center;margin-top:8px;">
+            <div style="font-size:32px;margin-bottom:8px;">🎯</div>
+            <div style="font-size:14px;color:var(--text);font-weight:600;">Reunião com cliente</div>
+            <div style="font-size:12px;color:var(--secondary);margin-top:4px;">25 min restantes</div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-mockup reveal">
+        <div class="screen-bar">
+          <div class="screen-bar-dot" style="background:#FF5F57"></div>
+          <div class="screen-bar-dot" style="background:#FEBC2E"></div>
+          <div class="screen-bar-dot" style="background:#28C840"></div>
+        </div>
+        <div class="screen-body">
+          <div class="screen-heading">🌙 Resumo do dia</div>
+          <div class="screen-sub-text">Você fez o que pôde. Isso basta.</div>
+          <div style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:12px;padding:16px;margin-top:8px;">
+            <div style="font-size:12px;color:#34D399;font-weight:600;margin-bottom:8px;">✓ 5 tarefas concluídas hoje</div>
+            <div style="font-size:12px;color:var(--muted);">Amanhã começa do zero. Sem cobranças. Sem listas infinitas.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="depoimentos" id="depoimentos">
+  <div class="depo-inner">
+    <div class="section-tag reveal">O que dizem</div>
+    <h2 class="section-title reveal">Pessoas reais.<br>TDAH de verdade.</h2>
+    <div class="depo-grid">
+      <div class="depo-card reveal">
+        <div class="depo-quote">"</div>
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">"Tentei Notion, Todoist, até planilha do Excel. Sempre a mesma coisa: funcionava por 3 dias e eu abandonava me sentindo um lixo. Com MeuFluxo foi diferente. A ideia de que cada bloco reseta mudou tudo pra mim."</p>
+        <div class="depo-author">
+          <div class="depo-avatar">LP</div>
+          <div>
+            <div class="depo-name">Larissa Pereira</div>
+            <div class="depo-role">Designer UX, TDAH diagnosticada aos 28</div>
+          </div>
+        </div>
+      </div>
+      <div class="depo-card reveal">
+        <div class="depo-quote">"</div>
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">"Eu abria qualquer app de tarefas e já ficava ansioso. A lista de coisas atrasadas parecia me gritar. Com MeuFluxo, abro e sinto que posso. Só o que importa agora. Isso mudou minha relação com produtividade."</p>
+        <div class="depo-author">
+          <div class="depo-avatar">RC</div>
+          <div>
+            <div class="depo-name">Rodrigo Carvalho</div>
+            <div class="depo-role">Dev freelancer, TDAH + ansiedade</div>
+          </div>
+        </div>
+      </div>
+      <div class="depo-card reveal">
+        <div class="depo-quote">"</div>
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">"Fui diagnosticada com TEA aos 32. Nunca me encaixei em nenhum sistema de organização. O MeuFluxo foi a primeira coisa que parecia ter sido feita pra como meu cérebro funciona. Simples. Sem punição. Perfeito."</p>
+        <div class="depo-author">
+          <div class="depo-avatar">MS</div>
+          <div>
+            <div class="depo-name">Marina Santos</div>
+            <div class="depo-role">Professora, TEA + TDAH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREÇO -->
+<section class="preco" id="preco">
+  <div class="preco-inner">
+    <div class="preco-badge">✦ Um plano, sem complicação</div>
+    <div class="preco-card">
+      <div class="preco-value"><span>R$</span>29</div>
+      <div class="preco-per">por mês · cancele quando quiser</div>
+      <ul class="preco-list">
+        <li>Tempo Vivo (manhã, tarde e noite)</li>
+        <li>Reinício automático por bloco</li>
+        <li>Notificações gentis e personalizáveis</li>
+        <li>Projetos com cores ilimitados</li>
+        <li>Modo foco integrado</li>
+        <li>Insights de progresso sem julgamento</li>
+        <li>Suporte por pessoas com TDAH</li>
+      </ul>
+      <a href="#" class="btn-primary magnetic-btn" style="width:100%;justify-content:center;font-size:16px;padding:18px 32px;">
+        Começar grátis 14 dias
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <p class="preco-note">Sem precisar de cartão de crédito nos 14 dias. Seu cérebro merece testar sem pressão.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final" id="cta-final">
+  <div class="cta-final-bg">
+    <div class="cta-orb"></div>
+    <div class="cta-orb-inner"></div>
+  </div>
+  <div class="cta-final-inner">
+    <h2 class="cta-final-title">Chega de se<br>sentir culpado<br>por ser você.</h2>
+    <p class="cta-final-sub">Milhares de pessoas com TDAH já encontraram um jeito de funcionar que respeita como elas são. Você é o próximo.</p>
+    <a href="#preco" class="btn-primary magnetic-btn" style="font-size:16px;padding:20px 44px;display:inline-flex;">
+      Começar agora — é grátis
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:8px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">MeuFluxo</div>
+  <div class="footer-links">
+    <a href="#">Privacidade</a>
+    <a href="#">Termos</a>
+    <a href="index.html">Ecossistema</a>
+  </div>
+  <div class="footer-copy">© 2026 MeuFluxo</div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════
+//  LENIS SMOOTH SCROLL
+// ══════════════════════════════════════════════════════════════
+const lenis = new Lenis({
+  lerp: 0.08,
+  smooth: true,
+  smoothTouch: false,
+});
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+gsap.ticker.lagSmoothing(0);
+
+// ══════════════════════════════════════════════════════════════
+//  CUSTOM CURSOR
+// ══════════════════════════════════════════════════════════════
+const cursorOuter = document.getElementById('cursor-outer');
+const cursorDot   = document.getElementById('cursor-dot');
+let outerX = 0, outerY = 0;
+let mouseX = 0, mouseY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursorDot.style.left = mouseX + 'px';
+  cursorDot.style.top  = mouseY + 'px';
+});
+
+function animateCursor() {
+  outerX += (mouseX - outerX) * 0.08;
+  outerY += (mouseY - outerY) * 0.08;
+  cursorOuter.style.left = outerX + 'px';
+  cursorOuter.style.top  = outerY + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.querySelectorAll('a, button, .btn-primary, .btn-secondary, .dor-card, .feat-card').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});
+
+document.addEventListener('mousedown', () => {
+  document.body.classList.add('cursor-click');
+  setTimeout(() => document.body.classList.remove('cursor-click'), 300);
+});
+
+// ══════════════════════════════════════════════════════════════
+//  SCROLL PROGRESS
+// ══════════════════════════════════════════════════════════════
+const progressBar = document.getElementById('scroll-progress');
+lenis.on('scroll', ({ progress }) => {
+  progressBar.style.width = (progress * 100) + '%';
+});
+
+// ══════════════════════════════════════════════════════════════
+//  NAV SCROLL STATE
+// ══════════════════════════════════════════════════════════════
+const mainNav = document.getElementById('main-nav');
+lenis.on('scroll', ({ scroll }) => {
+  mainNav.classList.toggle('scrolled', scroll > 60);
+});
+
+// ══════════════════════════════════════════════════════════════
+//  THREE.JS PARTICLE FIELD
+// ══════════════════════════════════════════════════════════════
+(function initThree() {
+  const canvas = document.getElementById('hero-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 80;
+
+  const count = 800;
+  const positions = new Float32Array(count * 3);
+  const velocities = [];
+
+  for (let i = 0; i < count; i++) {
+    positions[i*3]   = (Math.random() - 0.5) * 200;
+    positions[i*3+1] = (Math.random() - 0.5) * 120;
+    positions[i*3+2] = (Math.random() - 0.5) * 80;
+    velocities.push({
+      x: (Math.random() - 0.5) * 0.04,
+      y: (Math.random() - 0.5) * 0.04,
+      z: (Math.random() - 0.5) * 0.02,
+    });
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+  const mat = new THREE.PointsMaterial({
+    color: 0x575ECF,
+    size: 0.6,
+    transparent: true,
+    opacity: 0.55,
+    sizeAttenuation: true,
+  });
+
+  const particles = new THREE.Points(geo, mat);
+  scene.add(particles);
+
+  let mx = 0, my = 0;
+  let scrollY = 0;
+  let speedMult = 1;
+
+  document.addEventListener('mousemove', (e) => {
+    mx = (e.clientX / window.innerWidth - 0.5) * 2;
+    my = -(e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  lenis.on('scroll', ({ scroll }) => {
+    scrollY = scroll;
+    const maxHeroScroll = window.innerHeight * 2;
+    speedMult = Math.max(0.1, 1 - scroll / maxHeroScroll);
+    canvas.style.opacity = Math.max(0, 1 - scroll / (window.innerHeight * 1.2));
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const pos = geo.attributes.position.array;
+    for (let i = 0; i < count; i++) {
+      pos[i*3]   += velocities[i].x * speedMult;
+      pos[i*3+1] += velocities[i].y * speedMult;
+      pos[i*3+2] += velocities[i].z * speedMult;
+      if (Math.abs(pos[i*3])   > 105) velocities[i].x *= -1;
+      if (Math.abs(pos[i*3+1]) > 65)  velocities[i].y *= -1;
+      if (Math.abs(pos[i*3+2]) > 45)  velocities[i].z *= -1;
+    }
+    geo.attributes.position.needsUpdate = true;
+    camera.position.x += (mx * 8 - camera.position.x) * 0.04;
+    camera.position.y += (my * 5 - camera.position.y) * 0.04;
+    camera.lookAt(scene.position);
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  TEXT CHAR SPLIT HELPER
+// ══════════════════════════════════════════════════════════════
+function splitChars(el) {
+  const html = el.innerHTML;
+  const parts = html.split(/(<br>|<em>.*?<\/em>)/g);
+  let result = '';
+  parts.forEach(part => {
+    if (part === '<br>') {
+      result += '<br>';
+    } else if (part.startsWith('<em>')) {
+      const inner = part.replace(/<\/?em>/g, '');
+      let spans = '';
+      inner.split('').forEach(ch => {
+        if (ch === ' ') spans += '<span class="char" style="display:inline-block"> </span>';
+        else spans += `<span class="char" style="display:inline-block">${ch}</span>`;
+      });
+      result += `<em>${spans}</em>`;
+    } else {
+      part.split('').forEach(ch => {
+        if (ch === ' ') result += '<span class="char" style="display:inline-block"> </span>';
+        else result += `<span class="char" style="display:inline-block">${ch}</span>`;
+      });
+    }
+  });
+  el.innerHTML = result;
+  return el.querySelectorAll('.char');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  HERO ANIMATIONS
+// ══════════════════════════════════════════════════════════════
+const heroHeadline = document.getElementById('hero-headline');
+const heroChars = splitChars(heroHeadline);
+
+gsap.fromTo(heroChars, {
+  rotationX: -90,
+  opacity: 0,
+  transformOrigin: '0% 50% -50px',
+}, {
+  rotationX: 0,
+  opacity: 1,
+  duration: 0.8,
+  stagger: 0.018,
+  ease: 'back.out(1.5)',
+  delay: 0.3,
+});
+
+gsap.to('#hero-sub', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.9 });
+gsap.to('#hero-cta', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 1.1 });
+
+// Hero scroll pin
+const heroTl = gsap.timeline({
+  scrollTrigger: {
+    trigger: '#hero-section',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: 1.5,
+  }
+});
+
+heroTl
+  .to('#hero-left', { y: -60, scale: 0.94, ease: 'none' }, 0)
+  .to('#phone-wrap', {
+    rotateY: 0,
+    ease: 'none',
+  }, 0);
+
+// ══════════════════════════════════════════════════════════════
+//  TEMPO VIVO PINNED SECTION
+// ══════════════════════════════════════════════════════════════
+// Create stars
+const starsContainer = document.getElementById('tv-stars');
+for (let i = 0; i < 120; i++) {
+  const star = document.createElement('div');
+  star.className = 'tv-star';
+  star.style.left  = Math.random() * 100 + '%';
+  star.style.top   = Math.random() * 100 + '%';
+  star.style.animationDelay = Math.random() * 4 + 's';
+  star.style.animationDuration = (2 + Math.random() * 3) + 's';
+  starsContainer.appendChild(star);
+}
+
+const tvTl = gsap.timeline({
+  scrollTrigger: {
+    trigger: '#tempo-vivo',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: 1.5,
+    pin: false,
+    onUpdate: (self) => {
+      const p = self.progress;
+      const dots = document.querySelectorAll('.tv-dot');
+
+      // MANHÃ: 0 – 0.33
+      // TARDE: 0.33 – 0.66
+      // NOITE: 0.66 – 1
+      const manha = document.getElementById('tv-manha');
+      const tarde  = document.getElementById('tv-tarde');
+      const noite  = document.getElementById('tv-noite');
+      const dotsEl = document.getElementById('tv-dots');
+
+      dotsEl.style.opacity = '1';
+
+      if (p < 0.33) {
+        const lp = p / 0.33;
+        manha.style.opacity = '1';
+        tarde.style.opacity  = '0';
+        noite.style.opacity  = '0';
+        manha.style.background = `#07070A`;
+
+        const emoji = document.getElementById('tv-emoji-manha');
+        const sub   = document.getElementById('tv-sub-manha');
+        const reset = document.getElementById('tv-reset-manha');
+        emoji.style.transform = `scale(${0.5 + lp * 0.5})`;
+        emoji.style.opacity   = lp.toString();
+        sub.style.opacity     = Math.max(0, (lp - 0.4) / 0.6).toString();
+        reset.style.opacity   = Math.max(0, (lp - 0.6) / 0.4).toString();
+
+        dots[0].classList.add('active');
+        dots[1].classList.remove('active');
+        dots[2].classList.remove('active');
+
+      } else if (p < 0.66) {
+        const lp = (p - 0.33) / 0.33;
+        manha.style.opacity = '0';
+        tarde.style.opacity  = '1';
+        noite.style.opacity  = '0';
+
+        const r = Math.round(7 + (10-7)*lp);
+        const g = Math.round(7 + (15-7)*lp);
+        const b = Math.round(10 + (26-10)*lp);
+        tarde.style.background = `rgb(${r},${g},${b})`;
+
+        const emoji = document.getElementById('tv-emoji-tarde');
+        const sub   = document.getElementById('tv-sub-tarde');
+        const reset = document.getElementById('tv-reset-tarde');
+        emoji.style.transform = `scale(${0.5 + lp * 0.5})`;
+        emoji.style.opacity   = lp.toString();
+        sub.style.opacity     = Math.max(0, (lp - 0.4) / 0.6).toString();
+        reset.style.opacity   = Math.max(0, (lp - 0.6) / 0.4).toString();
+
+        dots[0].classList.remove('active');
+        dots[1].classList.add('active');
+        dots[2].classList.remove('active');
+
+      } else {
+        const lp = (p - 0.66) / 0.34;
+        manha.style.opacity = '0';
+        tarde.style.opacity  = '0';
+        noite.style.opacity  = '1';
+        noite.style.background = '#07070A';
+
+        const emoji = document.getElementById('tv-emoji-noite');
+        const sub   = document.getElementById('tv-sub-noite');
+        const reset = document.getElementById('tv-reset-noite');
+        emoji.style.transform = `scale(${0.5 + lp * 0.5})`;
+        emoji.style.opacity   = lp.toString();
+        sub.style.opacity     = Math.max(0, (lp - 0.4) / 0.6).toString();
+        reset.style.opacity   = Math.max(0, (lp - 0.6) / 0.4).toString();
+
+        const starsArr = starsContainer.querySelectorAll('.tv-star');
+        starsArr.forEach(s => { s.style.opacity = (Math.random() * lp).toString(); });
+
+        dots[0].classList.remove('active');
+        dots[1].classList.remove('active');
+        dots[2].classList.add('active');
+      }
+    }
+  }
+});
+
+// Init panels
+document.getElementById('tv-manha').style.opacity = '1';
+
+// ══════════════════════════════════════════════════════════════
+//  FEATURES HORIZONTAL SCROLL
+// ══════════════════════════════════════════════════════════════
+const track = document.getElementById('features-track');
+
+gsap.to(track, {
+  x: () => -(track.scrollWidth - window.innerWidth + 120),
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#features-section',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: 1.5,
+    pin: '.features-sticky',
+    anticipatePin: 1,
+  }
+});
+
+// ══════════════════════════════════════════════════════════════
+//  SECTION HEADING REVEALS
+// ══════════════════════════════════════════════════════════════
+document.querySelectorAll('.section-title').forEach(el => {
+  const chars = splitChars(el);
+  gsap.fromTo(chars, {
+    rotationX: -90,
+    opacity: 0,
+    transformOrigin: '0% 50% -50px',
+  }, {
+    rotationX: 0,
+    opacity: 1,
+    duration: 0.7,
+    stagger: 0.018,
+    ease: 'back.out(1.5)',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 85%',
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+//  REVEAL ELEMENTS
+// ══════════════════════════════════════════════════════════════
+document.querySelectorAll('.reveal:not(.section-title)').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, y: 30 }, {
+    opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 88%',
+    },
+    delay: (i % 4) * 0.08,
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+//  NUMBER COUNTERS
+// ══════════════════════════════════════════════════════════════
+document.querySelectorAll('.counter').forEach(el => {
+  const target = parseInt(el.dataset.target);
+  const suffix = el.dataset.suffix || '';
+  const format = el.dataset.format;
+
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 88%',
+    once: true,
+    onEnter: () => {
+      gsap.to({ val: 0 }, {
+        val: target,
+        duration: 2.2,
+        ease: 'power2.out',
+        onUpdate: function() {
+          let v = Math.round(this.targets()[0].val);
+          if (format === 'pt') {
+            v = v.toLocaleString('pt-BR');
+          }
+          el.parentElement.innerHTML = `<span>${v}${suffix}</span>`;
+        }
+      });
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+//  MAGNETIC BUTTONS
+// ══════════════════════════════════════════════════════════════
+document.querySelectorAll('.magnetic-btn').forEach(btn => {
+  btn.addEventListener('mousemove', (e) => {
+    const rect = btn.getBoundingClientRect();
+    const bx = rect.left + rect.width / 2;
+    const by = rect.top + rect.height / 2;
+    const dx = e.clientX - bx;
+    const dy = e.clientY - by;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 80) {
+      const factor = (80 - dist) / 80;
+      gsap.to(btn, {
+        x: dx * factor * 0.35,
+        y: dy * factor * 0.35,
+        duration: 0.35,
+        ease: 'power2.out',
+      });
+    }
+  });
+  btn.addEventListener('mouseleave', () => {
+    gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.5)' });
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+//  STAGGER CARD REVEALS
+// ══════════════════════════════════════════════════════════════
+['#dor-grid .dor-card', '#depoimentos .depo-card'].forEach(sel => {
+  // Already handled by .reveal class
+});
+
+// Grid-aware stagger for dor cards
+ScrollTrigger.create({
+  trigger: '.dor-grid',
+  start: 'top 82%',
+  once: true,
+  onEnter: () => {
+    gsap.fromTo('.dor-card', { opacity: 0, y: 40 }, {
+      opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out',
+    });
+  }
+});
+
+ScrollTrigger.create({
+  trigger: '.depo-grid',
+  start: 'top 82%',
+  once: true,
+  onEnter: () => {
+    gsap.fromTo('.depo-card', { opacity: 0, y: 40 }, {
+      opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out',
+    });
+  }
+});
+
+// ══════════════════════════════════════════════════════════════
+//  CTA FINAL REVEAL
+// ══════════════════════════════════════════════════════════════
+const ctaTitle = document.querySelector('.cta-final-title');
+const ctaTitleChars = splitChars(ctaTitle);
+gsap.fromTo(ctaTitleChars, {
+  rotationX: -90, opacity: 0, transformOrigin: '0% 50% -50px',
+}, {
+  rotationX: 0, opacity: 1, duration: 0.7, stagger: 0.02, ease: 'back.out(1.5)',
+  scrollTrigger: { trigger: '#cta-final', start: 'top 75%' }
+});
+
+gsap.fromTo('.cta-final-sub', { opacity: 0, y: 20 }, {
+  opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+  scrollTrigger: { trigger: '#cta-final', start: 'top 70%' }, delay: 0.4,
+});
+
+// ══════════════════════════════════════════════════════════════
+//  PRECO CARD REVEAL
+// ══════════════════════════════════════════════════════════════
+gsap.fromTo('.preco-card', { opacity: 0, y: 50, scale: 0.96 }, {
+  opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'power3.out',
+  scrollTrigger: { trigger: '.preco-card', start: 'top 82%' }
+});
+
+// ══════════════════════════════════════════════════════════════
+//  QUOTE MARK ANIMATION
+// ══════════════════════════════════════════════════════════════
+document.querySelectorAll('.depo-quote').forEach(q => {
+  gsap.fromTo(q, { opacity: 0, scale: 0.5, rotation: -20 }, {
+    opacity: 1, scale: 1, rotation: 0, duration: 0.6, ease: 'back.out(2)',
+    scrollTrigger: { trigger: q, start: 'top 88%' }
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+//  SCREENS STAGGER
+// ══════════════════════════════════════════════════════════════
+gsap.fromTo('.screen-mockup', { opacity: 0, y: 50 }, {
+  opacity: 1, y: (i) => i === 1 ? -24 : 0,
+  duration: 0.8, stagger: 0.15, ease: 'power3.out',
+  scrollTrigger: { trigger: '.screens-row', start: 'top 82%' }
+});
+
+</script>
+</body>
+</html>

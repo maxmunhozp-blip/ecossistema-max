@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TractorPRO — Dashboard unificado Meta + Google Ads com IA</title>
+<meta name="description" content="TractorPRO unifica Meta Ads + Google Ads, gera relatório automático pro seu cliente e cria campanhas com IA. Teste 7 dias grátis, sem cartão.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #3b82f6;
+    --blue-dark: #2563eb;
+    --blue-light: #eff6ff;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --text-light: #9ca3af;
+    --bg: #f9fafb;
+    --white: #ffffff;
+    --border: #e5e7eb;
+    --green: #10b981;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.08);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.2; }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-logo span { color: var(--blue); }
+  .logo-badge {
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: .05em;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: all .15s ease;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--blue);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(59,130,246,.35); }
+  .btn-sm { padding: 9px 18px; font-size: 14px; }
+
+  /* HERO */
+  .hero {
+    background: white;
+    padding: 80px 24px 72px;
+    text-align: center;
+  }
+  .hero-inner { max-width: 720px; margin: 0 auto; }
+  .hero-tag {
+    display: inline-block;
+    background: var(--blue-light);
+    color: var(--blue);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+    letter-spacing: .02em;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 20px;
+    letter-spacing: -.02em;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--blue);
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-bottom: 36px;
+    line-height: 1.7;
+  }
+  .hero-cta-group { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .hero-cta-group .btn { padding: 16px 32px; font-size: 17px; border-radius: var(--radius); }
+  .cta-note { font-size: 13px; color: var(--text-muted); }
+  .trust-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 40px;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  .trust-item i { color: var(--green); width: 16px; height: 16px; }
+
+  /* SECTION BASE */
+  section { padding: 80px 24px; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 16px;
+    letter-spacing: -.02em;
+  }
+  .section-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 540px;
+    line-height: 1.7;
+  }
+
+  /* PAIN */
+  .pain { background: var(--bg); }
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+  .pain-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+  }
+  .pain-card-icon {
+    width: 44px;
+    height: 44px;
+    background: #fef2f2;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .pain-card-icon i { color: #ef4444; width: 22px; height: 22px; }
+  .pain-card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .pain-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* HOW IT WORKS */
+  .how { background: white; }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+    margin-top: 56px;
+    position: relative;
+  }
+  .step { text-align: center; position: relative; }
+  .step-num {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: white;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 12px rgba(59,130,246,.3);
+  }
+  .step-visual {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-icon { color: var(--blue); }
+  .step-icon i { width: 36px; height: 36px; }
+  .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .step p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .connector {
+    display: none;
+  }
+  @media(min-width: 768px) {
+    .connector {
+      display: block;
+      position: absolute;
+      top: 26px;
+      left: calc(33.33% + 10px);
+      width: calc(33.33% - 20px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), #a5b4fc);
+    }
+    .connector-2 {
+      left: calc(66.66% + 10px);
+    }
+  }
+
+  /* FEATURES */
+  .features { background: var(--bg); }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+  .feature-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .feature-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--blue-light);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .feature-icon i { color: var(--blue); width: 24px; height: 24px; }
+  .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .feature-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* TESTIMONIALS */
+  .testimonials { background: white; }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .testimonial-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .stars { color: #f59e0b; font-size: 18px; margin-bottom: 14px; letter-spacing: 2px; }
+  .testimonial-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    color: white;
+    flex-shrink: 0;
+  }
+  .av1 { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
+  .av2 { background: linear-gradient(135deg, #10b981, #3b82f6); }
+  .av3 { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+  .author-name { font-weight: 700; font-size: 14px; }
+  .author-role { font-size: 13px; color: var(--text-muted); }
+
+  /* PRICING */
+  .pricing { background: var(--bg); }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+    align-items: start;
+  }
+  .pricing-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    position: relative;
+    transition: transform .2s;
+  }
+  .pricing-card:hover { transform: translateY(-4px); }
+  .pricing-card.recommended {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(59,130,246,.08), var(--shadow-lg);
+  }
+  .rec-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--blue);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 100px;
+    white-space: nowrap;
+    letter-spacing: .04em;
+  }
+  .plan-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .plan-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+  .plan-price { margin-bottom: 24px; }
+  .plan-price .currency { font-size: 18px; font-weight: 600; color: var(--text-muted); vertical-align: top; margin-top: 8px; display: inline-block; }
+  .plan-price .amount {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+  }
+  .plan-price .period { font-size: 14px; color: var(--text-muted); }
+  .plan-features { list-style: none; margin-bottom: 28px; }
+  .plan-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .plan-features li:last-child { border-bottom: none; }
+  .plan-features li i { color: var(--green); width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+  .plan-cta { width: 100%; text-align: center; justify-content: center; }
+
+  /* FAQ */
+  .faq { background: white; }
+  .faq-list { max-width: 720px; margin: 48px auto 0; }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 20px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    transition: color .15s;
+  }
+  .faq-question:hover { color: var(--blue); }
+  .faq-icon { flex-shrink: 0; transition: transform .2s; }
+  .faq-icon i { width: 20px; height: 20px; color: var(--blue); }
+  .faq-item.open .faq-icon { transform: rotate(180deg); }
+  .faq-answer {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease, padding .3s ease;
+  }
+  .faq-item.open .faq-answer { max-height: 300px; padding-bottom: 20px; }
+
+  /* FINAL CTA */
+  .final-cta {
+    background: var(--blue);
+    padding: 80px 24px;
+    text-align: center;
+  }
+  .final-cta h2 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    color: white;
+    margin-bottom: 16px;
+    letter-spacing: -.02em;
+  }
+  .final-cta p { font-size: 18px; color: rgba(255,255,255,.8); margin-bottom: 36px; }
+  .final-cta .btn {
+    background: white;
+    color: var(--blue);
+    font-size: 17px;
+    padding: 16px 36px;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(0,0,0,.15);
+  }
+  .final-cta .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+  .final-cta .cta-note { color: rgba(255,255,255,.65); margin-top: 14px; font-size: 13px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--text);
+    color: rgba(255,255,255,.6);
+    padding: 32px 24px;
+    text-align: center;
+    font-size: 14px;
+  }
+  footer a { color: rgba(255,255,255,.8); text-decoration: none; }
+  footer a:hover { color: white; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; gap: 12px; }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: .1s; }
+  .reveal-delay-2 { transition-delay: .2s; }
+  .reveal-delay-3 { transition-delay: .3s; }
+
+  @media(max-width: 640px) {
+    section { padding: 60px 16px; }
+    .hero { padding: 60px 16px 56px; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .trust-row { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">
+      Tractor<span>PRO</span>
+      <span class="logo-badge">BETA</span>
+    </a>
+    <a href="#pricing" class="btn btn-primary btn-sm">Testar grátis</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="hero-tag">Para gestores de tráfego freelancers e micro agências</span>
+    <h1>Criei uma campanha completa em <em>4 minutos</em>. Sem abrir o Gerenciador.</h1>
+    <p class="hero-sub">TractorPRO unifica Meta + Google, gera relatório automático pro seu cliente e cria campanhas com IA.</p>
+    <div class="hero-cta-group">
+      <a href="#pricing" class="btn btn-primary">
+        <i data-lucide="zap"></i> Testar 7 dias grátis (sem cartão)
+      </a>
+      <span class="cta-note">Sem cartão de crédito &nbsp;·&nbsp; Cancela quando quiser</span>
+    </div>
+    <div class="trust-row">
+      <div class="trust-item"><i data-lucide="check-circle"></i> 1.240 gestores</div>
+      <div class="trust-item"><i data-lucide="check-circle"></i> Meta Ads + Google Ads</div>
+      <div class="trust-item"><i data-lucide="check-circle"></i> Relatório via WhatsApp</div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:8px;">
+      <span class="section-label">A realidade do gestor</span>
+    </div>
+    <h2 class="section-title" style="text-align:center;margin:0 auto 12px;">Você reconhece alguma dessas situações?</h2>
+    <p class="section-sub" style="text-align:center;margin:0 auto;">Se você é gestor de tráfego, provavelmente viveu isso na semana passada.</p>
+    <div class="pain-grid">
+      <div class="pain-card reveal">
+        <div class="pain-card-icon"><i data-lucide="clock"></i></div>
+        <h3>"Passei 4 horas montando um relatório que o cliente viu em 30 segundos"</h3>
+        <p>Juntou print, colocou no Canva, mandou o PDF... e o cliente nem abriu. Isso nunca mais acontece no TractorPRO.</p>
+      </div>
+      <div class="pain-card reveal reveal-delay-1">
+        <div class="pain-card-icon"><i data-lucide="alert-triangle"></i></div>
+        <h3>"O orçamento explodiu durante a madrugada. Só vi de manhã."</h3>
+        <p>Sem alertas inteligentes, você descobre o problema depois do estrago. TractorPRO avisa em tempo real, no WhatsApp.</p>
+      </div>
+      <div class="pain-card reveal reveal-delay-2">
+        <div class="pain-card-icon"><i data-lucide="users"></i></div>
+        <h3>"Tenho 12 clientes para olhar toda manhã. Nunca tenho tempo para todos."</h3>
+        <p>Uma tela, todos os clientes, todas as plataformas. Sua rotina matinal passa de 2 horas para 15 minutos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="section-inner">
+    <div style="text-align:center;">
+      <span class="section-label">Como funciona</span>
+      <h2 class="section-title" style="margin:8px auto 12px;">3 passos. Começa hoje.</h2>
+      <p class="section-sub" style="margin:0 auto 0;">Não precisa instalar nada. Funciona no navegador.</p>
+    </div>
+    <div class="steps">
+      <div class="connector"></div>
+      <div class="connector connector-2"></div>
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <div class="step-visual">
+          <div class="step-icon"><i data-lucide="plug-zap"></i></div>
+        </div>
+        <h3>Conecta Meta Ads + Google Ads</h3>
+        <p>Integração real via OAuth. Autoriza em 2 cliques, sem copiar tokens ou mexer em API. Funciona com múltiplas contas.</p>
+      </div>
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">2</div>
+        <div class="step-visual">
+          <div class="step-icon"><i data-lucide="layout-dashboard"></i></div>
+        </div>
+        <h3>Dashboard unificado em tempo real</h3>
+        <p>Todos os clientes em uma tela. ROAS, CPC, orçamento, conversões. Meta e Google lado a lado, sem trocar de aba.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">3</div>
+        <div class="step-visual">
+          <div class="step-icon"><i data-lucide="send"></i></div>
+        </div>
+        <h3>Relatório automático via WhatsApp</h3>
+        <p>Toda semana o cliente recebe um relatório bonito e claro automaticamente. Você não faz nada — acontece sozinho.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-inner">
+    <span class="section-label">Funcionalidades</span>
+    <h2 class="section-title">Tudo que um gestor sério precisa</h2>
+    <p class="section-sub">Construído por gestores de tráfego, para gestores de tráfego.</p>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon"><i data-lucide="brain-circuit"></i></div>
+        <h3>Wizard de Campanha com IA</h3>
+        <p>Responde 5 perguntas sobre o cliente e a IA monta a estrutura de campanha completa: segmentação, criativos e orçamento sugerido.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon"><i data-lucide="bar-chart-2"></i></div>
+        <h3>Dashboard Unificado</h3>
+        <p>Meta Ads e Google Ads em um único lugar. Veja ROAS, CTR, CPC e conversões de todos os clientes sem trocar de aba.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon"><i data-lucide="message-circle"></i></div>
+        <h3>Relatório via WhatsApp</h3>
+        <p>Relatório semanal enviado automaticamente pro WhatsApp do cliente. Ele recebe um link bonito com os resultados da semana.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><i data-lucide="bell-ring"></i></div>
+        <h3>Alertas Inteligentes</h3>
+        <p>Receba notificação no WhatsApp quando orçamento estiver perto do limite, ROAS cair abaixo do esperado ou campanha pausar.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon"><i data-lucide="users-round"></i></div>
+        <h3>Multi-Clientes</h3>
+        <p>Gerencie quantos clientes quiser. Troque de conta com 1 clique. Cada cliente tem seu próprio dashboard e relatório.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon"><i data-lucide="file-text"></i></div>
+        <h3>Proposta Comercial Automática</h3>
+        <p>Gere propostas profissionais com os resultados do cliente em PDF para renovação de contrato ou apresentação para novos clientes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="section-inner">
+    <div style="text-align:center;">
+      <span class="section-label">Resultados reais</span>
+      <h2 class="section-title" style="margin:8px auto 12px;">O que gestores falam</h2>
+      <p class="section-sub" style="margin:0 auto;">Mais de 1.200 gestores de tráfego já usam o TractorPRO.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Cara, eu economizo umas 3h por semana só com os relatórios automáticos. Meus clientes adoram receber pelo WhatsApp. Já renovaram o contrato 2x por causa disso."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar av1">RF</div>
+          <div>
+            <div class="author-name">Rafael F.</div>
+            <div class="author-role">Gestor de Tráfego · São Paulo</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-1">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Tinha 9 clientes e estava quase largando tudo. Com o dashboard unificado agora tenho 16 e consigo gerenciar sozinha, de manhã, em 30 minutos."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar av2">MC</div>
+          <div>
+            <div class="author-name">Mariana C.</div>
+            <div class="author-role">Gestora Freelancer · Curitiba</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-2">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"O wizard de campanha com IA é absurdo. Testei criar uma campanha pra um cliente novo e em 4 minutos tinha estrutura completa, já aprovada pelo cliente. Isso não existia."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar av3">TN</div>
+          <div>
+            <div class="author-name">Thiago N.</div>
+            <div class="author-role">Agência Micro · Belo Horizonte</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-inner">
+    <div style="text-align:center;">
+      <span class="section-label">Planos</span>
+      <h2 class="section-title" style="margin:8px auto 12px;">Quanto custa parar de perder tempo?</h2>
+      <p class="section-sub" style="margin:0 auto;">Teste 7 dias grátis em qualquer plano. Sem cartão de crédito.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="plan-name">Starter</div>
+        <div class="plan-desc">Para quem está começando</div>
+        <div class="plan-price">
+          <span class="currency">R$</span><span class="amount">97</span><span class="period">/mês</span>
+        </div>
+        <ul class="plan-features">
+          <li><i data-lucide="check"></i> Até 5 clientes</li>
+          <li><i data-lucide="check"></i> Dashboard Meta + Google</li>
+          <li><i data-lucide="check"></i> Relatório automático mensal</li>
+          <li><i data-lucide="check"></i> Alertas de orçamento</li>
+          <li><i data-lucide="check"></i> Suporte por email</li>
+        </ul>
+        <a href="#" class="btn btn-primary plan-cta" style="background:var(--bg);color:var(--blue);border:2px solid var(--blue);">Testar grátis 7 dias</a>
+      </div>
+      <div class="pricing-card recommended reveal reveal-delay-1">
+        <div class="rec-badge">RECOMENDADO</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-desc">Para gestores sérios</div>
+        <div class="plan-price">
+          <span class="currency">R$</span><span class="amount">147</span><span class="period">/mês</span>
+        </div>
+        <ul class="plan-features">
+          <li><i data-lucide="check"></i> Até 20 clientes</li>
+          <li><i data-lucide="check"></i> Dashboard Meta + Google</li>
+          <li><i data-lucide="check"></i> Relatório automático semanal</li>
+          <li><i data-lucide="check"></i> Wizard de campanha IA (ilimitado)</li>
+          <li><i data-lucide="check"></i> Alertas inteligentes WhatsApp</li>
+          <li><i data-lucide="check"></i> Proposta comercial automática</li>
+          <li><i data-lucide="check"></i> Suporte prioritário</li>
+        </ul>
+        <a href="#" class="btn btn-primary plan-cta">Testar grátis 7 dias</a>
+      </div>
+      <div class="pricing-card reveal reveal-delay-2">
+        <div class="plan-name">Agência</div>
+        <div class="plan-desc">Para agências e equipes</div>
+        <div class="plan-price">
+          <span class="currency">R$</span><span class="amount">247</span><span class="period">/mês</span>
+        </div>
+        <ul class="plan-features">
+          <li><i data-lucide="check"></i> Clientes ilimitados</li>
+          <li><i data-lucide="check"></i> Múltiplos usuários (até 5)</li>
+          <li><i data-lucide="check"></i> White-label (logo da sua agência)</li>
+          <li><i data-lucide="check"></i> Todos os recursos Pro</li>
+          <li><i data-lucide="check"></i> API de integração</li>
+          <li><i data-lucide="check"></i> Gerente de conta dedicado</li>
+        </ul>
+        <a href="#" class="btn btn-primary plan-cta" style="background:var(--bg);color:var(--blue);border:2px solid var(--blue);">Testar grátis 7 dias</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="section-inner">
+    <div style="text-align:center;">
+      <span class="section-label">Dúvidas frequentes</span>
+      <h2 class="section-title" style="margin:8px auto 0;">Respondemos tudo</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question">
+          Funciona com múltiplos clientes?
+          <span class="faq-icon"><i data-lucide="chevron-down"></i></span>
+        </button>
+        <div class="faq-answer">Sim, desde o plano Starter. Você cria um "workspace" para cada cliente, conecta as contas de anúncios dele e tem dashboards separados para cada um. No plano Pro você gerencia até 20 clientes, e no Agência não tem limite.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          A integração com Meta Ads é real?
+          <span class="faq-icon"><i data-lucide="chevron-down"></i></span>
+        </button>
+        <div class="faq-answer">100% real. Usamos a API oficial do Meta Marketing e a API do Google Ads. Você autoriza via OAuth (igual ao "Entrar com Facebook"), sem copiar tokens ou mexer em configurações técnicas. Os dados são puxados em tempo real, não por scraping.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          O relatório vai direto pro WhatsApp do meu cliente?
+          <span class="faq-icon"><i data-lucide="chevron-down"></i></span>
+        </button>
+        <div class="faq-answer">Sim. Você cadastra o WhatsApp do cliente e define a frequência (diário, semanal ou mensal). O TractorPRO envia automaticamente um link com o relatório interativo. O cliente vê os resultados no celular, sem precisar de login. Parece que você mandou pessoalmente.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Preciso instalar algo?
+          <span class="faq-icon"><i data-lucide="chevron-down"></i></span>
+        </button>
+        <div class="faq-answer">Não. TractorPRO é 100% web. Funciona em qualquer navegador, em qualquer computador ou celular. Sem download, sem extensão, sem configuração técnica. Você cria sua conta e começa a usar em minutos.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Quanto tempo para configurar o primeiro cliente?
+          <span class="faq-icon"><i data-lucide="chevron-down"></i></span>
+        </button>
+        <div class="faq-answer">Em média 7 minutos. Você cria o workspace, conecta o Meta Ads e o Google Ads do cliente (2 cliques cada), e o dashboard já está pronto. Tem um tutorial passo a passo dentro da plataforma, e se precisar de ajuda o suporte responde rápido.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="section-inner">
+    <h2>Chega de perder horas no Gerenciador.</h2>
+    <p>Junte-se a 1.240 gestores que já trabalham de forma inteligente.</p>
+    <a href="#pricing" class="btn">
+      <i data-lucide="zap"></i> Testar 7 dias grátis (sem cartão)
+    </a>
+    <p class="cta-note">Sem compromisso. Cancela com 1 clique.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span>© 2025 TractorPRO. Todos os direitos reservados.</span>
+    <a href="index.html">← Ecossistema MAX</a>
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>

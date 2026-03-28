@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeuFluxo — O app de tarefas para TDAH que não te cobra pelo que você não fez</title>
+<meta name="description" content="Para quem tem TDAH: cada período do dia reinicia do zero. Sem lista de vergonha. Sem culpa acumulada. Sem cartão de crédito.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8fafc;
+    --bg-card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --accent: #7c3aed;
+    --accent-light: #ede9fe;
+    --accent-hover: #6d28d9;
+    --border: #e2e8f0;
+    --success: #059669;
+    --radius: 12px;
+    --radius-lg: 20px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .headline {
+    font-family: 'Syne', sans-serif;
+    line-height: 1.15;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 14px 28px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+    white-space: nowrap;
+  }
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(124,58,237,0.40);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-primary.large {
+    font-size: 18px;
+    padding: 18px 36px;
+  }
+
+  /* ============================================
+     STICKY NAV
+  ============================================ */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(248,250,252,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--text); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--text); }
+
+  .btn-nav {
+    display: inline-flex;
+    align-items: center;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 100px;
+    transition: background 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-nav:hover { background: var(--accent-hover); }
+
+  /* ============================================
+     HERO
+  ============================================ */
+  .hero {
+    padding: 80px 0 60px;
+    text-align: center;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+    letter-spacing: 0.01em;
+  }
+
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 58px);
+    font-weight: 800;
+    color: var(--text);
+    max-width: 820px;
+    margin: 0 auto 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 2.5vw, 20px);
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 0 auto 36px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .hero-microcopy {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .hero-microcopy strong {
+    color: var(--success);
+    font-weight: 600;
+  }
+
+  .trust-signals {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  .trust-item .check {
+    color: var(--success);
+    font-weight: 700;
+  }
+
+  .social-cluster {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .avatars {
+    display: flex;
+    align-items: center;
+  }
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    margin-left: -8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+  .avatars .avatar:first-child { margin-left: 0; }
+  .av1 { background: #f59e0b; }
+  .av2 { background: #10b981; }
+  .av3 { background: #3b82f6; }
+
+  .social-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  .social-text strong { color: var(--text); }
+
+  /* ============================================
+     PAIN SECTION
+  ============================================ */
+  .pain {
+    padding: 60px 0;
+    background: #fff;
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+
+  .section-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 540px;
+  }
+
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+
+  .pain-card {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+
+  .pain-emoji {
+    font-size: 32px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .pain-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #991b1b;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .pain-card p {
+    font-size: 14px;
+    color: #b91c1c;
+    line-height: 1.6;
+  }
+
+  /* ============================================
+     SOLUTION / HOW IT WORKS
+  ============================================ */
+  .solution {
+    padding: 80px 0;
+  }
+
+  .solution-header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .step-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    position: relative;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .step-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  .step-number {
+    width: 40px;
+    height: 40px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .step-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .step-card p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .step-card.highlight {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .step-card.highlight .step-number {
+    background: var(--accent);
+  }
+  .step-card.highlight h3 { color: var(--accent); }
+  .step-card.highlight p { color: #5b21b6; }
+
+  /* ============================================
+     TESTIMONIALS
+  ============================================ */
+  .testimonials {
+    padding: 80px 0;
+    background: #fff;
+  }
+
+  .testimonials-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .testi-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    transition: box-shadow 0.2s;
+  }
+  .testi-card:hover { box-shadow: var(--shadow); }
+
+  .testi-stars {
+    color: #f59e0b;
+    font-size: 13px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .testi-quote {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .testi-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .testi-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .testi-role {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ============================================
+     PRICING
+  ============================================ */
+  .pricing {
+    padding: 80px 0;
+  }
+
+  .pricing-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .price-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    position: relative;
+  }
+
+  .price-card.pro {
+    border-color: var(--accent);
+    border-width: 2px;
+  }
+
+  .pro-badge {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .price-plan {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .price-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .price-value .price-currency {
+    font-size: 22px;
+    vertical-align: super;
+  }
+  .price-value .price-period {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  .price-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    margin-top: 4px;
+  }
+
+  .price-features {
+    list-style: none;
+    margin-bottom: 28px;
+  }
+  .price-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .price-features li:last-child { border-bottom: none; }
+  .price-features .feat-icon {
+    color: var(--success);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .price-features .feat-icon.no { color: #94a3b8; }
+
+  .btn-price {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid var(--border);
+    background: #fff;
+    color: var(--text);
+  }
+  .btn-price:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-price.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(124,58,237,0.3);
+  }
+  .btn-price.primary:hover { background: var(--accent-hover); }
+
+  /* ============================================
+     FAQ
+  ============================================ */
+  .faq {
+    padding: 80px 0;
+    background: #fff;
+  }
+
+  .faq-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .faq-list {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-item input[type="checkbox"] {
+    display: none;
+  }
+
+  .faq-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text);
+    user-select: none;
+    gap: 16px;
+  }
+  .faq-label:hover { color: var(--accent); }
+
+  .faq-icon {
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--text-muted);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+  }
+
+  .faq-answer-inner {
+    padding-bottom: 20px;
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .faq-item input:checked ~ .faq-label .faq-icon {
+    transform: rotate(45deg);
+  }
+  .faq-item input:checked ~ .faq-answer {
+    max-height: 300px;
+  }
+
+  /* ============================================
+     FINAL CTA
+  ============================================ */
+  .final-cta {
+    padding: 100px 0;
+    text-align: center;
+    background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%);
+    color: #fff;
+  }
+
+  .final-cta h2 {
+    font-size: clamp(30px, 5vw, 52px);
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+
+  .final-cta p {
+    font-size: 18px;
+    opacity: 0.85;
+    margin-bottom: 36px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .final-cta .btn-primary {
+    background: #fff;
+    color: var(--accent);
+    font-size: 18px;
+    padding: 18px 40px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+  .final-cta .btn-primary:hover { background: #f0e7ff; }
+
+  .final-trust {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 8px;
+  }
+  .final-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    opacity: 0.80;
+  }
+  .final-trust-item .check { color: #86efac; }
+
+  /* ============================================
+     FOOTER
+  ============================================ */
+  footer {
+    background: var(--text);
+    color: #fff;
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  footer p {
+    font-size: 14px;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+
+  footer a {
+    color: #a78bfa;
+    text-decoration: underline;
+    font-size: 14px;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  footer a:hover { opacity: 0.8; }
+
+  /* ============================================
+     SCROLL REVEAL ANIMATIONS
+  ============================================ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-5 { transition-delay: 0.5s; }
+
+  /* ============================================
+     RESPONSIVE
+  ============================================ */
+  @media (max-width: 768px) {
+    .nav-link { display: none; }
+    .hero { padding: 48px 0 40px; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .pain-grid { grid-template-columns: 1fr; }
+    .trust-signals { flex-direction: column; gap: 10px; }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 28px; }
+    .btn-primary.large { font-size: 16px; padding: 16px 28px; }
+    .final-cta h2 { font-size: 26px; }
+    .price-card { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <div class="nav-logo">Meu<span>Fluxo</span></div>
+    <div class="nav-right">
+      <a href="#como-funciona" class="nav-link">Como funciona</a>
+      <a href="#planos" class="nav-link">Planos</a>
+      <button class="btn-nav" onclick="document.getElementById('hero-cta').scrollIntoView({behavior:'smooth'})">Testar grátis</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag">
+      ✦ Feito para o cérebro TDAH
+    </div>
+    <h1>O único app de tarefas que não te <em>cobra pelo que você NÃO fez.</em></h1>
+    <p class="hero-sub">Para quem tem TDAH: cada período do dia reinicia do zero. Sem lista de vergonha. Sem culpa acumulada.</p>
+
+    <div class="hero-cta-group" id="hero-cta">
+      <a href="#planos" class="btn-primary large">
+        Testar 7 dias grátis (sem cartão)
+      </a>
+      <p class="hero-microcopy"><strong>Grátis para sempre</strong> no plano básico. Pro por R$29/mês.</p>
+    </div>
+
+    <div class="trust-signals">
+      <div class="trust-item">
+        <span class="check">✓</span>
+        <span>4.9★ App Store</span>
+      </div>
+      <div class="trust-item">
+        <span class="check">✓</span>
+        <span>12.000+ usuários com TDAH</span>
+      </div>
+      <div class="trust-item">
+        <span class="check">✓</span>
+        <span>Cancele quando quiser</span>
+      </div>
+    </div>
+
+    <div class="social-cluster">
+      <div class="avatars">
+        <div class="avatar av1">M</div>
+        <div class="avatar av2">R</div>
+        <div class="avatar av3">J</div>
+      </div>
+      <div class="social-text">
+        <strong>Já ajudou 12k+ pessoas</strong> com TDAH a ter mais clareza
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">O problema</div>
+      <h2 class="section-title">Os outros apps foram feitos para quem não tem TDAH</h2>
+      <p class="section-sub">Todo app de produtividade assume que você tem memória perfeita e motivação constante. Você não tem. E não é culpa sua.</p>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-card reveal reveal-delay-1">
+        <span class="pain-emoji">😰</span>
+        <h3>Todo app te mostra quantas tarefas você falhou ontem</h3>
+        <p>Você abre o app de manhã e já se sente fracassado antes de começar. Aquela lista vermelha de ontem ainda está ali, te acusando.</p>
+      </div>
+      <div class="pain-card reveal reveal-delay-2">
+        <span class="pain-emoji">😤</span>
+        <h3>Notificação às 23h: "você tem 47 tarefas pendentes"</h3>
+        <p>Como se você fosse conseguir fazer 47 tarefas nessa hora. O app te lembra que falhou, no pior momento possível.</p>
+      </div>
+      <div class="pain-card reveal reveal-delay-3">
+        <span class="pain-emoji">😔</span>
+        <h3>Você fecha o app antes de abrir porque ver a lista dói</h3>
+        <p>Então você acaba sem nenhuma organização — não porque é preguiçoso, mas porque o app é doloroso de usar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION / HOW IT WORKS -->
+<section class="solution" id="como-funciona">
+  <div class="container">
+    <div class="solution-header reveal">
+      <div class="section-label">Como funciona</div>
+      <h2 class="section-title">Três passos. Sem overhead.</h2>
+      <p class="section-sub">O conceito Tempo Vivo divide o dia em blocos que reiniciam independentemente.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-number">1</div>
+        <h3>Você abre o MeuFluxo no começo do período</h3>
+        <p>Manhã, tarde ou noite — cada momento tem sua própria tela limpa, zerada, esperando por você.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-number">2</div>
+        <h3>Adiciona só o que vai fazer AGORA</h3>
+        <p>Sem planejar a semana toda. Sem estimativas de tempo. Só o que você vai fazer neste período, com essa energia.</p>
+      </div>
+      <div class="step-card highlight reveal reveal-delay-3">
+        <div class="step-number">3</div>
+        <h3>O período termina. Tudo reseta. Recomeço limpo.</h3>
+        <p>Sem cobrança. Sem lista de vergonha. O que não foi feito, não foi feito. O próximo período começa zerado.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="container">
+    <div class="testimonials-header reveal">
+      <div class="section-label">Quem já usa</div>
+      <h2 class="section-title">Pessoas reais. Cérebros reais.</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Finalmente um app que entende que meu cérebro não funciona de forma linear. O reset por período mudou tudo pra mim."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#f59e0b">M</div>
+          <div>
+            <div class="testi-name">Mariana F.</div>
+            <div class="testi-role">Designer, TDAH desde 2019</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Usei Notion por 2 anos sem conseguir manter a consistência. Com MeuFluxo estou na terceira semana seguida."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#10b981">R</div>
+          <div>
+            <div class="testi-name">Rafael S.</div>
+            <div class="testi-role">Dev backend, TDAH + ansiedade</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal reveal-delay-3">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"A notificação gentil no começo do período é perfeita. Não me cobra pelo que não fiz — só me convida pro próximo momento."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#3b82f6">J</div>
+          <div>
+            <div class="testi-name">Julia P.</div>
+            <div class="testi-role">Psicóloga, TDAH diagnosticada</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Eu achava que era preguiça. Depois do MeuFluxo entendi que era o app errado. Agora uso todo dia sem esforço."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#ec4899">A</div>
+          <div>
+            <div class="testi-name">Ana C.</div>
+            <div class="testi-role">Estudante de medicina</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"O Modo Foco me salvou. Uma tarefa por vez, tela limpa. É o único jeito que meu cérebro consegue funcionar direito."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#8b5cf6">T</div>
+          <div>
+            <div class="testi-name">Thiago M.</div>
+            <div class="testi-role">Empreendedor, TEA + TDAH</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal reveal-delay-3">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Minha terapeuta de TDAH me indicou. Depois de 1 mês, já consigo ver padrões no meu histórico semanal sem me culpar."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#14b8a6">C</div>
+          <div>
+            <div class="testi-name">Camila R.</div>
+            <div class="testi-role">Professora, TDAH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="planos">
+  <div class="container">
+    <div class="pricing-header reveal">
+      <div class="section-label">Planos</div>
+      <h2 class="section-title">Começa grátis, sempre</h2>
+      <p class="section-sub" style="margin:0 auto; text-align:center">Sem cartão de crédito. Sem surpresas. Upgrade quando fizer sentido pra você.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="price-card reveal reveal-delay-1">
+        <div class="price-plan">Gratuito</div>
+        <div class="price-value">R$0</div>
+        <div class="price-desc">Para sempre. Sem cartão.</div>
+        <ul class="price-features">
+          <li><span class="feat-icon">✓</span> Blocos manhã/tarde/noite</li>
+          <li><span class="feat-icon">✓</span> Reset automático por período</li>
+          <li><span class="feat-icon">✓</span> Modo Foco (1 tarefa)</li>
+          <li><span class="feat-icon">✓</span> Notificações gentis</li>
+          <li><span class="feat-icon no">—</span> Histórico semanal</li>
+          <li><span class="feat-icon no">—</span> Temas e personalização</li>
+          <li><span class="feat-icon no">—</span> Suporte prioritário</li>
+        </ul>
+        <button class="btn-price">Começar grátis</button>
+      </div>
+
+      <div class="price-card pro reveal reveal-delay-2">
+        <div class="pro-badge">✦ Mais popular</div>
+        <div class="price-plan">Pro</div>
+        <div class="price-value">
+          <span class="price-currency">R$</span>29<span class="price-period">/mês</span>
+        </div>
+        <div class="price-desc">7 dias grátis. Cancele quando quiser.</div>
+        <ul class="price-features">
+          <li><span class="feat-icon">✓</span> Tudo do plano Gratuito</li>
+          <li><span class="feat-icon">✓</span> Histórico semanal de padrões</li>
+          <li><span class="feat-icon">✓</span> Temas e personalização</li>
+          <li><span class="feat-icon">✓</span> Suporte prioritário</li>
+          <li><span class="feat-icon">✓</span> Insights de produtividade</li>
+          <li><span class="feat-icon">✓</span> Integrações (em breve)</li>
+          <li><span class="feat-icon">✓</span> Acesso antecipado a novos recursos</li>
+        </ul>
+        <a href="#" class="btn-price primary">Testar 7 dias grátis</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <div class="faq-header reveal">
+      <div class="section-label">Dúvidas</div>
+      <h2 class="section-title">Perguntas frequentes</h2>
+    </div>
+
+    <div class="faq-list">
+
+      <div class="faq-item reveal">
+        <input type="checkbox" id="faq1">
+        <label class="faq-label" for="faq1">
+          Funciona para TEA também?
+          <span class="faq-icon">+</span>
+        </label>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sim! O MeuFluxo foi desenvolvido com atenção às necessidades de pessoas com TDAH e TEA. A interface minimalista, os blocos de tempo previsíveis e a ausência de sobrecargas cognitivas foram projetados pensando em quem tem dificuldade com transições e acúmulo de informações. Muitos usuários com TEA relatam que a estrutura de três períodos fixos cria a previsibilidade que precisam.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <input type="checkbox" id="faq2">
+        <label class="faq-label" for="faq2">
+          Posso usar no Android?
+          <span class="faq-icon">+</span>
+        </label>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            O MeuFluxo está disponível para iOS (App Store) e Android (Google Play). A versão web também funciona muito bem em qualquer navegador mobile — você pode adicionar na tela inicial do seu celular como se fosse um app nativo.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <input type="checkbox" id="faq3">
+        <label class="faq-label" for="faq3">
+          E se eu esquecer de abrir no começo do período?
+          <span class="faq-icon">+</span>
+        </label>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sem problema! Você pode abrir a qualquer momento durante o período. O MeuFluxo não te cobra se você não abrir — o período simplesmente passa e o próximo começa zerado de qualquer forma. As notificações gentis do início do período existem para te convidar, não para cobrar.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <input type="checkbox" id="faq4">
+        <label class="faq-label" for="faq4">
+          Tem notificações?
+          <span class="faq-icon">+</span>
+        </label>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sim, mas completamente diferentes das dos outros apps. O MeuFluxo envia uma notificação no início de cada período — uma no começo da manhã, uma no início da tarde e uma ao entrar na noite. Nunca uma notificação dizendo "você tem tarefas pendentes" ou "você não fez X". Só um convite suave para o próximo momento. Você pode personalizar os horários e desativar qualquer notificação.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <input type="checkbox" id="faq5">
+        <label class="faq-label" for="faq5">
+          Posso cancelar quando quiser?
+          <span class="faq-icon">+</span>
+        </label>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Completamente. Sem fidelidade, sem multa, sem ligação chata de retenção. Cancele direto no app com dois toques. Você continua com acesso ao Pro até o fim do período pago. Depois cai automaticamente para o plano Gratuito — que continua funcionando pra sempre.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container">
+    <h2>Pronto para recomeçar sem culpa?</h2>
+    <p>Cada novo período é uma tela em branco. Comece agora — sem cartão.</p>
+    <div>
+      <a href="#planos" class="btn-primary large" style="display:inline-flex; margin: 0 auto 20px;">
+        Começar agora — 7 dias grátis
+      </a>
+    </div>
+    <div class="final-trust">
+      <div class="final-trust-item">
+        <span class="check">✓</span>
+        <span>Sem cartão de crédito</span>
+      </div>
+      <div class="final-trust-item">
+        <span class="check">✓</span>
+        <span>Cancele quando quiser</span>
+      </div>
+      <div class="final-trust-item">
+        <span class="check">✓</span>
+        <span>Grátis para sempre no plano básico</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p>© 2026 MeuFluxo. Feito com cuidado para pessoas com TDAH e TEA.</p>
+    <a href="index.html">← Ecossistema MAX</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

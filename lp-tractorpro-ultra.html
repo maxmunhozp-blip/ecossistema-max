@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TractorPRO — Nunca Mais Abra o Gerenciador de Anúncios da Meta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET & ROOT
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#04080F;
+  --surface:#080F1E;
+  --surface-2:#0d1830;
+  --border:rgba(59,130,246,.12);
+  --border-strong:rgba(59,130,246,.3);
+  --accent:#3B82F6;
+  --accent-2:#8B5CF6;
+  --grad:linear-gradient(135deg,#3B82F6,#8B5CF6);
+  --text:#EEF2FF;
+  --muted:#6B7DB3;
+  --red:#EF4444;
+  --green:#22C55E;
+  --yellow:#F59E0B;
+}
+
+html{scroll-behavior:auto}
+body{
+  font-family:'Manrope',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+#cursor-dot{
+  position:fixed;width:8px;height:8px;
+  background:var(--accent);border-radius:50%;
+  pointer-events:none;z-index:99999;
+  transform:translate(-50%,-50%);
+  transition:transform .1s,background .2s;
+}
+#cursor-ring{
+  position:fixed;width:32px;height:32px;
+  border:1.5px solid rgba(59,130,246,.5);
+  border-radius:50%;pointer-events:none;z-index:99998;
+  transform:translate(-50%,-50%);
+  transition:transform .12s cubic-bezier(.25,.46,.45,.94),width .2s,height .2s,border-color .2s;
+}
+body.cursor-hover #cursor-ring{width:48px;height:48px;border-color:var(--accent)}
+
+/* ============================================================
+   THREE.JS CANVAS
+   ============================================================ */
+#three-canvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:0;pointer-events:none;
+  transition:opacity .5s;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:20px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .4s,backdrop-filter .4s,border-bottom .4s;
+}
+nav.scrolled{
+  background:rgba(4,8,15,.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;letter-spacing:2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nav-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--grad);
+  color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;
+  padding:4px 10px;border-radius:20px;margin-left:12px;
+  vertical-align:middle;text-transform:uppercase;
+}
+.nav-actions{display:flex;align-items:center;gap:24px}
+.nav-back{
+  color:var(--muted);font-size:14px;font-weight:500;
+  text-decoration:none;
+  transition:color .2s;
+  display:flex;align-items:center;gap:6px;
+}
+.nav-back:hover{color:var(--text)}
+.nav-cta{
+  background:var(--grad);
+  color:#fff;font-size:14px;font-weight:700;
+  padding:10px 24px;border-radius:50px;
+  border:none;cursor:none;text-decoration:none;
+  transition:opacity .2s,transform .2s;
+}
+.nav-cta:hover{opacity:.9;transform:scale(1.03)}
+
+/* ============================================================
+   SECTION BASE
+   ============================================================ */
+section{position:relative;z-index:1}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  padding:140px 40px 100px;
+  overflow:hidden;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(59,130,246,.1);
+  border:1px solid rgba(59,130,246,.25);
+  color:var(--accent);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  padding:8px 16px;border-radius:50px;
+  margin-bottom:40px;
+  opacity:0;
+}
+.hero-headline{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(72px,12vw,160px);
+  line-height:.92;
+  letter-spacing:2px;
+  margin-bottom:32px;
+  position:relative;
+}
+.hero-headline .line{
+  display:block;
+  opacity:0;transform:translateY(40px);
+}
+/* GLITCH */
+.glitch{position:relative}
+.glitch::before,
+.glitch::after{
+  content:attr(data-text);
+  position:absolute;top:0;left:0;width:100%;
+  font-family:inherit;font-size:inherit;line-height:inherit;
+}
+.glitch::before{
+  color:#3B82F6;
+  clip-path:inset(0 0 60% 0);
+  transform:translateX(0);
+  opacity:0;
+}
+.glitch::after{
+  color:#8B5CF6;
+  clip-path:inset(60% 0 0 0);
+  transform:translateX(0);
+  opacity:0;
+}
+.glitch.glitching::before{animation:glitch-top .4s steps(2) forwards}
+.glitch.glitching::after{animation:glitch-bot .4s steps(2) forwards}
+@keyframes glitch-top{
+  0%{opacity:1;transform:translateX(-3px);clip-path:inset(0 0 70% 0)}
+  20%{transform:translateX(3px);clip-path:inset(10% 0 60% 0)}
+  40%{transform:translateX(-2px);clip-path:inset(0 0 80% 0)}
+  60%{transform:translateX(2px)}
+  80%{transform:translateX(0)}
+  100%{opacity:0;transform:translateX(0)}
+}
+@keyframes glitch-bot{
+  0%{opacity:1;transform:translateX(3px);clip-path:inset(70% 0 0 0)}
+  20%{transform:translateX(-3px);clip-path:inset(60% 0 10% 0)}
+  40%{transform:translateX(2px);clip-path:inset(80% 0 0 0)}
+  60%{transform:translateX(-2px)}
+  80%{transform:translateX(0)}
+  100%{opacity:0;transform:translateX(0)}
+}
+
+.hero-sub{
+  font-size:clamp(16px,2vw,20px);
+  color:var(--muted);max-width:560px;
+  margin:0 auto 48px;
+  opacity:0;transform:translateY(20px);
+}
+.hero-ctas{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;
+  opacity:0;transform:translateY(20px);
+}
+.btn-primary{
+  position:relative;overflow:hidden;
+  background:var(--grad);
+  color:#fff;font-size:16px;font-weight:800;letter-spacing:.5px;
+  padding:18px 44px;border-radius:50px;
+  border:none;cursor:none;text-decoration:none;
+  display:inline-flex;align-items:center;gap:10px;
+  transition:transform .3s,box-shadow .3s;
+  box-shadow:0 0 40px rgba(59,130,246,.35);
+}
+.btn-primary:hover{
+  transform:scale(1.04);
+  box-shadow:0 0 60px rgba(59,130,246,.5);
+}
+.btn-primary .ripple{
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,.3);
+  transform:scale(0);animation:ripple-out .6s linear;
+  pointer-events:none;
+}
+@keyframes ripple-out{
+  to{transform:scale(4);opacity:0}
+}
+.btn-secondary{
+  color:var(--muted);font-size:15px;font-weight:600;
+  background:none;border:1px solid rgba(107,125,179,.3);
+  padding:17px 32px;border-radius:50px;cursor:none;
+  text-decoration:none;
+  transition:color .2s,border-color .2s;
+}
+.btn-secondary:hover{color:var(--text);border-color:var(--border-strong)}
+
+.hero-trust{
+  margin-top:60px;
+  display:flex;align-items:center;gap:24px;flex-wrap:wrap;justify-content:center;
+  opacity:0;
+}
+.trust-item{
+  display:flex;align-items:center;gap:8px;
+  color:var(--muted);font-size:13px;font-weight:500;
+}
+.trust-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+
+/* ============================================================
+   MARQUEE
+   ============================================================ */
+#marquee-strip{
+  padding:28px 0;
+  background:rgba(59,130,246,.06);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+  position:relative;z-index:2;
+}
+.marquee-row{display:flex;overflow:hidden;margin:6px 0}
+.marquee-track{
+  display:flex;gap:0;
+  white-space:nowrap;
+  animation:marquee-left 30s linear infinite;
+}
+.marquee-row:nth-child(2) .marquee-track{
+  animation:marquee-right 25s linear infinite;
+}
+@keyframes marquee-left{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+@keyframes marquee-right{
+  from{transform:translateX(-50%)}
+  to{transform:translateX(0)}
+}
+.marquee-item{
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:14px;font-weight:600;color:var(--muted);
+  padding:0 28px;
+  white-space:nowrap;
+}
+.marquee-item span.hi{color:var(--accent)}
+.marquee-sep{color:var(--border-strong)}
+
+/* ============================================================
+   PAIN SECTION
+   ============================================================ */
+#pain{
+  padding:120px 40px;
+  max-width:1200px;margin:0 auto;
+}
+.section-label{
+  text-align:center;
+  font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:20px;
+}
+.section-title{
+  text-align:center;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,6vw,72px);
+  line-height:1;letter-spacing:1px;
+  margin-bottom:16px;
+}
+.section-sub{
+  text-align:center;
+  color:var(--muted);font-size:17px;max-width:540px;margin:0 auto 64px;
+}
+.pain-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;
+}
+.pain-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;padding:40px 36px;
+  position:relative;overflow:hidden;
+  opacity:0;transform:translateY(40px);
+  transition:border-color .3s;
+}
+.pain-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--grad);opacity:0;transition:opacity .3s;
+}
+.pain-card:hover{border-color:var(--border-strong)}
+.pain-card:hover::before{opacity:1}
+.pain-icon{
+  font-size:36px;margin-bottom:20px;
+  display:block;
+}
+.pain-card h3{
+  font-size:20px;font-weight:800;margin-bottom:12px;
+}
+.pain-card p{color:var(--muted);font-size:15px;line-height:1.7}
+.pain-quote{
+  margin-top:20px;
+  padding:16px;
+  background:rgba(239,68,68,.06);
+  border-left:3px solid var(--red);
+  border-radius:0 10px 10px 0;
+  color:#f87171;font-size:14px;font-style:italic;
+}
+
+/* ============================================================
+   DASHBOARD BUILD SECTION
+   ============================================================ */
+#dashboard-pin-wrap{
+  /* height set by JS */
+}
+#dashboard-sticky{
+  position:sticky;top:0;
+  height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  padding:60px 40px;
+}
+.db-section-intro{
+  text-align:center;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:100%;z-index:10;
+  pointer-events:none;
+}
+.db-section-intro h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,7vw,90px);
+  line-height:.95;
+}
+.db-section-intro p{
+  color:var(--muted);font-size:18px;margin-top:20px;
+}
+
+/* LAPTOP */
+.laptop-wrap{
+  width:min(900px,95vw);
+  perspective:1200px;
+  opacity:0;
+}
+.laptop{
+  transform:rotateX(8deg) rotateY(-5deg);
+  transform-style:preserve-3d;
+  transition:transform .3s;
+  position:relative;
+}
+.laptop-lid{
+  background:linear-gradient(to bottom,#d4d4d8,#a1a1aa);
+  border-radius:16px 16px 4px 4px;
+  padding:12px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1);
+  position:relative;
+}
+.laptop-logo{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  opacity:.3;
+}
+.laptop-screen-bezel{
+  background:#1a1a1e;
+  border-radius:8px;overflow:hidden;
+  position:relative;
+}
+.laptop-cam{
+  width:8px;height:8px;background:#333;border-radius:50%;
+  margin:6px auto;
+}
+.laptop-screen{
+  background:#060912;
+  min-height:440px;
+  display:grid;grid-template-columns:200px 1fr;
+  overflow:hidden;position:relative;
+}
+/* Sidebar */
+.db-sidebar{
+  background:#080F1E;
+  border-right:1px solid rgba(59,130,246,.1);
+  padding:20px 0;
+  display:flex;flex-direction:column;
+  gap:4px;
+}
+.db-sidebar-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  padding:0 20px 16px;
+  border-bottom:1px solid rgba(59,130,246,.1);
+  margin-bottom:8px;
+}
+.db-nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 20px;font-size:12px;font-weight:600;
+  color:var(--muted);border-radius:0;
+  transition:color .2s;position:relative;
+}
+.db-nav-item.active{
+  color:var(--accent);
+  background:rgba(59,130,246,.08);
+}
+.db-nav-item.active::before{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:3px;height:60%;background:var(--accent);border-radius:0 3px 3px 0;
+}
+.db-nav-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent)}
+.db-nav-icon{font-size:14px}
+/* Main content */
+.db-main{
+  padding:20px 24px;overflow:hidden;
+}
+.db-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.db-title{font-size:16px;font-weight:800;color:var(--text)}
+.db-subtitle{font-size:11px;color:var(--muted);margin-top:2px}
+.db-filter{
+  display:flex;gap:6px;
+}
+.db-filter span{
+  background:rgba(59,130,246,.1);
+  border:1px solid rgba(59,130,246,.2);
+  border-radius:6px;padding:4px 10px;font-size:10px;color:var(--accent);font-weight:600;
+}
+/* Metric cards */
+.db-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.db-metric{
+  background:#0d1830;
+  border:1px solid rgba(59,130,246,.1);
+  border-radius:10px;padding:14px;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .3s,transform .3s;
+}
+.db-metric-label{font-size:10px;color:var(--muted);font-weight:600;margin-bottom:6px}
+.db-metric-val{
+  font-size:20px;font-weight:800;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;
+}
+.db-metric-val.blue{color:var(--accent)}
+.db-metric-val.green{color:var(--green)}
+.db-metric-val.purple{color:var(--accent-2)}
+.db-metric-val.yellow{color:var(--yellow)}
+.db-metric-trend{
+  font-size:10px;font-weight:700;margin-top:4px;
+  display:flex;align-items:center;gap:3px;
+}
+.db-metric-trend.up{color:var(--green)}
+.db-metric-trend.down{color:var(--red)}
+/* Chart */
+.db-chart-wrap{
+  background:#0d1830;border:1px solid rgba(59,130,246,.1);
+  border-radius:10px;padding:14px;margin-bottom:14px;
+  opacity:0;
+}
+.db-chart-title{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:10px}
+.db-chart-legend{
+  display:flex;gap:14px;margin-bottom:10px;
+}
+.db-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}
+.db-legend-dot{width:8px;height:8px;border-radius:50%}
+.db-bars{display:flex;align-items:flex-end;gap:8px;height:80px}
+.db-bar-group{display:flex;gap:3px;align-items:flex-end;flex:1}
+.db-bar{
+  flex:1;border-radius:3px 3px 0 0;
+  transition:height .5s cubic-bezier(.22,1,.36,1);
+  height:0;
+  min-width:6px;
+}
+.db-bar.meta{background:var(--accent)}
+.db-bar.google{background:var(--accent-2)}
+.db-bar-label{font-size:8px;color:var(--muted);text-align:center;margin-top:4px}
+.db-bar-labels{display:flex;gap:8px;justify-content:space-around}
+/* Campaigns */
+.db-campaigns{
+  background:#0d1830;border:1px solid rgba(59,130,246,.1);
+  border-radius:10px;padding:14px;
+  opacity:0;
+}
+.db-camp-title{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:10px}
+.db-camp-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 0;border-bottom:1px solid rgba(59,130,246,.06);
+  opacity:0;transform:translateX(20px);
+  transition:opacity .3s,transform .3s;
+  font-size:11px;
+}
+.db-camp-row:last-child{border-bottom:none}
+.db-status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);flex-shrink:0}
+.db-camp-name{flex:1;font-weight:600;color:var(--text)}
+.db-camp-platform{
+  font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;
+}
+.db-camp-platform.meta{background:rgba(59,130,246,.15);color:var(--accent)}
+.db-camp-platform.google{background:rgba(139,92,246,.15);color:var(--accent-2)}
+.db-camp-roas{font-weight:800;color:var(--green)}
+/* Bottom notification */
+.db-notification{
+  margin-top:10px;
+  background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.2);
+  border-radius:8px;padding:8px 14px;
+  font-size:11px;color:var(--green);font-weight:600;
+  display:flex;align-items:center;gap:8px;
+  opacity:0;transform:translateY(10px);
+}
+/* Bottom keyboard */
+.laptop-base{
+  background:linear-gradient(to bottom,#b8b8bc,#9e9ea4);
+  border-radius:4px 4px 14px 14px;
+  height:20px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 20px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);
+}
+.laptop-trackpad{
+  width:100px;height:10px;background:rgba(0,0,0,.15);
+  border-radius:4px;
+}
+
+/* ============================================================
+   SAVINGS CALCULATOR
+   ============================================================ */
+#savings{
+  padding:120px 40px;
+  max-width:960px;margin:0 auto;
+  text-align:center;
+}
+.savings-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:24px;margin-top:64px;
+}
+.savings-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px;padding:40px 32px;
+  opacity:0;transform:translateY(30px);
+}
+.savings-icon{font-size:40px;margin-bottom:16px}
+.savings-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:56px;line-height:1;letter-spacing:2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:8px;
+}
+.savings-card p{color:var(--muted);font-size:15px}
+
+/* ============================================================
+   FLIP CARDS (FEATURES)
+   ============================================================ */
+#features{
+  padding:120px 40px;
+  max-width:1200px;margin:0 auto;
+}
+.flip-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;margin-top:64px;
+}
+.flip-card-wrap{
+  perspective:1000px;height:320px;
+  opacity:0;
+}
+.flip-card{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;
+  transform:rotateY(180deg);
+  transition:transform .7s cubic-bezier(.25,.46,.45,.94);
+}
+.flip-card-wrap.flipped .flip-card{transform:rotateY(0deg)}
+.flip-front,.flip-back{
+  position:absolute;inset:0;
+  border-radius:20px;padding:36px;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.flip-back{
+  background:var(--surface);
+  border:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  transform:rotateY(180deg);
+}
+.flip-back-icon{font-size:52px;margin-bottom:20px}
+.flip-back-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;letter-spacing:2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.flip-front{
+  background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(139,92,246,.1));
+  border:1px solid var(--border-strong);
+  display:flex;flex-direction:column;
+  gap:12px;
+}
+.flip-front-badge{
+  display:inline-block;
+  background:var(--grad);
+  color:#fff;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;
+  align-self:flex-start;
+}
+.flip-front h3{font-size:19px;font-weight:800;line-height:1.3}
+.flip-front p{color:var(--muted);font-size:14px;line-height:1.7}
+.flip-front .benefit{
+  margin-top:auto;
+  background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.2);
+  border-radius:10px;padding:10px 14px;
+  color:var(--green);font-size:13px;font-weight:700;
+}
+
+/* ============================================================
+   COMPARISON
+   ============================================================ */
+#comparison{
+  padding:120px 40px;
+  max-width:900px;margin:0 auto;
+}
+.compare-table{
+  margin-top:64px;
+  border-radius:20px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.compare-header{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  background:var(--surface);
+  padding:24px 28px;
+  font-weight:800;font-size:15px;
+  border-bottom:1px solid var(--border);
+}
+.compare-header .col-product{
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.compare-header .col-native{color:var(--muted)}
+.compare-row{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  padding:18px 28px;
+  border-bottom:1px solid var(--border);
+  align-items:center;
+  opacity:0;
+  transition:background .2s;
+}
+.compare-row:last-child{border-bottom:none}
+.compare-row:hover{background:rgba(59,130,246,.04)}
+.compare-row .feature-name{font-size:14px;font-weight:600;color:var(--muted)}
+.col-product-cell{text-align:center}
+.col-native-cell{text-align:center}
+.check-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;
+  background:rgba(34,197,94,.12);border-radius:50%;
+}
+.check-icon svg{width:16px;height:16px;stroke:var(--green);stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .5s ease}
+.check-icon svg.drawn{stroke-dashoffset:0}
+.x-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;
+  background:rgba(239,68,68,.08);border-radius:50%;
+  color:var(--red);font-size:16px;font-weight:700;
+}
+.x-shake{animation:x-shake .3s ease}
+@keyframes x-shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  75%{transform:translateX(4px)}
+}
+
+/* ============================================================
+   HOW IT WORKS
+   ============================================================ */
+#how{
+  padding:120px 40px;
+  max-width:900px;margin:0 auto;
+}
+.how-steps{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  position:relative;margin-top:64px;
+}
+.how-step{
+  text-align:center;padding:0 24px;
+  opacity:0;transform:translateY(30px);
+  position:relative;
+}
+.how-step:not(:last-child)::after{
+  content:'';position:absolute;
+  top:40px;right:-12px;
+  width:calc(100% - 80px);height:2px;
+  background:var(--border);
+  /* will be drawn via JS */
+}
+.how-step-num{
+  width:80px;height:80px;
+  background:var(--grad);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:32px;
+  margin:0 auto 24px;
+  box-shadow:0 0 30px rgba(59,130,246,.4);
+}
+.how-step h3{font-size:22px;font-weight:800;margin-bottom:12px}
+.how-step p{color:var(--muted);font-size:14px;line-height:1.7}
+.how-svg-line{
+  position:absolute;top:40px;
+  height:2px;
+  stroke:url(#lineGrad);
+  stroke-width:2;
+  fill:none;
+  stroke-dasharray:300;
+  stroke-dashoffset:300;
+  transition:stroke-dashoffset .8s ease;
+}
+.how-svg-line.drawn{stroke-dashoffset:0}
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+#testimonials{
+  padding:120px 40px;
+  max-width:1200px;margin:0 auto;
+}
+.testi-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:24px;margin-top:64px;
+}
+.testi-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px;padding:36px;
+  opacity:0;transform:translateY(30px);
+  position:relative;overflow:hidden;
+}
+.testi-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:var(--grad);
+}
+.testi-quote{
+  font-size:36px;color:var(--accent);opacity:.4;
+  font-family:serif;line-height:1;
+  margin-bottom:16px;
+}
+.testi-text{
+  font-size:16px;line-height:1.7;color:var(--text);
+  margin-bottom:24px;
+}
+.testi-text em{
+  color:var(--accent);font-style:normal;font-weight:700;
+}
+.testi-author{
+  display:flex;align-items:center;gap:14px;
+}
+.testi-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:16px;flex-shrink:0;
+}
+.testi-name{font-weight:700;font-size:14px}
+.testi-role{font-size:12px;color:var(--muted)}
+.testi-stars{
+  margin-left:auto;
+  color:var(--yellow);font-size:12px;letter-spacing:2px;
+}
+
+/* ============================================================
+   PRICING
+   ============================================================ */
+#pricing{
+  padding:120px 40px;
+  max-width:600px;margin:0 auto;
+  text-align:center;
+}
+.price-card{
+  background:var(--surface);
+  border:1px solid var(--border-strong);
+  border-radius:32px;padding:60px 48px;
+  position:relative;overflow:hidden;
+  box-shadow:0 0 80px rgba(59,130,246,.15);
+  opacity:0;transform:translateY(40px);
+}
+.price-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--grad);
+}
+.price-badge{
+  display:inline-block;
+  background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);
+  color:var(--green);font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:6px 16px;border-radius:20px;margin-bottom:32px;
+}
+.price-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(28px,5vw,48px);letter-spacing:3px;
+  margin-bottom:8px;
+}
+.price-sub-text{color:var(--muted);font-size:15px;margin-bottom:40px}
+.price-main{margin-bottom:8px}
+.price-from{font-size:14px;color:var(--muted);text-decoration:line-through;margin-bottom:4px}
+.price-value{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(60px,10vw,96px);letter-spacing:2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  line-height:1;
+}
+.price-period{font-size:18px;color:var(--muted);font-weight:600;margin-left:6px}
+.price-note{font-size:13px;color:var(--muted);margin-bottom:40px}
+.price-features{
+  list-style:none;margin-bottom:40px;text-align:left;
+}
+.price-features li{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+  font-size:15px;font-weight:500;
+}
+.price-features li:last-child{border-bottom:none}
+.price-check{color:var(--green);font-size:16px;flex-shrink:0}
+.price-savings{
+  background:rgba(59,130,246,.08);
+  border:1px solid rgba(59,130,246,.2);
+  border-radius:12px;padding:16px;
+  font-size:14px;color:var(--muted);
+  margin-bottom:40px;
+}
+.price-savings strong{color:var(--accent)}
+
+/* ============================================================
+   FINAL CTA
+   ============================================================ */
+#cta-final{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  padding:120px 40px;
+  position:relative;overflow:hidden;
+}
+#cta-final::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(139,92,246,.15));
+}
+.cta-final-headline{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(48px,9vw,120px);
+  line-height:.95;letter-spacing:2px;
+  margin-bottom:24px;
+  position:relative;z-index:1;
+  opacity:0;transform:translateY(40px);
+}
+.cta-final-sub{
+  font-size:20px;color:var(--muted);
+  max-width:500px;margin:0 auto 56px;
+  position:relative;z-index:1;
+  opacity:0;
+}
+.cta-final-actions{
+  position:relative;z-index:1;
+  opacity:0;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  padding:48px 40px;
+  text-align:center;
+}
+.footer-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;letter-spacing:3px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:16px;
+}
+.footer-links{
+  display:flex;align-items:center;justify-content:center;
+  gap:32px;margin-bottom:24px;flex-wrap:wrap;
+}
+.footer-links a{
+  color:var(--muted);font-size:14px;text-decoration:none;
+  transition:color .2s;
+}
+.footer-links a:hover{color:var(--text)}
+footer p{color:var(--muted);font-size:13px}
+
+/* ============================================================
+   GLOW ORBS
+   ============================================================ */
+.glow-orb{
+  position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;
+}
+.orb-blue{background:rgba(59,130,246,.15);width:500px;height:500px}
+.orb-purple{background:rgba(139,92,246,.12);width:400px;height:400px}
+
+/* ============================================================
+   SCROLL REVEAL (fallback)
+   ============================================================ */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:768px){
+  nav{padding:16px 20px}
+  .nav-actions .btn-secondary{display:none}
+  #hero{padding:120px 20px 80px}
+  .laptop-screen{grid-template-columns:1fr}
+  .db-sidebar{display:none}
+  .how-steps{grid-template-columns:1fr;gap:40px}
+  .how-step::after{display:none}
+  .compare-header,.compare-row{grid-template-columns:.6fr 1fr 1fr;padding:14px 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- THREE.JS CANVAS -->
+<canvas id="three-canvas"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <div style="display:flex;align-items:center">
+    <span class="nav-logo">TractorPRO</span>
+    <span class="nav-badge">Beta</span>
+  </div>
+  <div class="nav-actions">
+    <a href="index.html" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Voltar
+    </a>
+    <a href="#pricing" class="nav-cta magnetic">Começar trial grátis</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="hero">
+  <div class="glow-orb orb-blue" style="top:-150px;left:-100px;opacity:.6"></div>
+  <div class="glow-orb orb-purple" style="top:20%;right:-150px;opacity:.5"></div>
+
+  <div class="hero-eyebrow">
+    <span class="trust-dot"></span>
+    Feito por gestor de tráfego &mdash; pra gestor de tráfego
+  </div>
+
+  <h1 class="hero-headline">
+    <span class="line glitch" data-text="NUNCA MAIS">NUNCA MAIS</span>
+    <span class="line glitch" data-text="ABRA O">ABRA O</span>
+    <span class="line glitch" data-text="GERENCIADOR" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">GERENCIADOR</span>
+  </h1>
+
+  <p class="hero-sub">
+    Feito por gestor de tráfego que também odiava abrir aquilo toda manhã.
+    Meta + Google num painel só, relatório automático no WhatsApp do cliente.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="#pricing" class="btn-primary magnetic">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Começar trial grátis
+    </a>
+    <a href="#dashboard-pin-wrap" class="btn-secondary">Ver como funciona</a>
+  </div>
+
+  <div class="hero-trust">
+    <div class="trust-item"><span class="trust-dot"></span>Sem cartão de crédito</div>
+    <div class="trust-item"><span class="trust-dot"></span>14 dias grátis</div>
+    <div class="trust-item"><span class="trust-dot"></span>Cancela quando quiser</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MARQUEE
+     ============================================================ -->
+<div id="marquee-strip">
+  <div class="marquee-row">
+    <div class="marquee-track" id="m1">
+      <span class="marquee-item"><span class="hi">2h</span> economizadas por dia <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">De 12 para <span class="hi">40 clientes</span> <span class="marquee-sep">··</span></span>
+      <span class="marquee-item"><span class="hi">4 minutos</span> por campanha <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Relatório <span class="hi">automático</span> no WhatsApp <span class="marquee-sep">··</span></span>
+      <span class="marquee-item"><span class="hi">Meta + Google</span> unificados <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Zero planilha manual <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Dashboard do cliente incluso <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Wizard de campanha com <span class="hi">IA</span> <span class="marquee-sep">··</span></span>
+      <!-- duplicate -->
+      <span class="marquee-item"><span class="hi">2h</span> economizadas por dia <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">De 12 para <span class="hi">40 clientes</span> <span class="marquee-sep">··</span></span>
+      <span class="marquee-item"><span class="hi">4 minutos</span> por campanha <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Relatório <span class="hi">automático</span> no WhatsApp <span class="marquee-sep">··</span></span>
+      <span class="marquee-item"><span class="hi">Meta + Google</span> unificados <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Zero planilha manual <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Dashboard do cliente incluso <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Wizard de campanha com <span class="hi">IA</span> <span class="marquee-sep">··</span></span>
+    </div>
+  </div>
+  <div class="marquee-row">
+    <div class="marquee-track" id="m2">
+      <span class="marquee-item">ROAS <span class="hi">4.2x</span> em média <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">CPC <span class="hi">R$0.87</span> <span class="marquee-sep">··</span></span>
+      <span class="marquee-item"><span class="hi">847</span> conversões rastreadas <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Multi-clientes no mesmo login <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">CTR <span class="hi">3.8%</span> <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Nunca mais exportar CSV <span class="marquee-sep">··</span></span>
+      <span class="marquee-item"><span class="hi">R$147/mês</span> — menos que 1 dia de trabalho <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Integração real com API Meta <span class="marquee-sep">··</span></span>
+      <!-- duplicate -->
+      <span class="marquee-item">ROAS <span class="hi">4.2x</span> em média <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">CPC <span class="hi">R$0.87</span> <span class="marquee-sep">··</span></span>
+      <span class="marquee-item"><span class="hi">847</span> conversões rastreadas <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Multi-clientes no mesmo login <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">CTR <span class="hi">3.8%</span> <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Nunca mais exportar CSV <span class="marquee-sep">··</span></span>
+      <span class="marquee-item"><span class="hi">R$147/mês</span> — menos que 1 dia de trabalho <span class="marquee-sep">··</span></span>
+      <span class="marquee-item">Integração real com API Meta <span class="marquee-sep">··</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAIN
+     ============================================================ -->
+<section id="pain">
+  <div class="glow-orb orb-purple" style="top:50%;right:-100px;opacity:.4"></div>
+  <p class="section-label">A dor que você conhece</p>
+  <h2 class="section-title">Você sabe exatamente<br>como isso dói</h2>
+  <p class="section-sub">Cada manhã abrindo aquele gerenciador. Cada tarde perdida em relatório.</p>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <span class="pain-icon">😤</span>
+      <h3>Abre o gerenciador toda hora</h3>
+      <p>Você alterna entre Meta Ads, Google Ads, planilha e WhatsApp do cliente. São 4 telas abertas, 0 visão do todo.</p>
+      <div class="pain-quote">"Odeio ter que entrar no gerenciador. É confuso, lento e muda toda hora."</div>
+    </div>
+    <div class="pain-card">
+      <span class="pain-icon">⏰</span>
+      <h3>Tarde inteira em relatório</h3>
+      <p>Você passa horas exportando dados, formatando planilha, montando PDF. O cliente lê em 10 segundos e responde: "tá bom?"</p>
+      <div class="pain-quote">"Perdi a tarde toda montando relatório. Cliente viu por 30 segundos."</div>
+    </div>
+    <div class="pain-card">
+      <span class="pain-icon">🤷</span>
+      <h3>Cliente não entende o que você faz</h3>
+      <p>Você entrega resultado mas não consegue mostrar de forma clara. Cliente começa a questionar o valor do que paga.</p>
+      <div class="pain-quote">"Meu cliente não entende o que estou fazendo. Fica achando que é simples."</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     DASHBOARD BUILD (400vh PIN)
+     ============================================================ -->
+<div id="dashboard-pin-wrap">
+  <div id="dashboard-sticky">
+
+    <!-- Intro text (fades out as laptop fades in) -->
+    <div class="db-section-intro" id="db-intro">
+      <p class="section-label" style="text-align:center">O produto</p>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,7vw,90px);line-height:.95;letter-spacing:2px">
+        SEU DASHBOARD<br><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CONSTRUINDO AO VIVO</span>
+      </h2>
+      <p style="color:var(--muted);font-size:18px;margin-top:20px">Role para ver o TractorPRO em ação</p>
+    </div>
+
+    <!-- LAPTOP MOCKUP -->
+    <div class="laptop-wrap" id="laptop-wrap">
+      <div class="laptop" id="laptop">
+
+        <!-- LID + SCREEN -->
+        <div class="laptop-lid">
+          <div class="laptop-logo">T</div>
+          <div class="laptop-screen-bezel">
+            <div class="laptop-cam"></div>
+            <div class="laptop-screen" id="laptop-screen">
+
+              <!-- SIDEBAR -->
+              <div class="db-sidebar">
+                <div class="db-sidebar-logo">TractorPRO</div>
+                <div class="db-nav-item active">
+                  <span class="db-nav-dot"></span>
+                  <span class="db-nav-icon">📊</span> Dashboard
+                </div>
+                <div class="db-nav-item">
+                  <span class="db-nav-icon" style="margin-left:15px">📣</span> Campanhas
+                </div>
+                <div class="db-nav-item">
+                  <span class="db-nav-icon" style="margin-left:15px">👥</span> Clientes
+                </div>
+                <div class="db-nav-item">
+                  <span class="db-nav-icon" style="margin-left:15px">✨</span> Wizard IA
+                </div>
+                <div class="db-nav-item">
+                  <span class="db-nav-icon" style="margin-left:15px">📱</span> WhatsApp
+                </div>
+                <div class="db-nav-item" style="margin-top:auto">
+                  <span class="db-nav-icon" style="margin-left:15px">⚙️</span> Config
+                </div>
+              </div>
+
+              <!-- MAIN -->
+              <div class="db-main">
+                <div class="db-header">
+                  <div>
+                    <div class="db-title">Dashboard · Rafael Mendes</div>
+                    <div class="db-subtitle">Atualizado agora · Todos os clientes</div>
+                  </div>
+                  <div class="db-filter">
+                    <span>Últimos 30 dias</span>
+                    <span>Meta + Google</span>
+                  </div>
+                </div>
+
+                <!-- METRICS -->
+                <div class="db-metrics">
+                  <div class="db-metric" id="m-roas">
+                    <div class="db-metric-label">ROAS Geral</div>
+                    <div class="db-metric-val blue" id="v-roas">0x</div>
+                    <div class="db-metric-trend up">↑ 18% vs mês anterior</div>
+                  </div>
+                  <div class="db-metric" id="m-cpc">
+                    <div class="db-metric-label">CPC Médio</div>
+                    <div class="db-metric-val green" id="v-cpc">R$0</div>
+                    <div class="db-metric-trend up">↓ 12% mais barato</div>
+                  </div>
+                  <div class="db-metric" id="m-ctr">
+                    <div class="db-metric-label">CTR Médio</div>
+                    <div class="db-metric-val purple" id="v-ctr">0%</div>
+                    <div class="db-metric-trend up">↑ 0.4pp</div>
+                  </div>
+                  <div class="db-metric" id="m-conv">
+                    <div class="db-metric-label">Conversões</div>
+                    <div class="db-metric-val yellow" id="v-conv">0</div>
+                    <div class="db-metric-trend up">↑ 203 no período</div>
+                  </div>
+                </div>
+
+                <!-- CHART -->
+                <div class="db-chart-wrap" id="db-chart">
+                  <div class="db-chart-title">INVESTIMENTO POR DIA — ÚLTIMOS 7 DIAS</div>
+                  <div class="db-chart-legend">
+                    <div class="db-legend-item"><div class="db-legend-dot" style="background:var(--accent)"></div>Meta Ads</div>
+                    <div class="db-legend-item"><div class="db-legend-dot" style="background:var(--accent-2)"></div>Google Ads</div>
+                  </div>
+                  <div class="db-bars" id="db-bars">
+                    <div class="db-bar-group"><div class="db-bar meta" id="bar-m1" data-h="55"></div><div class="db-bar google" id="bar-g1" data-h="40"></div></div>
+                    <div class="db-bar-group"><div class="db-bar meta" id="bar-m2" data-h="70"></div><div class="db-bar google" id="bar-g2" data-h="50"></div></div>
+                    <div class="db-bar-group"><div class="db-bar meta" id="bar-m3" data-h="48"></div><div class="db-bar google" id="bar-g3" data-h="62"></div></div>
+                    <div class="db-bar-group"><div class="db-bar meta" id="bar-m4" data-h="80"></div><div class="db-bar google" id="bar-g4" data-h="55"></div></div>
+                    <div class="db-bar-group"><div class="db-bar meta" id="bar-m5" data-h="60"></div><div class="db-bar google" id="bar-g5" data-h="75"></div></div>
+                    <div class="db-bar-group"><div class="db-bar meta" id="bar-m6" data-h="90"></div><div class="db-bar google" id="bar-g6" data-h="65"></div></div>
+                    <div class="db-bar-group"><div class="db-bar meta" id="bar-m7" data-h="75"></div><div class="db-bar google" id="bar-g7" data-h="80"></div></div>
+                  </div>
+                  <div class="db-bar-labels">
+                    <span style="font-size:8px;color:var(--muted)">Seg</span>
+                    <span style="font-size:8px;color:var(--muted)">Ter</span>
+                    <span style="font-size:8px;color:var(--muted)">Qua</span>
+                    <span style="font-size:8px;color:var(--muted)">Qui</span>
+                    <span style="font-size:8px;color:var(--muted)">Sex</span>
+                    <span style="font-size:8px;color:var(--muted)">Sáb</span>
+                    <span style="font-size:8px;color:var(--muted)">Dom</span>
+                  </div>
+                </div>
+
+                <!-- CAMPAIGNS -->
+                <div class="db-campaigns" id="db-campaigns">
+                  <div class="db-camp-title">CAMPANHAS ATIVAS</div>
+                  <div class="db-camp-row" id="camp-1">
+                    <div class="db-status-dot"></div>
+                    <div class="db-camp-name">Black Friday Meta · Conversão</div>
+                    <div class="db-camp-platform meta">Meta</div>
+                    <div class="db-camp-roas">4.8x</div>
+                  </div>
+                  <div class="db-camp-row" id="camp-2">
+                    <div class="db-status-dot"></div>
+                    <div class="db-camp-name">Google Search Leads</div>
+                    <div class="db-camp-platform google">Google</div>
+                    <div class="db-camp-roas">3.9x</div>
+                  </div>
+                  <div class="db-camp-row" id="camp-3">
+                    <div class="db-status-dot"></div>
+                    <div class="db-camp-name">Remarketing Meta · Catálogo</div>
+                    <div class="db-camp-platform meta">Meta</div>
+                    <div class="db-camp-roas">6.1x</div>
+                  </div>
+                </div>
+
+                <!-- NOTIFICATION -->
+                <div class="db-notification" id="db-notif">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 0h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9a16 16 0 0 0 6.29 6.29l1.36-1.36a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Relatório enviado automaticamente para cliente · há 3 min ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BASE -->
+        <div class="laptop-base">
+          <div class="laptop-trackpad"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SAVINGS
+     ============================================================ -->
+<section id="savings">
+  <div class="glow-orb orb-blue" style="bottom:0;left:-100px;opacity:.4"></div>
+  <p class="section-label">O custo real do jeito antigo</p>
+  <h2 class="section-title">Quanto você perde<br>por mês sem saber</h2>
+  <p class="section-sub">Cada hora gasta em relatório manual é dinheiro que sai do seu bolso.</p>
+
+  <div class="savings-grid">
+    <div class="savings-card">
+      <div class="savings-icon">🕐</div>
+      <div class="savings-num" id="sav-hours">0</div>
+      <p><strong style="color:var(--text)">horas/mês</strong> gastas em relatórios manuais e gerenciadores</p>
+    </div>
+    <div class="savings-card">
+      <div class="savings-icon">💸</div>
+      <div class="savings-num" id="sav-money">R$0</div>
+      <p><strong style="color:var(--text)">perdidos todo mês</strong> em tempo que poderia ser faturado</p>
+    </div>
+    <div class="savings-card">
+      <div class="savings-icon">⚡</div>
+      <div class="savings-num" id="sav-saved">0</div>
+      <p><strong style="color:var(--text)">horas devolvidas</strong> com o TractorPRO todo mês</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURES (FLIP CARDS)
+     ============================================================ -->
+<section id="features">
+  <p class="section-label">Funcionalidades</p>
+  <h2 class="section-title">Tudo que você precisava<br>num lugar só</h2>
+  <p class="section-sub">Quatro superpoderes que outros gestores ainda não têm.</p>
+
+  <div class="flip-grid">
+    <div class="flip-card-wrap" data-idx="0">
+      <div class="flip-card">
+        <div class="flip-front">
+          <span class="flip-front-badge">Painel Unificado</span>
+          <h3>Meta + Google no mesmo dashboard</h3>
+          <p>Chega de alternar entre 4 abas. ROAS, CPC, CTR e conversões das duas plataformas em uma tela só. Visão em tempo real.</p>
+          <div class="benefit">✓ Economiza 45 min por dia de troca de contexto</div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-icon">🖥️</div>
+          <div class="flip-back-name">Dashboard Unificado</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card-wrap" data-idx="1">
+      <div class="flip-card">
+        <div class="flip-front">
+          <span class="flip-front-badge">IA Wizard</span>
+          <h3>Campanha completa em 4 minutos com IA</h3>
+          <p>Responde 5 perguntas sobre o cliente. A IA gera estrutura de campanha, copies, segmentação e configurações. Você só revisa e sobe.</p>
+          <div class="benefit">✓ "Criei campanha em 4 min. Cliente nunca precisou saber como."</div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-icon">✨</div>
+          <div class="flip-back-name">Wizard IA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card-wrap" data-idx="2">
+      <div class="flip-card">
+        <div class="flip-front">
+          <span class="flip-front-badge">WhatsApp Auto</span>
+          <h3>Relatório automático no WhatsApp do cliente</h3>
+          <p>Toda semana, ou na frequência que configurar, o TractorPRO manda um relatório visual direto no WhatsApp do cliente. Sem você fazer nada.</p>
+          <div class="benefit">✓ "O relatório foi pro cliente sozinho enquanto eu dormia."</div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-icon">📱</div>
+          <div class="flip-back-name">Relatório Auto</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card-wrap" data-idx="3">
+      <div class="flip-card">
+        <div class="flip-front">
+          <span class="flip-front-badge">Multi-clientes</span>
+          <h3>40 clientes no mesmo login, sem virar louco</h3>
+          <p>Um workspace por cliente. Alterne em segundos. Cada cliente vê só o próprio dashboard. Você gerencia todos de cima.</p>
+          <div class="benefit">✓ "De 12 para 40 clientes sem contratar ninguém."</div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-icon">👥</div>
+          <div class="flip-back-name">Multi-clientes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     COMPARISON
+     ============================================================ -->
+<section id="comparison">
+  <p class="section-label">Comparação honesta</p>
+  <h2 class="section-title">TractorPRO vs<br>Meta Ads Nativo</h2>
+  <p class="section-sub">Sem firula. Você já sabe quem ganha.</p>
+
+  <div class="compare-table">
+    <div class="compare-header">
+      <div>Funcionalidade</div>
+      <div class="col-product" style="text-align:center">TractorPRO</div>
+      <div class="col-native" style="text-align:center">Meta Nativo</div>
+    </div>
+    <div class="compare-row" data-idx="0">
+      <div class="feature-name">Dashboard unificado Meta + Google</div>
+      <div class="col-product-cell"><div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+      <div class="col-native-cell"><div class="x-icon">✕</div></div>
+    </div>
+    <div class="compare-row" data-idx="1">
+      <div class="feature-name">Relatório automático no WhatsApp</div>
+      <div class="col-product-cell"><div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+      <div class="col-native-cell"><div class="x-icon">✕</div></div>
+    </div>
+    <div class="compare-row" data-idx="2">
+      <div class="feature-name">Wizard de campanha com IA (4 min)</div>
+      <div class="col-product-cell"><div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+      <div class="col-native-cell"><div class="x-icon">✕</div></div>
+    </div>
+    <div class="compare-row" data-idx="3">
+      <div class="feature-name">Multi-clientes no mesmo login</div>
+      <div class="col-product-cell"><div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+      <div class="col-native-cell"><div class="x-icon">✕</div></div>
+    </div>
+    <div class="compare-row" data-idx="4">
+      <div class="feature-name">Dashboard para o cliente ver</div>
+      <div class="col-product-cell"><div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+      <div class="col-native-cell"><div class="x-icon">✕</div></div>
+    </div>
+    <div class="compare-row" data-idx="5">
+      <div class="feature-name">Interface que não muda toda semana</div>
+      <div class="col-product-cell"><div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+      <div class="col-native-cell"><div class="x-icon">✕</div></div>
+    </div>
+    <div class="compare-row" data-idx="6">
+      <div class="feature-name">Feito por gestor de tráfego</div>
+      <div class="col-product-cell"><div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+      <div class="col-native-cell"><div class="x-icon">✕</div></div>
+    </div>
+    <div class="compare-row" data-idx="7">
+      <div class="feature-name">Acesso às métricas básicas de campanha</div>
+      <div class="col-product-cell"><div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+      <div class="col-native-cell"><div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:#F59E0B"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     HOW IT WORKS
+     ============================================================ -->
+<section id="how">
+  <p class="section-label">Como funciona</p>
+  <h2 class="section-title">Conecta, visualiza<br>e automatiza</h2>
+  <p class="section-sub">Três passos. Um café. Você nunca mais abre o gerenciador.</p>
+
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">1</div>
+      <h3>Conecta</h3>
+      <p>Autorize sua conta Meta Ads e Google Ads com OAuth. Leva 2 minutos. Dados aparecem em tempo real.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">2</div>
+      <h3>Visualiza</h3>
+      <p>Todas as métricas de todos os clientes num painel só. ROAS, CPC, CTR, conversões. Sem exportar CSV.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">3</div>
+      <h3>Automatiza</h3>
+      <p>Configure relatórios automáticos no WhatsApp, crie campanhas com o Wizard IA e pare de apagar incêndio.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+     ============================================================ -->
+<section id="testimonials">
+  <p class="section-label">Prova social</p>
+  <h2 class="section-title">O que gestores estão<br>falando</h2>
+  <p class="section-sub">Não acredita em nós. Acredita em quem usa.</p>
+
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Primeira semana e já economizei <em>2 horas por dia</em>. Meu cliente ficou impressionado com o dashboard — renovou o contrato no mesmo dia que viu.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">L</div>
+        <div>
+          <div class="testi-name">Lucas Ferreira</div>
+          <div class="testi-role">Gestor de Tráfego · São Paulo</div>
+        </div>
+        <div class="testi-stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Criei campanha completa em <em>4 minutos com o Wizard</em>. O cliente nunca precisou saber como. Isso é a diferença entre parecer amador ou profissional.</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,#8B5CF6,#06B6D4)">M</div>
+        <div>
+          <div class="testi-name">Marina Souza</div>
+          <div class="testi-role">Freelancer · Belo Horizonte</div>
+        </div>
+        <div class="testi-stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Fui de 12 para <em>40 clientes</em> sem contratar ninguém. O relatório automático no WhatsApp é ridiculamente bom. Nunca mais monto relatório manual.</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">R</div>
+        <div>
+          <div class="testi-name">Rafael Mendes</div>
+          <div class="testi-role">Micro Agência · Curitiba</div>
+        </div>
+        <div class="testi-stars">★★★★★</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRICING
+     ============================================================ -->
+<section id="pricing">
+  <p class="section-label">Investimento</p>
+  <h2 class="section-title">Menos que<br>1 dia de trabalho</h2>
+  <p class="section-sub">E você recupera isso em horas economizadas na primeira semana.</p>
+
+  <div class="price-card reveal">
+    <div class="price-badge">✓ 14 dias grátis — sem cartão</div>
+    <div class="price-name">TractorPRO</div>
+    <div class="price-sub-text">O único dashboard que você vai precisar</div>
+    <div class="price-main">
+      <div class="price-from">De R$297/mês</div>
+      <div>
+        <span class="price-value">R$147</span>
+        <span class="price-period">/mês</span>
+      </div>
+    </div>
+    <div class="price-note">ou R$1.270/ano (2 meses grátis)</div>
+    <ul class="price-features">
+      <li><span class="price-check">✓</span> Dashboard unificado Meta + Google</li>
+      <li><span class="price-check">✓</span> Wizard de campanha com IA</li>
+      <li><span class="price-check">✓</span> Relatório automático no WhatsApp</li>
+      <li><span class="price-check">✓</span> Multi-clientes ilimitados</li>
+      <li><span class="price-check">✓</span> Dashboard do cliente (link exclusivo)</li>
+      <li><span class="price-check">✓</span> Suporte via WhatsApp</li>
+      <li><span class="price-check">✓</span> Atualizações inclusas para sempre</li>
+    </ul>
+    <div class="price-savings">
+      Se você cobra R$500/dia de consultoria, <strong>recupera o investimento em 7h economizadas</strong>. Normalmente, você economiza isso na primeira semana.
+    </div>
+    <a href="#" class="btn-primary magnetic" style="width:100%;justify-content:center;font-size:17px;padding:20px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Começar trial grátis — 14 dias
+    </a>
+    <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:16px">
+      Sem cartão de crédito · Cancela com 1 clique · Dados seguros
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     FINAL CTA
+     ============================================================ -->
+<section id="cta-final">
+  <div class="glow-orb orb-blue" style="top:-100px;left:10%;width:600px;height:600px;opacity:.2"></div>
+  <div class="glow-orb orb-purple" style="bottom:-100px;right:10%;width:500px;height:500px;opacity:.2"></div>
+
+  <h2 class="cta-final-headline">
+    CHEGA DE<br><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">ABRIR AQUILO</span>
+  </h2>
+  <p class="cta-final-sub">
+    Você sabe que o gerenciador da Meta é um pesadelo. Agora existe uma saída.
+  </p>
+  <div class="cta-final-actions">
+    <a href="#" class="btn-primary magnetic" style="font-size:18px;padding:22px 56px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Começar trial grátis agora
+    </a>
+    <p style="color:var(--muted);font-size:14px;margin-top:16px">14 dias grátis · Sem cartão · Cancela quando quiser</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">TractorPRO</div>
+  <div class="footer-links">
+    <a href="index.html">← Ecossistema MAX</a>
+    <a href="#">Termos de Uso</a>
+    <a href="#">Privacidade</a>
+    <a href="#">Suporte</a>
+  </div>
+  <p>© 2026 TractorPRO · Feito com ♥ por gestor de tráfego, pra gestor de tráfego.</p>
+</footer>
+
+<!-- SVG DEFS for gradient lines -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3B82F6"/>
+      <stop offset="100%" style="stop-color:#8B5CF6"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+// ============================================================
+// LENIS SMOOTH SCROLL
+// ============================================================
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  smooth: true,
+  mouseMultiplier: 1.0,
+});
+
+function rafLoop(time) {
+  lenis.raf(time);
+  requestAnimationFrame(rafLoop);
+}
+requestAnimationFrame(rafLoop);
+
+// Connect Lenis with GSAP ScrollTrigger
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(time => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
+
+// ============================================================
+// THREE.JS NEURAL NETWORK BACKGROUND
+// ============================================================
+(function() {
+  const canvas = document.getElementById('three-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 80;
+
+  const COUNT = 400;
+  const positions = new Float32Array(COUNT * 3);
+  const velocities = [];
+  const COLORS = [new THREE.Color('#3B82F6'), new THREE.Color('#8B5CF6')];
+
+  for (let i = 0; i < COUNT; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 160;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 80;
+    velocities.push({
+      x: (Math.random() - 0.5) * 0.04,
+      y: (Math.random() - 0.5) * 0.04,
+      z: (Math.random() - 0.5) * 0.02,
+    });
+  }
+
+  const pointGeo = new THREE.BufferGeometry();
+  pointGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+  const pointMat = new THREE.PointsMaterial({
+    color: '#3B82F6',
+    size: 0.8,
+    transparent: true,
+    opacity: 0.6,
+    sizeAttenuation: true,
+  });
+
+  const points = new THREE.Points(pointGeo, pointMat);
+  scene.add(points);
+
+  // Lines
+  const maxLines = 600;
+  const linePositions = new Float32Array(maxLines * 6);
+  const lineGeo = new THREE.BufferGeometry();
+  lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+  lineGeo.setDrawRange(0, 0);
+
+  const lineMat = new THREE.LineBasicMaterial({
+    color: '#3B82F6',
+    transparent: true,
+    opacity: 0.12,
+  });
+
+  const lineSegs = new THREE.LineSegments(lineGeo, lineMat);
+  scene.add(lineSegs);
+
+  // Mouse parallax
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  // Scroll fade
+  let canvasOpacity = 1;
+  lenis.on('scroll', ({ scroll }) => {
+    const heroH = window.innerHeight;
+    canvasOpacity = Math.max(0, 1 - scroll / (heroH * 0.8));
+    canvas.style.opacity = canvasOpacity;
+  });
+
+  const CONNECT_DIST = 22;
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    const pos = pointGeo.attributes.position.array;
+
+    // Update particle positions
+    for (let i = 0; i < COUNT; i++) {
+      pos[i * 3] += velocities[i].x;
+      pos[i * 3 + 1] += velocities[i].y;
+      pos[i * 3 + 2] += velocities[i].z;
+
+      if (Math.abs(pos[i * 3]) > 80) velocities[i].x *= -1;
+      if (Math.abs(pos[i * 3 + 1]) > 50) velocities[i].y *= -1;
+      if (Math.abs(pos[i * 3 + 2]) > 40) velocities[i].z *= -1;
+    }
+    pointGeo.attributes.position.needsUpdate = true;
+
+    // Build lines
+    let lineIdx = 0;
+    const lp = lineGeo.attributes.position.array;
+
+    for (let i = 0; i < COUNT && lineIdx < maxLines; i++) {
+      for (let j = i + 1; j < COUNT && lineIdx < maxLines; j++) {
+        const dx = pos[i*3] - pos[j*3];
+        const dy = pos[i*3+1] - pos[j*3+1];
+        const dz = pos[i*3+2] - pos[j*3+2];
+        const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        if (dist < CONNECT_DIST) {
+          lp[lineIdx*6] = pos[i*3];
+          lp[lineIdx*6+1] = pos[i*3+1];
+          lp[lineIdx*6+2] = pos[i*3+2];
+          lp[lineIdx*6+3] = pos[j*3];
+          lp[lineIdx*6+4] = pos[j*3+1];
+          lp[lineIdx*6+5] = pos[j*3+2];
+          lineIdx++;
+        }
+      }
+    }
+    lineGeo.attributes.position.needsUpdate = true;
+    lineGeo.setDrawRange(0, lineIdx * 2);
+
+    // Parallax
+    scene.rotation.y += (mouseX * 0.08 - scene.rotation.y) * 0.04;
+    scene.rotation.x += (-mouseY * 0.05 - scene.rotation.x) * 0.04;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+// ============================================================
+// CUSTOM CURSOR
+// ============================================================
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let cx = 0, cy = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
+
+function cursorLoop() {
+  rx += (cx - rx) * 0.12;
+  ry += (cy - ry) * 0.12;
+  dot.style.left = cx + 'px';
+  dot.style.top = cy + 'px';
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+
+document.querySelectorAll('a,button,.btn-primary,.btn-secondary,.magnetic,.nav-cta').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});
+
+// ============================================================
+// MAGNETIC BUTTONS
+// ============================================================
+document.querySelectorAll('.magnetic').forEach(btn => {
+  btn.addEventListener('mousemove', function(e) {
+    const rect = this.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    const dist = Math.sqrt(x*x + y*y);
+    const maxDist = 100;
+    if (dist < maxDist) {
+      const pull = (1 - dist / maxDist) * 0.4;
+      this.style.transform = `translate(${x * pull}px, ${y * pull}px) scale(1.04)`;
+    }
+  });
+  btn.addEventListener('mouseleave', function() {
+    this.style.transform = '';
+  });
+  btn.addEventListener('click', function(e) {
+    const rect = this.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    const size = Math.max(rect.width, rect.height) * 2;
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+    this.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  });
+});
+
+// ============================================================
+// NAV SCROLL
+// ============================================================
+const nav = document.getElementById('nav');
+lenis.on('scroll', ({ scroll }) => {
+  nav.classList.toggle('scrolled', scroll > 60);
+});
+
+// ============================================================
+// GSAP + SCROLLTRIGGER
+// ============================================================
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero animations
+gsap.to('.hero-eyebrow', { opacity: 1, y: 0, duration: .8, delay: .3 });
+gsap.to('.hero-headline .line', {
+  opacity: 1, y: 0, duration: .9,
+  stagger: .15, delay: .5,
+  ease: 'power3.out',
+});
+gsap.to('.hero-sub', { opacity: 1, y: 0, duration: .8, delay: 1.1 });
+gsap.to('.hero-ctas', { opacity: 1, y: 0, duration: .8, delay: 1.3 });
+gsap.to('.hero-trust', { opacity: 1, duration: .8, delay: 1.6 });
+
+// Glitch effect on load
+setTimeout(() => {
+  document.querySelectorAll('.glitch').forEach((el, i) => {
+    setTimeout(() => {
+      el.classList.add('glitching');
+      setTimeout(() => el.classList.remove('glitching'), 500);
+    }, i * 100);
+  });
+}, 600);
+
+// Pain cards
+gsap.utils.toArray('.pain-card').forEach((card, i) => {
+  gsap.to(card, {
+    opacity: 1, y: 0, duration: .7,
+    delay: i * .1,
+    scrollTrigger: { trigger: card, start: 'top 85%' }
+  });
+});
+
+// ============================================================
+// DASHBOARD BUILD — 400vh PIN
+// ============================================================
+const pinWrap = document.getElementById('dashboard-pin-wrap');
+pinWrap.style.height = '400vh';
+
+// Set up dashboard build timeline
+const dbTl = gsap.timeline({
+  scrollTrigger: {
+    trigger: pinWrap,
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: 1.5,
+    pin: '#dashboard-sticky',
+  }
+});
+
+// Phase 0: intro fades out, laptop fades in
+dbTl
+  .to('#db-intro', { opacity: 0, y: -40, duration: .2 }, 0)
+  .to('#laptop-wrap', { opacity: 1, duration: .3 }, 0.1)
+  .to('#laptop', { rotateX: 0, rotateY: 0, duration: .4 }, 0.1)
+
+  // Phase 1: metric cards appear one by one
+  .to('#m-roas', { opacity: 1, y: 0, duration: .15 }, 0.35)
+  .to('#m-cpc', { opacity: 1, y: 0, duration: .15 }, 0.45)
+  .to('#m-ctr', { opacity: 1, y: 0, duration: .15 }, 0.55)
+  .to('#m-conv', { opacity: 1, y: 0, duration: .15 }, 0.65)
+
+  // Phase 2: chart appears, bars grow
+  .to('#db-chart', { opacity: 1, duration: .15 }, 0.72)
+  .to('#bar-m1,#bar-g1', { height: '+=0', duration: 0 }, 0.72) // trigger
+
+  // Phase 3: campaigns appear
+  .to('#db-campaigns', { opacity: 1, duration: .1 }, 0.78)
+  .to('#camp-1', { opacity: 1, x: 0, duration: .1 }, 0.80)
+  .to('#camp-2', { opacity: 1, x: 0, duration: .1 }, 0.85)
+  .to('#camp-3', { opacity: 1, x: 0, duration: .1 }, 0.90)
+
+  // Phase 4: notification
+  .to('#db-notif', { opacity: 1, y: 0, duration: .1 }, 0.95);
+
+// Number counters — triggered by scroll into metric visibility
+const counterTargets = {
+  'v-roas': { target: 4.2, suffix: 'x', decimals: 1 },
+  'v-cpc':  { target: 0.87, prefix: 'R$', decimals: 2 },
+  'v-ctr':  { target: 3.8, suffix: '%', decimals: 1 },
+  'v-conv': { target: 847, decimals: 0 },
+};
+
+ScrollTrigger.create({
+  trigger: '#m-roas',
+  start: 'top 80%',
+  once: true,
+  onEnter: () => {
+    Object.entries(counterTargets).forEach(([id, cfg]) => {
+      const el = document.getElementById(id);
+      const obj = { val: 0 };
+      gsap.to(obj, {
+        val: cfg.target, duration: 1.5, ease: 'power2.out',
+        onUpdate: () => {
+          const v = obj.val.toFixed(cfg.decimals);
+          el.textContent = (cfg.prefix || '') + v + (cfg.suffix || '');
+        }
+      });
+    });
+  }
+});
+
+// Bar chart animation on scroll
+ScrollTrigger.create({
+  trigger: '#db-chart',
+  start: 'top 80%',
+  once: true,
+  onEnter: () => {
+    document.querySelectorAll('.db-bar').forEach(bar => {
+      const targetH = parseInt(bar.dataset.h);
+      gsap.to(bar, { height: targetH + '%', duration: 1, ease: 'power2.out', delay: Math.random() * .3 });
+    });
+  }
+});
+
+// ============================================================
+// SAVINGS COUNTER
+// ============================================================
+ScrollTrigger.create({
+  trigger: '#savings',
+  start: 'top 70%',
+  once: true,
+  onEnter: () => {
+    gsap.utils.toArray('.savings-card').forEach((c, i) => {
+      gsap.to(c, { opacity: 1, y: 0, duration: .6, delay: i * .15 });
+    });
+
+    const counters = [
+      { id: 'sav-hours', target: 32, suffix: '', decimals: 0 },
+      { id: 'sav-money', target: 3200, prefix: 'R$', suffix: '', decimals: 0 },
+      { id: 'sav-saved', target: 28, suffix: '', decimals: 0 },
+    ];
+    counters.forEach((c, i) => {
+      const el = document.getElementById(c.id);
+      const obj = { val: 0 };
+      gsap.to(obj, {
+        val: c.target, duration: 1.8, ease: 'power2.out', delay: i * .2,
+        onUpdate: () => {
+          el.textContent = (c.prefix || '') + Math.round(obj.val).toLocaleString('pt-BR') + (c.suffix || '');
+        }
+      });
+    });
+  }
+});
+
+// ============================================================
+// FLIP CARDS
+// ============================================================
+const flipObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const wrap = entry.target;
+      const idx = parseInt(wrap.dataset.idx);
+      setTimeout(() => {
+        wrap.style.opacity = '1';
+        setTimeout(() => wrap.classList.add('flipped'), 80);
+        flipObs.unobserve(wrap);
+      }, idx * 150);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.flip-card-wrap').forEach(el => flipObs.observe(el));
+
+// ============================================================
+// COMPARISON ROW-BY-ROW REVEAL
+// ============================================================
+const compareObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const row = entry.target;
+      const idx = parseInt(row.dataset.idx);
+      setTimeout(() => {
+        gsap.to(row, { opacity: 1, duration: .4 });
+        // Animate checkmarks
+        row.querySelectorAll('.check-icon svg').forEach(svg => {
+          setTimeout(() => svg.classList.add('drawn'), 200);
+        });
+        // Animate X marks
+        row.querySelectorAll('.x-icon').forEach(x => {
+          setTimeout(() => x.classList.add('x-shake'), 200);
+        });
+        compareObs.unobserve(row);
+      }, idx * 100);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.compare-row').forEach(el => compareObs.observe(el));
+
+// ============================================================
+// HOW IT WORKS
+// ============================================================
+gsap.utils.toArray('.how-step').forEach((step, i) => {
+  gsap.to(step, {
+    opacity: 1, y: 0, duration: .7,
+    delay: i * .2,
+    scrollTrigger: { trigger: '#how .how-steps', start: 'top 75%' }
+  });
+});
+
+// ============================================================
+// TESTIMONIALS
+// ============================================================
+gsap.utils.toArray('.testi-card').forEach((card, i) => {
+  gsap.to(card, {
+    opacity: 1, y: 0, duration: .7,
+    delay: i * .15,
+    scrollTrigger: { trigger: card, start: 'top 85%' }
+  });
+});
+
+// ============================================================
+// PRICING CARD
+// ============================================================
+ScrollTrigger.create({
+  trigger: '.price-card',
+  start: 'top 80%',
+  once: true,
+  onEnter: () => {
+    gsap.to('.price-card', { opacity: 1, y: 0, duration: .8, ease: 'power3.out' });
+  }
+});
+
+// ============================================================
+// FINAL CTA
+// ============================================================
+ScrollTrigger.create({
+  trigger: '#cta-final',
+  start: 'top 70%',
+  once: true,
+  onEnter: () => {
+    gsap.to('.cta-final-headline', { opacity: 1, y: 0, duration: .8, ease: 'power3.out' });
+    gsap.to('.cta-final-sub', { opacity: 1, duration: .7, delay: .3 });
+    gsap.to('.cta-final-actions', { opacity: 1, duration: .7, delay: .5 });
+  }
+});
+
+// ============================================================
+// GENERAL REVEAL
+// ============================================================
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+</script>
+</body>
+</html>

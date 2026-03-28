@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbitta Messenger — WhatsApp Multi-atendente para PME</title>
+<meta name="description" content="Seu WhatsApp pessoal não foi feito para tocar um negócio. Orbitta coloca toda sua equipe no mesmo número. CRM, disparo em massa e relatórios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;
+  --bg-light:#f9fafb;
+  --bg-mid:#f3f4f6;
+  --text:#111827;
+  --text-2:#374151;
+  --text-muted:#6b7280;
+  --accent:#f97316;
+  --accent-dark:#ea580c;
+  --accent-light:#fff7ed;
+  --accent-mid:rgba(249,115,22,.15);
+  --border:#e5e7eb;
+  --border-dark:#d1d5db;
+  --green:#16a34a;
+  --red:#dc2626;
+  --radius:12px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.1);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;padding:0 24px}
+.nav-inner{max-width:1160px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.nav-logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:9px;display:flex;align-items:center;justify-content:center}
+.nav-logo-icon svg{color:#fff}
+.nav-logo-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.4px}
+.nav-logo-name span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;font-weight:700;font-size:14px;padding:9px 20px;border-radius:8px;text-decoration:none;transition:.2s;box-shadow:0 4px 12px rgba(249,115,22,.3)}
+.nav-cta:hover{background:var(--accent-dark);transform:translateY(-1px)}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* HERO */
+.hero{padding:80px 24px 72px;background:linear-gradient(180deg,#fff9f5 0%,#ffffff 100%);overflow:hidden;position:relative}
+.hero::before{content:'';position:absolute;top:-120px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(249,115,22,.08) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:760px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;background:var(--accent-light);border:1px solid rgba(249,115,22,.25);color:var(--accent-dark);font-size:12px;font-weight:700;padding:5px 14px;border-radius:100px;margin-bottom:24px;letter-spacing:.4px;text-transform:uppercase}
+.hero-tag .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.4)}}
+.hero-h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(30px,5vw,52px);line-height:1.12;letter-spacing:-1.2px;color:var(--text);margin-bottom:20px}
+.hero-sub{font-size:18px;color:var(--text-2);line-height:1.65;margin-bottom:36px;max-width:560px;margin-left:auto;margin-right:auto}
+.hero-cta-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:36px}
+.btn-hero{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px;padding:16px 36px;border-radius:12px;text-decoration:none;transition:.2s;box-shadow:0 8px 24px rgba(249,115,22,.35)}
+.btn-hero:hover{background:var(--accent-dark);transform:translateY(-2px);box-shadow:0 12px 32px rgba(249,115,22,.4)}
+.hero-fine{font-size:13px;color:var(--text-muted)}
+.trust-row{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:32px}
+.trust-item{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--text-2)}
+.trust-item svg{color:var(--green)}
+.hero-anchor{display:inline-block;background:#fef2f2;border:1px solid #fecaca;color:var(--red);font-size:13px;font-weight:700;padding:8px 18px;border-radius:8px}
+.hero-anchor span{color:var(--green)}
+
+/* PAIN */
+.pain{padding:80px 24px;background:var(--bg-light)}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-tag{display:inline-block;background:var(--accent-mid);color:var(--accent-dark);font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 12px;border-radius:6px;margin-bottom:14px}
+.section-h2{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(24px,3.5vw,38px);letter-spacing:-.8px;margin-bottom:12px;line-height:1.2}
+.section-sub{font-size:16px;color:var(--text-muted);max-width:500px;margin-bottom:48px}
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:768px){.cards-3{grid-template-columns:1fr}}
+.pain-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:28px;position:relative;overflow:hidden}
+.pain-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),#f87171)}
+.pain-card-icon{width:40px;height:40px;background:#fef2f2;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.pain-card-icon svg{color:var(--red)}
+.pain-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px;line-height:1.3}
+.pain-card p{font-size:14px;color:var(--text-muted);line-height:1.6}
+
+/* HOW IT WORKS */
+.how{padding:80px 24px;background:#fff}
+.steps{display:flex;flex-direction:column;gap:0;max-width:640px;margin:0 auto}
+.step{display:flex;gap:24px;position:relative;padding-bottom:40px}
+.step:last-child{padding-bottom:0}
+.step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.step-num{width:44px;height:44px;background:var(--accent);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(249,115,22,.3)}
+.step-line{width:2px;flex:1;background:linear-gradient(to bottom,var(--accent-mid),transparent);margin-top:8px}
+.step:last-child .step-line{display:none}
+.step-content{padding-top:8px}
+.step-content h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:18px;margin-bottom:6px}
+.step-content p{font-size:15px;color:var(--text-muted);line-height:1.6}
+
+/* SOCIAL PROOF */
+.social{padding:80px 24px;background:var(--bg-light)}
+.metric-banner{background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:var(--radius);padding:48px;text-align:center;margin-bottom:56px;color:#fff}
+.metric-number{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(48px,8vw,80px);letter-spacing:-2px;line-height:1;display:block}
+.metric-label{font-size:18px;opacity:.85;margin-top:8px}
+.testimonials{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:768px){.testimonials{grid-template-columns:1fr}}
+.testi{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:28px}
+.testi-stars{display:flex;gap:3px;margin-bottom:14px}
+.testi-stars svg{color:#f59e0b;fill:#f59e0b}
+.testi-text{font-size:14px;color:var(--text-2);line-height:1.65;margin-bottom:18px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px;color:#fff;flex-shrink:0}
+.testi-name{font-weight:700;font-size:14px}
+.testi-role{font-size:12px;color:var(--text-muted)}
+
+/* FEATURES */
+.features{padding:80px 24px;background:#fff}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+@media(max-width:900px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.features-grid{grid-template-columns:1fr}}
+.feat-card{padding:28px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-light);transition:.2s}
+.feat-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+.feat-icon{width:44px;height:44px;background:var(--accent-light);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.feat-icon svg{color:var(--accent)}
+.feat-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px}
+.feat-card p{font-size:13px;color:var(--text-muted);line-height:1.6}
+
+/* PRICING */
+.pricing{padding:80px 24px;background:var(--bg-light)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:960px;margin:0 auto}
+@media(max-width:900px){.pricing-grid{grid-template-columns:1fr;max-width:420px}}
+.plan{background:#fff;border:2px solid var(--border);border-radius:16px;padding:32px;position:relative;transition:.2s}
+.plan.featured{border-color:var(--accent);box-shadow:0 0 0 4px rgba(249,115,22,.1),var(--shadow-lg)}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.plan-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;margin-bottom:6px}
+.plan-desc{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:24px}
+.plan-price-from{font-size:13px;color:var(--text-muted)}
+.plan-price-value{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:38px;letter-spacing:-1px}
+.plan-price-period{font-size:14px;color:var(--text-muted)}
+.plan-cta{display:block;text-align:center;padding:12px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none;transition:.2s;margin-bottom:24px}
+.plan .plan-cta{background:var(--bg-mid);color:var(--text);border:1px solid var(--border)}
+.plan .plan-cta:hover{background:var(--border)}
+.plan.featured .plan-cta{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(249,115,22,.3)}
+.plan.featured .plan-cta:hover{background:var(--accent-dark)}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px}
+.plan-features li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-2)}
+.plan-features li svg{color:var(--green);flex-shrink:0;margin-top:1px}
+
+/* FAQ */
+.faq{padding:80px 24px;background:#fff}
+.faq-list{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:0}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-item input[type="checkbox"]{display:none}
+.faq-label{display:flex;align-items:center;justify-content:space-between;padding:20px 0;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:16px;color:var(--text);user-select:none;gap:12px}
+.faq-label .faq-icon{width:24px;height:24px;border-radius:50%;background:var(--bg-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .3s,background .2s}
+.faq-label .faq-icon svg{transition:transform .3s}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.faq-answer p{padding:0 0 20px;font-size:15px;color:var(--text-muted);line-height:1.65}
+.faq-item input:checked ~ .faq-label .faq-icon{background:var(--accent-mid);transform:rotate(0)}
+.faq-item input:checked ~ .faq-label .faq-icon svg{transform:rotate(45deg);color:var(--accent)}
+.faq-item input:checked ~ .faq-answer{max-height:300px}
+
+/* FINAL CTA */
+.final-cta{padding:96px 24px;background:linear-gradient(135deg,#111827 0%,#1f2937 100%);text-align:center;position:relative;overflow:hidden}
+.final-cta::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(249,115,22,.15) 0%,transparent 65%);pointer-events:none}
+.final-cta h2{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(26px,4vw,44px);color:#fff;margin-bottom:16px;letter-spacing:-.8px;position:relative;z-index:1}
+.final-cta p{font-size:17px;color:#9ca3af;margin-bottom:40px;position:relative;z-index:1}
+.final-trust{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:28px;position:relative;z-index:1}
+.final-trust-item{display:flex;align-items:center;gap:6px;font-size:13px;color:#6b7280}
+.final-trust-item svg{color:#4ade80}
+
+/* FOOTER */
+.footer{background:#0f172a;padding:32px 24px;text-align:center;border-top:1px solid #1e293b}
+.footer-back{display:inline-flex;align-items:center;gap:6px;color:#64748b;text-decoration:none;font-size:14px;font-weight:500;transition:.2s}
+.footer-back:hover{color:#94a3b8}
+.footer-copy{margin-top:12px;font-size:12px;color:#334155}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+
+/* CENTER UTILS */
+.text-center{text-align:center}
+.mb-8{margin-bottom:8px}
+.mb-16{margin-bottom:16px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      </div>
+      <span class="nav-logo-name">Orbitta <span>Messenger</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#precos">Preços</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#testar" class="nav-cta">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      Testar grátis
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">
+      <span class="dot"></span>
+      Para oficinas, óticas, salões, clínicas e restaurantes
+    </div>
+    <h1 class="hero-h1">Seu WhatsApp pessoal não foi feito para tocar um negócio.</h1>
+    <p class="hero-sub">Orbitta coloca toda a sua equipe no mesmo número. Com CRM, disparo em massa e relatórios — sem precisar trocar de celular.</p>
+    <div class="hero-cta-wrap">
+      <a href="#testar" class="btn-hero" id="testar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Testar 7 dias grátis
+      </a>
+      <span class="hero-fine">Sem cartão de crédito. Cancela quando quiser.</span>
+    </div>
+    <div class="trust-row">
+      <div class="trust-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        847 empresas ativas
+      </div>
+      <div class="trust-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Setup em 1 dia
+      </div>
+      <div class="trust-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Cancela quando quiser
+      </div>
+    </div>
+    <div class="hero-anchor">
+      IA Conecta cobra <strong>R$950/mês</strong> — Orbitta custa a partir de <span><strong>R$197/mês</strong></span>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-tag">Você sabe bem esse problema</div>
+      <h2 class="section-h2">Se isso soa familiar, você precisa do Orbitta.</h2>
+      <p class="section-sub">Esses são os 3 maiores problemas de quem usa WhatsApp pessoal para atender clientes.</p>
+    </div>
+    <div class="cards-3">
+      <div class="pain-card reveal">
+        <div class="pain-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <h3>Você não consegue delegar o atendimento</h3>
+        <p>O WhatsApp está no seu celular. Só você tem acesso. Então só você pode responder — às 7h da manhã e às 11h da noite.</p>
+      </div>
+      <div class="pain-card reveal reveal-delay-1">
+        <div class="pain-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </div>
+        <h3>Mensagem de cliente se perde no meio da zona</h3>
+        <p>Entre foto da família, grupo da escola e conversa de amigo, o cliente que perguntou sobre o orçamento ontem ficou sem resposta.</p>
+      </div>
+      <div class="pain-card reveal reveal-delay-2">
+        <div class="pain-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </div>
+        <h3>Quando você tira férias, o negócio para</h3>
+        <p>Não tem como passar o login do WhatsApp para um funcionário. Então ou você fica de plantão nas férias, ou os clientes ficam sem resposta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="como-funciona">
+  <div class="section-inner">
+    <div class="text-center" style="margin-bottom:48px">
+      <div class="section-tag">Simples assim</div>
+      <h2 class="section-h2">Configure em menos de 1 dia.</h2>
+      <p class="section-sub">Você não precisa ser técnico. Não precisa trocar de número. Funciona com o WhatsApp Business que você já tem.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-left">
+          <div class="step-num">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h3>Conecta seu número WhatsApp Business</h3>
+          <p>Você escaneia um QR Code. Pronto. O Orbitta assume o número que seus clientes já conhecem — sem mudança de contato, sem confusão.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-1">
+        <div class="step-left">
+          <div class="step-num">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h3>Adiciona sua equipe com acesso próprio</h3>
+          <p>Cada funcionário entra com o próprio usuário e senha. O histórico de cada cliente fica centralizado — todo mundo vê, ninguém se perde.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-left">
+          <div class="step-num">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h3>Um número, vários atendentes, tudo organizado.</h3>
+          <p>As conversas aparecem em fila. Você distribui, acompanha e vê relatórios em tempo real — sem precisar pegar o celular de ninguém.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="social">
+  <div class="section-inner">
+    <div class="metric-banner reveal">
+      <span class="metric-number">847</span>
+      <p class="metric-label">empresas já usam o Orbitta todo dia</p>
+    </div>
+    <div class="testimonials">
+      <div class="testi reveal">
+        <div class="testi-stars">
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="testi-text">"Antes eu ficava no celular o dia inteiro respondendo cliente. Agora minha atendente cuida de tudo e eu apareço só quando precisa. Vida outra."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#f97316">R</div>
+          <div>
+            <div class="testi-name">Roberto Silva</div>
+            <div class="testi-role">Dono de oficina mecânica, SP</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi reveal reveal-delay-1">
+        <div class="testi-stars">
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="testi-text">"Tirei 10 dias de férias sem abrir o WhatsApp uma vez. Minha equipe atendeu tudo. Voltei e o movimento estava igual. Primeira vez na vida."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#7c3aed">C</div>
+          <div>
+            <div class="testi-name">Carla Mendes</div>
+            <div class="testi-role">Donos de salão de beleza, RJ</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi reveal reveal-delay-2">
+        <div class="testi-stars">
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="testi-text">"Disparo 300 mensagens de confirmação de consulta todo mês. Taxa de falta caiu 60%. O R$197 paga sozinho só com isso."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#0891b2">D</div>
+          <div>
+            <div class="testi-name">Dr. Daniel Faria</div>
+            <div class="testi-role">Clínica odontológica, MG</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-inner">
+    <div class="text-center" style="margin-bottom:48px">
+      <div class="section-tag">O que está incluído</div>
+      <h2 class="section-h2">Tudo que você precisa. Nada que você não vai usar.</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card reveal">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </div>
+        <h3>Multi-atendente real</h3>
+        <p>Vários funcionários no mesmo número. Cada um com acesso próprio, sem compartilhar senha do seu celular.</p>
+      </div>
+      <div class="feat-card reveal reveal-delay-1">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.92 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        </div>
+        <h3>CRM integrado</h3>
+        <p>Histórico de cada cliente, tags personalizadas e funil de atendimento. Nunca mais esquecer com quem falou sobre o quê.</p>
+      </div>
+      <div class="feat-card reveal reveal-delay-2">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </div>
+        <h3>Disparo em massa personalizado</h3>
+        <p>Envia para 500 clientes de uma vez. Cada mensagem sai com o nome da pessoa — parece que foi enviada individualmente.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        </div>
+        <h3>Fila de atendimento</h3>
+        <p>Cada mensagem entra em fila. Você distribui para quem está disponível. Nenhum cliente fica esperando sem resposta.</p>
+      </div>
+      <div class="feat-card reveal reveal-delay-1">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        </div>
+        <h3>Relatórios e métricas</h3>
+        <p>Tempo médio de resposta, volume de atendimentos, desempenho por funcionário. Tudo em um painel simples.</p>
+      </div>
+      <div class="feat-card reveal reveal-delay-2">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        <h3>Respostas automáticas</h3>
+        <p>Configure mensagens automáticas para fora do horário, primeiro contato e perguntas frequentes. Atende 24h mesmo quando você não está.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="precos">
+  <div class="section-inner">
+    <div class="text-center" style="margin-bottom:48px">
+      <div class="section-tag">Planos</div>
+      <h2 class="section-h2">Simples. Justo. Sem pegadinha.</h2>
+      <p class="section-sub" style="margin-left:auto;margin-right:auto">IA Conecta cobra R$950/mês. Você paga menos que um salário mínimo e tem tudo que precisa.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan reveal">
+        <div class="plan-name">Essencial</div>
+        <div class="plan-desc">Ideal para começar</div>
+        <div class="plan-price">
+          <span class="plan-price-from">R$</span>
+          <span class="plan-price-value">197</span>
+          <span class="plan-price-period">/mês</span>
+        </div>
+        <a href="#testar" class="plan-cta">Testar 7 dias grátis</a>
+        <ul class="plan-features">
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Até 3 atendentes</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>1 número WhatsApp</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>CRM básico</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Disparo de até 500 msgs/mês</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Respostas automáticas</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Suporte via chat</li>
+        </ul>
+      </div>
+      <div class="plan featured reveal reveal-delay-1">
+        <div class="plan-badge">RECOMENDADO</div>
+        <div class="plan-name">Profissional</div>
+        <div class="plan-desc">Para negócios em crescimento</div>
+        <div class="plan-price">
+          <span class="plan-price-from">R$</span>
+          <span class="plan-price-value">297</span>
+          <span class="plan-price-period">/mês</span>
+        </div>
+        <a href="#testar" class="plan-cta">Testar 7 dias grátis</a>
+        <ul class="plan-features">
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Até 10 atendentes</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>2 números WhatsApp</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>CRM completo com funil</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Disparo ilimitado</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Relatórios avançados</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Chatbot automático</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Suporte prioritário</li>
+        </ul>
+      </div>
+      <div class="plan reveal reveal-delay-2">
+        <div class="plan-name">Expansão</div>
+        <div class="plan-desc">Para quem quer escalar de vez</div>
+        <div class="plan-price">
+          <span class="plan-price-from">R$</span>
+          <span class="plan-price-value">397</span>
+          <span class="plan-price-period">/mês</span>
+        </div>
+        <a href="#testar" class="plan-cta">Testar 7 dias grátis</a>
+        <ul class="plan-features">
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Atendentes ilimitados</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Números ilimitados</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Tudo do Profissional</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>API de integração</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Onboarding dedicado</li>
+          <li><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Suporte via WhatsApp</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-inner">
+    <div class="text-center" style="margin-bottom:40px">
+      <div class="section-tag">Perguntas frequentes</div>
+      <h2 class="section-h2">Ficou alguma dúvida?</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <input type="checkbox" id="faq1">
+        <label class="faq-label" for="faq1">
+          Funciona com WhatsApp normal ou só com o Business?
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </div>
+        </label>
+        <div class="faq-answer"><p>Funciona com os dois. Se você já tem o WhatsApp Business, melhor — tem mais recursos disponíveis. Mas você pode conectar qualquer número do WhatsApp. Recomendamos migrar para o Business se ainda não tiver, porque é grátis e facilita a separação entre pessoal e profissional.</p></div>
+      </div>
+      <div class="faq-item">
+        <input type="checkbox" id="faq2">
+        <label class="faq-label" for="faq2">
+          Minha equipe precisa de celular próprio para usar?
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </div>
+        </label>
+        <div class="faq-answer"><p>Não. O Orbitta funciona pelo navegador, em qualquer computador ou celular. Cada funcionário acessa com o próprio e-mail e senha pelo site — sem precisar instalar app, sem precisar ter o WhatsApp no celular dele. É tudo centralizado na plataforma.</p></div>
+      </div>
+      <div class="faq-item">
+        <input type="checkbox" id="faq3">
+        <label class="faq-label" for="faq3">
+          O histórico das conversas fica salvo?
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </div>
+        </label>
+        <div class="faq-answer"><p>Sim, tudo fica salvo. Todo o histórico de conversas com cada cliente é armazenado no CRM do Orbitta. Se um funcionário sair e entrar outro, o novo vê o histórico completo. Você nunca perde o contexto de nenhuma conversa.</p></div>
+      </div>
+      <div class="faq-item">
+        <input type="checkbox" id="faq4">
+        <label class="faq-label" for="faq4">
+          Quanto tempo leva para configurar?
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </div>
+        </label>
+        <div class="faq-answer"><p>A maioria dos clientes está operando em menos de 1 hora. O processo é: criar conta, escanear o QR Code do WhatsApp, cadastrar os atendentes. Nosso suporte está disponível para ajudar em tempo real durante o setup. Não precisa de técnico, não precisa de programador.</p></div>
+      </div>
+      <div class="faq-item">
+        <input type="checkbox" id="faq5">
+        <label class="faq-label" for="faq5">
+          Se eu cancelar, perco os dados das conversas?
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </div>
+        </label>
+        <div class="faq-answer"><p>Não perde. Antes de cancelar, você pode exportar todo o histórico de conversas e contatos em formato CSV. Os dados são seus — sempre. Após o cancelamento, mantemos o acesso de leitura por mais 30 dias para você fazer o download com calma.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div>
+    <h2>Pronto para atender com a equipe toda?</h2>
+    <p>7 dias grátis. Sem cartão. Se não gostar, não paga nada.</p>
+    <a href="#testar" class="btn-hero" style="margin:0 auto;display:inline-flex">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Testar 7 dias grátis (sem cartão)
+    </a>
+    <div class="final-trust">
+      <div class="final-trust-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Sem cartão de crédito
+      </div>
+      <div class="final-trust-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Cancela em 1 clique
+      </div>
+      <div class="final-trust-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Suporte no setup incluído
+      </div>
+      <div class="final-trust-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        847 empresas ativas
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <a href="index.html" class="footer-back">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    Ecossistema MAX
+  </a>
+  <p class="footer-copy">© 2026 Orbitta Messenger. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
