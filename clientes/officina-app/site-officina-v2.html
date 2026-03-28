@@ -1267,6 +1267,238 @@
     }
 
     /* ============================================================
+       7b. COBERTURA — "Cada item coberto já pagou o plano"
+    ============================================================ */
+    #cobertura {
+      background: var(--bg);
+    }
+
+    .cob-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 56px;
+    }
+    .cob-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .cob-header h2 em {
+      font-style: normal;
+      color: var(--yellow);
+    }
+    .cob-header p {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .cob-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .cob-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .cob-item:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .cob-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--teal-bg);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+    .cob-icon svg { width: 22px; height: 22px; }
+
+    .cob-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .cob-detail {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .cob-price {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .cob-price .label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .cob-price .value {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #EF4444;
+    }
+
+    @media (max-width: 900px) {
+      .cob-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 580px) {
+      .cob-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       CALCULADORA DE RISCO (dropdown)
+    ============================================================ */
+    .calc-risk-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px 48px;
+      max-width: 720px;
+      margin: 0 auto 40px;
+    }
+
+    .calc-risk-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .calc-risk-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .calc-risk-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .calc-risk-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .calc-risk-field label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .calc-risk-field select {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .calc-risk-field select:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(26,158,143,0.1);
+    }
+
+    .calc-risk-btn {
+      width: 100%;
+      background: var(--teal);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: background 0.2s, transform 0.15s;
+      margin-bottom: 20px;
+    }
+    .calc-risk-btn:hover {
+      background: var(--teal-dark);
+      transform: translateY(-1px);
+    }
+
+    .calc-risk-result {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      background: linear-gradient(135deg, #F0FBF9, #E8F7F5);
+      border: 1px solid rgba(26,158,143,0.15);
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s, transform 0.4s;
+      pointer-events: none;
+    }
+    .calc-risk-result.show {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+
+    .risk-res-item { text-align: center; }
+    .risk-res-val {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .risk-res-val.bad { color: #EF4444; }
+    .risk-res-val.mid { color: var(--yellow); }
+    .risk-res-val.good { color: var(--teal); }
+    .risk-res-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .calc-risk-note {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 580px) {
+      .calc-risk-grid { grid-template-columns: 1fr; }
+      .calc-risk-result { grid-template-columns: 1fr; }
+      .calc-risk-box { padding: 28px 20px; }
+    }
+
+    /* ============================================================
        8. PLANOS PMP
     ============================================================ */
     #planos {
@@ -1942,44 +2174,6 @@
   </section>
 
 
-  <!-- ============================================================
-       3. NÚMEROS
-  ============================================================ -->
-  <section id="stats" aria-label="Números da plataforma">
-    <div class="container">
-      <div class="stats-grid">
-
-        <div class="stat-item reveal d1">
-          <div class="stat-number">
-            <span class="counter" data-target="847" data-suffix="">0</span>
-          </div>
-          <div class="stat-label">Oficinas credenciadas</div>
-        </div>
-
-        <div class="stat-item reveal d2">
-          <div class="stat-number">
-            <span class="counter" data-target="50000" data-suffix="+" data-format="50k">0</span>
-          </div>
-          <div class="stat-label">Motoristas cadastrados</div>
-        </div>
-
-        <div class="stat-item reveal d3">
-          <div class="stat-number">
-            <span class="counter" data-target="48" data-suffix="" data-decimal="true">0</span>
-          </div>
-          <div class="stat-label">Nota média na plataforma</div>
-        </div>
-
-        <div class="stat-item reveal d4">
-          <div class="stat-number">
-            <span style="color:var(--yellow)">R$</span><span class="counter" data-target="280" data-suffix="">0</span>
-          </div>
-          <div class="stat-label">Economia média por visita</div>
-        </div>
-
-      </div>
-    </div>
-  </section>
 
 
   <!-- ============================================================
@@ -2046,46 +2240,6 @@
   </section>
 
 
-  <!-- ============================================================
-       5. DORES
-  ============================================================ -->
-  <section id="dores">
-    <div class="container">
-
-      <div class="dores-stat reveal-scale">
-        <span class="dores-big-num" id="dores-num">8 em 10</span>
-        <p class="dores-big-text">
-          motoristas já desconfiaram do mecânico.
-        </p>
-      </div>
-
-      <div class="dores-grid">
-
-        <div class="dore-card reveal d1">
-          <div class="dore-icon">
-            <i data-lucide="alert-circle"></i>
-          </div>
-          <p>"Você entra na oficina sem saber o preço. Sai com uma surpresa que não dá pra questionar."</p>
-        </div>
-
-        <div class="dore-card reveal d2">
-          <div class="dore-icon">
-            <i data-lucide="eye"></i>
-          </div>
-          <p>"Não tem como saber se o serviço era mesmo necessário — ou se te venderam algo que você não precisava."</p>
-        </div>
-
-        <div class="dore-card reveal d3">
-          <div class="dore-icon">
-            <i data-lucide="shield-check"></i>
-          </div>
-          <p>"Não tem histórico, não tem garantia por escrito, não tem prova de nada se der errado depois."</p>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
 
 
   <!-- ============================================================
@@ -2301,6 +2455,89 @@
 
 
   <!-- ============================================================
+       7b. O QUE ESTÁ INCLUSO
+  ============================================================ -->
+  <section id="cobertura">
+    <div class="container">
+
+      <div class="cob-header reveal">
+        <div class="section-label">
+          <i data-lucide="package-check" style="width:13px;height:13px;"></i>
+          O que está incluso
+        </div>
+        <h2>Cada item coberto <em>já pagou</em> o plano inteiro.</h2>
+        <p>Veja o custo real de cada serviço se você fosse pagar avulso — e quanto você paga com o PMP.</p>
+      </div>
+
+      <div class="cob-grid">
+
+        <div class="cob-item reveal d1">
+          <div class="cob-icon"><i data-lucide="wrench"></i></div>
+          <div class="cob-name">Troca de óleo + filtro</div>
+          <div class="cob-detail">Inclui óleo sintético 5W30 ou conforme manual, filtro de óleo original e inspeção de nível de fluidos.</div>
+          <div class="cob-price">
+            <span class="label">Avulso em SP</span>
+            <span class="value">R$180–R$320</span>
+          </div>
+        </div>
+
+        <div class="cob-item reveal d2">
+          <div class="cob-icon"><i data-lucide="zap"></i></div>
+          <div class="cob-name">Diagnóstico eletrônico (OBD)</div>
+          <div class="cob-detail">Leitura de todas as falhas do computador do veículo. Identifica problemas antes de virarem barulho.</div>
+          <div class="cob-price">
+            <span class="label">Avulso em SP</span>
+            <span class="value">R$120–R$200</span>
+          </div>
+        </div>
+
+        <div class="cob-item reveal d3">
+          <div class="cob-icon"><i data-lucide="link-2"></i></div>
+          <div class="cob-name">Verificação de correia dentada</div>
+          <div class="cob-detail">Inspeção visual e por km rodado. Correia estoura → motor destruído. Prevenção custa R$180. Conserto, R$4.000+.</div>
+          <div class="cob-price">
+            <span class="label">Avulso em SP</span>
+            <span class="value">R$800–R$1.600</span>
+          </div>
+        </div>
+
+        <div class="cob-item reveal d1">
+          <div class="cob-icon"><i data-lucide="refresh-cw"></i></div>
+          <div class="cob-name">Fluido do câmbio (Completo)</div>
+          <div class="cob-detail">Troca do fluido de transmissão automática ou CVT. Fluido vencido leva a falhas de R$3.000+.</div>
+          <div class="cob-price">
+            <span class="label">Avulso em SP</span>
+            <span class="value">R$300–R$600</span>
+          </div>
+        </div>
+
+        <div class="cob-item reveal d2">
+          <div class="cob-icon"><i data-lucide="shield-alert"></i></div>
+          <div class="cob-name">Inspeção de freios</div>
+          <div class="cob-detail">Medição de espessura das pastilhas, inspeção dos discos e verificação do fluido. Freio falho é risco de acidente.</div>
+          <div class="cob-price">
+            <span class="label">Avulso em SP</span>
+            <span class="value">R$250–R$480</span>
+          </div>
+        </div>
+
+        <div class="cob-item reveal d3">
+          <div class="cob-icon"><i data-lucide="smartphone"></i></div>
+          <div class="cob-name">Histórico digital do veículo</div>
+          <div class="cob-detail">Todos os serviços registrados no app. Na hora de vender, histórico documentado vale R$3.000–R$8.000 a mais.</div>
+          <div class="cob-price">
+            <span class="label">Valor na revenda</span>
+            <span class="value" style="color:var(--teal)">+R$3.000–R$8.000</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
        8. PLANOS PMP
   ============================================================ -->
   <section id="planos">
@@ -2325,7 +2562,7 @@
           </div>
           <h3>Motor</h3>
           <div class="plan-price">
-            <strong>R$500</strong>
+            <strong>R$89</strong>
             <span>/mês</span>
           </div>
           <div class="plan-divider"></div>
@@ -2359,7 +2596,7 @@
           </div>
           <h3>Suspensão</h3>
           <div class="plan-price">
-            <strong>R$500</strong>
+            <strong>R$89</strong>
             <span>/mês</span>
           </div>
           <div class="plan-divider"></div>
@@ -2394,7 +2631,7 @@
           </div>
           <h3>Completo</h3>
           <div class="plan-price">
-            <strong>R$800</strong>
+            <strong>R$159</strong>
             <span>/mês</span>
           </div>
           <div class="plan-divider"></div>
@@ -2569,10 +2806,76 @@
 
 
   <!-- ============================================================
-       10.5 CALCULADORA DE ECONOMIA
+       10.5 CALCULADORAS
   ============================================================ -->
   <section id="calculadora">
     <div class="container">
+
+      <!-- Calculadora de Risco -->
+      <div class="calc-risk-box reveal">
+        <div class="section-label" style="margin-bottom:16px;">
+          <i data-lucide="alert-triangle" style="width:13px;height:13px;"></i>
+          Calculadora de Risco
+        </div>
+        <div class="calc-risk-title">Quanto seu carro <span style="color:var(--yellow)">já vai te custar?</span></div>
+        <div class="calc-risk-sub">Preencha os dados e veja o risco real do seu veículo.</div>
+        <div class="calc-risk-grid">
+          <div class="calc-risk-field">
+            <label>Tipo de veículo</label>
+            <select id="cTipo" onchange="calcRisco()">
+              <option value="popular">Hatch popular (Onix, HB20, Polo)</option>
+              <option value="sedan">Sedan médio (Corolla, Civic, Jetta)</option>
+              <option value="suv">SUV (HRV, Creta, Compass)</option>
+              <option value="pickupLeve">Pickup (S10, Frontier)</option>
+            </select>
+          </div>
+          <div class="calc-risk-field">
+            <label>Ano do veículo</label>
+            <select id="cAno" onchange="calcRisco()">
+              <option value="new">2022 a 2025</option>
+              <option value="mid" selected>2018 a 2021</option>
+              <option value="old">2014 a 2017</option>
+              <option value="older">Até 2013</option>
+            </select>
+          </div>
+          <div class="calc-risk-field">
+            <label>Km rodados por mês</label>
+            <select id="cKm" onchange="calcRisco()">
+              <option value="low">Até 1.000 km</option>
+              <option value="mid" selected>1.000 a 2.500 km</option>
+              <option value="high">2.500 a 4.000 km</option>
+              <option value="xhigh">Acima de 4.000 km</option>
+            </select>
+          </div>
+          <div class="calc-risk-field">
+            <label>Última revisão completa</label>
+            <select id="cRev" onchange="calcRisco()">
+              <option value="recent">Menos de 6 meses</option>
+              <option value="ok">6 a 12 meses</option>
+              <option value="late" selected>Mais de 1 ano</option>
+              <option value="never">Nunca fiz revisão completa</option>
+            </select>
+          </div>
+        </div>
+        <button class="calc-risk-btn" onclick="calcRisco()">Calcular meu risco →</button>
+        <div class="calc-risk-result" id="calcRiscoResult">
+          <div class="risk-res-item">
+            <div class="risk-res-val bad" id="resRisco">—</div>
+            <div class="risk-res-label">Risco de conserto<br/>nos próximos 12 meses</div>
+          </div>
+          <div class="risk-res-item">
+            <div class="risk-res-val mid" id="resCusto">—</div>
+            <div class="risk-res-label">Custo estimado<br/>sem proteção</div>
+          </div>
+          <div class="risk-res-item">
+            <div class="risk-res-val good" id="resEco">—</div>
+            <div class="risk-res-label">Economia estimada<br/>com PMP Motor</div>
+          </div>
+        </div>
+        <p class="calc-risk-note">* Estimativas baseadas em média de oficinas parceiras em São Paulo.</p>
+      </div>
+
+      <!-- Calculadora de Economia -->
       <div class="calc-wrap reveal">
         <div class="calc-header">
           <div class="calc-header-label">
@@ -2934,7 +3237,41 @@
 
     // ============================================================
     // ============================================================
-    // CALCULADORA
+    // CALCULADORA DE RISCO
+    // ============================================================
+    function calcRisco() {
+      const tipo = document.getElementById('cTipo').value;
+      const ano = document.getElementById('cAno').value;
+      const km = document.getElementById('cKm').value;
+      const rev = document.getElementById('cRev').value;
+
+      let risk = 30;
+      const costs = { popular: 1400, sedan: 2200, suv: 2800, pickupLeve: 3200 };
+      let custo = costs[tipo] || 1400;
+
+      if (ano === 'old') { risk += 20; custo *= 1.3; }
+      else if (ano === 'older') { risk += 35; custo *= 1.6; }
+      else if (ano === 'mid') { risk += 10; custo *= 1.1; }
+
+      if (km === 'high') { risk += 15; custo *= 1.15; }
+      else if (km === 'xhigh') { risk += 25; custo *= 1.3; }
+
+      if (rev === 'late') { risk += 25; custo *= 1.25; }
+      else if (rev === 'never') { risk += 40; custo *= 1.5; }
+      else if (rev === 'ok') risk += 10;
+
+      risk = Math.min(risk, 96);
+      custo = Math.round(custo / 100) * 100;
+      const eco = Math.round((custo - 599) / 100) * 100;
+
+      document.getElementById('resRisco').textContent = risk + '%';
+      document.getElementById('resCusto').textContent = 'R$' + custo.toLocaleString('pt-BR');
+      document.getElementById('resEco').textContent = eco > 0 ? 'R$' + eco.toLocaleString('pt-BR') : 'Já coberto';
+      document.getElementById('calcRiscoResult').classList.add('show');
+    }
+
+    // ============================================================
+    // CALCULADORA DE ECONOMIA
     // ============================================================
     function updateCalc() {
       const slider = document.getElementById('calcSlider');
