@@ -249,36 +249,8 @@
       gap: 32px;
     }
 
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .nav-logo-icon {
-      width: 32px;
-      height: 32px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.4s ease;
-    }
-    .nav-logo-icon svg {
-      width: 18px;
-      height: 18px;
-      stroke: #fff;
-      transition: stroke 0.4s ease;
-    }
-    #navbar.scrolled .nav-logo-icon {
-      background: var(--teal-bg);
-    }
-    #navbar.scrolled .nav-logo-icon svg {
-      stroke: var(--teal-dark);
-    }
     .nav-logo img {
-      height: 28px;
+      height: 30px;
       width: auto;
       transition: filter 0.4s ease;
     }
@@ -1884,13 +1856,6 @@
     <div class="nav-inner">
 
       <a href="#" class="nav-logo" aria-label="Officina App — Home">
-        <div class="nav-logo-icon" id="nav-logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/>
-            <circle cx="7.5" cy="17.5" r="2.5"/>
-            <circle cx="17.5" cy="17.5" r="2.5"/>
-          </svg>
-        </div>
         <img src="logo-teal.png" id="nav-logo-img" alt="Officina App" />
       </a>
 
