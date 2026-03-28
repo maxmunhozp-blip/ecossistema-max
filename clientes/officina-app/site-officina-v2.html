@@ -1356,16 +1356,18 @@
     }
     .cob-price .value {
       font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: 800;
+      font-size: 1.6rem;
+      font-weight: 900;
       color: #EF4444;
+      letter-spacing: -0.02em;
     }
 
     @media (max-width: 900px) {
       .cob-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 580px) {
-      .cob-grid { grid-template-columns: 1fr; }
+      .cob-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .cob-item { padding: 20px 16px; }
     }
 
     /* ============================================================
@@ -2465,7 +2467,7 @@
           <i data-lucide="package-check" style="width:13px;height:13px;"></i>
           O que está incluso
         </div>
-        <h2>Cada item coberto <em>já pagou</em> o plano inteiro.</h2>
+        <h2>Cada item coberto <em style="color:#D97706">já pagou</em> o plano inteiro.</h2>
         <p>Veja o custo real de cada serviço se você fosse pagar avulso — e quanto você paga com o PMP.</p>
       </div>
 
@@ -2474,9 +2476,9 @@
         <div class="cob-item reveal d1">
           <div class="cob-icon"><i data-lucide="wrench"></i></div>
           <div class="cob-name">Troca de óleo + filtro</div>
-          <div class="cob-detail">Inclui óleo sintético 5W30 ou conforme manual, filtro de óleo original e inspeção de nível de fluidos.</div>
+          <div class="cob-detail">Óleo sintético + filtro original, todo mês. Nunca atrasado, nunca esquecido.</div>
           <div class="cob-price">
-            <span class="label">Avulso em SP</span>
+            <span class="label">Avulso em Goiânia</span>
             <span class="value">R$180–R$320</span>
           </div>
         </div>
@@ -2484,9 +2486,9 @@
         <div class="cob-item reveal d2">
           <div class="cob-icon"><i data-lucide="zap"></i></div>
           <div class="cob-name">Diagnóstico eletrônico (OBD)</div>
-          <div class="cob-detail">Leitura de todas as falhas do computador do veículo. Identifica problemas antes de virarem barulho.</div>
+          <div class="cob-detail">Lê as falhas do computador antes de virarem barulho — e barulho virar conserto caro.</div>
           <div class="cob-price">
-            <span class="label">Avulso em SP</span>
+            <span class="label">Avulso em Goiânia</span>
             <span class="value">R$120–R$200</span>
           </div>
         </div>
@@ -2494,9 +2496,9 @@
         <div class="cob-item reveal d3">
           <div class="cob-icon"><i data-lucide="link-2"></i></div>
           <div class="cob-name">Verificação de correia dentada</div>
-          <div class="cob-detail">Inspeção visual e por km rodado. Correia estoura → motor destruído. Prevenção custa R$180. Conserto, R$4.000+.</div>
+          <div class="cob-detail">Correia estoura, motor vai junto. Prevenção: R$180. Conserto: R$4.000+. A conta não fecha sem ela.</div>
           <div class="cob-price">
-            <span class="label">Avulso em SP</span>
+            <span class="label">Avulso em Goiânia</span>
             <span class="value">R$800–R$1.600</span>
           </div>
         </div>
@@ -2504,9 +2506,9 @@
         <div class="cob-item reveal d1">
           <div class="cob-icon"><i data-lucide="refresh-cw"></i></div>
           <div class="cob-name">Fluido do câmbio (Completo)</div>
-          <div class="cob-detail">Troca do fluido de transmissão automática ou CVT. Fluido vencido leva a falhas de R$3.000+.</div>
+          <div class="cob-detail">Fluido vencido quebra o câmbio sem avisar. Trocar preventivamente custa R$300. Câmbio novo, R$5.000+.</div>
           <div class="cob-price">
-            <span class="label">Avulso em SP</span>
+            <span class="label">Avulso em Goiânia</span>
             <span class="value">R$300–R$600</span>
           </div>
         </div>
@@ -2514,9 +2516,9 @@
         <div class="cob-item reveal d2">
           <div class="cob-icon"><i data-lucide="shield-alert"></i></div>
           <div class="cob-name">Inspeção de freios</div>
-          <div class="cob-detail">Medição de espessura das pastilhas, inspeção dos discos e verificação do fluido. Freio falho é risco de acidente.</div>
+          <div class="cob-detail">Pastilha gasta não freia. Freio que falha não avisa — até ser tarde demais.</div>
           <div class="cob-price">
-            <span class="label">Avulso em SP</span>
+            <span class="label">Avulso em Goiânia</span>
             <span class="value">R$250–R$480</span>
           </div>
         </div>
@@ -2524,7 +2526,7 @@
         <div class="cob-item reveal d3">
           <div class="cob-icon"><i data-lucide="smartphone"></i></div>
           <div class="cob-name">Histórico digital do veículo</div>
-          <div class="cob-detail">Todos os serviços registrados no app. Na hora de vender, histórico documentado vale R$3.000–R$8.000 a mais.</div>
+          <div class="cob-detail">Na hora de vender o carro, histórico documentado vale R$3.000–R$8.000 a mais na negociação.</div>
           <div class="cob-price">
             <span class="label">Valor na revenda</span>
             <span class="value" style="color:var(--teal)">+R$3.000–R$8.000</span>
