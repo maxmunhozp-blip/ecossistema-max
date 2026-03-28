@@ -250,9 +250,9 @@
     }
 
     .nav-logo img {
-      height: 36px;
+      height: 32px;
       width: auto;
-      transition: filter 0.4s ease;
+      transition: opacity 0.3s ease;
     }
 
     .nav-links {
@@ -1856,7 +1856,7 @@
     <div class="nav-inner">
 
       <a href="#" class="nav-logo" aria-label="Officina App — Home">
-        <img src="logo-amber.png" id="nav-logo-img" alt="Officina App" />
+        <img src="logo-horizontal-white.png" id="nav-logo-img" alt="Officina App" />
       </a>
 
       <ul class="nav-links">
@@ -2732,16 +2732,10 @@
       function applyState(isScrolled) {
         navbar.classList.toggle('scrolled', isScrolled);
         if (isScrolled) {
-          // Nav branco: logo-teal.png (só texto, sem carro — limpo no branco)
-          logoImg.src = 'logo-teal.png';
-          logoImg.style.filter = '';
-          logoImg.style.height = '20px';
+          logoImg.src = 'logo-horizontal-dark.png';
           ctaBtn.style.cssText = 'padding:10px 22px;font-size:0.85rem;border-radius:8px;background:var(--teal);color:#fff;border:none;';
         } else {
-          // Nav teal: logo-amber.png (carro amber + texto branco — funciona no teal)
-          logoImg.src = 'logo-amber.png';
-          logoImg.style.filter = '';
-          logoImg.style.height = '36px';
+          logoImg.src = 'logo-horizontal-white.png';
           ctaBtn.style.cssText = 'padding:10px 22px;font-size:0.85rem;border-radius:8px;background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.4);';
         }
       }
