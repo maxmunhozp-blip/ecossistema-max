@@ -404,6 +404,8 @@
       flex-direction: column;
       align-items: flex-start;
       justify-content: center;
+      position: relative;
+      z-index: 3;
     }
 
     /* ---- Hero Copy ---- */
@@ -1888,9 +1890,20 @@
        2. HERO
   ============================================================ -->
   <section id="hero" aria-label="Apresentação principal">
-    <div class="hero-inner">
 
-      <!-- Copy -->
+    <!-- Foto full-background — fora do hero-inner para cobrir #hero inteiro -->
+    <div class="hero-photo-wrap">
+      <img
+        src="foto-mulher-carro.png"
+        alt="Mulher sorrindo com celular, carro aberto ao fundo"
+        class="hero-photo-img"
+        loading="eager"
+      />
+
+    </div>
+
+    <!-- Copy — sobre a foto -->
+    <div class="hero-inner">
       <div class="hero-copy">
         <div class="hero-badge">
           <span class="hero-badge-dot"></span>
@@ -1923,31 +1936,8 @@
           <span>Cancela quando quiser</span>
         </div>
       </div>
-
-      <!-- Photo -->
-      <div class="hero-photo-wrap">
-        <img
-          src="foto-mulher-carro.png"
-          alt="Mulher sorrindo com celular, carro aberto ao fundo"
-          class="hero-photo-img"
-          loading="eager"
-        />
-
-        <!-- Floating approval card -->
-        <div class="hero-float-card" aria-hidden="true">
-          <div class="hero-float-card-top">
-            <div class="hero-float-check">
-              <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <div class="hero-float-card-label">Orçamento aprovado</div>
-          </div>
-          <div class="hero-float-card-service">Revisão 10.000km — AutoFix Moema</div>
-          <div class="hero-float-card-price">R$ 194,00</div>
-          <div class="hero-float-card-saving">Economia de R$286 vs. concorrente</div>
-        </div>
-      </div>
-
     </div>
+
   </section>
 
 
