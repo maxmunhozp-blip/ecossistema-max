@@ -57,10 +57,10 @@ nav.scrolled{background:rgba(4,13,12,.92);backdrop-filter:blur(20px);border-bott
 @keyframes pulse-amber{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.6)}50%{box-shadow:0 0 0 8px rgba(245,166,35,0)}}
 .eyebrow-text{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--amber)}
 
-.hero-headline{font-family:'Barlow Condensed',sans-serif;font-size:clamp(62px,8.5vw,130px);font-weight:900;line-height:.9;letter-spacing:-2px;margin-bottom:0;position:relative;z-index:2;color:var(--text)}
-.hero-headline .line-1{display:block;color:rgba(244,249,249,.25);font-size:clamp(22px,3vw,42px);font-weight:600;letter-spacing:0;margin-bottom:8px}
+.hero-headline{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,7vw,104px);font-weight:800;line-height:.95;letter-spacing:-1px;margin-bottom:0;position:relative;z-index:2;color:var(--text)}
+.hero-headline .line-1{display:block;color:rgba(244,249,249,.5);font-size:clamp(16px,2.2vw,26px);font-weight:400;letter-spacing:.2px;margin-bottom:14px;font-family:'DM Sans',sans-serif}
 .hero-headline em{font-style:normal;color:var(--amber);display:block}
-.hero-headline .slash{color:var(--teal);font-style:italic}
+.hero-headline .slash{color:var(--teal);font-style:italic;font-weight:700}
 
 .hero-bottom{display:grid;grid-template-columns:1fr auto;gap:60px;align-items:flex-end;margin-top:52px;position:relative;z-index:2;padding-top:40px;border-top:1px solid var(--border)}
 .hero-desc{font-size:clamp(16px,1.8vw,20px);color:var(--text2);line-height:1.65;max-width:520px;font-weight:300}
@@ -95,7 +95,7 @@ section{padding:100px 6%}
 .v-card.amber::before{background:var(--amber)}
 .v-card.teal::before{background:var(--teal)}
 .v-card.mid::before{background:var(--teal-mid)}
-.v-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(64px,8vw,110px);font-weight:900;line-height:.85;letter-spacing:-3px;margin-bottom:12px}
+.v-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,7vw,90px);font-weight:800;line-height:.9;letter-spacing:-1.5px;margin-bottom:14px}
 .v-num.red{color:var(--red)}
 .v-num.amber{color:var(--amber)}
 .v-num.teal{color:var(--teal)}
@@ -107,7 +107,7 @@ section{padding:100px 6%}
 .math-section{background:var(--bg-mid);position:relative;overflow:hidden}
 .math-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 50%,rgba(0,73,79,.4) 0%,transparent 70%)}
 .math-wrap{position:relative;z-index:2}
-.math-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(42px,6vw,78px);font-weight:900;line-height:.95;letter-spacing:-2px;margin-bottom:16px}
+.math-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(34px,4.5vw,62px);font-weight:700;line-height:1;letter-spacing:-.8px;margin-bottom:16px}
 .math-title em{font-style:normal;color:var(--amber)}
 .math-sub{font-size:18px;color:var(--text2);max-width:540px;line-height:1.65;margin-bottom:60px;font-weight:300}
 
@@ -134,11 +134,11 @@ section{padding:100px 6%}
 .math-side-label{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px}
 .math-side-label.bad{color:var(--red)}
 .math-side-label.good{color:var(--teal)}
-.math-big{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,6vw,80px);font-weight:900;line-height:1}
+.math-big{font-family:'Barlow Condensed',sans-serif;font-size:clamp(44px,5vw,68px);font-weight:700;line-height:1}
 .math-big.bad{color:var(--red)}
 .math-big.good{color:var(--teal)}
 .math-small-desc{font-size:14px;color:var(--text2);margin-top:10px;line-height:1.5}
-.math-vs{font-family:'Barlow Condensed',sans-serif;font-size:72px;font-weight:900;color:var(--border);text-align:center;line-height:1}
+.math-vs{font-family:'Barlow Condensed',sans-serif;font-size:56px;font-weight:700;color:var(--border);text-align:center;line-height:1}
 .math-save-badge{background:rgba(61,169,165,.12);border:1px solid rgba(61,169,165,.3);border-radius:8px;padding:12px 20px;text-align:center;margin-top:20px}
 .math-save-badge span{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--teal)}
 .math-save-badge p{font-size:12px;color:var(--text3);margin-top:2px}
@@ -146,7 +146,7 @@ section{padding:100px 6%}
 /* ── CALCULADORA ── */
 .calc-section{background:var(--bg-dark)}
 .calc-box{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:52px 48px;max-width:820px;margin:60px auto 0}
-.calc-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;margin-bottom:8px;line-height:1}
+.calc-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(24px,3.2vw,38px);font-weight:700;letter-spacing:-.4px;margin-bottom:8px;line-height:1.1}
 .calc-sub{font-size:15px;color:var(--text2);margin-bottom:40px}
 .calc-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
 .calc-field{display:flex;flex-direction:column;gap:8px}
@@ -157,7 +157,7 @@ section{padding:100px 6%}
 .calc-result{background:var(--bg-mid);border:1px solid var(--border-amber);border-radius:12px;padding:32px 36px;margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;opacity:0;transform:translateY(12px);transition:.4s}
 .calc-result.show{opacity:1;transform:none}
 .calc-res-item{text-align:center}
-.calc-res-val{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,3vw,42px);font-weight:900;line-height:1;margin-bottom:6px}
+.calc-res-val{font-family:'Barlow Condensed',sans-serif;font-size:clamp(26px,2.8vw,38px);font-weight:700;line-height:1;margin-bottom:6px}
 .calc-res-val.bad{color:var(--red)}
 .calc-res-val.mid{color:var(--amber)}
 .calc-res-val.good{color:var(--teal)}
@@ -174,11 +174,11 @@ section{padding:100px 6%}
 .plano-card.destaque{border-color:var(--amber);background:linear-gradient(135deg,var(--bg-card) 0%,rgba(245,166,35,.06) 100%)}
 .plano-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--amber);color:#1A2424;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:5px 20px;border-radius:20px;white-space:nowrap}
 .plano-icon{width:52px;height:52px;background:rgba(61,169,165,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;font-size:24px}
-.plano-name{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.5px;margin-bottom:6px}
+.plano-name{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;letter-spacing:0;margin-bottom:6px}
 .plano-desc{font-size:14px;color:var(--text2);margin-bottom:28px;line-height:1.55}
 .plano-price{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
 .plano-price .currency{font-size:18px;font-weight:600;color:var(--amber);margin-top:8px}
-.plano-price .value{font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,5vw,68px);font-weight:900;color:var(--text);letter-spacing:-2px;line-height:1}
+.plano-price .value{font-family:'Barlow Condensed',sans-serif;font-size:clamp(42px,4.5vw,60px);font-weight:800;color:var(--text);letter-spacing:-1px;line-height:1}
 .plano-price .period{font-size:14px;color:var(--text3);font-weight:400;align-self:flex-end;margin-bottom:8px}
 .plano-day{font-size:13px;color:var(--teal);margin-bottom:28px;font-weight:500}
 .plano-items{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
@@ -241,13 +241,13 @@ section{padding:100px 6%}
 .sexy-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
 .sexy-left{}
 .sexy-right{}
-.sexy-canvas-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(38px,5vw,60px);font-weight:900;line-height:.95;letter-spacing:-2px;margin-bottom:24px}
+.sexy-canvas-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,48px);font-weight:700;line-height:1;letter-spacing:-.8px;margin-bottom:24px}
 .sexy-canvas-title em{font-style:normal;color:var(--amber)}
 .sexy-canvas-desc{font-size:16px;color:var(--text2);line-height:1.7;margin-bottom:36px;font-weight:300}
 .sexy-list{display:flex;flex-direction:column;gap:16px}
 .sexy-item{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}
 .sexy-item:last-child{border-bottom:none}
-.sexy-num{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:var(--teal);line-height:1;min-width:40px}
+.sexy-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;color:var(--teal);line-height:1;min-width:40px}
 .sexy-text{flex:1}
 .sexy-text strong{font-size:16px;color:var(--text);display:block;margin-bottom:4px;font-weight:600}
 .sexy-text p{font-size:13px;color:var(--text2);line-height:1.55}
@@ -282,7 +282,7 @@ section{padding:100px 6%}
 .cta-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:44px 44px}
 .cta-inner{position:relative;z-index:2;text-align:center;max-width:720px;margin:0 auto}
 .cta-pre{font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:24px}
-.cta-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,7vw,96px);font-weight:900;line-height:.9;letter-spacing:-3px;color:var(--white);margin-bottom:24px}
+.cta-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(42px,5.5vw,76px);font-weight:700;line-height:1;letter-spacing:-1px;color:var(--white);margin-bottom:24px}
 .cta-title em{font-style:normal;color:var(--amber)}
 .cta-sub{font-size:18px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:52px;font-weight:300}
 .cta-sub strong{color:var(--white);font-weight:600}
@@ -352,10 +352,10 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
 
 <!-- NAV -->
 <nav id="nav">
-  <div class="nav-logo">
+  <a href="site-officina.html" class="nav-logo" style="text-decoration:none">
     <img src="logo-amber.png" alt="Officina App"/>
     <div class="nav-badge">PMP</div>
-  </div>
+  </a>
   <a href="#planos" class="nav-cta">Ver planos →</a>
 </nav>
 
@@ -412,7 +412,7 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
 <!-- VERDADE — 4 stats que assustam -->
 <section class="verdade" id="verdade">
   <div class="s-label reveal">A conta que você não faz</div>
-  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1;max-width:700px" class="reveal reveal-d1">
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:700;letter-spacing:-1px;line-height:1.05;max-width:700px" class="reveal reveal-d1">
     O carro que você financia<br/>pode virar <em style="font-style:normal;color:var(--amber)">sua maior dívida.</em>
   </h2>
 
@@ -544,7 +544,7 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
 <!-- CALCULADORA -->
 <section class="calc-section" id="calculadora">
   <div class="s-label reveal">Sua realidade</div>
-  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1" class="reveal reveal-d1">
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:700;letter-spacing:-1px;line-height:1.05" class="reveal reveal-d1">
     Quanto seu carro<br/><em style="font-style:normal;color:var(--amber)">já vai te custar?</em>
   </h2>
 
@@ -613,7 +613,7 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
 <!-- PLANOS -->
 <section class="planos" id="planos">
   <div class="s-label reveal">Escolha sua proteção</div>
-  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:16px" class="reveal reveal-d1">
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:700;letter-spacing:-1px;line-height:1.05;margin-bottom:16px" class="reveal reveal-d1">
     Dois planos.<br/><em style="font-style:normal;color:var(--amber)">Uma decisão simples.</em>
   </h2>
   <p style="font-size:17px;color:var(--text2);max-width:520px;line-height:1.65;font-weight:300" class="reveal reveal-d2">
@@ -675,7 +675,7 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
 <!-- O QUE COBRE -->
 <section class="cobertura" id="cobertura">
   <div class="s-label reveal">O que está incluso</div>
-  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:16px" class="reveal reveal-d1">
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:700;letter-spacing:-1px;line-height:1.05;margin-bottom:16px" class="reveal reveal-d1">
     Cada item coberto <em style="font-style:normal;color:var(--amber)">já pagou</em><br/>o plano inteiro.
   </h2>
   <p style="font-size:16px;color:var(--text2);max-width:540px;line-height:1.65;font-weight:300" class="reveal reveal-d2">
@@ -725,7 +725,7 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
 <!-- COMPARATIVO -->
 <section class="comparativo">
   <div class="s-label reveal">Comparação honesta</div>
-  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:16px" class="reveal reveal-d1">
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:700;letter-spacing:-1px;line-height:1.05;margin-bottom:16px" class="reveal reveal-d1">
     O que você <em style="font-style:normal;color:var(--red)">perde</em> quando<br/>não tem plano.
   </h2>
 
@@ -854,7 +854,7 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
 <!-- DEPOIMENTOS -->
 <section class="depoimentos">
   <div class="s-label reveal">Quem já protegeu o carro</div>
-  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:16px" class="reveal reveal-d1">
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:700;letter-spacing:-1px;line-height:1.05;margin-bottom:16px" class="reveal reveal-d1">
     Eles acharam caro.<br/><em style="font-style:normal;color:var(--amber)">Até entenderem a conta.</em>
   </h2>
 
@@ -901,7 +901,7 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
 <!-- FAQ -->
 <section class="faq" id="faq">
   <div class="s-label reveal">Dúvidas comuns</div>
-  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,60px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:48px" class="reveal reveal-d1">
+  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,60px);font-weight:700;letter-spacing:-1px;line-height:1.05;margin-bottom:48px" class="reveal reveal-d1">
     Respondendo as<br/>perguntas que você<br/><em style="font-style:normal;color:var(--amber)">está pensando.</em>
   </h2>
 

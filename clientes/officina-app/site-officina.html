@@ -188,6 +188,33 @@ footer{background:var(--teal-dark);padding:60px 5% 40px}
 .social-btn:hover{background:rgba(255,255,255,.14)}
 .social-btn svg{width:16px;height:16px;stroke:rgba(255,255,255,.6);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
+/* ── SIMULADOR DE ECONOMIA ── */
+.simulador{background:var(--bg);padding:100px 5%}
+.sim-box{background:var(--white);border:1.5px solid rgba(61,169,165,.15);border-radius:20px;padding:52px 48px;max-width:820px;margin:56px auto 0;box-shadow:0 4px 32px rgba(0,0,0,.05)}
+.sim-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(22px,3vw,36px);font-weight:700;letter-spacing:-.5px;margin-bottom:6px;color:var(--text);line-height:1.1}
+.sim-sub{font-size:14px;color:var(--text3);margin-bottom:32px}
+.sim-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.sim-field{display:flex;flex-direction:column;gap:7px}
+.sim-field label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+.sim-field select{background:var(--bg);border:1.5px solid rgba(61,169,165,.2);border-radius:10px;padding:12px 16px;font-size:14px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;appearance:none;outline:none;transition:.2s;cursor:pointer}
+.sim-field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(61,169,165,.08)}
+.sim-btn{width:100%;background:var(--teal-dark);color:var(--white);font-weight:700;font-size:15px;padding:17px;border-radius:10px;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:.2s;margin-top:6px}
+.sim-btn:hover{background:var(--teal);transform:translateY(-1px)}
+.sim-result{background:var(--bg);border:1.5px solid rgba(61,169,165,.15);border-radius:14px;padding:32px 36px;margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;opacity:0;transform:translateY(10px);transition:.4s}
+.sim-result.show{opacity:1;transform:none}
+.sim-res-item{text-align:center}
+.sim-res-val{font-family:'Barlow Condensed',sans-serif;font-size:clamp(26px,3.2vw,40px);font-weight:800;line-height:1;margin-bottom:6px}
+.sim-res-val.bad{color:#E84C4C}
+.sim-res-val.mid{color:var(--amber-dark)}
+.sim-res-val.good{color:var(--teal-dark)}
+.sim-res-label{font-size:12px;color:var(--text3);line-height:1.4}
+.sim-note{font-size:11px;color:var(--text3);text-align:center;margin-top:14px;opacity:.7}
+.sim-cta{text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid var(--bg)}
+.sim-cta-link{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:var(--teal-dark);text-decoration:none;transition:.2s}
+.sim-cta-link:hover{color:var(--teal)}
+.sim-cta-link svg{transition:.2s}
+.sim-cta-link:hover svg{transform:translateX(3px)}
+
 /* ── PMP BANNER ── */
 .pmp-banner{background:var(--teal-dark);padding:0 5%;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:80px;border-bottom:2px solid rgba(245,166,35,.3)}
 .pmp-banner-left{display:flex;align-items:center;gap:20px}
@@ -217,6 +244,11 @@ footer{background:var(--teal-dark);padding:60px 5% 40px}
   .hero-photo{width:100%;opacity:.25}
   .hero-stats{flex-wrap:wrap}
   .cta-mockups{display:none}
+}
+@media(max-width:600px){
+  .sim-row{grid-template-columns:1fr}
+  .sim-result{grid-template-columns:1fr}
+  .sim-box{padding:32px 20px}
 }
 </style>
 </head>
@@ -379,44 +411,124 @@ footer{background:var(--teal-dark);padding:60px 5% 40px}
   </div>
 </section>
 
+<!-- SIMULADOR DE ECONOMIA -->
+<section class="simulador" id="simulador">
+  <div class="reveal">
+    <div class="section-tag">Simule sua economia</div>
+    <div class="section-title">Quanto seu carro<br/>vai te custar sem <em>proteção?</em></div>
+    <p class="section-sub">Preencha abaixo e veja o risco real para o seu perfil de uso.</p>
+  </div>
+  <div class="sim-box reveal">
+    <div class="sim-title">Simulador de Economia PMP</div>
+    <p class="sim-sub">Estimativa baseada em média de oficinas parceiras em São Paulo.</p>
+    <div class="sim-row">
+      <div class="sim-field">
+        <label>Tipo de veículo</label>
+        <select id="sTipo" onchange="simCalc()">
+          <option value="popular">Hatch popular (Onix, HB20, Polo)</option>
+          <option value="sedan">Sedan médio (Corolla, Civic, Jetta)</option>
+          <option value="suv">SUV (HRV, Creta, Compass)</option>
+          <option value="pickupLeve">Pickup (S10, Frontier)</option>
+        </select>
+      </div>
+      <div class="sim-field">
+        <label>Ano do veículo</label>
+        <select id="sAno" onchange="simCalc()">
+          <option value="new">2022 a 2025</option>
+          <option value="mid" selected>2018 a 2021</option>
+          <option value="old">2014 a 2017</option>
+          <option value="older">Até 2013</option>
+        </select>
+      </div>
+    </div>
+    <div class="sim-row">
+      <div class="sim-field">
+        <label>Km rodados por mês</label>
+        <select id="sKm" onchange="simCalc()">
+          <option value="low">Até 1.000 km</option>
+          <option value="mid" selected>1.000 a 2.500 km</option>
+          <option value="high">2.500 a 4.000 km</option>
+          <option value="xhigh">Acima de 4.000 km</option>
+        </select>
+      </div>
+      <div class="sim-field">
+        <label>Última revisão completa</label>
+        <select id="sRev" onchange="simCalc()">
+          <option value="recent">Menos de 6 meses</option>
+          <option value="ok">6 a 12 meses</option>
+          <option value="late" selected>Mais de 1 ano</option>
+          <option value="never">Nunca fiz revisão completa</option>
+        </select>
+      </div>
+    </div>
+    <button class="sim-btn" onclick="simCalc()">Calcular meu risco →</button>
+    <div class="sim-result" id="simResult">
+      <div class="sim-res-item">
+        <div class="sim-res-val bad" id="simRisco">—</div>
+        <div class="sim-res-label">Risco de conserto<br/>em 12 meses</div>
+      </div>
+      <div class="sim-res-item">
+        <div class="sim-res-val mid" id="simCusto">—</div>
+        <div class="sim-res-label">Custo estimado<br/>sem proteção</div>
+      </div>
+      <div class="sim-res-item">
+        <div class="sim-res-val good" id="simEco">—</div>
+        <div class="sim-res-label">Economia estimada<br/>com PMP Motor</div>
+      </div>
+    </div>
+    <p class="sim-note">* Estimativas baseadas em média de oficinas parceiras em SP.</p>
+    <div class="sim-cta">
+      <p>Quer entender tudo que o PMP cobre?</p>
+      <a href="lp-pmp.html" class="sim-cta-link">
+        Ver a página completa do Plano de Manutenção Preventiva
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- PLANOS PMP -->
 <section class="planos" id="planos">
   <div class="reveal">
     <div class="section-tag">Plano de Manutenção Preventiva</div>
     <div class="section-title">Pare de pagar pelo<br/><em style="color:var(--amber)">inesperado.</em></div>
-    <p class="section-sub">O PMP cobre as principais falhas mecânicas do seu carro. Funciona como um seguro preventivo — você paga uma mensalidade e fica protegido.</p>
+    <p class="section-sub" style="color:rgba(255,255,255,.6)">Menos do que você gasta com streaming. E protege algo que vale 30× mais.</p>
   </div>
   <div class="planos-grid">
     <div class="plano-card reveal reveal-delay-1">
-      <div class="plano-tag">Plano PMP</div>
+      <div class="plano-tag">PMP Motor</div>
       <div class="plano-nome">Motor</div>
-      <div class="plano-preco">R$500</div>
-      <div class="plano-periodo">por mês · sujeito a vistoria</div>
-      <div class="plano-desc">Cobre falhas mecânicas e defeitos inesperados no motor. Mais segurança e tranquilidade para manter seu carro sempre em movimento.</div>
+      <div class="plano-preco">R$49<span style="font-size:24px;font-weight:400;color:rgba(255,255,255,.5)">,90</span></div>
+      <div class="plano-periodo">por mês · R$1,63 por dia</div>
+      <div class="plano-desc">Para quem quer o essencial coberto. Motor saudável é carro na estrada.</div>
       <ul class="plano-itens">
-        <li>Proteção contra falhas no motor</li>
-        <li>Assistência em oficinas credenciadas</li>
-        <li>Evita gastos inesperados com reparos</li>
-        <li>Acompanhamento em tempo real</li>
+        <li>Revisão de motor completa (2×/ano)</li>
+        <li>Troca de óleo e filtro incluída</li>
+        <li>Verificação de correia dentada</li>
+        <li>Diagnóstico eletrônico (OBD)</li>
+        <li>Prioridade no agendamento</li>
+        <li>Histórico digital do carro</li>
       </ul>
-      <a href="#acesso" class="btn-plano">Contratar plano Motor</a>
+      <a href="lp-pmp.html" class="btn-plano">Começar com Motor →</a>
     </div>
     <div class="plano-card destaque reveal reveal-delay-2">
-      <div class="plano-tag">Plano PMP</div>
-      <div class="plano-nome">Suspensão</div>
-      <div class="plano-preco">R$500</div>
-      <div class="plano-periodo">por mês · sujeito a vistoria</div>
-      <div class="plano-desc">Cobre falhas e desgastes no sistema de suspensão. Dirija com confiança e conforto — seu carro pronto para qualquer estrada.</div>
+      <div class="plano-tag">Mais escolhido</div>
+      <div class="plano-nome">Completo</div>
+      <div class="plano-preco">R$89<span style="font-size:24px;font-weight:400;color:rgba(26,36,36,.45)">,90</span></div>
+      <div class="plano-periodo" style="color:rgba(26,36,36,.45)">por mês · R$2,99 por dia</div>
+      <div class="plano-desc" style="color:rgba(26,36,36,.65)">Motor + câmbio + suspensão. Para quem financia o carro e depende dele para trabalhar.</div>
       <ul class="plano-itens">
-        <li>Manutenção preventiva e corretiva</li>
-        <li>Proteção de amortecedores e molas</li>
-        <li>Atendimento em oficinas credenciadas</li>
-        <li>Rode com mais segurança</li>
+        <li>Revisão de motor completa (3×/ano)</li>
+        <li>Troca de óleo e filtro incluída</li>
+        <li>Verificação de correia dentada</li>
+        <li>Diagnóstico eletrônico (OBD)</li>
+        <li>Câmbio e fluido de transmissão</li>
+        <li>Suspensão, freios e direção</li>
       </ul>
-      <a href="#acesso" class="btn-plano">Contratar plano Suspensão</a>
+      <a href="lp-pmp.html" class="btn-plano">Proteger tudo por R$89,90 →</a>
     </div>
   </div>
-  <p class="plano-nota reveal">Ambos os planos incluem agendamento de vistoria prévia. Consulte termos e condições.</p>
+  <p class="plano-nota reveal">30 dias de garantia ou seu dinheiro de volta. Cancele quando quiser, sem fidelidade.</p>
 </section>
 
 <!-- DEPOIMENTOS -->
@@ -586,6 +698,32 @@ window.addEventListener('load', () => {
     setTimeout(() => el.classList.add('visible'), 600 + i * 100);
   });
 });
+
+// Simulador de economia
+function simCalc() {
+  const tipo = document.getElementById('sTipo').value;
+  const ano = document.getElementById('sAno').value;
+  const km = document.getElementById('sKm').value;
+  const rev = document.getElementById('sRev').value;
+  let risk = 30;
+  const costs = { popular: 1400, sedan: 2200, suv: 2800, pickupLeve: 3200 };
+  let custo = costs[tipo] || 1400;
+  if(ano === 'old') { risk += 20; custo *= 1.3; }
+  else if(ano === 'older') { risk += 35; custo *= 1.6; }
+  else if(ano === 'mid') { risk += 10; custo *= 1.1; }
+  if(km === 'high') { risk += 15; custo *= 1.15; }
+  else if(km === 'xhigh') { risk += 25; custo *= 1.3; }
+  if(rev === 'late') { risk += 25; custo *= 1.25; }
+  else if(rev === 'never') { risk += 40; custo *= 1.5; }
+  else if(rev === 'ok') risk += 10;
+  risk = Math.min(risk, 96);
+  custo = Math.round(custo / 100) * 100;
+  const eco = Math.round((custo - 599) / 100) * 100;
+  document.getElementById('simRisco').textContent = risk + '%';
+  document.getElementById('simCusto').textContent = 'R$' + custo.toLocaleString('pt-BR');
+  document.getElementById('simEco').textContent = eco > 0 ? 'R$' + eco.toLocaleString('pt-BR') : 'Já coberto';
+  document.getElementById('simResult').classList.add('show');
+}
 
 // Step hover
 document.querySelectorAll('.step').forEach(step => {
