@@ -437,11 +437,12 @@
     .hero-headline {
       font-family: var(--font-display);
       font-weight: 900;
-      font-size: clamp(3.2rem, 5.5vw, 5rem);
-      line-height: 1.0;
+      font-size: clamp(3rem, 5vw, 4.8rem);
+      line-height: 1.05;
       color: #fff;
       margin-bottom: 20px;
       letter-spacing: -0.01em;
+      text-wrap: balance;
       animation: fadeInUp 0.9s ease 0.35s both;
     }
     .hero-headline em {
@@ -455,6 +456,7 @@
       line-height: 1.65;
       margin-bottom: 36px;
       max-width: 440px;
+      text-wrap: pretty;
       animation: fadeInUp 0.9s ease 0.5s both;
     }
 
@@ -638,9 +640,10 @@
       font-weight: 800;
       font-size: clamp(1.8rem, 3.5vw, 2.6rem);
       color: var(--text);
-      line-height: 1.2;
+      line-height: 1.15;
       letter-spacing: -0.02em;
       margin-bottom: 16px;
+      text-wrap: balance;
     }
     .section-title em { color: var(--teal); font-style: normal; }
 
@@ -648,6 +651,7 @@
       font-size: 1.05rem;
       color: var(--muted);
       line-height: 1.7;
+      text-wrap: pretty;
     }
 
     .how-inner {
@@ -1743,6 +1747,7 @@
       line-height: 1.2;
       margin-bottom: 20px;
       letter-spacing: -0.02em;
+      text-wrap: balance;
     }
     .cta-headline em { color: var(--yellow); font-style: normal; }
 
@@ -1893,7 +1898,7 @@
         </div>
 
         <h1 class="hero-headline">
-          Orçamento <em>antes</em><br>de qualquer serviço.
+          Orçamento <em>antes</em> de qualquer serviço.
         </h1>
 
         <p class="hero-sub">
@@ -2059,7 +2064,7 @@
       <div class="dores-stat reveal-scale">
         <span class="dores-big-num" id="dores-num">8 em 10</span>
         <p class="dores-big-text">
-          motoristas já desconfiaram<br>do mecânico.
+          motoristas já desconfiaram do mecânico.
         </p>
       </div>
 
@@ -2114,7 +2119,7 @@
             <i data-lucide="users" style="width:13px;height:13px;"></i>
             Para motoristas
           </div>
-          <h2 class="section-title reveal">Você no controle.<br><em>Seu carro em boas mãos.</em></h2>
+          <h2 class="section-title reveal">Você no controle. <em>Seu carro em boas mãos.</em></h2>
           <p class="section-sub reveal" style="margin-bottom:0;">Chega de depender da boa vontade do mecânico. Com o Officina, você sabe o preço antes, compara opções e decide com informação.</p>
 
           <div class="features-grid">
@@ -2316,7 +2321,7 @@
           <i data-lucide="shield-check" style="width:13px;height:13px;"></i>
           Planos PMP
         </div>
-        <h2 class="section-title">Proteção para seu carro,<br><em>mês a mês.</em></h2>
+        <h2 class="section-title">Proteção para seu carro, <em>mês a mês.</em></h2>
         <p class="section-sub">Planos de manutenção preventiva para você nunca ser pego de surpresa numa emergência.</p>
       </div>
 
@@ -2457,7 +2462,7 @@
             <i data-lucide="tool" style="width:13px;height:13px;"></i>
             Para Mecânicos e Oficinas
           </div>
-          <h2 class="section-title reveal" style="color:#fff;">Aqui tem cliente<br>novo <em style="color:var(--yellow);">todo dia.</em></h2>
+          <h2 class="section-title reveal" style="color:#fff;">Aqui tem cliente novo <em style="color:var(--yellow);">todo dia.</em></h2>
           <p class="section-sub reveal" style="color:rgba(255,255,255,0.6);">
             Receba orçamentos de clientes qualificados direto no app. Sem depender de indicação, sem pagar por lead. Só trabalho.
           </p>
@@ -2645,8 +2650,7 @@
       </div>
 
       <h2 class="cta-headline reveal d1">
-        Sua próxima revisão.<br>
-        Com orçamento. <em>Com transparência.</em>
+        Sua próxima revisão. Com orçamento. <em>Com transparência.</em>
       </h2>
 
       <div class="cta-buttons reveal d2">
