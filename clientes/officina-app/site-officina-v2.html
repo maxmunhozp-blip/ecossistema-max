@@ -249,8 +249,18 @@
       gap: 32px;
     }
 
-    .nav-logo img {
-      height: 30px;
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-logo-icon {
+      height: 32px;
+      width: auto;
+      transition: filter 0.4s ease;
+    }
+    .nav-logo-wordmark {
+      height: 22px;
       width: auto;
       transition: filter 0.4s ease;
     }
@@ -1856,7 +1866,8 @@
     <div class="nav-inner">
 
       <a href="#" class="nav-logo" aria-label="Officina App — Home">
-        <img src="logo-teal.png" id="nav-logo-img" alt="Officina App" />
+        <img src="icon-amber.png" id="nav-logo-icon" class="nav-logo-icon" alt="" />
+        <img src="logo-teal.png" id="nav-logo-img" class="nav-logo-wordmark" alt="Officina App" />
       </a>
 
       <ul class="nav-links">
@@ -2724,20 +2735,23 @@
     // NAV: scroll behavior + logo/cta swap
     // ============================================================
     (function() {
-      const navbar  = document.getElementById('navbar');
-      const logoImg = document.getElementById('nav-logo-img');
-      const ctaBtn  = document.getElementById('nav-cta-btn');
-      let scrolled  = false;
+      const navbar    = document.getElementById('navbar');
+      const logoImg   = document.getElementById('nav-logo-img');
+      const logoIcon  = document.getElementById('nav-logo-icon');
+      const ctaBtn    = document.getElementById('nav-cta-btn');
+      let scrolled    = false;
 
       function applyState(isScrolled) {
         navbar.classList.toggle('scrolled', isScrolled);
         if (isScrolled) {
-          logoImg.src = 'logo-teal.png';
+          // Nav branco: wordmark teal, ícone amber (natural)
           logoImg.style.filter = '';
+          logoIcon.style.filter = '';
           ctaBtn.style.cssText = 'padding:10px 22px;font-size:0.85rem;border-radius:8px;background:var(--teal);color:#fff;border:none;';
         } else {
-          logoImg.src = 'logo-teal.png';
+          // Nav transparente sobre hero teal: wordmark branco, ícone amber (contrasta bem no teal)
           logoImg.style.filter = 'brightness(0) invert(1)';
+          logoIcon.style.filter = '';
           ctaBtn.style.cssText = 'padding:10px 22px;font-size:0.85rem;border-radius:8px;background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.4);';
         }
       }

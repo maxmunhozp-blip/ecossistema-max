@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logos — Officina App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F4F6F8; color: #111; }
+
+    .page-header {
+      background: #fff;
+      border-bottom: 1px solid #E5E7EB;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .page-header img { height: 28px; }
+    .page-header h1 { font-size: 1rem; font-weight: 600; color: #374151; }
+    .page-header span { font-size: 0.8rem; color: #9CA3AF; }
+
+    .grid {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #E5E7EB;
+      overflow: hidden;
+    }
+    .card-preview {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+    .card-preview img { max-height: 80px; max-width: 100%; object-fit: contain; }
+    .card-info {
+      padding: 16px 20px;
+      border-top: 1px solid #E5E7EB;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-label { font-size: 0.82rem; font-weight: 600; color: #374151; }
+    .card-hint { font-size: 0.75rem; color: #9CA3AF; margin-top: 2px; }
+    .card-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: #F3F4F6;
+      color: #6B7280;
+    }
+
+    /* Combinações horizontais */
+    .combo-preview {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 32px;
+    }
+    .combo-preview img { object-fit: contain; }
+    .combo-icon { height: 40px; }
+    .combo-wordmark { height: 26px; }
+
+    .bg-white  { background: #ffffff; }
+    .bg-teal   { background: #1A9E8F; }
+    .bg-dark   { background: #0D1117; }
+    .bg-amber  { background: #F5C518; }
+
+    .section-title {
+      max-width: 1100px;
+      margin: 40px auto 16px;
+      padding: 0 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9CA3AF;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <img src="logo-teal.png" alt="Officina" />
+    <div>
+      <h1>Assets de Logo</h1>
+      <span>Todas as variações disponíveis para uso</span>
+    </div>
+  </div>
+
+  <p class="section-title">Logos originais</p>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-preview bg-white">
+        <img src="logo-black.png" alt="Logo Black" />
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-label">Logo Preta</div>
+          <div class="card-hint">logo-black.png · Fundo branco</div>
+        </div>
+        <span class="card-badge">PNG</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-preview bg-teal">
+        <img src="logo-amber.png" alt="Logo Amber" />
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-label">Logo Amber</div>
+          <div class="card-hint">logo-amber.png · Fundo teal/escuro</div>
+        </div>
+        <span class="card-badge">PNG</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-preview bg-white">
+        <img src="logo-teal.png" alt="Logo Teal" />
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-label">Wordmark Teal</div>
+          <div class="card-hint">logo-teal.png · Só o nome, fundo branco</div>
+        </div>
+        <span class="card-badge">PNG</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-preview bg-white">
+        <img src="icon-amber.png" alt="Ícone Amber" />
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-label">Ícone Amber</div>
+          <div class="card-hint">icon-amber.png · Só o carro</div>
+        </div>
+        <span class="card-badge">PNG</span>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="section-title">Combinações horizontais (ícone + wordmark)</p>
+  <div class="grid">
+
+    <div class="card">
+      <div class="combo-preview bg-white">
+        <img src="icon-amber.png" class="combo-icon" alt="" />
+        <img src="logo-teal.png" class="combo-wordmark" alt="Officina" />
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-label">Horizontal — Fundo Branco</div>
+          <div class="card-hint">ícone amber + wordmark teal</div>
+        </div>
+        <span class="card-badge">Composta</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="combo-preview bg-teal">
+        <img src="icon-amber.png" class="combo-icon" alt="" />
+        <img src="logo-teal.png" class="combo-wordmark" style="filter:brightness(0) invert(1);" alt="Officina" />
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-label">Horizontal — Fundo Teal</div>
+          <div class="card-hint">ícone amber + wordmark branco (filter)</div>
+        </div>
+        <span class="card-badge">Composta</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="combo-preview bg-dark">
+        <img src="icon-amber.png" class="combo-icon" alt="" />
+        <img src="logo-teal.png" class="combo-wordmark" style="filter:brightness(0) invert(1);" alt="Officina" />
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-label">Horizontal — Fundo Escuro</div>
+          <div class="card-hint">ícone amber + wordmark branco (filter)</div>
+        </div>
+        <span class="card-badge">Composta</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="combo-preview bg-amber">
+        <img src="icon-amber.png" class="combo-icon" style="filter:brightness(0);" alt="" />
+        <img src="logo-teal.png" class="combo-wordmark" style="filter:brightness(0);" alt="Officina" />
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-label">Horizontal — Fundo Amarelo</div>
+          <div class="card-hint">ícone preto + wordmark preto (filter)</div>
+        </div>
+        <span class="card-badge">Composta</span>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
