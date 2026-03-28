@@ -46,32 +46,53 @@ nav.scrolled{background:rgba(255,255,255,.97);backdrop-filter:blur(20px);border-
 .nav-cta:hover{background:var(--amber-dark);transform:translateY(-1px)}
 
 /* ── HERO ── */
-.hero{min-height:100vh;background:linear-gradient(160deg,#E3F0F0 0%,#F0F7F7 50%,#EDF5F4 100%);position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:0 6% 80px;overflow:hidden}
-.hero-noise{position:absolute;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(61,169,165,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(61,169,165,.07) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 100%)}
-.hero-glow{position:absolute;top:-20%;left:-10%;width:70%;height:120%;background:radial-gradient(ellipse at 20% 40%,rgba(61,169,165,.18) 0%,transparent 65%);pointer-events:none}
-.hero-glow2{position:absolute;top:30%;right:-5%;width:50%;height:70%;background:radial-gradient(ellipse at 80% 50%,rgba(245,166,35,.1) 0%,transparent 60%);pointer-events:none}
+.hero{min-height:100vh;background:linear-gradient(145deg,#E8F3F3 0%,#F4F9F9 60%,#F0F5EE 100%);position:relative;display:flex;align-items:center;padding:88px 6% 60px;overflow:hidden}
+.hero-noise{position:absolute;inset:0;opacity:.018;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(61,169,165,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(61,169,165,.05) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 10%,transparent 100%)}
+.hero-glow{position:absolute;top:-10%;left:-5%;width:55%;height:100%;background:radial-gradient(ellipse at 20% 40%,rgba(61,169,165,.12) 0%,transparent 60%);pointer-events:none}
+.hero-glow2{position:absolute;top:20%;right:0;width:40%;height:80%;background:radial-gradient(ellipse at 80% 50%,rgba(245,166,35,.07) 0%,transparent 60%);pointer-events:none}
 
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;position:relative;z-index:2}
-.eyebrow-dot{width:8px;height:8px;background:var(--amber);border-radius:50%;animation:pulse-amber 2s ease-in-out infinite}
-@keyframes pulse-amber{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.6)}50%{box-shadow:0 0 0 8px rgba(245,166,35,0)}}
-.eyebrow-text{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--amber)}
+.hero-inner{position:relative;z-index:2;width:100%;display:grid;grid-template-columns:1fr 340px;gap:56px;align-items:center}
+.hero-left{}
 
-.hero-headline{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,7vw,104px);font-weight:800;line-height:.95;letter-spacing:-1px;margin-bottom:0;position:relative;z-index:2;color:var(--text)}
-.hero-headline .line-1{display:block;color:var(--text2);font-size:clamp(16px,2.2vw,26px);font-weight:400;letter-spacing:.2px;margin-bottom:14px;font-family:'DM Sans',sans-serif}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:20px}
+.eyebrow-dot{width:7px;height:7px;background:var(--teal);border-radius:50%;animation:pulse-teal 2.5s ease-in-out infinite}
+@keyframes pulse-teal{0%,100%{box-shadow:0 0 0 0 rgba(61,169,165,.5)}50%{box-shadow:0 0 0 7px rgba(61,169,165,0)}}
+.eyebrow-text{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal-dark)}
+
+.hero-headline{font-family:'Barlow Condensed',sans-serif;font-size:clamp(38px,4.8vw,72px);font-weight:800;line-height:1;letter-spacing:-.5px;margin-bottom:0;color:var(--text)}
+.hero-headline .line-1{display:block;color:var(--text3);font-size:clamp(13px,1.5vw,17px);font-weight:500;letter-spacing:.1px;margin-bottom:14px;font-family:'DM Sans',sans-serif;text-transform:none}
 .hero-headline em{font-style:normal;color:var(--amber);display:block}
-.hero-headline .slash{color:var(--teal);font-style:italic;font-weight:700}
+.hero-headline .slash{color:var(--teal-dark);font-style:normal;font-weight:700;font-size:.55em;display:block;margin-top:10px;letter-spacing:.5px;opacity:.75}
 
-.hero-bottom{display:grid;grid-template-columns:1fr auto;gap:60px;align-items:flex-end;margin-top:52px;position:relative;z-index:2;padding-top:40px;border-top:1px solid var(--border)}
-.hero-desc{font-size:clamp(16px,1.8vw,20px);color:var(--text2);line-height:1.65;max-width:520px;font-weight:300}
+.hero-bottom{margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+.hero-desc{font-size:clamp(14px,1.5vw,16px);color:var(--text2);line-height:1.75;max-width:480px;font-weight:400}
 .hero-desc strong{color:var(--text);font-weight:600}
-.hero-actions{display:flex;flex-direction:column;align-items:flex-end;gap:14px;flex-shrink:0}
-.btn-hero{background:var(--amber);color:#1A2424;font-weight:700;font-size:16px;padding:18px 36px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:.2s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
-.btn-hero:hover{background:var(--amber-dark);transform:translateY(-2px);box-shadow:0 12px 32px rgba(245,166,35,.3)}
+.hero-stats-row{display:flex;gap:32px;margin-top:24px}
+.hero-stat-item{text-align:left}
+.hero-stat-item strong{display:block;font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--teal-dark);line-height:1}
+.hero-stat-item span{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.3px;margin-top:2px;display:block}
+
+/* ── HERO CARD (direita) ── */
+.hero-card{background:var(--white);border:1.5px solid var(--border);border-radius:20px;padding:32px 28px;box-shadow:0 8px 48px rgba(0,73,79,.08)}
+.hero-card-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal-dark);margin-bottom:6px}
+.hero-card-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:16px}
+.hero-card-price{display:flex;align-items:baseline;gap:3px;margin-bottom:4px}
+.hero-card-price .cur{font-size:16px;font-weight:600;color:var(--text3);margin-top:6px}
+.hero-card-price .val{font-family:'Barlow Condensed',sans-serif;font-size:54px;font-weight:800;color:var(--teal-dark);letter-spacing:-1.5px;line-height:1}
+.hero-card-price .cents{font-size:22px;font-weight:600;color:var(--teal-dark);align-self:flex-end;margin-bottom:8px}
+.hero-card-per{font-size:12px;color:var(--text3);margin-bottom:4px}
+.hero-card-day{font-size:12px;color:var(--teal);font-weight:500;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.hero-card-items{display:flex;flex-direction:column;gap:7px;margin-bottom:20px}
+.hero-card-item{font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.hero-card-item::before{content:'';width:16px;height:16px;border-radius:50%;background:rgba(61,169,165,.12);flex-shrink:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300494f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");background-size:9px;background-repeat:no-repeat;background-position:center}
+.btn-hero{width:100%;background:var(--amber);color:#1A2424;font-weight:700;font-size:15px;padding:14px 24px;border-radius:10px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-hero:hover{background:var(--amber-dark);transform:translateY(-1px);box-shadow:0 8px 24px rgba(245,166,35,.25)}
 .btn-hero svg{transition:.2s}
 .btn-hero:hover svg{transform:translateX(3px)}
-.hero-micro{font-size:12px;color:var(--text3);text-align:right}
-.hero-micro span{color:var(--teal-dark)}
+.hero-card-guarantee{text-align:center;font-size:11px;color:var(--text3);margin-top:10px}
+.hero-card-guarantee span{color:var(--teal-dark);font-weight:600}
+.hero-micro{display:none}
 
 /* ── TICKER ── */
 .ticker{background:var(--teal-dark);padding:0;overflow:hidden;height:44px;display:flex;align-items:center;border-top:1px solid rgba(61,169,165,.3);border-bottom:1px solid rgba(61,169,165,.3)}
@@ -95,7 +116,7 @@ section{padding:100px 6%}
 .v-card.amber::before{background:var(--amber)}
 .v-card.teal::before{background:var(--teal)}
 .v-card.mid::before{background:var(--teal-mid)}
-.v-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,7vw,90px);font-weight:800;line-height:.9;letter-spacing:-1.5px;margin-bottom:14px}
+.v-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,5.5vw,72px);font-weight:800;line-height:.9;letter-spacing:-1px;margin-bottom:14px}
 .v-num.red{color:var(--red)}
 .v-num.amber{color:var(--amber)}
 .v-num.teal{color:var(--teal)}
@@ -327,10 +348,12 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
 .reveal-d5{transition-delay:.40s}
 
 /* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .hero-card{max-width:480px}
+}
 @media(max-width:900px){
-  .hero-bottom{grid-template-columns:1fr;gap:40px}
-  .hero-actions{align-items:flex-start}
-  .hero-micro{text-align:left}
+  .hero-inner{grid-template-columns:1fr}
   .verdade-grid,.comparativo .comp-table{grid-template-columns:1fr}
   .dep-grid,.cob-grid{grid-template-columns:1fr 1fr}
   .calc-row{grid-template-columns:1fr}
@@ -338,6 +361,7 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
   .math-reveal{grid-template-columns:1fr;text-align:center}
   .math-vs{display:none}
   .comp-head,.comp-row{grid-template-columns:2fr 1fr 1fr}
+  .hero-stats-row{gap:20px}
 }
 @media(max-width:600px){
   section{padding:72px 5%}
@@ -369,29 +393,55 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
 
-  <div class="hero-eyebrow reveal">
-    <span class="eyebrow-dot"></span>
-    <span class="eyebrow-text">Plano de Manutenção Preventiva</span>
-  </div>
+  <div class="hero-inner">
+    <!-- ESQUERDA: copy -->
+    <div class="hero-left">
+      <div class="hero-eyebrow reveal">
+        <span class="eyebrow-dot"></span>
+        <span class="eyebrow-text">Plano de Manutenção Preventiva — Officina App</span>
+      </div>
+      <h1 class="hero-headline reveal reveal-d1">
+        <span class="line-1">Você não paga manutenção preventiva.</span>
+        Você paga<br/><em>conserto.</em>
+        <span class="slash">Todo. Mês.</span>
+      </h1>
+      <div class="hero-bottom reveal reveal-d2">
+        <p class="hero-desc">
+          O motorista brasileiro gasta em média <strong>R$3.200 por ano em consertos evitáveis.</strong>
+          Com o PMP, você protege motor e câmbio por <strong>R$1,63 por dia.</strong>
+          Não é seguro — é controle preventivo.
+        </p>
+        <div class="hero-stats-row">
+          <div class="hero-stat-item"><strong>500+</strong><span>Oficinas verificadas</span></div>
+          <div class="hero-stat-item"><strong>68%</strong><span>Das falhas são preveníveis</span></div>
+          <div class="hero-stat-item"><strong>30 dias</strong><span>De garantia</span></div>
+        </div>
+      </div>
+    </div>
 
-  <h1 class="hero-headline reveal reveal-d1">
-    <span class="line-1">Você não paga manutenção preventiva.</span>
-    Você paga<br/><em>conserto.</em>
-    <br/><span class="slash">Todo. Mês.</span>
-  </h1>
-
-  <div class="hero-bottom reveal reveal-d2">
-    <p class="hero-desc">
-      O motorista brasileiro gasta em média <strong>R$3.200 por ano em consertos evitáveis.</strong>
-      Com o PMP do Officina App, você protege motor e câmbio por <strong>menos de R$1,63 por dia.</strong>
-      Não é seguro. É controle.
-    </p>
-    <div class="hero-actions">
+    <!-- DIREITA: card de preço -->
+    <div class="hero-card reveal reveal-d2">
+      <div class="hero-card-label">Plano PMP</div>
+      <div class="hero-card-name">Proteção Motor</div>
+      <div class="hero-card-price">
+        <span class="cur">R$</span>
+        <span class="val">49</span>
+        <span class="cents">,90</span>
+      </div>
+      <div class="hero-card-per">por mês</div>
+      <div class="hero-card-day">R$1,63 por dia — menos que um café</div>
+      <div class="hero-card-items">
+        <div class="hero-card-item">Revisão de motor 2× por ano</div>
+        <div class="hero-card-item">Troca de óleo e filtro incluída</div>
+        <div class="hero-card-item">Diagnóstico eletrônico (OBD)</div>
+        <div class="hero-card-item">Verificação da correia dentada</div>
+        <div class="hero-card-item">Histórico digital do veículo</div>
+      </div>
       <a href="#planos" class="btn-hero">
-        Quero proteger meu carro
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        Quero esse plano
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
-      <p class="hero-micro">Cancele quando quiser &nbsp;·&nbsp; <span>30 dias de garantia</span></p>
+      <div class="hero-card-guarantee">Cancele quando quiser &nbsp;·&nbsp; <span>30 dias de garantia</span></div>
     </div>
   </div>
 </section>
