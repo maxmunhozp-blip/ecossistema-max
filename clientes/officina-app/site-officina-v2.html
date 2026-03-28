@@ -1,0 +1,2733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Officina App — Orçamento antes de qualquer serviço</title>
+  <meta name="description" content="Receba o orçamento no celular, compare entre oficinas, aprove só o necessário. 847 oficinas credenciadas. Nota 4.8." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Officina App — Orçamento antes de qualquer serviço" />
+  <meta property="og:description" content="Conectamos motoristas a oficinas credenciadas. Transparência total do diagnóstico ao pagamento." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="foto-mulher-carro.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --teal:      #1A9E8F;
+      --teal-2:    #2BB5A4;
+      --teal-dark: #0D6B61;
+      --teal-bg:   #E8F7F5;
+      --yellow:    #F5C518;
+      --yellow-2:  #FFD23F;
+      --dark:      #0D1117;
+      --dark-2:    #1C2B2A;
+      --bg:        #F8FAFA;
+      --surface:   #FFFFFF;
+      --text:      #111827;
+      --text-2:    #374151;
+      --muted:     #6B7280;
+      --border:    #E5E7EB;
+
+      --font-display: 'Sora', sans-serif;
+      --font-body:    'Inter', sans-serif;
+
+      --radius-sm:  8px;
+      --radius-md:  14px;
+      --radius-lg:  24px;
+      --radius-xl:  36px;
+      --radius-pill:100px;
+
+      --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md:  0 4px 20px rgba(0,0,0,.10);
+      --shadow-lg:  0 20px 60px rgba(0,0,0,.16);
+      --shadow-xl:  0 40px 100px rgba(0,0,0,.24);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ============================================================
+       ANIMATION BASE CLASSES
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-48px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .reveal-left.visible { opacity: 1; transform: none; }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(48px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .reveal-right.visible { opacity: 1; transform: none; }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.88);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+    /* Stagger delays */
+    .d1 { transition-delay: 0.1s; }
+    .d2 { transition-delay: 0.2s; }
+    .d3 { transition-delay: 0.3s; }
+    .d4 { transition-delay: 0.4s; }
+    .d5 { transition-delay: 0.5s; }
+    .d6 { transition-delay: 0.6s; }
+
+    /* ============================================================
+       UTILITIES
+    ============================================================ */
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       SECTION SPACING
+    ============================================================ */
+    section { padding: 96px 0; }
+    @media (max-width: 768px) { section { padding: 64px 0; } }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 24px rgba(0,0,0,.18);
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: var(--dark);
+    }
+    .btn-yellow:hover { background: var(--yellow-2); }
+
+    .btn-yellow-lg {
+      padding: 18px 40px;
+      font-size: 1.05rem;
+      background: var(--yellow);
+      color: var(--dark);
+    }
+    .btn-yellow-lg:hover { background: var(--yellow-2); }
+
+    .btn-outline-white {
+      background: transparent;
+      color: #fff;
+      border-color: rgba(255,255,255,0.5);
+    }
+    .btn-outline-white:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.9);
+    }
+
+    .btn-teal {
+      background: var(--teal);
+      color: #fff;
+    }
+    .btn-teal:hover { background: var(--teal-2); }
+
+    /* ============================================================
+       SECTION LABEL
+    ============================================================ */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      background: rgba(26,158,143,0.1);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(26,158,143,0.2);
+      margin-bottom: 20px;
+    }
+
+    /* ============================================================
+       1. NAV
+    ============================================================ */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      transition: background 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+      background: rgba(13,107,97,0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    #navbar.scrolled {
+      background: rgba(255,255,255,0.97);
+      box-shadow: 0 2px 24px rgba(0,0,0,.10);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .nav-logo img {
+      height: 38px;
+      width: auto;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.88);
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover { color: #fff; }
+
+    #navbar.scrolled .nav-links a {
+      color: var(--text-2);
+    }
+    #navbar.scrolled .nav-links a:hover {
+      color: var(--teal);
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Mobile nav */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    #navbar.scrolled .nav-hamburger span { background: var(--text); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: var(--dark-2);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 999;
+      padding: 24px;
+      flex-direction: column;
+      gap: 16px;
+      animation: slideDown 0.3s ease forwards;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: rgba(255,255,255,0.88);
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--yellow); }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+
+    /* ============================================================
+       2. HERO
+    ============================================================ */
+    #hero {
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(140deg, #0D6B61 0%, #1A2E2C 60%, #0D1117 100%);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle noise texture */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 120px 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 64px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---- Hero Copy ---- */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,0.9);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 28px;
+      animation: fadeInDown 0.8s ease 0.2s both;
+    }
+    .hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--yellow);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.6; transform: scale(1.3); }
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(3rem, 6vw, 4.5rem);
+      line-height: 1.05;
+      color: #fff;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+      animation: fadeInUp 0.9s ease 0.35s both;
+    }
+    .hero-headline em {
+      color: var(--yellow);
+      font-style: normal;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 460px;
+      animation: fadeInUp 0.9s ease 0.5s both;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 32px;
+      animation: fadeInUp 0.9s ease 0.65s both;
+    }
+
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.55);
+      font-size: 0.82rem;
+      animation: fadeInUp 0.9s ease 0.8s both;
+    }
+    .hero-trust-dot {
+      width: 3px;
+      height: 3px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 50%;
+    }
+
+    /* ---- Hero Photo ---- */
+    .hero-photo-wrap {
+      position: relative;
+      animation: fadeInRight 1s ease 0.4s both;
+    }
+
+    .hero-photo-img {
+      width: 100%;
+      height: 560px;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: var(--radius-lg);
+      display: block;
+      animation: heroFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(-8px); }
+      50%       { transform: translateY(8px); }
+    }
+
+    /* Gradient fade on left edge of photo */
+    .hero-photo-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 40%;
+      background: linear-gradient(to right, #0D6B61, transparent);
+      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Floating approval card */
+    .hero-float-card {
+      position: absolute;
+      bottom: 36px;
+      left: -32px;
+      z-index: 10;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-xl);
+      padding: 18px 22px;
+      min-width: 260px;
+      animation: cardBounceIn 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 1.1s both;
+    }
+
+    @keyframes cardBounceIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.9); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .hero-float-card-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .hero-float-check {
+      width: 22px;
+      height: 22px;
+      background: #22C55E;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .hero-float-check svg {
+      width: 12px;
+      height: 12px;
+      stroke: #fff;
+      stroke-width: 2.5;
+    }
+    .hero-float-card-label {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+    .hero-float-card-service {
+      font-size: 0.8rem;
+      color: var(--text-2);
+      margin-bottom: 8px;
+    }
+    .hero-float-card-price {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .hero-float-card-saving {
+      font-size: 0.75rem;
+      color: #22C55E;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(32px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; padding-top: 110px; }
+      .hero-photo-img { height: 420px; }
+      .hero-float-card { left: 16px; bottom: 24px; }
+      .hero-headline { font-size: clamp(2.6rem, 7vw, 3.6rem); }
+    }
+    @media (max-width: 768px) {
+      .hero-photo-img { height: 320px; }
+      .hero-float-card { left: 12px; min-width: 220px; padding: 14px 16px; }
+      .hero-headline { font-size: 2.4rem; }
+    }
+
+    /* ============================================================
+       3. NUMBERS / STATS
+    ============================================================ */
+    #stats {
+      padding: 72px 0;
+      background: var(--teal-dark);
+      position: relative;
+      overflow: hidden;
+    }
+    #stats::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 36px 24px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .stat-item:last-child { border-right: none; }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-number span { color: var(--yellow); }
+
+    .stat-label {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.65);
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .stat-item:nth-child(2) { border-right: none; }
+    }
+
+    /* ============================================================
+       4. COMO FUNCIONA
+    ============================================================ */
+    #como-funciona {
+      background: var(--surface);
+    }
+
+    .how-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 72px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      color: var(--text);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .section-title em { color: var(--teal); font-style: normal; }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .how-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 80px;
+    }
+
+    .how-steps { display: flex; flex-direction: column; gap: 0; }
+
+    .how-step {
+      display: flex;
+      gap: 24px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .how-step:last-child { border-bottom: none; }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      background: var(--teal-bg);
+      border: 2px solid var(--teal);
+      color: var(--teal);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      transition: background 0.3s, color 0.3s;
+    }
+    .how-step:hover .step-num {
+      background: var(--teal);
+      color: #fff;
+    }
+
+    .step-icon {
+      color: var(--teal);
+      margin-bottom: 4px;
+    }
+    .step-icon svg { width: 20px; height: 20px; }
+
+    .step-content h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .step-content p {
+      font-size: 0.93rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .how-photo-wrap {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .how-photo-wrap img {
+      width: 100%;
+      height: 520px;
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+    }
+    .how-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(13,107,97,0.6) 100%);
+      border-radius: var(--radius-lg);
+    }
+
+    @media (max-width: 1024px) {
+      .how-inner { grid-template-columns: 1fr; gap: 48px; }
+      .how-photo-wrap img { height: 380px; }
+    }
+
+    /* ============================================================
+       5. DORES — IMPACT DARK
+    ============================================================ */
+    #dores {
+      background: var(--dark);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* CSS Grain texture */
+    #dores::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    #dores .container { position: relative; z-index: 1; }
+
+    .dores-stat {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .dores-big-num {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(5rem, 12vw, 9rem);
+      color: var(--yellow);
+      line-height: 0.9;
+      display: block;
+      letter-spacing: -0.03em;
+    }
+
+    .dores-big-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+      font-weight: 600;
+      color: rgba(255,255,255,0.88);
+      margin-top: 16px;
+      line-height: 1.4;
+    }
+
+    .dores-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .dore-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(26,158,143,0.2);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+    .dore-card:hover {
+      background: rgba(26,158,143,0.07);
+      border-color: rgba(26,158,143,0.45);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,.25);
+    }
+
+    .dore-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(245,197,24,0.1);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      color: var(--yellow);
+    }
+    .dore-icon svg { width: 22px; height: 22px; }
+
+    .dore-card p {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 768px) {
+      .dores-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       6. MOTORISTAS — SPLIT
+    ============================================================ */
+    #motoristas {
+      background: var(--teal-bg);
+    }
+
+    .split-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 72px;
+    }
+    .split-inner.reverse { direction: rtl; }
+    .split-inner.reverse > * { direction: ltr; }
+
+    .split-photo {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .split-photo img {
+      width: 100%;
+      height: 540px;
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+    }
+
+    .split-copy {}
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 36px;
+    }
+
+    .feature-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    }
+    .feature-item:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--teal);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--teal-bg);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      color: var(--teal);
+    }
+    .feature-icon svg { width: 18px; height: 18px; }
+
+    .feature-item h4 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    @media (max-width: 1024px) {
+      .split-inner { grid-template-columns: 1fr; gap: 48px; }
+      .split-inner.reverse { direction: ltr; }
+      .split-photo img { height: 380px; }
+    }
+
+    /* ============================================================
+       7. SIMULADOR DE TELAS
+    ============================================================ */
+    #simulador {
+      background: linear-gradient(140deg, var(--teal-dark), #1A2E2C 70%, var(--dark) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    #simulador::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .sim-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .sim-header .section-title { color: #fff; }
+    .sim-header .section-sub { color: rgba(255,255,255,0.6); }
+
+    .sim-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+    }
+
+    /* Phone frame */
+    .phone {
+      width: 260px;
+      height: 520px;
+      background: #fff;
+      border-radius: 36px;
+      border: 8px solid #1A1A2E;
+      box-shadow: 0 40px 100px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.05);
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .phone-notch {
+      width: 90px;
+      height: 24px;
+      background: #1A1A2E;
+      border-radius: 0 0 16px 16px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .phone-screen {
+      overflow: hidden;
+      position: relative;
+      height: calc(100% - 24px);
+    }
+
+    /* Screen slides */
+    .phone-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .phone-slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    /* -- Slide 1: Orçamento -- */
+    .slide-budget {
+      background: #f5f5f7;
+      font-family: var(--font-body);
+    }
+    .slide-budget .app-header {
+      background: var(--teal);
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .slide-budget .app-card {
+      margin: 12px 10px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    }
+    .slide-budget .oficina-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 2px;
+    }
+    .slide-budget .oficina-rating {
+      font-size: 0.68rem;
+      color: #F59E0B;
+      margin-bottom: 10px;
+    }
+    .slide-budget .service-name {
+      font-size: 0.72rem;
+      color: #374151;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .slide-budget .budget-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: #374151;
+      padding: 4px 0;
+    }
+    .slide-budget .budget-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #111;
+      padding: 8px 0 0;
+      margin-top: 4px;
+      border-top: 1px solid #e5e7eb;
+    }
+    .slide-budget .action-btns {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .slide-budget .action-btns button {
+      flex: 1;
+      padding: 8px 0;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-approve { background: #22C55E; color: #fff; }
+    .btn-refuse  { background: #f5f5f7; color: #374151; border: 1px solid #e5e7eb !important; }
+
+    /* -- Slide 2: Escolha Oficina -- */
+    .slide-oficinas {
+      background: #f5f5f7;
+      font-family: var(--font-body);
+    }
+    .slide-oficinas .app-header {
+      background: var(--teal);
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .steps-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 12px;
+      background: #fff;
+    }
+    .step-pill {
+      font-size: 0.55rem;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+      background: #e5e7eb;
+      color: #6b7280;
+    }
+    .step-pill.active { background: var(--teal); color: #fff; }
+    .oficina-row {
+      margin: 8px 10px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .oficina-pin {
+      width: 28px;
+      height: 28px;
+      background: var(--teal-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal);
+      flex-shrink: 0;
+    }
+    .oficina-pin svg { width: 14px; height: 14px; }
+    .oficina-info { flex: 1; }
+    .oficina-info strong {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #111;
+    }
+    .oficina-info span {
+      font-size: 0.62rem;
+      color: #6b7280;
+    }
+    .oficina-price {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    /* -- Slide 3: Cadastro -- */
+    .slide-cadastro {
+      background: #f5f5f7;
+      font-family: var(--font-body);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+    .slide-cadastro .logo-small {
+      height: 28px;
+      margin-bottom: 20px;
+    }
+    .slide-cadastro h3 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 18px;
+    }
+    .fake-input {
+      width: 100%;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 0.68rem;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    .slide-cadastro .btn-advance {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* -- Slide 4: Sucesso -- */
+    .slide-sucesso {
+      background: #f5f5f7;
+      font-family: var(--font-body);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      text-align: center;
+      height: 100%;
+    }
+    .sucesso-check {
+      width: 64px;
+      height: 64px;
+      background: #22C55E;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(34,197,94,.3);
+    }
+    .sucesso-check svg { width: 32px; height: 32px; stroke: #fff; stroke-width: 2.5; }
+    .slide-sucesso h3 {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    .slide-sucesso p {
+      font-size: 0.72rem;
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+    .slide-sucesso .btn-access {
+      padding: 10px 24px;
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Sim controls */
+    .sim-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sim-dot-nav {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+    .sim-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .sim-dot.active {
+      background: var(--yellow);
+      transform: scale(1.3);
+    }
+
+    .sim-labels {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sim-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.3s, border-color 0.3s;
+      width: 220px;
+    }
+    .sim-label:hover { background: rgba(255,255,255,0.05); }
+    .sim-label.active {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .sim-label-num {
+      width: 28px;
+      height: 28px;
+      background: var(--teal);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .sim-label.active .sim-label-num { background: var(--yellow); color: var(--dark); }
+
+    .sim-label-text {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+    }
+    .sim-label.active .sim-label-text { color: #fff; font-weight: 600; }
+
+    @media (max-width: 1024px) {
+      .sim-wrap { flex-direction: column; gap: 32px; }
+      .sim-labels { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+      .sim-label { width: auto; }
+    }
+    @media (max-width: 768px) {
+      .sim-labels { display: none; }
+    }
+
+    /* ============================================================
+       8. PLANOS PMP
+    ============================================================ */
+    #planos {
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .planos-bg-photo {
+      position: absolute;
+      inset: 0;
+      background-image: url('foto-homem-guincho.png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    .planos-header {
+      text-align: center;
+      max-width: 580px;
+      margin: 0 auto 56px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .planos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .plan-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    }
+    .plan-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+    .plan-card.popular {
+      border-color: var(--teal);
+      border-width: 2px;
+      box-shadow: 0 4px 24px rgba(26,158,143,0.15);
+    }
+    .plan-card.popular:hover {
+      box-shadow: 0 20px 60px rgba(26,158,143,0.25);
+    }
+
+    .plan-badge-popular {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--teal);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 16px;
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+    }
+
+    .plan-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--teal-bg);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--teal);
+    }
+    .plan-icon svg { width: 24px; height: 24px; }
+
+    .plan-card h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+    .plan-price strong {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--text);
+    }
+    .plan-price span {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .plan-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 20px;
+    }
+
+    .plan-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .plan-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--text-2);
+    }
+    .plan-list li svg {
+      width: 16px;
+      height: 16px;
+      color: var(--teal);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 768px) {
+      .planos-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       9. PARA OFICINAS — DARK SPLIT
+    ============================================================ */
+    #para-oficinas {
+      background: var(--dark-2);
+      padding-top: 96px;
+      padding-bottom: 96px;
+    }
+
+    #para-oficinas .split-inner { gap: 80px; }
+
+    #para-oficinas .split-photo img {
+      border-radius: var(--radius-lg);
+      filter: brightness(0.9) saturate(1.1);
+    }
+
+    .oficinas-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal-2);
+      background: rgba(43,181,164,0.12);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(43,181,164,0.25);
+      margin-bottom: 20px;
+    }
+
+    #para-oficinas .section-title { color: #fff; }
+    #para-oficinas .section-sub {
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 36px;
+    }
+
+    .benefit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .benefit-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .benefit-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(26,158,143,0.15);
+      border: 1px solid rgba(26,158,143,0.3);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal-2);
+      flex-shrink: 0;
+    }
+    .benefit-icon svg { width: 20px; height: 20px; }
+    .benefit-content h4 {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .benefit-content p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       10. DEPOIMENTOS
+    ============================================================ */
+    #depoimentos {
+      background: var(--surface);
+    }
+
+    .depo-header {
+      text-align: center;
+      max-width: 560px;
+      margin: 0 auto 56px;
+    }
+
+    .depo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .depo-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .depo-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .depo-stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 16px;
+      color: #F59E0B;
+    }
+    .depo-stars svg { width: 16px; height: 16px; fill: currentColor; }
+
+    .depo-text {
+      font-size: 0.92rem;
+      color: var(--text-2);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .depo-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .depo-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .depo-name { font-weight: 600; font-size: 0.88rem; color: var(--text); }
+    .depo-city { font-size: 0.78rem; color: var(--muted); }
+
+    @media (max-width: 768px) {
+      .depo-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       11. CTA FINAL
+    ============================================================ */
+    #cta-final {
+      padding: 120px 0;
+      background: linear-gradient(140deg, var(--teal-dark) 0%, #1A2E2C 60%, var(--dark) 100%);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    #cta-final::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,158,143,0.2) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    #cta-final .container { position: relative; z-index: 1; }
+
+    .cta-logo { margin: 0 auto 28px; }
+    .cta-logo img { height: 56px; margin: 0 auto; }
+
+    .cta-headline {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .cta-headline em { color: var(--yellow); font-style: normal; }
+
+    .cta-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .cta-sub {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ============================================================
+       12. FOOTER
+    ============================================================ */
+    #footer {
+      background: var(--dark);
+      padding: 72px 0 36px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+
+    .footer-brand {}
+    .footer-brand .footer-logo img {
+      height: 44px;
+      filter: brightness(0) invert(1);
+      margin-bottom: 16px;
+    }
+    .footer-brand p {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+      max-width: 280px;
+    }
+
+    .footer-col h5 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-col ul a {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.55);
+      transition: color 0.2s;
+    }
+    .footer-col ul a:hover { color: var(--teal-2); }
+
+    .footer-bottom {
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.3);
+    }
+    .footer-bottom a { color: rgba(255,255,255,0.45); transition: color 0.2s; }
+    .footer-bottom a:hover { color: var(--teal-2); }
+
+    @media (max-width: 768px) {
+      .footer-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 480px) {
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       1. NAV
+  ============================================================ -->
+  <nav id="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-inner">
+
+      <a href="#" class="nav-logo" aria-label="Officina App — Home">
+        <img src="logo-amber.png" id="nav-logo-img" alt="Officina App" />
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#como-funciona">Como funciona</a></li>
+        <li><a href="#para-oficinas">Para Oficinas</a></li>
+        <li><a href="#planos">Planos PMP</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="#cta-final" class="btn btn-yellow">Criar conta grátis</a>
+      </div>
+
+      <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu" role="menu">
+    <a href="#como-funciona" role="menuitem">Como funciona</a>
+    <a href="#para-oficinas" role="menuitem">Para Oficinas</a>
+    <a href="#planos" role="menuitem">Planos PMP</a>
+    <a href="#cta-final" class="btn btn-yellow" role="menuitem" style="text-align:center; margin-top:8px;">Criar conta grátis</a>
+  </div>
+
+
+  <!-- ============================================================
+       2. HERO
+  ============================================================ -->
+  <section id="hero" aria-label="Apresentação principal">
+    <div class="hero-inner">
+
+      <!-- Copy -->
+      <div class="hero-copy">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          847 oficinas credenciadas · Nota 4.8
+        </div>
+
+        <h1 class="hero-headline">
+          Orçamento <em>antes</em><br>
+          de qualquer<br>
+          serviço.
+        </h1>
+
+        <p class="hero-sub">
+          Receba o orçamento no celular, compare entre oficinas, aprove só o necessário. Tudo transparente, do diagnóstico ao pagamento.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="#cta-final" class="btn btn-yellow" style="font-size:1rem; padding:16px 32px;">
+            Criar conta grátis
+            <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+          </a>
+          <a href="#como-funciona" class="btn btn-outline-white" style="font-size:1rem; padding:16px 32px;">
+            Ver como funciona
+          </a>
+        </div>
+
+        <div class="hero-trust">
+          <span>Sem mensalidade</span>
+          <span class="hero-trust-dot"></span>
+          <span>Cadastro em 2min</span>
+          <span class="hero-trust-dot"></span>
+          <span>Cancela quando quiser</span>
+        </div>
+      </div>
+
+      <!-- Photo -->
+      <div class="hero-photo-wrap">
+        <img
+          src="foto-mulher-carro.png"
+          alt="Mulher sorrindo com celular, carro aberto ao fundo"
+          class="hero-photo-img"
+          loading="eager"
+        />
+
+        <!-- Floating approval card -->
+        <div class="hero-float-card" aria-hidden="true">
+          <div class="hero-float-card-top">
+            <div class="hero-float-check">
+              <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="hero-float-card-label">Orçamento aprovado</div>
+          </div>
+          <div class="hero-float-card-service">Revisão 10.000km — AutoFix Moema</div>
+          <div class="hero-float-card-price">R$ 194,00</div>
+          <div class="hero-float-card-saving">Economia de R$286 vs. concorrente</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       3. NÚMEROS
+  ============================================================ -->
+  <section id="stats" aria-label="Números da plataforma">
+    <div class="container">
+      <div class="stats-grid">
+
+        <div class="stat-item reveal d1">
+          <div class="stat-number">
+            <span class="counter" data-target="847" data-suffix="">0</span>
+          </div>
+          <div class="stat-label">Oficinas credenciadas</div>
+        </div>
+
+        <div class="stat-item reveal d2">
+          <div class="stat-number">
+            <span class="counter" data-target="50000" data-suffix="+" data-format="50k">0</span>
+          </div>
+          <div class="stat-label">Motoristas cadastrados</div>
+        </div>
+
+        <div class="stat-item reveal d3">
+          <div class="stat-number">
+            <span class="counter" data-target="48" data-suffix="" data-decimal="true">0</span>
+          </div>
+          <div class="stat-label">Nota média na plataforma</div>
+        </div>
+
+        <div class="stat-item reveal d4">
+          <div class="stat-number">
+            <span style="color:var(--yellow)">R$</span><span class="counter" data-target="280" data-suffix="">0</span>
+          </div>
+          <div class="stat-label">Economia média por visita</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       4. COMO FUNCIONA
+  ============================================================ -->
+  <section id="como-funciona">
+    <div class="container">
+
+      <div class="how-header reveal">
+        <div class="section-label">
+          <i data-lucide="zap" style="width:13px;height:13px;"></i>
+          Simples e rápido
+        </div>
+        <h2 class="section-title">Como funciona o <em>Officina</em></h2>
+        <p class="section-sub">Três passos e você já tem o orçamento na mão. Sem ligação, sem surpresa.</p>
+      </div>
+
+      <div class="how-inner">
+
+        <!-- Steps -->
+        <div class="how-steps">
+
+          <div class="how-step reveal d1">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-icon"><i data-lucide="wrench"></i></div>
+              <h3>Descreva o problema</h3>
+              <p>Abra o app, escreva o que está acontecendo com seu carro. Nada de ligação, nada de ir presencialmente primeiro.</p>
+            </div>
+          </div>
+
+          <div class="how-step reveal d2">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-icon"><i data-lucide="map-pin"></i></div>
+              <h3>Escolha a oficina</h3>
+              <p>Veja oficinas próximas, preços e avaliações reais de outros motoristas. Compare antes de decidir.</p>
+            </div>
+          </div>
+
+          <div class="how-step reveal d3">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-icon"><i data-lucide="check-circle"></i></div>
+              <h3>Aprove e acompanhe</h3>
+              <p>Receba o orçamento no celular, aprove só o necessário. Acompanhe tudo em tempo real. Pague no app.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Photo -->
+        <div class="how-photo-wrap reveal-right" id="how-photo">
+          <img
+            src="foto-mecanico-cliente.png"
+            alt="Mecânico e cliente lado a lado olhando para o motor do carro"
+            loading="lazy"
+          />
+          <div class="how-photo-overlay"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       5. DORES
+  ============================================================ -->
+  <section id="dores">
+    <div class="container">
+
+      <div class="dores-stat reveal-scale">
+        <span class="dores-big-num" id="dores-num">8 em 10</span>
+        <p class="dores-big-text">
+          motoristas já desconfiaram<br>do mecânico.
+        </p>
+      </div>
+
+      <div class="dores-grid">
+
+        <div class="dore-card reveal d1">
+          <div class="dore-icon">
+            <i data-lucide="alert-circle"></i>
+          </div>
+          <p>"Você entra na oficina sem saber o preço. Sai com uma surpresa que não dá pra questionar."</p>
+        </div>
+
+        <div class="dore-card reveal d2">
+          <div class="dore-icon">
+            <i data-lucide="eye"></i>
+          </div>
+          <p>"Não tem como saber se o serviço era mesmo necessário — ou se te venderam algo que você não precisava."</p>
+        </div>
+
+        <div class="dore-card reveal d3">
+          <div class="dore-icon">
+            <i data-lucide="shield-check"></i>
+          </div>
+          <p>"Não tem histórico, não tem garantia por escrito, não tem prova de nada se der errado depois."</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       6. MOTORISTAS
+  ============================================================ -->
+  <section id="motoristas">
+    <div class="container">
+      <div class="split-inner">
+
+        <!-- Photo -->
+        <div class="split-photo reveal-left" id="motoristas-photo">
+          <img
+            src="foto-homem-volvo.png"
+            alt="Homem sorrindo com celular, mecânico trabalhando no Volvo ao fundo"
+            loading="lazy"
+          />
+        </div>
+
+        <!-- Copy -->
+        <div class="split-copy">
+          <div class="section-label">
+            <i data-lucide="users" style="width:13px;height:13px;"></i>
+            Para motoristas
+          </div>
+          <h2 class="section-title reveal">Você no controle.<br><em>Seu carro em boas mãos.</em></h2>
+          <p class="section-sub reveal" style="margin-bottom:0;">Chega de depender da boa vontade do mecânico. Com o Officina, você sabe o preço antes, compara opções e decide com informação.</p>
+
+          <div class="features-grid">
+
+            <div class="feature-item reveal d1">
+              <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+              <h4>Orçamento antes de qualquer serviço</h4>
+            </div>
+
+            <div class="feature-item reveal d2">
+              <div class="feature-icon"><i data-lucide="trending-up"></i></div>
+              <h4>Compare preços entre oficinas</h4>
+            </div>
+
+            <div class="feature-item reveal d3">
+              <div class="feature-icon"><i data-lucide="check-circle"></i></div>
+              <h4>Aprove só o necessário</h4>
+            </div>
+
+            <div class="feature-item reveal d4">
+              <div class="feature-icon"><i data-lucide="clock"></i></div>
+              <h4>Histórico completo do carro</h4>
+            </div>
+
+            <div class="feature-item reveal d5">
+              <div class="feature-icon"><i data-lucide="badge-check"></i></div>
+              <h4>Oficinas credenciadas e avaliadas</h4>
+            </div>
+
+            <div class="feature-item reveal d6">
+              <div class="feature-icon"><i data-lucide="zap"></i></div>
+              <h4>Pagamento seguro no app</h4>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       7. SIMULADOR DE TELAS
+  ============================================================ -->
+  <section id="simulador">
+    <div class="container">
+
+      <div class="sim-header reveal">
+        <div class="section-label" style="background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.8); border-color:rgba(255,255,255,0.15);">
+          <i data-lucide="phone" style="width:13px;height:13px;"></i>
+          Interface
+        </div>
+        <h2 class="section-title">O app na prática</h2>
+        <p class="section-sub">Cada etapa pensada para que você nunca seja surpreendido.</p>
+      </div>
+
+      <div class="sim-wrap">
+
+        <!-- Labels (desktop) -->
+        <div class="sim-controls" id="sim-left-labels">
+          <div class="sim-label active" data-slide="0">
+            <div class="sim-label-num">1</div>
+            <span class="sim-label-text">Orçamento recebido</span>
+          </div>
+          <div class="sim-label" data-slide="1">
+            <div class="sim-label-num">2</div>
+            <span class="sim-label-text">Escolha a oficina</span>
+          </div>
+          <div class="sim-label" data-slide="2">
+            <div class="sim-label-num">3</div>
+            <span class="sim-label-text">Cadastro rápido</span>
+          </div>
+          <div class="sim-label" data-slide="3">
+            <div class="sim-label-num">4</div>
+            <span class="sim-label-text">Pronto para usar</span>
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="phone reveal-scale">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+
+            <!-- Slide 0: Orçamento -->
+            <div class="phone-slide active slide-budget">
+              <div class="app-header">Orçamento recebido</div>
+              <div class="app-card">
+                <div class="oficina-name">AutoFix Moema</div>
+                <div class="oficina-rating">★★★★★ 4.9 · 182 avaliações</div>
+                <div class="service-name">Revisão 10.000km</div>
+                <div class="budget-line">
+                  <span>Troca de óleo 5W-30</span>
+                  <span>R$ 89</span>
+                </div>
+                <div class="budget-line">
+                  <span>Filtro de ar</span>
+                  <span>R$ 45</span>
+                </div>
+                <div class="budget-line">
+                  <span>Fluido de freio</span>
+                  <span>R$ 60</span>
+                </div>
+                <div class="budget-total">
+                  <span>Total</span>
+                  <span>R$ 194</span>
+                </div>
+                <div class="action-btns">
+                  <button class="btn-approve">Aprovar</button>
+                  <button class="btn-refuse">Recusar</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 1: Escolha oficina -->
+            <div class="phone-slide slide-oficinas">
+              <div class="app-header">Escolha a oficina</div>
+              <div class="steps-indicator">
+                <span class="step-pill">Veículo</span>
+                <span class="step-pill active">Oficina</span>
+                <span class="step-pill">Agendar</span>
+                <span class="step-pill">Confirmar</span>
+              </div>
+
+              <div class="oficina-row">
+                <div class="oficina-pin"><i data-lucide="map-pin"></i></div>
+                <div class="oficina-info">
+                  <strong>AutoFix Moema</strong>
+                  <span>★ 4.9 · 0,8 km</span>
+                </div>
+                <div class="oficina-price">R$194</div>
+              </div>
+
+              <div class="oficina-row">
+                <div class="oficina-pin"><i data-lucide="map-pin"></i></div>
+                <div class="oficina-info">
+                  <strong>Mecânica Central</strong>
+                  <span>★ 4.7 · 1,4 km</span>
+                </div>
+                <div class="oficina-price">R$218</div>
+              </div>
+
+              <div class="oficina-row">
+                <div class="oficina-pin"><i data-lucide="map-pin"></i></div>
+                <div class="oficina-info">
+                  <strong>TopGear Ibirapuera</strong>
+                  <span>★ 4.8 · 2,1 km</span>
+                </div>
+                <div class="oficina-price">R$480</div>
+              </div>
+            </div>
+
+            <!-- Slide 2: Cadastro -->
+            <div class="phone-slide slide-cadastro">
+              <img src="logo-amber.png" alt="Officina" class="logo-small" />
+              <h3>Cadastre-se grátis</h3>
+              <div class="fake-input">Nome completo</div>
+              <div class="fake-input">Telefone (WhatsApp)</div>
+              <div class="fake-input">Placa do veículo</div>
+              <button class="btn-advance">Avançar →</button>
+            </div>
+
+            <!-- Slide 3: Sucesso -->
+            <div class="phone-slide slide-sucesso">
+              <div class="sucesso-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <h3>Cadastro realizado!</h3>
+              <p>Você já pode acessar o Officina e receber orçamentos das melhores oficinas.</p>
+              <button class="btn-access">Acessar agora</button>
+            </div>
+
+          </div><!-- /phone-screen -->
+        </div><!-- /phone -->
+
+        <!-- Dot nav (mobile) -->
+        <div style="position:absolute; left:50%; transform:translateX(-50%); bottom:-48px; display:flex; gap:8px;" id="sim-dots-mobile" class="sim-dot-nav">
+          <div class="sim-dot active" data-slide="0"></div>
+          <div class="sim-dot" data-slide="1"></div>
+          <div class="sim-dot" data-slide="2"></div>
+          <div class="sim-dot" data-slide="3"></div>
+        </div>
+
+      </div><!-- /sim-wrap -->
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       8. PLANOS PMP
+  ============================================================ -->
+  <section id="planos">
+    <div class="planos-bg-photo" aria-hidden="true"></div>
+    <div class="container">
+
+      <div class="planos-header reveal">
+        <div class="section-label">
+          <i data-lucide="shield-check" style="width:13px;height:13px;"></i>
+          Planos PMP
+        </div>
+        <h2 class="section-title">Proteção para seu carro,<br><em>mês a mês.</em></h2>
+        <p class="section-sub">Planos de manutenção preventiva para você nunca ser pego de surpresa numa emergência.</p>
+      </div>
+
+      <div class="planos-grid">
+
+        <!-- Motor -->
+        <div class="plan-card reveal d1">
+          <div class="plan-icon">
+            <i data-lucide="wrench"></i>
+          </div>
+          <h3>Motor</h3>
+          <div class="plan-price">
+            <strong>R$500</strong>
+            <span>/mês</span>
+          </div>
+          <div class="plan-divider"></div>
+          <ul class="plan-list">
+            <li>
+              <i data-lucide="check-circle"></i>
+              Troca de óleo e filtro todo mês
+            </li>
+            <li>
+              <i data-lucide="check-circle"></i>
+              Verificação de correia dentada
+            </li>
+            <li>
+              <i data-lucide="check-circle"></i>
+              Checagem do sistema de arrefecimento
+            </li>
+            <li>
+              <i data-lucide="check-circle"></i>
+              Diagnóstico eletrônico OBD mensal
+            </li>
+          </ul>
+          <a href="#cta-final" class="btn btn-teal" style="width:100%; justify-content:center;">
+            Assinar plano Motor
+          </a>
+        </div>
+
+        <!-- Suspensão -->
+        <div class="plan-card reveal d2">
+          <div class="plan-icon">
+            <i data-lucide="car"></i>
+          </div>
+          <h3>Suspensão</h3>
+          <div class="plan-price">
+            <strong>R$500</strong>
+            <span>/mês</span>
+          </div>
+          <div class="plan-divider"></div>
+          <ul class="plan-list">
+            <li>
+              <i data-lucide="check-circle"></i>
+              Alinhamento e balanceamento mensal
+            </li>
+            <li>
+              <i data-lucide="check-circle"></i>
+              Revisão de amortecedores e buchas
+            </li>
+            <li>
+              <i data-lucide="check-circle"></i>
+              Verificação do sistema de freios
+            </li>
+            <li>
+              <i data-lucide="check-circle"></i>
+              Inspeção de pneus e rodas
+            </li>
+          </ul>
+          <a href="#cta-final" class="btn btn-teal" style="width:100%; justify-content:center;">
+            Assinar plano Suspensão
+          </a>
+        </div>
+
+        <!-- Completo -->
+        <div class="plan-card popular reveal d3">
+          <div class="plan-badge-popular">Mais popular</div>
+          <div class="plan-icon" style="background:var(--teal); color:#fff;">
+            <i data-lucide="badge-check"></i>
+          </div>
+          <h3>Completo</h3>
+          <div class="plan-price">
+            <strong>R$800</strong>
+            <span>/mês</span>
+          </div>
+          <div class="plan-divider"></div>
+          <ul class="plan-list">
+            <li>
+              <i data-lucide="check-circle"></i>
+              Tudo do plano Motor
+            </li>
+            <li>
+              <i data-lucide="check-circle"></i>
+              Tudo do plano Suspensão
+            </li>
+            <li>
+              <i data-lucide="check-circle"></i>
+              Guincho 24h ilimitado
+            </li>
+            <li>
+              <i data-lucide="check-circle"></i>
+              Carro reserva em manutenções
+            </li>
+            <li>
+              <i data-lucide="check-circle"></i>
+              Atendimento prioritário na rede
+            </li>
+          </ul>
+          <a href="#cta-final" class="btn btn-yellow" style="width:100%; justify-content:center;">
+            Assinar plano Completo
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       9. PARA OFICINAS
+  ============================================================ -->
+  <section id="para-oficinas">
+    <div class="container">
+      <div class="split-inner">
+
+        <!-- Photo -->
+        <div class="split-photo reveal-left" id="oficinas-photo">
+          <img
+            src="foto-mecanica-mulher.png"
+            alt="Mecânico uniformizado trabalhando com cliente ao lado em oficina real"
+            loading="lazy"
+          />
+        </div>
+
+        <!-- Copy -->
+        <div class="split-copy">
+          <div class="oficinas-label">
+            <i data-lucide="tool" style="width:13px;height:13px;"></i>
+            Para Mecânicos e Oficinas
+          </div>
+          <h2 class="section-title reveal" style="color:#fff;">Aqui tem cliente<br>novo <em style="color:var(--yellow);">todo dia.</em></h2>
+          <p class="section-sub reveal" style="color:rgba(255,255,255,0.6);">
+            Receba orçamentos de clientes qualificados direto no app. Sem depender de indicação, sem pagar por lead. Só trabalho.
+          </p>
+
+          <div class="benefit-list">
+
+            <div class="benefit-item reveal d1">
+              <div class="benefit-icon">
+                <i data-lucide="users"></i>
+              </div>
+              <div class="benefit-content">
+                <h4>Clientes que já querem o serviço</h4>
+                <p>Receba apenas motoristas que descreveram o problema e estão prontos para contratar.</p>
+              </div>
+            </div>
+
+            <div class="benefit-item reveal d2">
+              <div class="benefit-icon">
+                <i data-lucide="zap"></i>
+              </div>
+              <div class="benefit-content">
+                <h4>Pagamento garantido via plataforma</h4>
+                <p>Receba pelo app com segurança. Zero calote, zero inadimplência.</p>
+              </div>
+            </div>
+
+            <div class="benefit-item reveal d3">
+              <div class="benefit-icon">
+                <i data-lucide="star"></i>
+              </div>
+              <div class="benefit-content">
+                <h4>Avaliações que constroem reputação</h4>
+                <p>Cada serviço bem feito vira avaliação pública. Sua nota atrai mais clientes.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <a href="#cta-final" class="btn btn-yellow reveal" style="font-size:1rem; padding:16px 32px;">
+            Cadastrar minha oficina
+            <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       10. DEPOIMENTOS
+  ============================================================ -->
+  <section id="depoimentos">
+    <div class="container">
+
+      <div class="depo-header reveal">
+        <div class="section-label">
+          <i data-lucide="thumbs-up" style="width:13px;height:13px;"></i>
+          Depoimentos
+        </div>
+        <h2 class="section-title">Quem usou, <em>aprovou.</em></h2>
+        <p class="section-sub">Motoristas e mecânicos que mudaram como lidam com o carro.</p>
+      </div>
+
+      <div class="depo-grid">
+
+        <div class="depo-card reveal d1">
+          <div class="depo-stars">
+            <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+          </div>
+          <p class="depo-text">"Antes eu chegava na oficina completamente às cegas. Com o Officina, soube o valor antes de entrar. Aprovei o que fazia sentido e recusei o que não precisava. Economizei R$340 só na primeira visita."</p>
+          <div class="depo-author">
+            <div class="depo-avatar" style="background: var(--teal);">C</div>
+            <div>
+              <div class="depo-name">Carla Mendes</div>
+              <div class="depo-city">São Paulo, SP</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="depo-card reveal d2">
+          <div class="depo-stars">
+            <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+          </div>
+          <p class="depo-text">"Minha oficina cresceu 40% nos primeiros três meses no Officina. Os clientes chegam qualificados, sabendo o que precisam. Fechamento mais rápido, menos negociação, mais serviço feito."</p>
+          <div class="depo-author">
+            <div class="depo-avatar" style="background: var(--teal-dark);">R</div>
+            <div>
+              <div class="depo-name">Rafael Costa</div>
+              <div class="depo-city">Mecânico — Campinas, SP</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="depo-card reveal d3">
+          <div class="depo-stars">
+            <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+          </div>
+          <p class="depo-text">"Trabalho o dia inteiro e não tenho tempo pra ficar esperando em oficina sem saber o que vai acontecer. O Officina resolveu isso: mando a placa, descrevo o problema, recebo o orçamento no celular. Simples assim."</p>
+          <div class="depo-author">
+            <div class="depo-avatar" style="background: #0D6B61;">M</div>
+            <div>
+              <div class="depo-name">Marcelo Alves</div>
+              <div class="depo-city">Curitiba, PR</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       11. CTA FINAL
+  ============================================================ -->
+  <section id="cta-final">
+    <div class="container">
+
+      <div class="cta-logo reveal">
+        <img src="logo-amber.png" alt="Officina App" />
+      </div>
+
+      <h2 class="cta-headline reveal d1">
+        Sua próxima revisão.<br>
+        Com orçamento. <em>Com transparência.</em>
+      </h2>
+
+      <div class="cta-buttons reveal d2">
+        <a href="#" class="btn btn-yellow-lg">
+          Criar conta grátis
+          <i data-lucide="arrow-right" style="width:20px;height:20px;"></i>
+        </a>
+        <a href="#para-oficinas" class="btn btn-outline-white" style="padding:18px 40px; font-size:1.05rem;">
+          Sou mecânico
+        </a>
+      </div>
+
+      <p class="cta-sub reveal d3">Sem mensalidade. Sem surpresas. Sempre.</p>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       12. FOOTER
+  ============================================================ -->
+  <footer id="footer" role="contentinfo">
+    <div class="container">
+
+      <div class="footer-inner">
+
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="logo-amber.png" alt="Officina App" />
+          </div>
+          <p>Marketplace que conecta motoristas a oficinas credenciadas. Transparência total do orçamento ao pagamento.</p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Produto</h5>
+          <ul>
+            <li><a href="#como-funciona">Como funciona</a></li>
+            <li><a href="#simulador">Ver o app</a></li>
+            <li><a href="#planos">Planos PMP</a></li>
+            <li><a href="#depoimentos">Depoimentos</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Oficinas</h5>
+          <ul>
+            <li><a href="#para-oficinas">Para mecânicos</a></li>
+            <li><a href="#para-oficinas">Credenciamento</a></li>
+            <li><a href="#para-oficinas">Como receber clientes</a></li>
+            <li><a href="#para-oficinas">Reputação na plataforma</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Empresa</h5>
+          <ul>
+            <li><a href="#">Sobre o Officina</a></li>
+            <li><a href="#">Termos de uso</a></li>
+            <li><a href="#">Privacidade</a></li>
+            <li><a href="#">Contato</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Officina App. Todos os direitos reservados.</p>
+        <p>Feito com cuidado para motoristas e mecânicos.</p>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    // ============================================================
+    // NAV: scroll behavior + logo swap
+    // ============================================================
+    (function() {
+      const navbar   = document.getElementById('navbar');
+      const logoImg  = document.getElementById('nav-logo-img');
+      let scrolled   = false;
+
+      function onScroll() {
+        const isScrolled = window.scrollY > 80;
+        if (isScrolled !== scrolled) {
+          scrolled = isScrolled;
+          navbar.classList.toggle('scrolled', isScrolled);
+          logoImg.src = isScrolled ? 'logo-teal.png' : 'logo-amber.png';
+        }
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+
+    // ============================================================
+    // HAMBURGER MENU
+    // ============================================================
+    (function() {
+      const btn        = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      btn.addEventListener('click', () => {
+        const open = mobileMenu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open);
+      });
+
+      // Close on link click
+      mobileMenu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          mobileMenu.classList.remove('open');
+          btn.setAttribute('aria-expanded', false);
+        });
+      });
+    })();
+
+    // ============================================================
+    // INTERSECTION OBSERVER — reveal animations
+    // ============================================================
+    (function() {
+      const revealObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            revealObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll(
+        '.reveal, .reveal-left, .reveal-right, .reveal-scale'
+      ).forEach(el => revealObs.observe(el));
+    })();
+
+    // ============================================================
+    // COUNTERS — animate on viewport entry
+    // ============================================================
+    (function() {
+      const counters = document.querySelectorAll('.counter');
+
+      const countObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          countObs.unobserve(e.target);
+
+          const el      = e.target;
+          const target  = parseInt(el.dataset.target);
+          const suffix  = el.dataset.suffix || '';
+          const decimal = el.dataset.decimal === 'true';
+          const duration = 1800;
+          let start = null;
+
+          function easeOutQuart(t) {
+            return 1 - Math.pow(1 - t, 4);
+          }
+
+          function step(timestamp) {
+            if (!start) start = timestamp;
+            const progress = Math.min((timestamp - start) / duration, 1);
+            const eased    = easeOutQuart(progress);
+
+            if (decimal) {
+              // target is 48, display as 4.8
+              const val = (eased * (target / 10)).toFixed(1);
+              el.textContent = val + suffix;
+            } else if (target >= 50000) {
+              // display as 50k+
+              const val = Math.floor(eased * target / 1000);
+              el.textContent = val + 'k' + suffix;
+            } else {
+              el.textContent = Math.floor(eased * target).toLocaleString('pt-BR') + suffix;
+            }
+
+            if (progress < 1) requestAnimationFrame(step);
+          }
+
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.4 });
+
+      counters.forEach(c => countObs.observe(c));
+    })();
+
+    // ============================================================
+    // PHONE SIMULATOR
+    // ============================================================
+    (function() {
+      const slides     = document.querySelectorAll('.phone-slide');
+      const dots       = document.querySelectorAll('.sim-dot');
+      const labels     = document.querySelectorAll('.sim-label');
+      let current      = 0;
+      let autoTimer    = null;
+
+      function goTo(idx) {
+        slides[current].classList.remove('active');
+        dots[current] && dots[current].classList.remove('active');
+        labels[current] && labels[current].classList.remove('active');
+
+        current = (idx + slides.length) % slides.length;
+
+        slides[current].classList.add('active');
+        dots[current] && dots[current].classList.add('active');
+        labels[current] && labels[current].classList.add('active');
+      }
+
+      function startAuto() {
+        clearInterval(autoTimer);
+        autoTimer = setInterval(() => goTo(current + 1), 3000);
+      }
+
+      function stopAuto() {
+        clearInterval(autoTimer);
+      }
+
+      // Label clicks
+      labels.forEach(label => {
+        label.addEventListener('click', () => {
+          stopAuto();
+          goTo(parseInt(label.dataset.slide));
+          setTimeout(startAuto, 6000);
+        });
+      });
+
+      // Dot clicks
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          stopAuto();
+          goTo(parseInt(dot.dataset.slide));
+          setTimeout(startAuto, 6000);
+        });
+      });
+
+      // Pause on hover
+      const phoneEl = document.querySelector('.phone');
+      phoneEl.addEventListener('mouseenter', stopAuto);
+      phoneEl.addEventListener('mouseleave', startAuto);
+
+      startAuto();
+    })();
+
+    // ============================================================
+    // PARALLAX — desktop only
+    // ============================================================
+    (function() {
+      if (window.innerWidth <= 768) return;
+
+      const parallaxEls = [
+        { el: document.getElementById('how-photo'),      factor: 0.08  },
+        { el: document.getElementById('motoristas-photo'), factor: 0.06 },
+        { el: document.getElementById('oficinas-photo'), factor: 0.06  },
+      ].filter(item => item.el);
+
+      let ticking = false;
+
+      function updateParallax() {
+        parallaxEls.forEach(({ el, factor }) => {
+          const rect     = el.getBoundingClientRect();
+          const viewH    = window.innerHeight;
+          const offset   = (rect.top + rect.height / 2 - viewH / 2) * factor;
+          el.style.transform = `translateY(${offset}px)`;
+        });
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(updateParallax);
+          ticking = true;
+        }
+      }, { passive: true });
+    })();
+
+    // ============================================================
+    // Init Lucide Icons
+    // ============================================================
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  </script>
+
+</body>
+</html>
