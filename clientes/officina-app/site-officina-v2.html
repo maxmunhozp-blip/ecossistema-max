@@ -1275,98 +1275,87 @@
 
     .cob-header {
       text-align: center;
-      max-width: 600px;
+      max-width: 560px;
       margin: 0 auto 56px;
     }
     .cob-header h2 {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1.05;
+      font-family: var(--font-body);
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
       color: var(--text);
+      text-wrap: balance;
       margin-bottom: 12px;
     }
     .cob-header h2 em {
       font-style: normal;
-      color: var(--yellow);
+      color: #D97706;
     }
     .cob-header p {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--muted);
-      line-height: 1.65;
+      line-height: 1.6;
+      text-wrap: pretty;
     }
 
+    /* Stat block único com divisores internos */
     .cob-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      max-width: 900px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--surface);
+      max-width: 880px;
       margin: 0 auto;
     }
 
     .cob-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 40px 32px;
+      padding: 48px 40px;
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      gap: 0;
-      transition: transform 0.3s, box-shadow 0.3s;
     }
-    .cob-item:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
-    }
+    .cob-item:last-child { border-right: none; }
 
-    .cob-icon {
-      width: 48px;
-      height: 48px;
-      background: var(--teal-bg);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--teal);
-      margin-bottom: 24px;
+    .cob-price-val {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 2.8vw, 2.6rem);
+      font-weight: 900;
+      color: #C2410C;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 6px;
     }
-    .cob-icon svg { width: 22px; height: 22px; }
+    .cob-price-val.positive { color: var(--teal); }
 
-    .cob-name {
+    .cob-label {
+      font-size: 0.68rem;
       font-weight: 700;
-      font-size: 1.05rem;
-      color: var(--text);
-      line-height: 1.3;
-      margin-bottom: 32px;
-      flex: 1;
-    }
-
-    .cob-price {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-    }
-    .cob-price .label {
-      font-size: 0.72rem;
-      font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
-    }
-    .cob-price .value {
-      font-family: var(--font-display);
-      font-size: 1.75rem;
-      font-weight: 900;
-      color: #C2410C;
-      letter-spacing: -0.03em;
-      line-height: 1;
+      margin-bottom: 28px;
     }
 
+    .cob-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-2);
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .cob-name svg { width: 15px; height: 15px; color: var(--teal); flex-shrink: 0; }
+
     @media (max-width: 768px) {
-      .cob-grid { grid-template-columns: 1fr; max-width: 420px; }
+      .cob-grid { grid-template-columns: 1fr; border-radius: var(--radius-md); }
+      .cob-item { border-right: none; border-bottom: 1px solid var(--border); padding: 32px 28px; }
+      .cob-item:last-child { border-bottom: none; }
     }
 
     /* ============================================================
@@ -2473,29 +2462,29 @@
       <div class="cob-grid">
 
         <div class="cob-item reveal d1">
-          <div class="cob-icon"><i data-lucide="wrench"></i></div>
-          <div class="cob-name">Troca de óleo + filtro</div>
-          <div class="cob-price">
-            <span class="label">Avulso em Goiânia</span>
-            <span class="value">R$180–R$320</span>
+          <div class="cob-price-val">R$180–R$320</div>
+          <div class="cob-label">Avulso em Goiânia</div>
+          <div class="cob-name">
+            <i data-lucide="wrench"></i>
+            Troca de óleo + filtro
           </div>
         </div>
 
         <div class="cob-item reveal d2">
-          <div class="cob-icon"><i data-lucide="link-2"></i></div>
-          <div class="cob-name">Verificação de correia dentada</div>
-          <div class="cob-price">
-            <span class="label">Avulso em Goiânia</span>
-            <span class="value">R$800–R$1.600</span>
+          <div class="cob-price-val">R$800–R$1.600</div>
+          <div class="cob-label">Avulso em Goiânia</div>
+          <div class="cob-name">
+            <i data-lucide="link-2"></i>
+            Correia dentada
           </div>
         </div>
 
         <div class="cob-item reveal d3">
-          <div class="cob-icon"><i data-lucide="smartphone"></i></div>
-          <div class="cob-name">Histórico digital do veículo</div>
-          <div class="cob-price">
-            <span class="label">Valor na revenda</span>
-            <span class="value" style="color:var(--teal)">+R$3.000–R$8.000</span>
+          <div class="cob-price-val positive">+R$3.000–R$8.000</div>
+          <div class="cob-label">Valor na revenda</div>
+          <div class="cob-name">
+            <i data-lucide="smartphone"></i>
+            Histórico digital do veículo
           </div>
         </div>
 
