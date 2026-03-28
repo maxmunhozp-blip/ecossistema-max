@@ -1856,7 +1856,7 @@
     <div class="nav-inner">
 
       <a href="#" class="nav-logo" aria-label="Officina App — Home">
-        <img src="logo-horizontal-white.png" id="nav-logo-img" alt="Officina App" />
+        <img src="logo-amber.png" id="nav-logo-img" alt="Officina App" style="height:40px;" />
       </a>
 
       <ul class="nav-links">
@@ -2733,9 +2733,11 @@
         navbar.classList.toggle('scrolled', isScrolled);
         if (isScrolled) {
           logoImg.src = 'logo-horizontal-dark.png';
+          logoImg.style.height = '26px';
           ctaBtn.style.cssText = 'padding:10px 22px;font-size:0.85rem;border-radius:8px;background:var(--teal);color:#fff;border:none;';
         } else {
-          logoImg.src = 'logo-horizontal-white.png';
+          logoImg.src = 'logo-amber.png';
+          logoImg.style.height = '40px';
           ctaBtn.style.cssText = 'padding:10px 22px;font-size:0.85rem;border-radius:8px;background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.4);';
         }
       }
