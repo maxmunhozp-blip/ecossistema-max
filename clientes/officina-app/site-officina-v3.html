@@ -56,7 +56,7 @@
       font-family: var(--font-d);
       letter-spacing: -0.02em;
       text-wrap: balance;
-      line-height: 1.0;
+      line-height: 1.08;
     }
     p { text-wrap: pretty; }
 
@@ -158,7 +158,7 @@
       box-shadow: 0 1px 12px rgba(0,0,0,0.06);
     }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; }
-    .nav-logo img { height: 32px; object-fit: contain; }
+    .nav-logo img { height: 40px; object-fit: contain; display: block; }
     .nav-right { display: flex; align-items: center; gap: 16px; }
     .nav-link { font-size: 0.875rem; font-weight: 500; color: var(--muted); transition: color 0.15s; }
     .nav-link:hover { color: var(--text); }
@@ -211,11 +211,11 @@
     .hero-eyebrow svg { width: 13px; height: 13px; }
 
     .hero-headline {
-      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-size: clamp(2.6rem, 5.5vw, 5rem);
       font-weight: 900;
       color: var(--text);
-      line-height: 0.95;
-      letter-spacing: -0.03em;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
       text-wrap: balance;
     }
     .hero-headline em { font-style: normal; color: var(--teal-dk); }
@@ -773,7 +773,7 @@
     <div class="container">
       <div class="nav-inner">
         <a href="#hero" class="nav-logo" aria-label="Officina App">
-          <img src="logo-teal.png" alt="Officina App" />
+          <img src="logo-teal.png" alt="Officina App" onerror="this.src='logo-black.png'" />
         </a>
         <div class="nav-right">
           <a href="#planos" class="nav-link">Planos</a>
