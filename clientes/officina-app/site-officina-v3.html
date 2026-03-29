@@ -140,10 +140,7 @@
     }
     .teal-bg { background: var(--teal-bg); }
 
-    /* ============================================================
-       GSAP REVEAL DEFAULTS (invisible before animation)
-    ============================================================ */
-    .reveal { opacity: 0; }
+    /* GSAP sets initial opacity via JS — no CSS needed here */
 
     /* ============================================================
        BUTTONS
@@ -1663,45 +1660,44 @@
       })
     }
 
+    // ============================================================
+    // INITIALIZE — set all reveals invisible before first paint
+    // ============================================================
+    gsap.set('.reveal', { opacity: 0, y: 28 })
+    gsap.set('.step', { opacity: 0, y: 40 })
+    gsap.set('.plan-card', { opacity: 0, y: 32 })
+    gsap.set('.dep-card', { opacity: 0, y: 28 })
+    gsap.set('.cob-row', { opacity: 0, x: -16 })
+
     // Hero reveals — stagger on load (not scroll)
     const heroItems = document.querySelectorAll('#hero .reveal')
-    gsap.from(heroItems, {
-      y: 32,
-      opacity: 0,
+    gsap.to(heroItems, {
+      y: 0,
+      opacity: 1,
       duration: 0.85,
       stagger: 0.14,
       delay: 0.3,
       ease: 'power3.out',
     })
-    heroItems.forEach(el => el.style.opacity = '')
 
-    // All other reveals
-    document.querySelectorAll('.reveal:not(#hero .reveal)').forEach((el, i) => {
-      gsap.from(el, {
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 88%',
-          once: true,
-        },
-        y: 36,
-        opacity: 0,
+    // All other .reveal elements
+    document.querySelectorAll('.reveal:not(#hero .reveal)').forEach((el) => {
+      gsap.to(el, {
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+        y: 0,
+        opacity: 1,
         duration: 0.75,
         ease: 'power2.out',
-        onComplete: () => { el.style.opacity = ''; el.style.transform = ''; }
       })
     })
 
-    // Steps: stagger each step in the same container
+    // Steps: stagger
     const steps = document.querySelectorAll('.step')
     if (steps.length) {
-      gsap.from(steps, {
-        scrollTrigger: {
-          trigger: '.steps-wrap',
-          start: 'top 85%',
-          once: true,
-        },
-        y: 48,
-        opacity: 0,
+      gsap.to(steps, {
+        scrollTrigger: { trigger: '.steps-wrap', start: 'top 85%', once: true },
+        y: 0,
+        opacity: 1,
         duration: 0.8,
         stagger: 0.15,
         ease: 'power3.out',
@@ -1711,14 +1707,10 @@
     // Plan cards: stagger
     const planCards = document.querySelectorAll('.plan-card')
     if (planCards.length) {
-      gsap.from(planCards, {
-        scrollTrigger: {
-          trigger: '.plans-grid',
-          start: 'top 85%',
-          once: true,
-        },
-        y: 40,
-        opacity: 0,
+      gsap.to(planCards, {
+        scrollTrigger: { trigger: '.plans-grid', start: 'top 85%', once: true },
+        y: 0,
+        opacity: 1,
         duration: 0.7,
         stagger: 0.12,
         ease: 'power2.out',
@@ -1728,14 +1720,10 @@
     // Depoimento cards
     const depCards = document.querySelectorAll('.dep-card')
     if (depCards.length) {
-      gsap.from(depCards, {
-        scrollTrigger: {
-          trigger: '.dep-grid',
-          start: 'top 85%',
-          once: true,
-        },
-        y: 32,
-        opacity: 0,
+      gsap.to(depCards, {
+        scrollTrigger: { trigger: '.dep-grid', start: 'top 85%', once: true },
+        y: 0,
+        opacity: 1,
         duration: 0.65,
         stagger: 0.1,
         ease: 'power2.out',
@@ -1745,28 +1733,23 @@
     // Comparison table rows: stagger
     const cobRows = document.querySelectorAll('.cob-row')
     if (cobRows.length) {
-      gsap.from(cobRows, {
-        scrollTrigger: {
-          trigger: '.cob-table',
-          start: 'top 85%',
-          once: true,
-        },
-        x: -20,
-        opacity: 0,
+      gsap.to(cobRows, {
+        scrollTrigger: { trigger: '.cob-table', start: 'top 85%', once: true },
+        x: 0,
+        opacity: 1,
         duration: 0.5,
         stagger: 0.08,
         ease: 'power2.out',
       })
     }
 
-    // CTA final number counter animation (step nums are not real numbers here)
-    // but the cob-total-val values can animate in
-    const totals = document.querySelectorAll('.cob-total-val')
-    totals.forEach(el => {
-      gsap.from(el, {
+    // cob-total-val bounce in
+    gsap.set('.cob-total-val', { scale: 0.85, opacity: 0 })
+    document.querySelectorAll('.cob-total-val').forEach(el => {
+      gsap.to(el, {
         scrollTrigger: { trigger: '.cob-total', start: 'top 90%', once: true },
-        scale: 0.85,
-        opacity: 0,
+        scale: 1,
+        opacity: 1,
         duration: 0.6,
         ease: 'back.out(1.5)',
       })
