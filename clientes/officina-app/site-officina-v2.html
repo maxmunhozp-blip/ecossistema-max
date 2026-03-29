@@ -1308,76 +1308,91 @@
       text-wrap: pretty;
     }
 
-    /* Stat block único com divisores internos */
-    .cob-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    /* Tabela de comparação */
+    .cob-table-wrap {
+      max-width: 780px;
+      margin: 0 auto;
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       overflow: hidden;
       background: var(--surface);
-      max-width: 880px;
-      margin: 0 auto;
     }
 
-    .cob-item {
-      padding: 48px 40px;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
+    .cob-table-head {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
     }
-    .cob-item:last-child { border-right: none; }
-
-    .cob-price-val {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 2.8vw, 2.6rem);
-      font-weight: 900;
-      color: #C2410C;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .cob-price-val.positive { color: var(--teal); }
-
-    .cob-label {
-      font-size: 0.68rem;
+    .cob-th {
+      padding: 14px 24px;
+      font-size: var(--text-xs);
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 28px;
     }
+    .cob-th.highlight {
+      background: var(--teal);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cob-th.highlight svg { width: 13px; height: 13px; }
 
-    .cob-name {
+    .cob-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .cob-row:last-child { border-bottom: none; }
+    .cob-row:hover { background: rgba(26,158,143,0.03); }
+
+    .cob-cell {
+      padding: 18px 24px;
+      font-size: var(--text-sm);
+      color: var(--text-2);
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: var(--text-sm);
-      font-weight: 600;
-      color: var(--text-2);
-      margin-top: auto;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
     }
-    .cob-name svg { width: 14px; height: 14px; color: var(--teal); flex-shrink: 0; }
+    .cob-cell:last-child { border-right: none; }
+    .cob-cell svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-    .cob-included {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: var(--text-xs);
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 20px;
+    .cob-cell.service { font-weight: 600; color: var(--text); }
+    .cob-cell.price-avulso { font-family: var(--font-display); font-weight: 800; font-size: var(--text-md); color: var(--text); }
+    .cob-cell.incluso { color: var(--teal); font-weight: 700; font-size: var(--text-xs); letter-spacing: 0.06em; text-transform: uppercase; }
+    .cob-cell.incluso svg { color: var(--teal); }
+
+    .cob-total-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      background: linear-gradient(135deg, #F0FBF9, #E8F7F5);
+      border-top: 2px solid var(--teal);
     }
-    .cob-included svg { width: 13px; height: 13px; }
+    .cob-total-cell {
+      padding: 20px 24px;
+      border-right: 1px solid rgba(26,158,143,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .cob-total-cell:last-child { border-right: none; }
+    .cob-total-label { font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .cob-total-val { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 900; line-height: 1; }
+    .cob-total-val.bad { color: var(--text); }
+    .cob-total-val.good { color: var(--teal); }
 
-    @media (max-width: 768px) {
-      .cob-grid { grid-template-columns: 1fr; border-radius: var(--radius-md); }
-      .cob-item { border-right: none; border-bottom: 1px solid var(--border); padding: 32px 28px; }
-      .cob-item:last-child { border-bottom: none; }
+    @media (max-width: 640px) {
+      .cob-table-head,
+      .cob-row,
+      .cob-total-row { grid-template-columns: 1fr 1fr; }
+      .cob-th:first-child,
+      .cob-cell.service,
+      .cob-total-cell:first-child { display: none; }
     }
 
     /* ============================================================
@@ -2477,48 +2492,59 @@
           <i data-lucide="package-check" style="width:13px;height:13px;"></i>
           O que está incluso
         </div>
-        <h2>Cada item coberto <em style="color:#D97706">já pagou</em> o plano inteiro.</h2>
-        <p>Veja o custo real de cada serviço se você fosse pagar avulso — e quanto você paga com o PMP.</p>
+        <h2>Faça a conta. <em>O plano se paga sozinho.</em></h2>
+        <p>Um serviço avulso em Goiânia já cobre o plano inteiro. O resto do ano é proteção de graça.</p>
       </div>
 
-      <div class="cob-grid">
+      <div class="cob-table-wrap reveal">
 
-        <div class="cob-item reveal d1">
-          <div class="cob-price-val">R$180–R$320</div>
-          <div class="cob-label">Avulso em Goiânia</div>
-          <div class="cob-included">
-            <i data-lucide="check-circle"></i>
-            Incluso no plano Motor
-          </div>
-          <div class="cob-name">
-            <i data-lucide="wrench"></i>
-            Troca de óleo + filtro
+        <!-- Cabeçalho -->
+        <div class="cob-table-head">
+          <div class="cob-th">Serviço</div>
+          <div class="cob-th">Avulso em Goiânia</div>
+          <div class="cob-th highlight">
+            <i data-lucide="shield-check"></i>
+            Com PMP Motor
           </div>
         </div>
 
-        <div class="cob-item reveal d2">
-          <div class="cob-price-val">R$800–R$1.600</div>
-          <div class="cob-label">Avulso em Goiânia</div>
-          <div class="cob-included">
-            <i data-lucide="check-circle"></i>
-            Incluso no plano Motor
-          </div>
-          <div class="cob-name">
-            <i data-lucide="link-2"></i>
-            Correia dentada
-          </div>
+        <!-- Linhas -->
+        <div class="cob-row">
+          <div class="cob-cell service"><i data-lucide="wrench"></i> Troca de óleo + filtro</div>
+          <div class="cob-cell price-avulso">R$180–R$320</div>
+          <div class="cob-cell incluso"><i data-lucide="check-circle"></i> Incluso</div>
         </div>
 
-        <div class="cob-item reveal d3">
-          <div class="cob-price-val positive">+R$3.000–R$8.000</div>
-          <div class="cob-label">Valor na revenda</div>
-          <div class="cob-included">
-            <i data-lucide="check-circle"></i>
-            Incluso em todos os planos
+        <div class="cob-row">
+          <div class="cob-cell service"><i data-lucide="link-2"></i> Correia dentada</div>
+          <div class="cob-cell price-avulso">R$800–R$1.600</div>
+          <div class="cob-cell incluso"><i data-lucide="check-circle"></i> Incluso</div>
+        </div>
+
+        <div class="cob-row">
+          <div class="cob-cell service"><i data-lucide="zap"></i> Diagnóstico eletrônico OBD</div>
+          <div class="cob-cell price-avulso">R$120–R$200</div>
+          <div class="cob-cell incluso"><i data-lucide="check-circle"></i> Incluso</div>
+        </div>
+
+        <div class="cob-row">
+          <div class="cob-cell service"><i data-lucide="smartphone"></i> Histórico digital</div>
+          <div class="cob-cell price-avulso">Não existe avulso</div>
+          <div class="cob-cell incluso"><i data-lucide="check-circle"></i> Incluso</div>
+        </div>
+
+        <!-- Totais -->
+        <div class="cob-total-row">
+          <div class="cob-total-cell">
+            <span class="cob-total-label">Estimativa anual</span>
           </div>
-          <div class="cob-name">
-            <i data-lucide="smartphone"></i>
-            Histórico digital do veículo
+          <div class="cob-total-cell">
+            <span class="cob-total-label">Sem plano</span>
+            <span class="cob-total-val bad">R$2.400+</span>
+          </div>
+          <div class="cob-total-cell">
+            <span class="cob-total-label">Com PMP Motor</span>
+            <span class="cob-total-val good">R$89/mês</span>
           </div>
         </div>
 
