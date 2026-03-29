@@ -50,6 +50,7 @@
     }
 
     img { max-width: 100%; display: block; }
+    .nav-logo img { max-width: none; }
     a { color: inherit; text-decoration: none; }
 
     h1, h2, h3 {
@@ -158,7 +159,8 @@
       box-shadow: 0 1px 12px rgba(0,0,0,0.06);
     }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; }
-    .nav-logo img { height: 40px; object-fit: contain; display: block; }
+    .nav-logo { display: flex; align-items: center; flex-shrink: 0; overflow: visible; }
+    .nav-logo img { height: 44px; width: auto; max-width: none; display: block; }
     .nav-right { display: flex; align-items: center; gap: 16px; }
     .nav-link { font-size: 0.875rem; font-weight: 500; color: var(--muted); transition: color 0.15s; }
     .nav-link:hover { color: var(--text); }
@@ -773,7 +775,7 @@
     <div class="container">
       <div class="nav-inner">
         <a href="#hero" class="nav-logo" aria-label="Officina App">
-          <img src="logo-teal.png" alt="Officina App" onerror="this.src='logo-black.png'" />
+          <img src="logo-teal.png" alt="Officina App" style="height:44px;width:auto;max-width:none;display:block;" onerror="this.src='logo-black.png'" />
         </a>
         <div class="nav-right">
           <a href="#planos" class="nav-link">Planos</a>
