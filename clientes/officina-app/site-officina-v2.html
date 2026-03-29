@@ -2511,19 +2511,19 @@
         <!-- Linhas -->
         <div class="cob-row">
           <div class="cob-cell service"><i data-lucide="wrench"></i> Troca de óleo + filtro</div>
-          <div class="cob-cell price-avulso">R$180–R$320</div>
+          <div class="cob-cell price-avulso">R$120–R$220</div>
           <div class="cob-cell incluso"><i data-lucide="check-circle"></i> Incluso</div>
         </div>
 
         <div class="cob-row">
           <div class="cob-cell service"><i data-lucide="link-2"></i> Correia dentada</div>
-          <div class="cob-cell price-avulso">R$800–R$1.600</div>
+          <div class="cob-cell price-avulso">R$650–R$1.200</div>
           <div class="cob-cell incluso"><i data-lucide="check-circle"></i> Incluso</div>
         </div>
 
         <div class="cob-row">
           <div class="cob-cell service"><i data-lucide="zap"></i> Diagnóstico eletrônico OBD</div>
-          <div class="cob-cell price-avulso">R$120–R$200</div>
+          <div class="cob-cell price-avulso">R$60–R$120</div>
           <div class="cob-cell incluso"><i data-lucide="check-circle"></i> Incluso</div>
         </div>
 
@@ -2540,7 +2540,7 @@
           </div>
           <div class="cob-total-cell">
             <span class="cob-total-label">Sem plano</span>
-            <span class="cob-total-val bad">R$2.400+</span>
+            <span class="cob-total-val bad">R$1.800+</span>
           </div>
           <div class="cob-total-cell">
             <span class="cob-total-label">Com PMP Motor</span>
@@ -3263,7 +3263,7 @@
       const rev = document.getElementById('cRev').value;
 
       let risk = 30;
-      const costs = { popular: 1400, sedan: 2200, suv: 2800, pickupLeve: 3200 };
+      const costs = { popular: 2200, sedan: 3200, suv: 4000, pickupLeve: 4500 };
       let custo = costs[tipo] || 1400;
 
       if (ano === 'old') { risk += 20; custo *= 1.3; }
@@ -3279,7 +3279,7 @@
 
       risk = Math.min(risk, 96);
       custo = Math.round(custo / 100) * 100;
-      const eco = Math.round((custo - 599) / 100) * 100;
+      const eco = Math.round((custo - 1068) / 100) * 100;
 
       document.getElementById('resRisco').textContent = risk + '%';
       document.getElementById('resCusto').textContent = 'R$' + custo.toLocaleString('pt-BR');
