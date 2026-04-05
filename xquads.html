@@ -194,19 +194,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <div class="metrics">
       <div class="metric">
         <div class="metric-icon" style="background:rgba(234,128,73,.15)"><i data-lucide="shield" style="width:18px;height:18px;color:#ea8049"></i></div>
-        <div><div class="metric-num" id="count-squads">11</div><div class="metric-label">Squads</div></div>
+        <div><div class="metric-num" id="count-squads">12</div><div class="metric-label">Squads</div></div>
       </div>
       <div class="metric">
         <div class="metric-icon" style="background:rgba(59,168,86,.15)"><i data-lucide="users" style="width:18px;height:18px;color:#3ba856"></i></div>
-        <div><div class="metric-num">136</div><div class="metric-label">Agentes</div></div>
+        <div><div class="metric-num">166</div><div class="metric-label">Agentes</div></div>
       </div>
       <div class="metric">
         <div class="metric-icon" style="background:var(--purple-dim)"><i data-lucide="git-branch" style="width:18px;height:18px;color:#8b5cf6"></i></div>
-        <div><div class="metric-num">21</div><div class="metric-label">Workflows</div></div>
+        <div><div class="metric-num">24</div><div class="metric-label">Workflows</div></div>
       </div>
       <div class="metric">
         <div class="metric-icon" style="background:var(--yellow-dim)"><i data-lucide="list-checks" style="width:18px;height:18px;color:#fbbf24"></i></div>
-        <div><div class="metric-num">94</div><div class="metric-label">Tasks</div></div>
+        <div><div class="metric-num">109</div><div class="metric-label">Tasks</div></div>
       </div>
       <div class="metric">
         <div class="metric-icon" style="background:var(--orange-dim)"><i data-lucide="toggle-right" style="width:18px;height:18px;color:#ea8049"></i></div>
@@ -224,7 +224,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <div class="enabled-bar">
       <span class="enabled-bar-label"><i data-lucide="check-circle" style="width:14px;height:14px;color:#ea8049;display:inline;vertical-align:middle;margin-right:4px"></i> Squads habilitados no ecossistema:</span>
       <div class="enabled-tags" id="enabled-tags"><span class="enabled-empty">Nenhum squad habilitado ainda</span></div>
-      <span class="enabled-count" id="enabled-count">0 / 11</span>
+      <span class="enabled-count" id="enabled-count">0 / 12</span>
     </div>
 
     <div class="squad-grid" id="squad-grid"></div>
@@ -240,72 +240,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
   <!-- DOWNLOADS -->
   <div id="tab-downloads" class="section">
     <div class="section-title">Downloads</div>
-    <div class="section-sub">Pacotes prontos para instalar no seu ambiente de desenvolvimento</div>
-    <div class="downloads-grid">
-
-      <div class="dl-card">
-        <div class="dl-header">
-          <div class="dl-icon"><i data-lucide="package" style="width:22px;height:22px"></i></div>
-          <div>
-            <div class="dl-name">Pacote Xquads</div>
-            <div class="dl-sub">Todos os squads · Agentes · Workflows · Tasks</div>
-          </div>
-        </div>
-        <p class="dl-desc">Todos os 12 squads com agentes, workflows, tasks e configurações prontos para uso. Advisory Board, Brand, Copy, Cybersecurity, Data, Design, Hormozi, Movement, Storytelling, Traffic Masters, C-Level e Claude Code Mastery.</p>
-        <div class="dl-includes">
-          <div class="dl-includes-title">Incluído no pacote</div>
-          <div class="dl-includes-grid">
-            <div class="dl-include-item">96+ Agentes</div>
-            <div class="dl-include-item">Personas completas</div>
-            <div class="dl-include-item">Workflows</div>
-            <div class="dl-include-item">Fluxos automatizados</div>
-            <div class="dl-include-item">Tasks</div>
-            <div class="dl-include-item">Configs</div>
-          </div>
-        </div>
-        <div class="dl-steps">
-          <div class="dl-steps-title">Como instalar</div>
-          <div class="dl-step"><div class="dl-step-num">1</div><div class="dl-step-text">Baixar o arquivo ZIP</div></div>
-          <div class="dl-step"><div class="dl-step-num">2</div><div class="dl-step-text">Extrair para uma pasta</div></div>
-          <div class="dl-step"><div class="dl-step-num">3</div><div class="dl-step-text">Copiar pasta <code style="font-size:11px;background:var(--bg);padding:2px 5px;border-radius:4px;color:#a78bfa">squads/</code> para o projeto aios-core</div></div>
-          <div class="dl-step"><div class="dl-step-num">4</div><div class="dl-step-text">Agentes, workflows e tasks ficam disponíveis</div></div>
-        </div>
-        <div class="dl-buttons">
-          <a href="https://github.com/SynkraAI/aios-core" target="_blank" class="btn-primary"><i data-lucide="download" style="width:14px;height:14px"></i> Baixar Xquads (ZIP)</a>
-          <a href="https://github.com/SynkraAI/aios-core" target="_blank" class="btn-secondary"><i data-lucide="github" style="width:14px;height:14px"></i> Ver no GitHub</a>
-        </div>
+    <div class="section-sub">Arquivos ZIP e scripts de instalação para cada squad — direto do ecossistema</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px">
+      <div style="width:36px;height:36px;border-radius:9px;background:var(--orange-dim);border:1px solid var(--orange-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="info" style="width:16px;height:16px;color:var(--orange)"></i></div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:2px">Como instalar</div>
+        <div style="font-size:12px;color:var(--text-muted)"><strong style="color:var(--text)">ZIP</strong> — baixe e extraia o conteúdo no seu projeto &nbsp;·&nbsp; <strong style="color:var(--text)">Script .sh</strong> — rode no terminal para instalar a skill no Claude Code automaticamente</div>
       </div>
-
-      <div class="dl-card">
-        <div class="dl-header">
-          <div class="dl-icon" style="background:var(--purple-dim);border-color:rgba(139,92,246,.25)"><i data-lucide="cpu" style="width:22px;height:22px;color:#8b5cf6"></i></div>
-          <div>
-            <div class="dl-name">Synkra AIOS Core</div>
-            <div class="dl-sub">Framework completo · CLI · Orquestração</div>
-          </div>
-        </div>
-        <p class="dl-desc">Repositório completo do framework AIOS. Inclui o core do sistema, CLI, orquestração de agentes, sistema de squads, templates e toda a infraestrutura para desenvolvimento orientado por IA.</p>
-        <div class="dl-includes">
-          <div class="dl-includes-title">Pré-requisitos</div>
-          <div class="dl-includes-grid">
-            <div class="dl-include-item">Node.js 18+</div>
-            <div class="dl-include-item">Git</div>
-            <div class="dl-include-item">Claude Code CLI</div>
-            <div class="dl-include-item">npm</div>
-          </div>
-        </div>
-        <div class="dl-steps">
-          <div class="dl-steps-title">Instalação</div>
-          <div class="dl-step"><div class="dl-step-num">1</div><div class="dl-step-text"><code class="dl-step-code">git clone https://github.com/SynkraAI/aios-core.git</code></div></div>
-          <div class="dl-step"><div class="dl-step-num">2</div><div class="dl-step-text"><code class="dl-step-code">cd aios-core && npm install</code></div></div>
-          <div class="dl-step"><div class="dl-step-num">3</div><div class="dl-step-text"><code class="dl-step-code">npx aios-core install</code></div></div>
-        </div>
-        <div class="dl-buttons">
-          <a href="https://github.com/SynkraAI/aios-core" target="_blank" class="btn-secondary" style="border-color:rgba(139,92,246,.4);color:#8b5cf6"><i data-lucide="github" style="width:14px;height:14px"></i> Acessar Repositório no GitHub</a>
-        </div>
-      </div>
-
     </div>
+    <div id="dl-grid" class="downloads-grid"></div>
   </div>
 
   <!-- SOBRE -->
@@ -417,6 +360,30 @@ triggers:
 - CAIO — IA strategy, automação, futuro
 ## Como usar
 Peça "c-level" + sua situação para receber análise de todos os ângulos executivos.`,
+
+  'copy-master': `---
+name: xquads-copy-master
+description: Squad mestre de copywriting com 30 agentes — orquestra todos os copywriters lendários + frameworks avançados de persuasão. O squad mais completo para copy de alta conversão, lançamentos, VSL e email marketing.
+triggers:
+  - copy master
+  - master copy
+  - copywriting avançado
+  - persuasão máxima
+  - copy de lançamento
+  - copy mestre
+  - vsl
+  - sequência de email
+---
+# Copy Master — Xquads
+O squad de copywriting mais completo — 30 agentes orquestrados para copy de alta conversão.
+## Arquitetura
+- Orquestrador Master — Direciona qual especialista usar em cada etapa
+- 22 copywriters lendários (Halbert, Schwartz, Ogilvy, Sugarman, Kennedy...)
+- 7 especialistas em formatos (VSL, Email, Landing Page, Social, Anúncio, SMS, Pitch)
+## Quando usar
+Projetos complexos que exigem múltiplos ângulos de copy — lançamentos, funis completos, campanhas integradas.
+## Como usar
+Peça "copy master" + seu produto/oferta completa para ativar o orquestrador.`,
 
   'copy-squad': `---
 name: xquads-copy-squad
@@ -614,51 +581,44 @@ Peça "traffic masters" + seu desafio de tráfego.`
 };
 
 // ─── Squad data ───────────────────────────────────────────────────────────
+const VPS_BASE = 'https://ecossistema.tracktor.com.br/downloads/squads';
 const SQUADS = [
   {id:'advisory-board', name:'Advisory Board', version:'v1.0.0', icon:'🧠', agents:11, tasks:7, workflows:2,
    desc:'Board de 11 conselheiros estratégicos — Ray Dalio, Charlie Munger, Naval Ravikant, Peter Thiel, Reid Hoffman, Simon Sinek, Brené Brown e mais.',
-   tags:['strategy','investment','leadership','mental-models','frameworks'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/advisory-board.zip -o advisory-board.zip'},
+   tags:['strategy','investment','leadership','mental-models','frameworks']},
   {id:'brand-squad', name:'Brand Squad', version:'v1.0.0', icon:'🎯', agents:15, tasks:9, workflows:2,
    desc:'Squad definitivo de estratégia de marca — 10 pensadores lendários de branding clonados como agentes de IA, mais 4 especialistas e 1 orquestrador.',
-   tags:['branding','brand-strategy','positioning','identity','narrative'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/brand-squad.zip -o brand-squad.zip'},
+   tags:['branding','brand-strategy','positioning','identity','narrative']},
   {id:'c-level', name:'C-Level Squad', version:'v1.0.0', icon:'👔', agents:6, tasks:7, workflows:2,
    desc:'C-suite virtual de 6 executivos — CEO (Vision Chief), COO, CMO, CTO, CIO, CAIO. Estratégia, operações, marketing, tecnologia e AI.',
-   tags:['c-suite','strategy','operations','marketing','technology'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/c-level.zip -o c-level.zip'},
+   tags:['c-suite','strategy','operations','marketing','technology']},
+  {id:'copy-master', name:'Copy Master', version:'v1.0.0', icon:'👑', agents:30, tasks:15, workflows:3,
+   desc:'Squad mestre de copywriting — orquestra todos os 22 copywriters lendários + frameworks avançados de persuasão. O squad mais completo para copy de alta conversão.',
+   tags:['copywriting','master','orchestration','persuasion','conversion']},
   {id:'copy-squad', name:'Copy Squad', version:'v1.0.0', icon:'✍️', agents:23, tasks:13, workflows:2,
    desc:'Squad de elite com 23 agentes de copywriting — 22 copywriters lendários (Halbert, Schwartz, Ogilvy, Sugarman...) + 1 orquestrador.',
-   tags:['copywriting','direct-response','sales-letter','email','hooks'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/copy-squad.zip -o copy-squad.zip'},
+   tags:['copywriting','direct-response','sales-letter','email','hooks']},
   {id:'cybersecurity', name:'Cybersecurity Squad', version:'v1.0.0', icon:'🛡️', agents:15, tasks:9, workflows:2,
    desc:'Squad de 15 agentes de cibersegurança. Pentest, red team, blue team, AppSec, incident response, recon, exploitation — com framework ético.',
-   tags:['pentesting','red-team','blue-team','appsec','incident-response'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/cybersecurity.zip -o cybersecurity.zip'},
+   tags:['pentesting','red-team','blue-team','appsec','incident-response']},
   {id:'data-squad', name:'Data Squad', version:'v1.0.0', icon:'📊', agents:7, tasks:7, workflows:2,
    desc:'Squad de 7 estrategistas data-driven — analytics (Kaushik), CLV (Fader), growth (Ellis), community (Spinks), customer success (Mehta).',
-   tags:['analytics','growth','customer-success','community','data'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/data-squad.zip -o data-squad.zip'},
+   tags:['analytics','growth','customer-success','community','data']},
   {id:'design-squad', name:'Design Squad', version:'v1.0.0', icon:'🎨', agents:8, tasks:8, workflows:2,
    desc:'Squad de design operations — 3 experts (Brad Frost, Dan Mall, Dave Malouf) + 4 especialistas + 1 orquestrador.',
-   tags:['design-systems','ux','ui','atomic-design','operations'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/design-squad.zip -o design-squad.zip'},
+   tags:['design-systems','ux','ui','atomic-design','operations']},
   {id:'hormozi-squad', name:'Hormozi Squad', version:'v1.0.0', icon:'💰', agents:16, tasks:10, workflows:2,
    desc:'Squad de 16 agentes implementando os frameworks de Alex Hormozi. Offers, leads, pricing, sales, content, hooks, launch, retention, scaling.',
-   tags:['hormozi','offers','leads','pricing','sales'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/hormozi-squad.zip -o hormozi-squad.zip'},
+   tags:['hormozi','offers','leads','pricing','sales']},
   {id:'movement-squad', name:'Movement Squad', version:'v1.0.0', icon:'⚡', agents:7, tasks:7, workflows:1,
    desc:'Squad de 7 agentes para construção de movimentos. Fenomenologia, identidade, manifestos, ciclos de crescimento, medição de impacto.',
-   tags:['movement','community','social-impact','identity','manifesto'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/movement-squad.zip -o movement-squad.zip'},
+   tags:['movement','community','social-impact','identity','manifesto']},
   {id:'storytelling-squad', name:'Storytelling Squad', version:'v1.0.0', icon:'📖', agents:12, tasks:8, workflows:2,
    desc:'Squad de 12 mestres do storytelling. Mitologia, screenwriting, narrativa pessoal, business storytelling, improviso, pitching, movimentos sociais.',
-   tags:['storytelling','narrative','screenplay','presentation','pitching'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/storytelling-squad.zip -o storytelling-squad.zip'},
+   tags:['storytelling','narrative','screenplay','presentation','pitching']},
   {id:'traffic-masters', name:'Traffic Masters', version:'v1.0.0', icon:'🚀', agents:16, tasks:9, workflows:2,
    desc:'Squad de 16 agentes especialistas em tráfego pago. Facebook, YouTube, Google Ads, media buying, creative analysis, scaling, tracking.',
-   tags:['traffic','ads','facebook','google','scaling'],
-   cmd:'curl -sL https://github.com/SynkraAI/aios-core/raw/main/squads/traffic-masters.zip -o traffic-masters.zip'},
+   tags:['traffic','ads','facebook','google','scaling']},
 ];
 
 // ─── State ────────────────────────────────────────────────────────────────
@@ -699,10 +659,15 @@ function renderSquads(){
         <div class="squad-tags">${tags}</div>
         <div class="install-panel">
           <div class="install-panel-label"><i data-lucide="check-circle-2" style="width:12px;height:12px"></i> Squad habilitado</div>
-          <button class="install-panel-btn" onclick="installOne('${s.id}')">
-            <i data-lucide="download" style="width:12px;height:12px"></i> Instalar no ecossistema
-          </button>
-          <div class="install-panel-note">Gera um script .sh — rode no terminal para instalar a skill</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
+            <a href="${VPS_BASE}/${s.id}.zip" download class="install-panel-btn" style="background:var(--surface-hover);border:1px solid var(--border-strong);color:var(--text)">
+              <i data-lucide="package" style="width:12px;height:12px"></i> Baixar ZIP
+            </a>
+            <button class="install-panel-btn" onclick="installOne('${s.id}')">
+              <i data-lucide="terminal" style="width:12px;height:12px"></i> Script .sh
+            </button>
+          </div>
+          <div class="install-panel-note">ZIP = arquivo direto · Script .sh = instala automaticamente no Claude Code</div>
         </div>
       </div>`;
   });
@@ -742,13 +707,13 @@ function updateEnabledBar(state){
     if(bar) bar.classList.add('show');
   }
   countEl.textContent = `${keys.length} / ${SQUADS.length}`;
+  if(document.getElementById('count-squads')) document.getElementById('count-squads').textContent = SQUADS.length;
   if(metricEl) metricEl.textContent = keys.length;
 }
 
 // ─── Gerar script de instalação ───────────────────────────────────────────
 function buildScript(ids){
-  const base = `${navigator.platform.includes('Mac')||true ? `${process?.env?.HOME||'~'}` : '~'}`;
-  let sh = `#!/bin/bash\n# Xquads — Instalar squads no ecossistema Claude Code\n# Gerado em: ${new Date().toLocaleString('pt-BR')}\n\nBASE="$HOME/.claude/plugins/cache/local"\necho "🚀 Instalando ${ids.length} squad(s) Xquads..."\n\n`;
+  let sh = `#!/bin/bash\n# Xquads — Instalar squads no ecossistema Claude Code\n# Gerado em: ${new Date().toLocaleString('pt-BR')}\n\nBASE="$HOME/.claude/plugins/cache/local"\nBASE_URL="${VPS_BASE}"\necho "Instalando ${ids.length} squad(s) Xquads..."\n\n`;
   ids.forEach(id => {
     const content = SKILL_TEMPLATES[id];
     if(!content) return;
@@ -758,9 +723,11 @@ function buildScript(ids){
     sh += `cat > "$BASE/${slug}/1.0.0/skills/${slug}/SKILL.md" << 'SKILLEOF'\n`;
     sh += content + '\n';
     sh += `SKILLEOF\n`;
-    sh += `echo "  ✓ ${id} instalado"\n\n`;
+    sh += `# Download ZIP (opcional — coloque em ~/.claude/squads/)\n`;
+    sh += `# curl -sL "$BASE_URL/${id}.zip" -o "$HOME/.claude/squads/${id}.zip"\n`;
+    sh += `echo "  OK ${id}"\n\n`;
   });
-  sh += `echo ""\necho "✅ Instalação concluída! Reinicie o Claude Code para ativar os squads."\n`;
+  sh += `echo ""\necho "Instalacao concluida! Reinicie o Claude Code para ativar os squads."\n`;
   return sh;
 }
 
@@ -807,8 +774,47 @@ function showToast(msg, type='orange'){
   t._t = setTimeout(()=>t.classList.remove('show'), 2200);
 }
 
+// ─── Render downloads ─────────────────────────────────────────────────────
+function renderDownloads(){
+  const grid = document.getElementById('dl-grid');
+  if(!grid) return;
+  grid.innerHTML = SQUADS.map(s => `
+    <div class="dl-card">
+      <div class="dl-header">
+        <div class="dl-icon"><span style="font-size:22px">${s.icon}</span></div>
+        <div>
+          <div class="dl-name">${s.name}</div>
+          <div class="dl-sub">${s.version} · ${s.agents} agentes · ${s.workflows} workflows · ${s.tasks} tasks</div>
+        </div>
+      </div>
+      <p class="dl-desc">${s.desc}</p>
+      <div class="dl-includes">
+        <div class="dl-includes-title">Tags</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">${s.tags.map(t=>`<span style="font-size:10px;color:var(--text-muted);background:var(--surface-alt);border:1px solid var(--border);padding:2px 7px;border-radius:8px">${t}</span>`).join('')}</div>
+      </div>
+      <div class="dl-buttons">
+        <a href="${VPS_BASE}/${s.id}.zip" download class="btn-primary">
+          <i data-lucide="package" style="width:14px;height:14px"></i> Baixar ZIP
+        </a>
+        <button class="btn-secondary" onclick="installOneDirect('${s.id}')">
+          <i data-lucide="terminal" style="width:14px;height:14px"></i> Gerar script .sh
+        </button>
+      </div>
+    </div>`).join('');
+  if(window.lucide) lucide.createIcons();
+}
+
+function installOneDirect(id){
+  const sq = SQUADS.find(s=>s.id===id);
+  if(!sq) return;
+  const script = buildScript([id]);
+  download(`install-xquads-${id}.sh`, script);
+  showToast(`Script gerado — rode no terminal para instalar ${sq.name}`, 'orange');
+}
+
 // ─── Init ─────────────────────────────────────────────────────────────────
 renderSquads();
+renderDownloads();
 lucide.createIcons();
 </script>
 </body>
