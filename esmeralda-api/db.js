@@ -101,7 +101,7 @@ if (count === 0) {
   const insertTask = db.prepare('INSERT INTO tasks (title, subtitle, category, type, client_id, position) VALUES (?, ?, ?, ?, ?, ?)');
   insertTask.run('Cobrar Gustavo — CNPJ novo', 'Nota fria pro Grupo Expo. Risco fiscal.', 'empresa', 'urgente', 1, 0);
   insertTask.run('Postar Reels Tojiro Mooca', null, 'agencia', 'hoje', 3, 0);
-  insertTask.run('Ligar Amanda — AdvocaciaIA', null, 'foguete', 'hoje', null, 1);
+  insertTask.run('Ligar Amanda — CorretorIA', null, 'foguete', 'hoje', null, 1);
   insertTask.run('Msg pro Gustavo', null, 'empresa', 'hoje', null, 2);
 
   const insertMilestone = db.prepare('INSERT INTO milestones (title, value, position) VALUES (?, ?, ?)');
