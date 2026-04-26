@@ -96,7 +96,7 @@ body {
 
 /* ===== Views ===== */
 .view { display: none; }
-.view.active { display: flex; flex-direction: column; min-height: 100vh; }
+.view.active { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
 /* ===== Focus Bar ===== */
 .focus-bar {
@@ -205,6 +205,8 @@ body {
   width: 100%;
   margin: 0 auto;
   padding: 0 20px;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .chat-messages {
