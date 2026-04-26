@@ -10,30 +10,20 @@ const headers = {
 
 // ===== State =====
 let dashboardData = null;
-let allTasks = [];
-let inboxFilter = 'all';
+let focusTasks = [];
+let focusIndex = 0;
 
 // ===== Init =====
 document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
-  setGreeting();
-  loadDashboard();
-  loadAllTasks();
+  loadDashboard().then(() => {
+    setupFocus();
+    greetUser();
+  });
   setupChat();
   setupSidebar();
   setupModal();
-  setupInbox();
-  setupInboxFilters();
 });
-
-// ===== Greeting =====
-function setGreeting() {
-  const hour = new Date().getHours();
-  let greeting = 'Boa noite, Max';
-  if (hour < 12) greeting = 'Bom dia, Max';
-  else if (hour < 18) greeting = 'Boa tarde, Max';
-  document.getElementById('greeting').textContent = greeting;
-}
 
 // ===== Sidebar / Views =====
 function setupSidebar() {
@@ -45,152 +35,221 @@ function setupSidebar() {
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById(`view-${view}`).classList.add('active');
 
-      // Refresh data when switching views
       if (view === 'agencia') renderAgenciaView();
       if (view === 'foguetes') renderFoguetesView();
-      if (view === 'inbox') { loadAllTasks(); }
-      if (view === 'config') renderConfigView();
+      if (view === 'pendencias') renderPendenciasView();
     });
   });
 }
 
-// ===== Dashboard =====
+function goHome() {
+  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('[data-view="home"]').classList.add('active');
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-home').classList.add('active');
+}
+window.goHome = goHome;
+
+// ===== Dashboard Data =====
 async function loadDashboard() {
   try {
     const res = await fetch(`${API_URL}/dashboard`, { headers });
     if (!res.ok) throw new Error('API error');
     dashboardData = await res.json();
-    renderPainel();
   } catch (err) {
     console.error('Erro ao carregar dashboard:', err);
   }
 }
 
-function renderPainel() {
-  if (!dashboardData) return;
-  renderUrgencias(dashboardData.tasks.urgente);
-  renderHoje(dashboardData.tasks.hoje);
-  renderClients(dashboardData.clients);
-  renderMapa(dashboardData.milestones, dashboardData.summary);
-  renderPendencias(dashboardData.pendencias);
+// ===== Focus Mode =====
+function setupFocus() {
+  if (!dashboardData) {
+    document.getElementById('focus-bar').classList.add('empty');
+    return;
+  }
+
+  // Gather today's tasks: urgente first, then hoje (only not done)
+  const urgente = (dashboardData.tasks.urgente || []).filter(t => !t.done);
+  const hoje = (dashboardData.tasks.hoje || []).filter(t => !t.done);
+  focusTasks = [...urgente, ...hoje];
+
+  if (focusTasks.length === 0) {
+    document.getElementById('focus-bar').classList.add('empty');
+    return;
+  }
+
+  focusIndex = 0;
+  renderFocusTask();
+
+  document.getElementById('btn-done').addEventListener('click', async () => {
+    const task = focusTasks[focusIndex];
+    if (!task) return;
+    await fetch(`${API_URL}/tasks/${task.id}`, {
+      method: 'PATCH', headers, body: JSON.stringify({ done: 1 })
+    });
+    focusTasks.splice(focusIndex, 1);
+    if (focusIndex >= focusTasks.length) focusIndex = 0;
+    if (focusTasks.length === 0) {
+      document.getElementById('focus-bar').classList.add('empty');
+      appendBubble('assistant', 'Todas as tarefas de hoje feitas. Descansa ou me conta o que mais ta na sua cabeca.');
+    } else {
+      renderFocusTask();
+    }
+    await loadDashboard();
+  });
+
+  document.getElementById('btn-skip').addEventListener('click', () => {
+    focusIndex = (focusIndex + 1) % focusTasks.length;
+    renderFocusTask();
+  });
+}
+
+function renderFocusTask() {
+  const task = focusTasks[focusIndex];
+  if (!task) return;
+  document.getElementById('focus-task').textContent = task.title;
+  document.getElementById('focus-bar').classList.remove('empty');
+
+  // Progress: how many done out of original total
+  const total = focusTasks.length + focusIndex;
+  const doneCount = focusIndex;
+  const pct = total > 0 ? ((doneCount / (focusTasks.length + doneCount)) * 100) : 0;
+  document.getElementById('focus-progress').style.width = `${pct}%`;
+
   lucide.createIcons();
 }
 
-// ===== Urgencias =====
-function renderUrgencias(tasks) {
-  const list = document.getElementById('list-urgente');
-  if (tasks.length === 0) {
-    list.innerHTML = '<li class="task-item" style="color:var(--text-muted);font-size:13px;">Nenhuma urgencia</li>';
-    return;
+// ===== Greeting =====
+function greetUser() {
+  const hour = new Date().getHours();
+  let greeting = 'Boa noite';
+  if (hour < 12) greeting = 'Bom dia';
+  else if (hour < 18) greeting = 'Boa tarde';
+
+  let msg = `${greeting}, Max.`;
+
+  if (focusTasks.length > 0) {
+    msg += ` Voce tem ${focusTasks.length} coisa${focusTasks.length > 1 ? 's' : ''} pra hoje.`;
+    msg += ` A primeira: "${focusTasks[0].title}".`;
+    msg += `\n\nFala comigo se precisar de ajuda ou se quiser despejar o que ta na cabeca.`;
+  } else {
+    msg += ` Nenhuma tarefa pra hoje ainda.`;
+    msg += `\n\nMe conta o que ta rolando — eu organizo pra voce.`;
   }
-  list.innerHTML = tasks.map(t => `
-    <li class="task-item task-item-urgente">
-      <span class="task-dot"></span>
-      <div class="task-content">
-        <div class="task-title">${esc(t.title)}</div>
-        ${t.subtitle ? `<div class="task-subtitle">${esc(t.subtitle)}</div>` : ''}
-      </div>
-      <button class="btn-icon danger" onclick="deleteTask(${t.id})" title="Remover"><i data-lucide="x" class="icon-sm"></i></button>
-    </li>
-  `).join('');
+
+  appendBubble('assistant', msg);
 }
 
-// ===== Hoje =====
-function renderHoje(tasks) {
-  const list = document.getElementById('list-hoje');
-  const active = tasks.filter(t => !t.done);
-  document.getElementById('hoje-count').textContent = `${active.length}/3`;
-  list.innerHTML = tasks.map(t => `
-    <li class="task-item">
-      <input type="checkbox" class="task-check" data-id="${t.id}" ${t.done ? 'checked' : ''}>
-      <div class="task-content">
-        <div class="task-title ${t.done ? 'done' : ''}">${esc(t.title)}</div>
-        ${t.category ? `<span class="task-tag">${esc(t.category)}</span>` : ''}
-      </div>
-      <button class="btn-icon danger" onclick="deleteTask(${t.id})" title="Remover"><i data-lucide="x" class="icon-sm"></i></button>
-    </li>
-  `).join('');
+// ===== Chat =====
+function setupChat() {
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-text');
 
-  list.querySelectorAll('.task-check').forEach(cb => {
-    cb.addEventListener('change', () => toggleTask(cb.dataset.id, cb.checked));
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    sendChat(msg);
+  });
+
+  document.querySelectorAll('.suggestion').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sendChat(btn.dataset.msg);
+      document.getElementById('chat-suggestions').style.display = 'none';
+    });
   });
 }
 
-// ===== Clients (painel card) =====
-function renderClients(clients) {
-  const list = document.getElementById('list-clients');
-  const maxRevenue = Math.max(...clients.map(c => c.revenue));
-  const total = clients.reduce((sum, c) => sum + c.revenue, 0);
+async function sendChat(message) {
+  const container = document.getElementById('chat-messages');
+  const suggestions = document.getElementById('chat-suggestions');
 
-  list.innerHTML = clients.map(c => `
-    <li class="client-item">
-      <span class="client-name">${esc(c.name)}${c.alert ? `<span class="client-alert" title="${esc(c.alert)}"> !</span>` : ''}</span>
-      <div class="client-bar-container">
-        <div class="client-bar" style="width:${(c.revenue / maxRevenue * 100).toFixed(0)}%"></div>
-      </div>
-      <span class="client-revenue">R$${formatNum(c.revenue)}</span>
-    </li>
-  `).join('');
+  appendBubble('user', message);
+  suggestions.style.display = 'none';
 
-  document.getElementById('total-revenue').textContent = `Total: R$${formatNum(total)}/mes`;
+  const typing = document.createElement('div');
+  typing.className = 'chat-typing';
+  typing.textContent = 'Pensando';
+  container.appendChild(typing);
+  container.scrollTop = container.scrollHeight;
+
+  try {
+    const res = await fetch(`${API_URL}/chat`, {
+      method: 'POST', headers, body: JSON.stringify({ message })
+    });
+    const data = await res.json();
+    typing.remove();
+
+    if (data.error) {
+      appendBubble('assistant', 'Erro: ' + data.error);
+      return;
+    }
+
+    let html = esc(data.message);
+    if (data.actions && data.actions.length > 0) {
+      html += '<div class="actions-list">';
+      data.actions.forEach(a => {
+        html += `<span class="action-badge">${esc(a.description)}</span>`;
+      });
+      html += '</div>';
+      // Refresh data after AI actions
+      await loadDashboard();
+      refreshFocus();
+    }
+
+    appendBubbleHTML('assistant', html);
+  } catch (err) {
+    typing.remove();
+    appendBubble('assistant', 'Erro ao conectar com o servidor.');
+  }
 }
 
-// ===== Mapa da Liberdade =====
-function renderMapa(milestones, summary) {
-  const goal = 8340;
-  const current = summary.saasRevenue;
-  const pct = Math.min((current / goal) * 100, 100);
+function refreshFocus() {
+  if (!dashboardData) return;
+  const urgente = (dashboardData.tasks.urgente || []).filter(t => !t.done);
+  const hoje = (dashboardData.tasks.hoje || []).filter(t => !t.done);
+  focusTasks = [...urgente, ...hoje];
+  focusIndex = 0;
 
-  document.getElementById('saas-progress').style.width = `${pct}%`;
-  document.getElementById('saas-label').textContent = `R$${formatNum(current)} / R$${formatNum(goal)} meta`;
-
-  let phase = 'Fase 1 — Construindo';
-  if (current >= 3000) phase = 'Fase 2 — Respirando';
-  if (current >= 8340) phase = 'Fase 3 — Livre';
-  document.getElementById('phase-badge').textContent = phase;
-
-  const list = document.getElementById('list-milestones');
-  list.innerHTML = milestones.map(m => `
-    <li class="milestone-item">
-      <span class="milestone-dot ${m.done ? 'done' : ''}" data-id="${m.id}"></span>
-      <span class="milestone-title ${m.done ? 'done' : ''}">${esc(m.title)}</span>
-      ${m.value ? `<span class="milestone-value">${esc(m.value)}</span>` : ''}
-    </li>
-  `).join('');
-
-  list.querySelectorAll('.milestone-dot').forEach(dot => {
-    dot.addEventListener('click', () => toggleMilestone(dot.dataset.id, !dot.classList.contains('done')));
-  });
+  if (focusTasks.length === 0) {
+    document.getElementById('focus-bar').classList.add('empty');
+  } else {
+    renderFocusTask();
+  }
 }
 
-// ===== Pendencias =====
-function renderPendencias(pendencias) {
-  const container = document.getElementById('list-pendencias');
-  container.innerHTML = pendencias.map(p => `
-    <div class="pendencia-item">
-      <input type="checkbox" class="pendencia-check" data-id="${p.id}" ${p.done ? 'checked' : ''}>
-      <span class="pendencia-title ${p.done ? 'done' : ''}">${esc(p.title)}</span>
-    </div>
-  `).join('');
+function appendBubble(role, text) {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `chat-bubble ${role}`;
+  div.textContent = text;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
 
-  container.querySelectorAll('.pendencia-check').forEach(cb => {
-    cb.addEventListener('change', () => togglePendencia(cb.dataset.id, cb.checked));
-  });
+function appendBubbleHTML(role, html) {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `chat-bubble ${role}`;
+  div.innerHTML = html;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
 }
 
 // ===== VIEW: Agencia =====
 async function renderAgenciaView() {
+  if (!dashboardData) await loadDashboard();
   if (!dashboardData) return;
+
   const clients = dashboardData.clients;
   const total = clients.reduce((sum, c) => sum + c.revenue, 0);
 
-  // Summary bar
   document.getElementById('agencia-summary').innerHTML = `
     <div class="summary-item"><span class="summary-value">${clients.length}</span>clientes</div>
     <div class="summary-item"><span class="summary-value">R$${formatNum(total)}</span>/mes</div>
   `;
 
-  // Fetch tasks for all clients
   const container = document.getElementById('agencia-clients');
   container.innerHTML = '';
 
@@ -235,7 +294,6 @@ async function renderAgenciaView() {
     container.appendChild(div);
   }
 
-  // Bind checkbox events
   container.querySelectorAll('.task-check').forEach(cb => {
     cb.addEventListener('change', async () => {
       await toggleTask(cb.dataset.id, cb.checked);
@@ -247,9 +305,9 @@ async function renderAgenciaView() {
 }
 
 function toggleAccordion(header) {
-  const accordion = header.parentElement;
-  accordion.classList.toggle('open');
+  header.parentElement.classList.toggle('open');
 }
+window.toggleAccordion = toggleAccordion;
 
 async function addClientTask(e, clientId) {
   e.preventDefault();
@@ -258,8 +316,7 @@ async function addClientTask(e, clientId) {
   if (!title) return;
 
   const res = await fetch(`${API_URL}/clients/${clientId}/tasks`, {
-    method: 'POST', headers,
-    body: JSON.stringify({ title })
+    method: 'POST', headers, body: JSON.stringify({ title })
   });
 
   if (res.ok) {
@@ -268,6 +325,7 @@ async function addClientTask(e, clientId) {
     renderAgenciaView();
   }
 }
+window.addClientTask = addClientTask;
 
 async function editClient(id) {
   const client = dashboardData.clients.find(c => c.id === id);
@@ -288,10 +346,13 @@ async function editClient(id) {
   await loadDashboard();
   renderAgenciaView();
 }
+window.editClient = editClient;
 
 // ===== VIEW: Foguetes =====
 async function renderFoguetesView() {
+  if (!dashboardData) await loadDashboard();
   if (!dashboardData) return;
+
   const container = document.getElementById('foguetes-list');
   container.innerHTML = '';
 
@@ -337,7 +398,7 @@ async function renderFoguetesView() {
         <ul class="task-list">
           ${pending.map(t => `
             <li class="task-item">
-              <input type="checkbox" class="task-check" data-id="${t.id}" ${t.done ? 'checked' : ''}>
+              <input type="checkbox" class="task-check" data-id="${t.id}">
               <div class="task-content">
                 <div class="task-title">${esc(t.title)}</div>
                 ${t.subtitle ? `<div class="task-subtitle">${esc(t.subtitle)}</div>` : ''}
@@ -363,7 +424,6 @@ async function renderFoguetesView() {
     container.appendChild(div);
   }
 
-  // Bind checkboxes
   container.querySelectorAll('.task-check').forEach(cb => {
     cb.addEventListener('change', async () => {
       await toggleTask(cb.dataset.id, cb.checked);
@@ -381,8 +441,7 @@ async function addProjectTask(e, projectId) {
   if (!title) return;
 
   const res = await fetch(`${API_URL}/projects/${projectId}/tasks`, {
-    method: 'POST', headers,
-    body: JSON.stringify({ title })
+    method: 'POST', headers, body: JSON.stringify({ title })
   });
 
   if (res.ok) {
@@ -390,112 +449,29 @@ async function addProjectTask(e, projectId) {
     renderFoguetesView();
   }
 }
+window.addProjectTask = addProjectTask;
 
-// ===== VIEW: Inbox =====
-async function loadAllTasks() {
-  try {
-    const res = await fetch(`${API_URL}/tasks`, { headers });
-    if (!res.ok) return;
-    allTasks = await res.json();
-    renderInboxTasks();
-  } catch (err) {
-    console.error('Erro ao carregar tarefas:', err);
-  }
-}
+// ===== VIEW: Pendencias =====
+async function renderPendenciasView() {
+  if (!dashboardData) await loadDashboard();
+  if (!dashboardData) return;
 
-function setupInbox() {
-  const form = document.getElementById('inbox-form');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const input = document.getElementById('inbox-input');
-    const title = input.value.trim();
-    if (!title) return;
+  const container = document.getElementById('list-pendencias');
+  const pendencias = dashboardData.pendencias || [];
 
-    const type = document.getElementById('inbox-type').value;
-    const category = document.getElementById('inbox-category').value;
-
-    const res = await fetch(`${API_URL}/tasks`, {
-      method: 'POST', headers,
-      body: JSON.stringify({ title, type, category })
-    });
-
-    if (res.ok) {
-      input.value = '';
-      await loadAllTasks();
-      await loadDashboard();
-    } else {
-      const err = await res.json();
-      alert(err.error || 'Erro ao criar tarefa');
-    }
-  });
-}
-
-function setupInboxFilters() {
-  document.querySelectorAll('.filter-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      inboxFilter = tab.dataset.filter;
-      renderInboxTasks();
-    });
-  });
-}
-
-function renderInboxTasks() {
-  const list = document.getElementById('list-all-tasks');
-  let filtered = allTasks;
-
-  if (inboxFilter === 'hoje') filtered = allTasks.filter(t => t.type === 'hoje' && !t.done);
-  else if (inboxFilter === 'urgente') filtered = allTasks.filter(t => t.type === 'urgente' && !t.done);
-  else if (inboxFilter === 'done') filtered = allTasks.filter(t => t.done);
-  else filtered = allTasks.filter(t => !t.done);
-
-  if (filtered.length === 0) {
-    list.innerHTML = '<li class="task-item" style="color:var(--text-muted);font-size:13px;">Nenhuma tarefa</li>';
-    return;
-  }
-
-  list.innerHTML = filtered.map(t => `
-    <li class="task-item">
-      <input type="checkbox" class="task-check" data-id="${t.id}" ${t.done ? 'checked' : ''}>
-      <div class="task-content">
-        <div class="task-title ${t.done ? 'done' : ''}">${esc(t.title)}</div>
-        ${t.subtitle ? `<div class="task-subtitle">${esc(t.subtitle)}</div>` : ''}
-        <span class="task-tag">${esc(t.type)}</span>
-        ${t.category ? `<span class="task-tag">${esc(t.category)}</span>` : ''}
-      </div>
-      <button class="btn-icon danger" onclick="deleteTask(${t.id})" title="Remover"><i data-lucide="x" class="icon-sm"></i></button>
-    </li>
+  container.innerHTML = pendencias.map(p => `
+    <div class="pendencia-item">
+      <input type="checkbox" class="pendencia-check" data-id="${p.id}" ${p.done ? 'checked' : ''}>
+      <span class="pendencia-title ${p.done ? 'done' : ''}">${esc(p.title)}</span>
+    </div>
   `).join('');
 
-  list.querySelectorAll('.task-check').forEach(cb => {
-    cb.addEventListener('change', () => toggleTask(cb.dataset.id, cb.checked));
-  });
-
-  lucide.createIcons();
-}
-
-// ===== VIEW: Config =====
-function renderConfigView() {
-  document.getElementById('config-api-url').textContent = API_URL;
-
-  fetch(`${API_URL.replace('/api', '')}/health`, { headers })
-    .then(r => r.json())
-    .then(() => {
-      document.getElementById('config-api-status').textContent = 'Conectado';
-      document.getElementById('config-api-status').style.color = '#2d7a2d';
-    })
-    .catch(() => {
-      document.getElementById('config-api-status').textContent = 'Offline';
-      document.getElementById('config-api-status').style.color = '#c44';
+  container.querySelectorAll('.pendencia-check').forEach(cb => {
+    cb.addEventListener('change', async () => {
+      await togglePendencia(cb.dataset.id, cb.checked);
+      renderPendenciasView();
     });
-
-  if (dashboardData) {
-    document.getElementById('config-clients-count').textContent = dashboardData.clients.length;
-    const totalTasks = (dashboardData.tasks.urgente?.length || 0) + (dashboardData.tasks.hoje?.length || 0);
-    document.getElementById('config-tasks-count').textContent = totalTasks;
-    document.getElementById('config-projects-count').textContent = dashboardData.projects.length;
-  }
+  });
 }
 
 // ===== Modal =====
@@ -504,9 +480,6 @@ function setupModal() {
   document.getElementById('modal-close').addEventListener('click', closeModal);
   document.getElementById('modal-cancel').addEventListener('click', closeModal);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-
-  document.getElementById('btn-add-hoje').addEventListener('click', () => openModal('hoje'));
-  document.getElementById('btn-add-urgente').addEventListener('click', () => openModal('urgente'));
 
   document.getElementById('modal-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -527,7 +500,7 @@ function setupModal() {
     if (res.ok) {
       closeModal();
       await loadDashboard();
-      await loadAllTasks();
+      refreshFocus();
     } else {
       const err = await res.json();
       alert(err.error || 'Erro ao criar tarefa');
@@ -555,106 +528,27 @@ async function toggleTask(id, done) {
     method: 'PATCH', headers, body: JSON.stringify({ done: done ? 1 : 0 })
   });
   await loadDashboard();
-  await loadAllTasks();
 }
 
 async function deleteTask(id) {
   await fetch(`${API_URL}/tasks/${id}`, { method: 'DELETE', headers });
   await loadDashboard();
-  await loadAllTasks();
+  refreshFocus();
 }
+window.deleteTask = deleteTask;
 
 async function toggleMilestone(id, done) {
   await fetch(`${API_URL}/milestones/${id}`, {
     method: 'PATCH', headers, body: JSON.stringify({ done: done ? 1 : 0 })
   });
-  loadDashboard();
+  await loadDashboard();
 }
 
 async function togglePendencia(id, done) {
   await fetch(`${API_URL}/pendencias/${id}`, {
     method: 'PATCH', headers, body: JSON.stringify({ done: done ? 1 : 0 })
   });
-  loadDashboard();
-}
-
-// ===== Chat =====
-function setupChat() {
-  const form = document.getElementById('chat-form');
-  const input = document.getElementById('chat-text');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const msg = input.value.trim();
-    if (!msg) return;
-    input.value = '';
-    sendChat(msg);
-  });
-
-  document.querySelectorAll('.suggestion').forEach(btn => {
-    btn.addEventListener('click', () => sendChat(btn.dataset.msg));
-  });
-}
-
-async function sendChat(message) {
-  const container = document.getElementById('chat-messages');
-  const suggestions = document.getElementById('chat-suggestions');
-
-  appendBubble('user', message);
-  suggestions.style.display = 'none';
-
-  const typing = document.createElement('div');
-  typing.className = 'chat-typing';
-  typing.textContent = 'Pensando...';
-  container.appendChild(typing);
-  container.scrollTop = container.scrollHeight;
-
-  try {
-    const res = await fetch(`${API_URL}/chat`, {
-      method: 'POST', headers, body: JSON.stringify({ message })
-    });
-    const data = await res.json();
-    typing.remove();
-
-    if (data.error) {
-      appendBubble('assistant', 'Erro: ' + data.error);
-      return;
-    }
-
-    let html = esc(data.message);
-    if (data.actions && data.actions.length > 0) {
-      html += '<div class="actions-list">';
-      data.actions.forEach(a => {
-        html += `<span class="action-badge">${esc(a.description)}</span>`;
-      });
-      html += '</div>';
-      await loadDashboard();
-      await loadAllTasks();
-    }
-
-    appendBubbleHTML('assistant', html);
-  } catch (err) {
-    typing.remove();
-    appendBubble('assistant', 'Erro ao conectar com o servidor.');
-  }
-}
-
-function appendBubble(role, text) {
-  const container = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = `chat-bubble ${role}`;
-  div.textContent = text;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
-
-function appendBubbleHTML(role, html) {
-  const container = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = `chat-bubble ${role}`;
-  div.innerHTML = html;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  await loadDashboard();
 }
 
 // ===== Helpers =====
@@ -668,10 +562,3 @@ function esc(str) {
 function formatNum(n) {
   return new Intl.NumberFormat('pt-BR').format(n);
 }
-
-// Make functions available globally for onclick handlers
-window.deleteTask = deleteTask;
-window.editClient = editClient;
-window.toggleAccordion = toggleAccordion;
-window.addClientTask = addClientTask;
-window.addProjectTask = addProjectTask;

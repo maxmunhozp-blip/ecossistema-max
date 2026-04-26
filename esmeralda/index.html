@@ -8,12 +8,12 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body>
-  <!-- Sidebar -->
+  <!-- Sidebar (minimal) -->
   <aside class="sidebar">
     <div class="sidebar-logo">E</div>
     <nav class="sidebar-nav">
-      <button class="sidebar-btn active" data-view="painel" title="Painel">
-        <i data-lucide="layout-grid"></i>
+      <button class="sidebar-btn active" data-view="home" title="Home">
+        <i data-lucide="message-circle"></i>
       </button>
       <button class="sidebar-btn" data-view="agencia" title="Agencia">
         <i data-lucide="users"></i>
@@ -21,83 +21,55 @@
       <button class="sidebar-btn" data-view="foguetes" title="Foguetes">
         <i data-lucide="rocket"></i>
       </button>
-      <button class="sidebar-btn" data-view="inbox" title="Inbox">
-        <i data-lucide="inbox"></i>
-      </button>
-      <button class="sidebar-btn" data-view="config" title="Config">
-        <i data-lucide="settings"></i>
+      <button class="sidebar-btn" data-view="pendencias" title="Pendencias">
+        <i data-lucide="clipboard-list"></i>
       </button>
     </nav>
   </aside>
 
-  <!-- Main content -->
+  <!-- Main: Home (chat-first + focus) -->
   <main class="main">
-    <header class="main-header">
-      <h1 class="main-title">Esmeralda</h1>
-      <span class="main-subtitle" id="greeting"></span>
-    </header>
 
-    <!-- VIEW: Painel -->
-    <div class="view active" id="view-painel">
-      <div class="grid">
-        <!-- Card: Urgencias -->
-        <section class="card card-urgente" id="card-urgente">
-          <div class="card-header">
-            <h2 class="card-title"><i data-lucide="alert-triangle" class="icon-amber"></i> Urgencias</h2>
-            <button class="btn-add" id="btn-add-urgente" title="Adicionar urgencia"><i data-lucide="plus" class="icon-sm"></i></button>
-          </div>
-          <ul class="task-list" id="list-urgente"></ul>
-        </section>
+    <!-- VIEW: Home (default) -->
+    <div class="view active" id="view-home">
 
-        <!-- Card: Hoje -->
-        <section class="card" id="card-hoje">
-          <div class="card-header">
-            <h2 class="card-title"><i data-lucide="circle-check" class="icon-muted"></i> Hoje</h2>
-            <div class="card-header-right">
-              <span class="badge" id="hoje-count">0/3</span>
-              <button class="btn-add" id="btn-add-hoje" title="Adicionar tarefa"><i data-lucide="plus" class="icon-sm"></i></button>
-            </div>
+      <!-- Focus bar: one task at a time -->
+      <div class="focus-bar" id="focus-bar">
+        <div class="focus-bar-inner">
+          <div class="focus-left">
+            <span class="focus-label">Agora</span>
+            <span class="focus-task" id="focus-task">Carregando...</span>
           </div>
-          <ul class="task-list" id="list-hoje"></ul>
-        </section>
+          <div class="focus-right">
+            <button class="focus-btn done" id="btn-done"><i data-lucide="check"></i> Feito</button>
+            <button class="focus-btn skip" id="btn-skip">Pular</button>
+          </div>
+        </div>
+        <div class="focus-progress">
+          <div class="focus-progress-fill" id="focus-progress"></div>
+        </div>
+      </div>
 
-        <!-- Card: Agencia -->
-        <section class="card" id="card-agencia">
-          <div class="card-header">
-            <h2 class="card-title"><i data-lucide="briefcase" class="icon-muted"></i> Agencia</h2>
-          </div>
-          <ul class="client-list" id="list-clients"></ul>
-          <div class="card-footer" id="total-revenue"></div>
-        </section>
-
-        <!-- Card: Mapa da Liberdade -->
-        <section class="card" id="card-mapa">
-          <div class="card-header">
-            <h2 class="card-title"><i data-lucide="map" class="icon-muted"></i> Mapa da Liberdade</h2>
-            <span class="badge badge-phase" id="phase-badge">Fase 1</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" id="saas-progress"></div>
-          </div>
-          <div class="progress-label" id="saas-label"></div>
-          <ul class="milestone-list" id="list-milestones"></ul>
-        </section>
-
-        <!-- Card: Pendencias -->
-        <section class="card card-full" id="card-pendencias">
-          <div class="card-header">
-            <h2 class="card-title"><i data-lucide="clipboard-list" class="icon-muted"></i> Pendencias de empresa</h2>
-          </div>
-          <div class="pendencias-grid" id="list-pendencias"></div>
-        </section>
+      <!-- Chat (the main interface) -->
+      <div class="chat-area">
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-suggestions" id="chat-suggestions">
+          <button class="suggestion" data-msg="onde eu parei?">onde eu parei?</button>
+          <button class="suggestion" data-msg="organiza meu dia">organiza meu dia</button>
+          <button class="suggestion" data-msg="to travado, me ajuda">to travado, me ajuda</button>
+        </div>
+        <form class="chat-input" id="chat-form">
+          <input type="text" id="chat-text" placeholder="Fala o que ta na sua cabeca..." autocomplete="off">
+          <button type="submit"><i data-lucide="send"></i></button>
+        </form>
       </div>
     </div>
 
     <!-- VIEW: Agencia -->
     <div class="view" id="view-agencia">
       <div class="view-header">
+        <button class="btn-back" onclick="goHome()"><i data-lucide="arrow-left" class="icon-sm"></i> Voltar</button>
         <h2>Agencia</h2>
-        <span class="view-subtitle">Clientes ativos — clique pra expandir tarefas</span>
       </div>
       <div class="agencia-summary" id="agencia-summary"></div>
       <div class="single-column" id="agencia-clients"></div>
@@ -106,110 +78,28 @@
     <!-- VIEW: Foguetes -->
     <div class="view" id="view-foguetes">
       <div class="view-header">
+        <button class="btn-back" onclick="goHome()"><i data-lucide="arrow-left" class="icon-sm"></i> Voltar</button>
         <h2>Foguetes</h2>
-        <span class="view-subtitle">O que fazer agora pra cada projeto andar</span>
       </div>
       <div class="single-column" id="foguetes-list"></div>
     </div>
 
-    <!-- VIEW: Inbox -->
-    <div class="view" id="view-inbox">
+    <!-- VIEW: Pendencias -->
+    <div class="view" id="view-pendencias">
       <div class="view-header">
-        <h2>Inbox</h2>
-        <span class="view-subtitle">Capture rapido — organize depois</span>
+        <button class="btn-back" onclick="goHome()"><i data-lucide="arrow-left" class="icon-sm"></i> Voltar</button>
+        <h2>Pendencias de empresa</h2>
       </div>
       <div class="single-column">
         <section class="card card-wide">
-          <form class="inbox-form" id="inbox-form">
-            <input type="text" id="inbox-input" placeholder="O que ta na sua cabeca?" autocomplete="off">
-            <select id="inbox-type">
-              <option value="hoje">Hoje</option>
-              <option value="urgente">Urgente</option>
-            </select>
-            <select id="inbox-category">
-              <option value="geral">Geral</option>
-              <option value="agencia">Agencia</option>
-              <option value="foguete">Foguete</option>
-              <option value="empresa">Empresa</option>
-            </select>
-            <button type="submit" class="btn-primary">Adicionar</button>
-          </form>
-        </section>
-        <section class="card card-wide" id="inbox-all-tasks">
-          <div class="card-header">
-            <h2 class="card-title">Todas as tarefas</h2>
-            <div class="filter-tabs" id="inbox-filters">
-              <button class="filter-tab active" data-filter="all">Todas</button>
-              <button class="filter-tab" data-filter="hoje">Hoje</button>
-              <button class="filter-tab" data-filter="urgente">Urgente</button>
-              <button class="filter-tab" data-filter="done">Feitas</button>
-            </div>
-          </div>
-          <ul class="task-list" id="list-all-tasks"></ul>
+          <div class="pendencias-grid" id="list-pendencias"></div>
         </section>
       </div>
     </div>
 
-    <!-- VIEW: Config -->
-    <div class="view" id="view-config">
-      <div class="view-header">
-        <h2>Configuracoes</h2>
-        <span class="view-subtitle">Ajustes do painel</span>
-      </div>
-      <div class="single-column">
-        <section class="card card-wide">
-          <h3 class="config-section-title">API</h3>
-          <div class="config-row">
-            <span class="config-label">Status</span>
-            <span class="config-value" id="config-api-status">Verificando...</span>
-          </div>
-          <div class="config-row">
-            <span class="config-label">Endpoint</span>
-            <span class="config-value config-mono" id="config-api-url"></span>
-          </div>
-        </section>
-        <section class="card card-wide">
-          <h3 class="config-section-title">Dados</h3>
-          <div class="config-row">
-            <span class="config-label">Clientes</span>
-            <span class="config-value" id="config-clients-count">-</span>
-          </div>
-          <div class="config-row">
-            <span class="config-label">Tarefas</span>
-            <span class="config-value" id="config-tasks-count">-</span>
-          </div>
-          <div class="config-row">
-            <span class="config-label">Projetos SaaS</span>
-            <span class="config-value" id="config-projects-count">-</span>
-          </div>
-        </section>
-      </div>
-    </div>
   </main>
 
-  <!-- Chat panel -->
-  <aside class="chat-panel" id="chat-panel">
-    <div class="chat-header">
-      <span class="chat-title">Esmeralda IA</span>
-      <span class="chat-status" id="chat-status">online</span>
-    </div>
-    <div class="chat-messages" id="chat-messages">
-      <div class="chat-bubble assistant">
-        Fala, Max. No que posso te ajudar?
-      </div>
-    </div>
-    <div class="chat-suggestions" id="chat-suggestions">
-      <button class="suggestion" data-msg="onde eu parei?">onde eu parei?</button>
-      <button class="suggestion" data-msg="organiza meu dia">organiza meu dia</button>
-      <button class="suggestion" data-msg="o que falta no AdvocaciaIA?">o que falta no AdvocaciaIA?</button>
-    </div>
-    <form class="chat-input" id="chat-form">
-      <input type="text" id="chat-text" placeholder="Digite uma mensagem..." autocomplete="off">
-      <button type="submit"><i data-lucide="send"></i></button>
-    </form>
-  </aside>
-
-  <!-- Modal: Add/Edit Task -->
+  <!-- Modal: Add Task -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
       <div class="modal-header">
@@ -217,7 +107,6 @@
         <button class="modal-close" id="modal-close"><i data-lucide="x" class="icon-sm"></i></button>
       </div>
       <form id="modal-form">
-        <input type="hidden" id="modal-task-id">
         <div class="form-group">
           <label>Titulo</label>
           <input type="text" id="modal-task-title" required autocomplete="off">
