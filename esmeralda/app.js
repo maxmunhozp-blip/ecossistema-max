@@ -171,6 +171,9 @@ async function loadChatHistory() {
       }
     });
     document.getElementById('chat-suggestions').style.display = 'none';
+    // Scroll to bottom after loading history
+    const container = document.getElementById('chat-messages');
+    container.scrollTop = container.scrollHeight;
   } catch {
     greetUser();
   }
