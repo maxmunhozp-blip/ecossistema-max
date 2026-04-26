@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
   loadDashboard().then(() => {
     setupFocus();
-    greetUser();
+    loadChatHistory();
   });
   setupChat();
   setupSidebar();
@@ -148,6 +148,32 @@ function renderFocusTask() {
   document.getElementById('focus-progress').style.width = `${pct}%`;
 
   lucide.createIcons();
+}
+
+// ===== Chat History =====
+async function loadChatHistory() {
+  try {
+    const res = await fetch(`${API_URL}/chat/history`, { headers });
+    if (!res.ok) throw new Error('no history');
+    const messages = await res.json();
+
+    if (messages.length === 0) {
+      greetUser();
+      return;
+    }
+
+    // Show last messages (skip showing suggestions if there's history)
+    messages.forEach(m => {
+      if (m.role === 'assistant') {
+        appendBubbleHTML(m.role, formatMd(m.content));
+      } else {
+        appendBubble(m.role, m.content);
+      }
+    });
+    document.getElementById('chat-suggestions').style.display = 'none';
+  } catch {
+    greetUser();
+  }
 }
 
 // ===== Greeting =====

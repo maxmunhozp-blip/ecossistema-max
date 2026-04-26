@@ -8,6 +8,11 @@ import { executeTool } from '../agent/executor.js';
 const router = Router();
 const client = new Anthropic();
 
+router.get('/chat/history', (req, res) => {
+  const messages = db.prepare('SELECT role, content, created_at FROM chat_messages ORDER BY id DESC LIMIT 20').all().reverse();
+  res.json(messages);
+});
+
 router.post('/chat', async (req, res) => {
   const { message } = req.body;
   if (!message) return res.status(400).json({ error: 'message required' });
