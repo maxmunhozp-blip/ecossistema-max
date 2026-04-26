@@ -104,6 +104,9 @@ body {
   border-bottom: 1px solid var(--border);
   padding: 0;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 
 .focus-bar.empty { display: none; }
