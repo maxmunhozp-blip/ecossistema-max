@@ -122,11 +122,15 @@ async function handleFocusDone() {
 
 function handleFocusSkip() {
   if (focusTasks.length <= 1) {
-    // Only 1 task — flash the bar to show "nao tem outra"
-    const bar = document.getElementById('focus-bar');
-    bar.style.transition = 'background 0.15s';
-    bar.style.background = 'var(--amber-bg)';
-    setTimeout(() => { bar.style.background = ''; }, 300);
+    // Only 1 task — show inline feedback
+    const taskEl = document.getElementById('focus-task');
+    const original = taskEl.textContent;
+    taskEl.textContent = 'So tem essa por enquanto';
+    taskEl.style.color = 'var(--text-muted)';
+    setTimeout(() => {
+      taskEl.textContent = original;
+      taskEl.style.color = '';
+    }, 1500);
     return;
   }
   focusIndex = (focusIndex + 1) % focusTasks.length;
