@@ -62,58 +62,85 @@ async function loadDashboard() {
 }
 
 // ===== Focus Mode =====
+let focusDoneCount = 0;
+let focusTotal = 0;
+
 function setupFocus() {
+  // Always bind buttons first
+  document.getElementById('btn-done').addEventListener('click', handleFocusDone);
+  document.getElementById('btn-skip').addEventListener('click', handleFocusSkip);
+
+  loadFocusTasks();
+}
+
+function loadFocusTasks() {
   if (!dashboardData) {
     document.getElementById('focus-bar').classList.add('empty');
     return;
   }
 
-  // Gather today's tasks: urgente first, then hoje (only not done)
   const urgente = (dashboardData.tasks.urgente || []).filter(t => !t.done);
   const hoje = (dashboardData.tasks.hoje || []).filter(t => !t.done);
   focusTasks = [...urgente, ...hoje];
+  focusIndex = 0;
 
   if (focusTasks.length === 0) {
     document.getElementById('focus-bar').classList.add('empty');
     return;
   }
 
-  focusIndex = 0;
+  focusTotal = focusTasks.length;
+  focusDoneCount = 0;
   renderFocusTask();
+}
 
-  document.getElementById('btn-done').addEventListener('click', async () => {
-    const task = focusTasks[focusIndex];
-    if (!task) return;
-    await fetch(`${API_URL}/tasks/${task.id}`, {
-      method: 'PATCH', headers, body: JSON.stringify({ done: 1 })
-    });
-    focusTasks.splice(focusIndex, 1);
+async function handleFocusDone() {
+  const task = focusTasks[focusIndex];
+  if (!task) return;
+
+  // Disable buttons during request
+  document.getElementById('btn-done').disabled = true;
+
+  await fetch(`${API_URL}/tasks/${task.id}`, {
+    method: 'PATCH', headers, body: JSON.stringify({ done: 1 })
+  });
+
+  focusDoneCount++;
+  focusTasks.splice(focusIndex, 1);
+
+  if (focusTasks.length === 0) {
+    document.getElementById('focus-bar').classList.add('empty');
+    appendBubble('assistant', 'Todas as tarefas de hoje feitas. Descansa ou me conta o que mais ta na sua cabeca.');
+  } else {
     if (focusIndex >= focusTasks.length) focusIndex = 0;
-    if (focusTasks.length === 0) {
-      document.getElementById('focus-bar').classList.add('empty');
-      appendBubble('assistant', 'Todas as tarefas de hoje feitas. Descansa ou me conta o que mais ta na sua cabeca.');
-    } else {
-      renderFocusTask();
-    }
-    await loadDashboard();
-  });
-
-  document.getElementById('btn-skip').addEventListener('click', () => {
-    focusIndex = (focusIndex + 1) % focusTasks.length;
     renderFocusTask();
-  });
+  }
+
+  document.getElementById('btn-done').disabled = false;
+  await loadDashboard();
+}
+
+function handleFocusSkip() {
+  if (focusTasks.length <= 1) {
+    // Only 1 task — flash the bar to show "nao tem outra"
+    const bar = document.getElementById('focus-bar');
+    bar.style.transition = 'background 0.15s';
+    bar.style.background = 'var(--amber-bg)';
+    setTimeout(() => { bar.style.background = ''; }, 300);
+    return;
+  }
+  focusIndex = (focusIndex + 1) % focusTasks.length;
+  renderFocusTask();
 }
 
 function renderFocusTask() {
   const task = focusTasks[focusIndex];
   if (!task) return;
+
   document.getElementById('focus-task').textContent = task.title;
   document.getElementById('focus-bar').classList.remove('empty');
 
-  // Progress: how many done out of original total
-  const total = focusTasks.length + focusIndex;
-  const doneCount = focusIndex;
-  const pct = total > 0 ? ((doneCount / (focusTasks.length + doneCount)) * 100) : 0;
+  const pct = focusTotal > 0 ? ((focusDoneCount / focusTotal) * 100) : 0;
   document.getElementById('focus-progress').style.width = `${pct}%`;
 
   lucide.createIcons();
@@ -206,17 +233,7 @@ async function sendChat(message) {
 }
 
 function refreshFocus() {
-  if (!dashboardData) return;
-  const urgente = (dashboardData.tasks.urgente || []).filter(t => !t.done);
-  const hoje = (dashboardData.tasks.hoje || []).filter(t => !t.done);
-  focusTasks = [...urgente, ...hoje];
-  focusIndex = 0;
-
-  if (focusTasks.length === 0) {
-    document.getElementById('focus-bar').classList.add('empty');
-  } else {
-    renderFocusTask();
-  }
+  loadFocusTasks();
 }
 
 function appendBubble(role, text) {
