@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esmeralda</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">E</div>
+    <nav class="sidebar-nav">
+      <button class="sidebar-btn active" data-view="painel" title="Painel">
+        <i data-lucide="layout-grid"></i>
+      </button>
+      <button class="sidebar-btn" data-view="agencia" title="Agencia">
+        <i data-lucide="users"></i>
+      </button>
+      <button class="sidebar-btn" data-view="foguetes" title="Foguetes">
+        <i data-lucide="rocket"></i>
+      </button>
+      <button class="sidebar-btn" data-view="inbox" title="Inbox">
+        <i data-lucide="inbox"></i>
+      </button>
+      <button class="sidebar-btn" data-view="config" title="Config">
+        <i data-lucide="settings"></i>
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+    <header class="main-header">
+      <h1 class="main-title">Esmeralda</h1>
+      <span class="main-subtitle" id="greeting"></span>
+    </header>
+
+    <div class="grid" id="grid">
+      <!-- Card: Urgencias -->
+      <section class="card card-urgente" id="card-urgente">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="alert-triangle" class="icon-amber"></i> Urgencias</h2>
+        </div>
+        <ul class="task-list" id="list-urgente"></ul>
+      </section>
+
+      <!-- Card: Hoje -->
+      <section class="card" id="card-hoje">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="circle-check" class="icon-muted"></i> Hoje</h2>
+          <span class="badge" id="hoje-count">0/3</span>
+        </div>
+        <ul class="task-list" id="list-hoje"></ul>
+      </section>
+
+      <!-- Card: Agencia -->
+      <section class="card" id="card-agencia">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="briefcase" class="icon-muted"></i> Agencia</h2>
+        </div>
+        <ul class="client-list" id="list-clients"></ul>
+        <div class="card-footer" id="total-revenue"></div>
+      </section>
+
+      <!-- Card: Mapa da Liberdade -->
+      <section class="card" id="card-mapa">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="map" class="icon-muted"></i> Mapa da Liberdade</h2>
+          <span class="badge badge-phase" id="phase-badge">Fase 1</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar" id="saas-progress"></div>
+          <div class="progress-label" id="saas-label"></div>
+        </div>
+        <ul class="milestone-list" id="list-milestones"></ul>
+      </section>
+
+      <!-- Card: Pendencias -->
+      <section class="card card-full" id="card-pendencias">
+        <div class="card-header">
+          <h2 class="card-title"><i data-lucide="clipboard-list" class="icon-muted"></i> Pendencias de empresa</h2>
+        </div>
+        <div class="pendencias-grid" id="list-pendencias"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Chat panel -->
+  <aside class="chat-panel" id="chat-panel">
+    <div class="chat-header">
+      <span class="chat-title">Esmeralda IA</span>
+      <span class="chat-status" id="chat-status">online</span>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-bubble assistant">
+        Fala, Max. No que posso te ajudar?
+      </div>
+    </div>
+    <div class="chat-suggestions" id="chat-suggestions">
+      <button class="suggestion" data-msg="onde eu parei?">onde eu parei?</button>
+      <button class="suggestion" data-msg="organiza meu dia">organiza meu dia</button>
+      <button class="suggestion" data-msg="o que falta no AdvocaciaIA?">o que falta no AdvocaciaIA?</button>
+    </div>
+    <form class="chat-input" id="chat-form">
+      <input type="text" id="chat-text" placeholder="Digite uma mensagem..." autocomplete="off">
+      <button type="submit"><i data-lucide="send"></i></button>
+    </form>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -22,6 +22,48 @@ jobs:
           target: /opt/ecosistema-max/
           rm: false
 
+      - name: Deploy Esmeralda API
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 76.13.172.151
+          username: root
+          password: ${{ secrets.VPS_PASSWORD }}
+          source: "esmeralda-api/"
+          target: /opt/
+          rm: false
+
+      - name: Install deps + restart Esmeralda API
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 76.13.172.151
+          username: root
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            cd /opt/esmeralda-api
+            npm install --production
+            export ANTHROPIC_API_KEY="${{ secrets.ANTHROPIC_API_KEY }}"
+            npx pm2 delete esmeralda-api 2>/dev/null || true
+            ANTHROPIC_API_KEY="${{ secrets.ANTHROPIC_API_KEY }}" npx pm2 start ecosystem.config.cjs
+            npx pm2 save
+            # Traefik route for esmeralda-api subdomain
+            mkdir -p /opt/traefik/config
+            cat > /opt/traefik/config/esmeralda-api.yml << 'TRAEFIKEOF'
+            http:
+              routers:
+                esmeralda-api:
+                  rule: "Host(`esmeralda-api.tracktor.com.br`)"
+                  entryPoints:
+                    - websecure
+                  tls:
+                    certResolver: letsencrypt
+                  service: esmeralda-api
+              services:
+                esmeralda-api:
+                  loadBalancer:
+                    servers:
+                      - url: "http://host.docker.internal:4100"
+            TRAEFIKEOF
+
       - name: Atualiza skills no VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
