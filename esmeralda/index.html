@@ -37,53 +37,174 @@
       <span class="main-subtitle" id="greeting"></span>
     </header>
 
-    <div class="grid" id="grid">
-      <!-- Card: Urgencias -->
-      <section class="card card-urgente" id="card-urgente">
-        <div class="card-header">
-          <h2 class="card-title"><i data-lucide="alert-triangle" class="icon-amber"></i> Urgencias</h2>
-        </div>
-        <ul class="task-list" id="list-urgente"></ul>
-      </section>
+    <!-- VIEW: Painel -->
+    <div class="view active" id="view-painel">
+      <div class="grid">
+        <!-- Card: Urgencias -->
+        <section class="card card-urgente" id="card-urgente">
+          <div class="card-header">
+            <h2 class="card-title"><i data-lucide="alert-triangle" class="icon-amber"></i> Urgencias</h2>
+            <button class="btn-add" id="btn-add-urgente" title="Adicionar urgencia"><i data-lucide="plus" class="icon-sm"></i></button>
+          </div>
+          <ul class="task-list" id="list-urgente"></ul>
+        </section>
 
-      <!-- Card: Hoje -->
-      <section class="card" id="card-hoje">
-        <div class="card-header">
-          <h2 class="card-title"><i data-lucide="circle-check" class="icon-muted"></i> Hoje</h2>
-          <span class="badge" id="hoje-count">0/3</span>
-        </div>
-        <ul class="task-list" id="list-hoje"></ul>
-      </section>
+        <!-- Card: Hoje -->
+        <section class="card" id="card-hoje">
+          <div class="card-header">
+            <h2 class="card-title"><i data-lucide="circle-check" class="icon-muted"></i> Hoje</h2>
+            <div class="card-header-right">
+              <span class="badge" id="hoje-count">0/3</span>
+              <button class="btn-add" id="btn-add-hoje" title="Adicionar tarefa"><i data-lucide="plus" class="icon-sm"></i></button>
+            </div>
+          </div>
+          <ul class="task-list" id="list-hoje"></ul>
+        </section>
 
-      <!-- Card: Agencia -->
-      <section class="card" id="card-agencia">
-        <div class="card-header">
-          <h2 class="card-title"><i data-lucide="briefcase" class="icon-muted"></i> Agencia</h2>
-        </div>
-        <ul class="client-list" id="list-clients"></ul>
-        <div class="card-footer" id="total-revenue"></div>
-      </section>
+        <!-- Card: Agencia -->
+        <section class="card" id="card-agencia">
+          <div class="card-header">
+            <h2 class="card-title"><i data-lucide="briefcase" class="icon-muted"></i> Agencia</h2>
+          </div>
+          <ul class="client-list" id="list-clients"></ul>
+          <div class="card-footer" id="total-revenue"></div>
+        </section>
 
-      <!-- Card: Mapa da Liberdade -->
-      <section class="card" id="card-mapa">
-        <div class="card-header">
-          <h2 class="card-title"><i data-lucide="map" class="icon-muted"></i> Mapa da Liberdade</h2>
-          <span class="badge badge-phase" id="phase-badge">Fase 1</span>
-        </div>
-        <div class="progress-container">
-          <div class="progress-bar" id="saas-progress"></div>
+        <!-- Card: Mapa da Liberdade -->
+        <section class="card" id="card-mapa">
+          <div class="card-header">
+            <h2 class="card-title"><i data-lucide="map" class="icon-muted"></i> Mapa da Liberdade</h2>
+            <span class="badge badge-phase" id="phase-badge">Fase 1</span>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" id="saas-progress"></div>
+          </div>
           <div class="progress-label" id="saas-label"></div>
-        </div>
-        <ul class="milestone-list" id="list-milestones"></ul>
-      </section>
+          <ul class="milestone-list" id="list-milestones"></ul>
+        </section>
 
-      <!-- Card: Pendencias -->
-      <section class="card card-full" id="card-pendencias">
-        <div class="card-header">
-          <h2 class="card-title"><i data-lucide="clipboard-list" class="icon-muted"></i> Pendencias de empresa</h2>
-        </div>
-        <div class="pendencias-grid" id="list-pendencias"></div>
-      </section>
+        <!-- Card: Pendencias -->
+        <section class="card card-full" id="card-pendencias">
+          <div class="card-header">
+            <h2 class="card-title"><i data-lucide="clipboard-list" class="icon-muted"></i> Pendencias de empresa</h2>
+          </div>
+          <div class="pendencias-grid" id="list-pendencias"></div>
+        </section>
+      </div>
+    </div>
+
+    <!-- VIEW: Agencia -->
+    <div class="view" id="view-agencia">
+      <div class="view-header">
+        <h2>Agencia</h2>
+        <span class="view-subtitle">Clientes ativos e receita mensal</span>
+      </div>
+      <div class="single-column">
+        <section class="card card-wide" id="agencia-detail">
+          <table class="data-table" id="table-clients">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Receita/mes</th>
+                <th>Alerta</th>
+                <th>Notas</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tbody-clients"></tbody>
+            <tfoot>
+              <tr>
+                <td><strong>Total</strong></td>
+                <td id="agencia-total"><strong></strong></td>
+                <td colspan="3"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </section>
+      </div>
+    </div>
+
+    <!-- VIEW: Foguetes -->
+    <div class="view" id="view-foguetes">
+      <div class="view-header">
+        <h2>Foguetes</h2>
+        <span class="view-subtitle">SaaS em construcao — caminho pra liberdade</span>
+      </div>
+      <div class="grid" id="foguetes-grid"></div>
+    </div>
+
+    <!-- VIEW: Inbox -->
+    <div class="view" id="view-inbox">
+      <div class="view-header">
+        <h2>Inbox</h2>
+        <span class="view-subtitle">Capture rapido — organize depois</span>
+      </div>
+      <div class="single-column">
+        <section class="card card-wide">
+          <form class="inbox-form" id="inbox-form">
+            <input type="text" id="inbox-input" placeholder="O que ta na sua cabeca?" autocomplete="off">
+            <select id="inbox-type">
+              <option value="hoje">Hoje</option>
+              <option value="urgente">Urgente</option>
+            </select>
+            <select id="inbox-category">
+              <option value="geral">Geral</option>
+              <option value="agencia">Agencia</option>
+              <option value="foguete">Foguete</option>
+              <option value="empresa">Empresa</option>
+            </select>
+            <button type="submit" class="btn-primary">Adicionar</button>
+          </form>
+        </section>
+        <section class="card card-wide" id="inbox-all-tasks">
+          <div class="card-header">
+            <h2 class="card-title">Todas as tarefas</h2>
+            <div class="filter-tabs" id="inbox-filters">
+              <button class="filter-tab active" data-filter="all">Todas</button>
+              <button class="filter-tab" data-filter="hoje">Hoje</button>
+              <button class="filter-tab" data-filter="urgente">Urgente</button>
+              <button class="filter-tab" data-filter="done">Feitas</button>
+            </div>
+          </div>
+          <ul class="task-list" id="list-all-tasks"></ul>
+        </section>
+      </div>
+    </div>
+
+    <!-- VIEW: Config -->
+    <div class="view" id="view-config">
+      <div class="view-header">
+        <h2>Configuracoes</h2>
+        <span class="view-subtitle">Ajustes do painel</span>
+      </div>
+      <div class="single-column">
+        <section class="card card-wide">
+          <h3 class="config-section-title">API</h3>
+          <div class="config-row">
+            <span class="config-label">Status</span>
+            <span class="config-value" id="config-api-status">Verificando...</span>
+          </div>
+          <div class="config-row">
+            <span class="config-label">Endpoint</span>
+            <span class="config-value config-mono" id="config-api-url"></span>
+          </div>
+        </section>
+        <section class="card card-wide">
+          <h3 class="config-section-title">Dados</h3>
+          <div class="config-row">
+            <span class="config-label">Clientes</span>
+            <span class="config-value" id="config-clients-count">-</span>
+          </div>
+          <div class="config-row">
+            <span class="config-label">Tarefas</span>
+            <span class="config-value" id="config-tasks-count">-</span>
+          </div>
+          <div class="config-row">
+            <span class="config-label">Projetos SaaS</span>
+            <span class="config-value" id="config-projects-count">-</span>
+          </div>
+        </section>
+      </div>
     </div>
   </main>
 
@@ -108,6 +229,49 @@
       <button type="submit"><i data-lucide="send"></i></button>
     </form>
   </aside>
+
+  <!-- Modal: Add/Edit Task -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">Nova tarefa</h3>
+        <button class="modal-close" id="modal-close"><i data-lucide="x" class="icon-sm"></i></button>
+      </div>
+      <form id="modal-form">
+        <input type="hidden" id="modal-task-id">
+        <div class="form-group">
+          <label>Titulo</label>
+          <input type="text" id="modal-task-title" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>Descricao (opcional)</label>
+          <input type="text" id="modal-task-subtitle" autocomplete="off">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo</label>
+            <select id="modal-task-type">
+              <option value="hoje">Hoje</option>
+              <option value="urgente">Urgente</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Categoria</label>
+            <select id="modal-task-category">
+              <option value="geral">Geral</option>
+              <option value="agencia">Agencia</option>
+              <option value="foguete">Foguete</option>
+              <option value="empresa">Empresa</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="modal-cancel">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

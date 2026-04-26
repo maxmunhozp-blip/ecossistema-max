@@ -10,14 +10,20 @@ const headers = {
 
 // ===== State =====
 let dashboardData = null;
+let allTasks = [];
+let inboxFilter = 'all';
 
 // ===== Init =====
 document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
   setGreeting();
   loadDashboard();
+  loadAllTasks();
   setupChat();
   setupSidebar();
+  setupModal();
+  setupInbox();
+  setupInboxFilters();
 });
 
 // ===== Greeting =====
@@ -29,19 +35,38 @@ function setGreeting() {
   document.getElementById('greeting').textContent = greeting;
 }
 
+// ===== Sidebar / Views =====
+function setupSidebar() {
+  document.querySelectorAll('.sidebar-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const view = btn.dataset.view;
+      document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(`view-${view}`).classList.add('active');
+
+      // Refresh data when switching views
+      if (view === 'agencia') renderAgenciaView();
+      if (view === 'foguetes') renderFoguetesView();
+      if (view === 'inbox') { loadAllTasks(); }
+      if (view === 'config') renderConfigView();
+    });
+  });
+}
+
 // ===== Dashboard =====
 async function loadDashboard() {
   try {
     const res = await fetch(`${API_URL}/dashboard`, { headers });
     if (!res.ok) throw new Error('API error');
     dashboardData = await res.json();
-    renderAll();
+    renderPainel();
   } catch (err) {
     console.error('Erro ao carregar dashboard:', err);
   }
 }
 
-function renderAll() {
+function renderPainel() {
   if (!dashboardData) return;
   renderUrgencias(dashboardData.tasks.urgente);
   renderHoje(dashboardData.tasks.hoje);
@@ -55,7 +80,7 @@ function renderAll() {
 function renderUrgencias(tasks) {
   const list = document.getElementById('list-urgente');
   if (tasks.length === 0) {
-    list.innerHTML = '<li class="task-item" style="color:var(--text-muted);font-size:13px;">Nenhuma urgencia no momento</li>';
+    list.innerHTML = '<li class="task-item" style="color:var(--text-muted);font-size:13px;">Nenhuma urgencia</li>';
     return;
   }
   list.innerHTML = tasks.map(t => `
@@ -65,6 +90,7 @@ function renderUrgencias(tasks) {
         <div class="task-title">${esc(t.title)}</div>
         ${t.subtitle ? `<div class="task-subtitle">${esc(t.subtitle)}</div>` : ''}
       </div>
+      <button class="btn-icon danger" onclick="deleteTask(${t.id})" title="Remover"><i data-lucide="x" class="icon-sm"></i></button>
     </li>
   `).join('');
 }
@@ -72,14 +98,16 @@ function renderUrgencias(tasks) {
 // ===== Hoje =====
 function renderHoje(tasks) {
   const list = document.getElementById('list-hoje');
-  document.getElementById('hoje-count').textContent = `${tasks.filter(t => !t.done).length}/3`;
+  const active = tasks.filter(t => !t.done);
+  document.getElementById('hoje-count').textContent = `${active.length}/3`;
   list.innerHTML = tasks.map(t => `
     <li class="task-item">
-      <input type="checkbox" class="task-check" data-id="${t.id}" data-type="task" ${t.done ? 'checked' : ''}>
+      <input type="checkbox" class="task-check" data-id="${t.id}" ${t.done ? 'checked' : ''}>
       <div class="task-content">
         <div class="task-title ${t.done ? 'done' : ''}">${esc(t.title)}</div>
         ${t.category ? `<span class="task-tag">${esc(t.category)}</span>` : ''}
       </div>
+      <button class="btn-icon danger" onclick="deleteTask(${t.id})" title="Remover"><i data-lucide="x" class="icon-sm"></i></button>
     </li>
   `).join('');
 
@@ -88,7 +116,7 @@ function renderHoje(tasks) {
   });
 }
 
-// ===== Clients =====
+// ===== Clients (painel card) =====
 function renderClients(clients) {
   const list = document.getElementById('list-clients');
   const maxRevenue = Math.max(...clients.map(c => c.revenue));
@@ -116,7 +144,6 @@ function renderMapa(milestones, summary) {
   document.getElementById('saas-progress').style.width = `${pct}%`;
   document.getElementById('saas-label').textContent = `R$${formatNum(current)} / R$${formatNum(goal)} meta`;
 
-  // Determine phase
   let phase = 'Fase 1 — Construindo';
   if (current >= 3000) phase = 'Fase 2 — Respirando';
   if (current >= 8340) phase = 'Fase 3 — Livre';
@@ -125,7 +152,7 @@ function renderMapa(milestones, summary) {
   const list = document.getElementById('list-milestones');
   list.innerHTML = milestones.map(m => `
     <li class="milestone-item">
-      <span class="milestone-dot ${m.done ? 'done' : ''}" data-id="${m.id}" data-type="milestone"></span>
+      <span class="milestone-dot ${m.done ? 'done' : ''}" data-id="${m.id}"></span>
       <span class="milestone-title ${m.done ? 'done' : ''}">${esc(m.title)}</span>
       ${m.value ? `<span class="milestone-value">${esc(m.value)}</span>` : ''}
     </li>
@@ -151,12 +178,250 @@ function renderPendencias(pendencias) {
   });
 }
 
+// ===== VIEW: Agencia =====
+function renderAgenciaView() {
+  if (!dashboardData) return;
+  const clients = dashboardData.clients;
+  const tbody = document.getElementById('tbody-clients');
+  const total = clients.reduce((sum, c) => sum + c.revenue, 0);
+
+  tbody.innerHTML = clients.map(c => `
+    <tr data-id="${c.id}">
+      <td><strong>${esc(c.name)}</strong></td>
+      <td>R$${formatNum(c.revenue)}</td>
+      <td>${c.alert ? `<span class="alert-text">${esc(c.alert)}</span>` : '—'}</td>
+      <td>${c.notes ? esc(c.notes) : '—'}</td>
+      <td>
+        <button class="btn-icon" onclick="editClient(${c.id})" title="Editar"><i data-lucide="pencil" class="icon-sm"></i></button>
+      </td>
+    </tr>
+  `).join('');
+
+  document.getElementById('agencia-total').innerHTML = `<strong>R$${formatNum(total)}/mes</strong>`;
+  lucide.createIcons();
+}
+
+async function editClient(id) {
+  const client = dashboardData.clients.find(c => c.id === id);
+  if (!client) return;
+
+  const newRevenue = prompt(`Receita de ${client.name} (atual: R$${formatNum(client.revenue)}):`, client.revenue);
+  if (newRevenue === null) return;
+
+  const newAlert = prompt(`Alerta (vazio pra remover):`, client.alert || '');
+
+  await fetch(`${API_URL}/clients/${id}`, {
+    method: 'PATCH', headers,
+    body: JSON.stringify({
+      revenue: parseInt(newRevenue) || client.revenue,
+      alert: newAlert || null
+    })
+  });
+  await loadDashboard();
+  renderAgenciaView();
+}
+
+// ===== VIEW: Foguetes =====
+function renderFoguetesView() {
+  if (!dashboardData) return;
+  const grid = document.getElementById('foguetes-grid');
+
+  grid.innerHTML = dashboardData.projects.map(p => {
+    const mrrBruto = p.clients_count * p.price;
+    const mrrLiquido = mrrBruto * (1 - (p.partner_split || 0) / 100);
+    const statusClass = p.status === 'active' ? 'active' : 'development';
+
+    return `
+    <section class="card project-card">
+      <div class="project-name">${esc(p.name)} <span class="status-badge ${statusClass}">${p.status === 'active' ? 'Ativo' : 'Em dev'}</span></div>
+      <div class="project-status">Parceiro: ${esc(p.partner_name || '—')} (${p.partner_split}/${100 - p.partner_split})</div>
+      <div class="project-stat"><span class="stat-label">Clientes</span><span class="stat-value">${p.clients_count} / ${p.clients_goal}</span></div>
+      <div class="project-stat"><span class="stat-label">Preco</span><span class="stat-value">R$${formatNum(p.price)}/mes</span></div>
+      <div class="project-stat"><span class="stat-label">MRR bruto</span><span class="stat-value">R$${formatNum(mrrBruto)}</span></div>
+      <div class="project-stat"><span class="stat-label">MRR liquido (seu)</span><span class="stat-value">R$${formatNum(mrrLiquido)}</span></div>
+      <div class="project-stat"><span class="stat-label">Meta clientes</span>
+        <span class="stat-value">
+          <div class="client-bar-container" style="width:120px;display:inline-block;vertical-align:middle;">
+            <div class="client-bar" style="width:${Math.min((p.clients_count / p.clients_goal) * 100, 100).toFixed(0)}%"></div>
+          </div>
+          ${((p.clients_count / p.clients_goal) * 100).toFixed(0)}%
+        </span>
+      </div>
+    </section>`;
+  }).join('');
+}
+
+// ===== VIEW: Inbox =====
+async function loadAllTasks() {
+  try {
+    const res = await fetch(`${API_URL}/tasks`, { headers });
+    if (!res.ok) return;
+    allTasks = await res.json();
+    renderInboxTasks();
+  } catch (err) {
+    console.error('Erro ao carregar tarefas:', err);
+  }
+}
+
+function setupInbox() {
+  const form = document.getElementById('inbox-form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('inbox-input');
+    const title = input.value.trim();
+    if (!title) return;
+
+    const type = document.getElementById('inbox-type').value;
+    const category = document.getElementById('inbox-category').value;
+
+    const res = await fetch(`${API_URL}/tasks`, {
+      method: 'POST', headers,
+      body: JSON.stringify({ title, type, category })
+    });
+
+    if (res.ok) {
+      input.value = '';
+      await loadAllTasks();
+      await loadDashboard();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Erro ao criar tarefa');
+    }
+  });
+}
+
+function setupInboxFilters() {
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      inboxFilter = tab.dataset.filter;
+      renderInboxTasks();
+    });
+  });
+}
+
+function renderInboxTasks() {
+  const list = document.getElementById('list-all-tasks');
+  let filtered = allTasks;
+
+  if (inboxFilter === 'hoje') filtered = allTasks.filter(t => t.type === 'hoje' && !t.done);
+  else if (inboxFilter === 'urgente') filtered = allTasks.filter(t => t.type === 'urgente' && !t.done);
+  else if (inboxFilter === 'done') filtered = allTasks.filter(t => t.done);
+  else filtered = allTasks.filter(t => !t.done);
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<li class="task-item" style="color:var(--text-muted);font-size:13px;">Nenhuma tarefa</li>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(t => `
+    <li class="task-item">
+      <input type="checkbox" class="task-check" data-id="${t.id}" ${t.done ? 'checked' : ''}>
+      <div class="task-content">
+        <div class="task-title ${t.done ? 'done' : ''}">${esc(t.title)}</div>
+        ${t.subtitle ? `<div class="task-subtitle">${esc(t.subtitle)}</div>` : ''}
+        <span class="task-tag">${esc(t.type)}</span>
+        ${t.category ? `<span class="task-tag">${esc(t.category)}</span>` : ''}
+      </div>
+      <button class="btn-icon danger" onclick="deleteTask(${t.id})" title="Remover"><i data-lucide="x" class="icon-sm"></i></button>
+    </li>
+  `).join('');
+
+  list.querySelectorAll('.task-check').forEach(cb => {
+    cb.addEventListener('change', () => toggleTask(cb.dataset.id, cb.checked));
+  });
+
+  lucide.createIcons();
+}
+
+// ===== VIEW: Config =====
+function renderConfigView() {
+  document.getElementById('config-api-url').textContent = API_URL;
+
+  fetch(`${API_URL.replace('/api', '')}/health`, { headers })
+    .then(r => r.json())
+    .then(() => {
+      document.getElementById('config-api-status').textContent = 'Conectado';
+      document.getElementById('config-api-status').style.color = '#2d7a2d';
+    })
+    .catch(() => {
+      document.getElementById('config-api-status').textContent = 'Offline';
+      document.getElementById('config-api-status').style.color = '#c44';
+    });
+
+  if (dashboardData) {
+    document.getElementById('config-clients-count').textContent = dashboardData.clients.length;
+    const totalTasks = (dashboardData.tasks.urgente?.length || 0) + (dashboardData.tasks.hoje?.length || 0);
+    document.getElementById('config-tasks-count').textContent = totalTasks;
+    document.getElementById('config-projects-count').textContent = dashboardData.projects.length;
+  }
+}
+
+// ===== Modal =====
+function setupModal() {
+  const overlay = document.getElementById('modal-overlay');
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-cancel').addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+  document.getElementById('btn-add-hoje').addEventListener('click', () => openModal('hoje'));
+  document.getElementById('btn-add-urgente').addEventListener('click', () => openModal('urgente'));
+
+  document.getElementById('modal-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('modal-task-title').value.trim();
+    if (!title) return;
+
+    const body = {
+      title,
+      subtitle: document.getElementById('modal-task-subtitle').value.trim() || null,
+      type: document.getElementById('modal-task-type').value,
+      category: document.getElementById('modal-task-category').value
+    };
+
+    const res = await fetch(`${API_URL}/tasks`, {
+      method: 'POST', headers, body: JSON.stringify(body)
+    });
+
+    if (res.ok) {
+      closeModal();
+      await loadDashboard();
+      await loadAllTasks();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Erro ao criar tarefa');
+    }
+  });
+}
+
+function openModal(type) {
+  document.getElementById('modal-task-title').value = '';
+  document.getElementById('modal-task-subtitle').value = '';
+  document.getElementById('modal-task-type').value = type || 'hoje';
+  document.getElementById('modal-task-category').value = 'geral';
+  document.getElementById('modal-title').textContent = type === 'urgente' ? 'Nova urgencia' : 'Nova tarefa';
+  document.getElementById('modal-overlay').classList.add('active');
+  document.getElementById('modal-task-title').focus();
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+}
+
 // ===== API Actions =====
 async function toggleTask(id, done) {
   await fetch(`${API_URL}/tasks/${id}`, {
     method: 'PATCH', headers, body: JSON.stringify({ done: done ? 1 : 0 })
   });
-  loadDashboard();
+  await loadDashboard();
+  await loadAllTasks();
+}
+
+async function deleteTask(id) {
+  await fetch(`${API_URL}/tasks/${id}`, { method: 'DELETE', headers });
+  await loadDashboard();
+  await loadAllTasks();
 }
 
 async function toggleMilestone(id, done) {
@@ -186,11 +451,8 @@ function setupChat() {
     sendChat(msg);
   });
 
-  // Suggestions
   document.querySelectorAll('.suggestion').forEach(btn => {
-    btn.addEventListener('click', () => {
-      sendChat(btn.dataset.msg);
-    });
+    btn.addEventListener('click', () => sendChat(btn.dataset.msg));
   });
 }
 
@@ -198,11 +460,9 @@ async function sendChat(message) {
   const container = document.getElementById('chat-messages');
   const suggestions = document.getElementById('chat-suggestions');
 
-  // Add user bubble
   appendBubble('user', message);
   suggestions.style.display = 'none';
 
-  // Show typing
   const typing = document.createElement('div');
   typing.className = 'chat-typing';
   typing.textContent = 'Pensando...';
@@ -221,7 +481,6 @@ async function sendChat(message) {
       return;
     }
 
-    // Build response with actions
     let html = esc(data.message);
     if (data.actions && data.actions.length > 0) {
       html += '<div class="actions-list">';
@@ -229,8 +488,8 @@ async function sendChat(message) {
         html += `<span class="action-badge">${esc(a.description)}</span>`;
       });
       html += '</div>';
-      // Reload dashboard since data changed
-      loadDashboard();
+      await loadDashboard();
+      await loadAllTasks();
     }
 
     appendBubbleHTML('assistant', html);
@@ -258,17 +517,6 @@ function appendBubbleHTML(role, html) {
   container.scrollTop = container.scrollHeight;
 }
 
-// ===== Sidebar =====
-function setupSidebar() {
-  document.querySelectorAll('.sidebar-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      // Future: switch views
-    });
-  });
-}
-
 // ===== Helpers =====
 function esc(str) {
   if (!str) return '';
@@ -280,3 +528,7 @@ function esc(str) {
 function formatNum(n) {
   return new Intl.NumberFormat('pt-BR').format(n);
 }
+
+// Make functions available globally for onclick handlers
+window.deleteTask = deleteTask;
+window.editClient = editClient;
