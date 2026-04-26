@@ -1,6 +1,6 @@
 // ===== Config =====
 const IS_LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
-const API_URL = IS_LOCAL ? 'http://localhost:4100/api' : 'https://esmeralda-api.tracktor.com.br/api';
+const API_URL = IS_LOCAL ? 'http://localhost:4100/api' : 'https://terminal.tracktor.com.br/esmeralda-api/api';
 const AUTH_TOKEN = 'esmeralda-max-2026';
 
 const headers = {
