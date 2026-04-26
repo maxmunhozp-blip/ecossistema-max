@@ -16,7 +16,7 @@ router.post('/chat', async (req, res) => {
   db.prepare('INSERT INTO chat_messages (role, content) VALUES (?, ?)').run('user', message);
 
   // Get recent history (last 20 messages)
-  const history = db.prepare('SELECT role, content FROM chat_messages ORDER BY id DESC LIMIT 20').all().reverse();
+  const history = db.prepare('SELECT role, content FROM chat_messages ORDER BY id DESC LIMIT 10').all().reverse();
 
   const messages = history.map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content }));
 
@@ -26,10 +26,10 @@ router.post('/chat', async (req, res) => {
     let finalText = '';
     let toolActions = [];
 
-    for (let i = 0; i < 5; i++) { // max 5 tool rounds
+    for (let i = 0; i < 3; i++) { // max 3 tool rounds
       const response = await client.messages.create({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1024,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 512,
         system: SYSTEM_PROMPT,
         tools: TOOLS,
         messages: currentMessages
