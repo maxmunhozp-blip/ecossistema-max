@@ -6,14 +6,15 @@ export const TOOLS = [
   },
   {
     name: 'create_task',
-    description: 'Cria uma nova tarefa. type pode ser "hoje" (máx 3) ou "urgente". category: agencia, foguete, empresa, geral',
+    description: 'Cria uma nova tarefa. type: "hoje" (máx 3), "urgente" ou "backlog". category: agencia, foguete, empresa, geral. client_id opcional pra associar a um cliente.',
     input_schema: {
       type: 'object',
       properties: {
         title: { type: 'string', description: 'Título da tarefa' },
         subtitle: { type: 'string', description: 'Descrição opcional' },
         category: { type: 'string', enum: ['agencia', 'foguete', 'empresa', 'geral'] },
-        type: { type: 'string', enum: ['hoje', 'urgente'] }
+        type: { type: 'string', enum: ['hoje', 'urgente', 'backlog'] },
+        client_id: { type: 'number', description: 'ID do cliente da agência (opcional)' }
       },
       required: ['title', 'type']
     }

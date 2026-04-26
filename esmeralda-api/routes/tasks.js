@@ -20,9 +20,10 @@ router.post('/tasks', (req, res) => {
     if (count >= 3) return res.status(400).json({ error: 'Máximo 3 tarefas no Hoje' });
   }
 
+  const { client_id } = req.body;
   const maxPos = db.prepare('SELECT COALESCE(MAX(position), -1) as m FROM tasks WHERE type = ?').get(type || 'hoje').m;
-  const result = db.prepare('INSERT INTO tasks (title, subtitle, category, type, position) VALUES (?, ?, ?, ?, ?)').run(
-    title, subtitle || null, category || 'geral', type || 'hoje', maxPos + 1
+  const result = db.prepare('INSERT INTO tasks (title, subtitle, category, type, client_id, position) VALUES (?, ?, ?, ?, ?, ?)').run(
+    title, subtitle || null, category || 'geral', type || 'hoje', client_id || null, maxPos + 1
   );
   const task = db.prepare('SELECT * FROM tasks WHERE id = ?').get(result.lastInsertRowid);
   res.status(201).json(task);

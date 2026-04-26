@@ -26,8 +26,8 @@ export function executeTool(name, input) {
         if (count >= 3) return { error: 'Máximo 3 tarefas no Hoje. Precisa tirar uma antes.' };
       }
       const maxPos = db.prepare('SELECT COALESCE(MAX(position), -1) as m FROM tasks WHERE type = ?').get(input.type).m;
-      const result = db.prepare('INSERT INTO tasks (title, subtitle, category, type, position) VALUES (?, ?, ?, ?, ?)').run(
-        input.title, input.subtitle || null, input.category || 'geral', input.type, maxPos + 1
+      const result = db.prepare('INSERT INTO tasks (title, subtitle, category, type, client_id, position) VALUES (?, ?, ?, ?, ?, ?)').run(
+        input.title, input.subtitle || null, input.category || 'geral', input.type, input.client_id || null, maxPos + 1
       );
       return db.prepare('SELECT * FROM tasks WHERE id = ?').get(result.lastInsertRowid);
     }

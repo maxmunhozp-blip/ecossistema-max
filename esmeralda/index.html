@@ -97,31 +97,10 @@
     <div class="view" id="view-agencia">
       <div class="view-header">
         <h2>Agencia</h2>
-        <span class="view-subtitle">Clientes ativos e receita mensal</span>
+        <span class="view-subtitle">Clientes ativos — clique pra expandir tarefas</span>
       </div>
-      <div class="single-column">
-        <section class="card card-wide" id="agencia-detail">
-          <table class="data-table" id="table-clients">
-            <thead>
-              <tr>
-                <th>Cliente</th>
-                <th>Receita/mes</th>
-                <th>Alerta</th>
-                <th>Notas</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="tbody-clients"></tbody>
-            <tfoot>
-              <tr>
-                <td><strong>Total</strong></td>
-                <td id="agencia-total"><strong></strong></td>
-                <td colspan="3"></td>
-              </tr>
-            </tfoot>
-          </table>
-        </section>
-      </div>
+      <div class="agencia-summary" id="agencia-summary"></div>
+      <div class="single-column" id="agencia-clients"></div>
     </div>
 
     <!-- VIEW: Foguetes -->

@@ -179,26 +179,94 @@ function renderPendencias(pendencias) {
 }
 
 // ===== VIEW: Agencia =====
-function renderAgenciaView() {
+async function renderAgenciaView() {
   if (!dashboardData) return;
   const clients = dashboardData.clients;
-  const tbody = document.getElementById('tbody-clients');
   const total = clients.reduce((sum, c) => sum + c.revenue, 0);
 
-  tbody.innerHTML = clients.map(c => `
-    <tr data-id="${c.id}">
-      <td><strong>${esc(c.name)}</strong></td>
-      <td>R$${formatNum(c.revenue)}</td>
-      <td>${c.alert ? `<span class="alert-text">${esc(c.alert)}</span>` : '—'}</td>
-      <td>${c.notes ? esc(c.notes) : '—'}</td>
-      <td>
-        <button class="btn-icon" onclick="editClient(${c.id})" title="Editar"><i data-lucide="pencil" class="icon-sm"></i></button>
-      </td>
-    </tr>
-  `).join('');
+  // Summary bar
+  document.getElementById('agencia-summary').innerHTML = `
+    <div class="summary-item"><span class="summary-value">${clients.length}</span>clientes</div>
+    <div class="summary-item"><span class="summary-value">R$${formatNum(total)}</span>/mes</div>
+  `;
 
-  document.getElementById('agencia-total').innerHTML = `<strong>R$${formatNum(total)}/mes</strong>`;
+  // Fetch tasks for all clients
+  const container = document.getElementById('agencia-clients');
+  container.innerHTML = '';
+
+  for (const c of clients) {
+    const tasksRes = await fetch(`${API_URL}/clients/${c.id}/tasks`, { headers });
+    const tasks = tasksRes.ok ? await tasksRes.json() : [];
+    const pendingCount = tasks.filter(t => !t.done).length;
+
+    const div = document.createElement('div');
+    div.className = 'client-accordion';
+    div.innerHTML = `
+      <div class="client-acc-header" onclick="toggleAccordion(this)">
+        <i data-lucide="chevron-right" class="client-acc-chevron"></i>
+        <span class="client-acc-name">${esc(c.name)}</span>
+        ${c.alert ? `<span class="client-acc-alert">${esc(c.alert)}</span>` : ''}
+        ${pendingCount > 0 ? `<span class="client-acc-task-count">${pendingCount} pendente${pendingCount > 1 ? 's' : ''}</span>` : ''}
+        <span class="client-acc-revenue">R$${formatNum(c.revenue)}</span>
+      </div>
+      <div class="client-acc-body">
+        <ul class="task-list" id="client-tasks-${c.id}">
+          ${tasks.length === 0 ? '<li class="task-item" style="color:var(--text-muted);font-size:13px;">Nenhuma tarefa</li>' :
+            tasks.map(t => `
+              <li class="task-item">
+                <input type="checkbox" class="task-check" data-id="${t.id}" ${t.done ? 'checked' : ''}>
+                <div class="task-content">
+                  <div class="task-title ${t.done ? 'done' : ''}">${esc(t.title)}</div>
+                  ${t.subtitle ? `<div class="task-subtitle">${esc(t.subtitle)}</div>` : ''}
+                </div>
+                <button class="btn-icon danger" onclick="deleteTask(${t.id})" title="Remover"><i data-lucide="x" class="icon-sm"></i></button>
+              </li>
+            `).join('')}
+        </ul>
+        <form class="client-add-task" onsubmit="addClientTask(event, ${c.id})">
+          <input type="text" placeholder="Nova tarefa pra ${esc(c.name)}..." autocomplete="off">
+          <button type="submit">Adicionar</button>
+        </form>
+        <div class="client-info-row">
+          <button onclick="editClient(${c.id})">Editar receita/alerta</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  }
+
+  // Bind checkbox events
+  container.querySelectorAll('.task-check').forEach(cb => {
+    cb.addEventListener('change', async () => {
+      await toggleTask(cb.dataset.id, cb.checked);
+      renderAgenciaView();
+    });
+  });
+
   lucide.createIcons();
+}
+
+function toggleAccordion(header) {
+  const accordion = header.parentElement;
+  accordion.classList.toggle('open');
+}
+
+async function addClientTask(e, clientId) {
+  e.preventDefault();
+  const input = e.target.querySelector('input');
+  const title = input.value.trim();
+  if (!title) return;
+
+  const res = await fetch(`${API_URL}/clients/${clientId}/tasks`, {
+    method: 'POST', headers,
+    body: JSON.stringify({ title })
+  });
+
+  if (res.ok) {
+    input.value = '';
+    await loadDashboard();
+    renderAgenciaView();
+  }
 }
 
 async function editClient(id) {
@@ -532,3 +600,5 @@ function formatNum(n) {
 // Make functions available globally for onclick handlers
 window.deleteTask = deleteTask;
 window.editClient = editClient;
+window.toggleAccordion = toggleAccordion;
+window.addClientTask = addClientTask;
