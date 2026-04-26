@@ -32,7 +32,9 @@ db.exec(`
     position INTEGER NOT NULL DEFAULT 0,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (client_id) REFERENCES clients(id)
+    project_id INTEGER,
+    FOREIGN KEY (client_id) REFERENCES clients(id),
+    FOREIGN KEY (project_id) REFERENCES projects(id)
   );
 
   CREATE TABLE IF NOT EXISTS projects (
@@ -75,12 +77,12 @@ db.exec(`
   );
 `);
 
-// Migration: add client_id to tasks if missing
-try {
-  db.prepare('SELECT client_id FROM tasks LIMIT 1').get();
-} catch {
-  db.exec('ALTER TABLE tasks ADD COLUMN client_id INTEGER REFERENCES clients(id)');
-}
+// Migrations
+try { db.prepare('SELECT client_id FROM tasks LIMIT 1').get(); }
+catch { db.exec('ALTER TABLE tasks ADD COLUMN client_id INTEGER REFERENCES clients(id)'); }
+
+try { db.prepare('SELECT project_id FROM tasks LIMIT 1').get(); }
+catch { db.exec('ALTER TABLE tasks ADD COLUMN project_id INTEGER REFERENCES projects(id)'); }
 
 const count = db.prepare('SELECT COUNT(*) as n FROM clients').get().n;
 if (count === 0) {

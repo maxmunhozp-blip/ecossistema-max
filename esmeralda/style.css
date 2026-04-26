@@ -834,14 +834,27 @@ body {
   text-decoration: underline;
 }
 
-/* ===== Foguetes Cards ===== */
-.project-card { padding: 24px; }
-.project-card .project-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-.project-card .project-status { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
-.project-card .project-stat { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--bg); font-size: 13px; }
-.project-card .project-stat:last-child { border-bottom: none; }
-.project-card .stat-label { color: var(--text-muted); }
-.project-card .stat-value { font-weight: 600; }
+/* ===== Foguetes (Project Blocks) ===== */
+.project-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.project-block-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.project-block-name {
+  font-size: 16px;
+  font-weight: 700;
+  flex: 1;
+}
 
 .status-badge {
   display: inline-block;
@@ -854,6 +867,88 @@ body {
 }
 .status-badge.active { background: #e8f5e8; color: #2d7a2d; }
 .status-badge.development { background: var(--amber-bg); color: var(--amber); }
+
+.project-meta {
+  display: flex;
+  gap: 16px;
+  padding: 12px 20px;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--bg);
+}
+
+.project-meta-item { display: flex; gap: 4px; }
+.project-meta-value { font-weight: 600; color: var(--text); }
+
+.project-block-body {
+  padding: 16px 20px;
+}
+
+.project-next-step {
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.project-next-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--amber);
+  margin-bottom: 4px;
+}
+
+.project-next-title {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.project-tasks-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.project-add-task {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.project-add-task input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+}
+
+.project-add-task input:focus { border-color: var(--accent); background: var(--surface); }
+
+.project-add-task button {
+  padding: 8px 14px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-active);
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: var(--font);
+  cursor: pointer;
+}
 
 /* ===== Inbox ===== */
 .inbox-form {

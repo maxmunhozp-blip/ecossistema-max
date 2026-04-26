@@ -290,33 +290,105 @@ async function editClient(id) {
 }
 
 // ===== VIEW: Foguetes =====
-function renderFoguetesView() {
+async function renderFoguetesView() {
   if (!dashboardData) return;
-  const grid = document.getElementById('foguetes-grid');
+  const container = document.getElementById('foguetes-list');
+  container.innerHTML = '';
 
-  grid.innerHTML = dashboardData.projects.map(p => {
+  for (const p of dashboardData.projects) {
+    const tasksRes = await fetch(`${API_URL}/projects/${p.id}/tasks`, { headers });
+    const tasks = tasksRes.ok ? await tasksRes.json() : [];
+    const pending = tasks.filter(t => !t.done);
+    const done = tasks.filter(t => t.done);
+    const nextStep = pending[0];
+
     const mrrBruto = p.clients_count * p.price;
     const mrrLiquido = mrrBruto * (1 - (p.partner_split || 0) / 100);
     const statusClass = p.status === 'active' ? 'active' : 'development';
 
-    return `
-    <section class="card project-card">
-      <div class="project-name">${esc(p.name)} <span class="status-badge ${statusClass}">${p.status === 'active' ? 'Ativo' : 'Em dev'}</span></div>
-      <div class="project-status">Parceiro: ${esc(p.partner_name || '—')} (${p.partner_split}/${100 - p.partner_split})</div>
-      <div class="project-stat"><span class="stat-label">Clientes</span><span class="stat-value">${p.clients_count} / ${p.clients_goal}</span></div>
-      <div class="project-stat"><span class="stat-label">Preco</span><span class="stat-value">R$${formatNum(p.price)}/mes</span></div>
-      <div class="project-stat"><span class="stat-label">MRR bruto</span><span class="stat-value">R$${formatNum(mrrBruto)}</span></div>
-      <div class="project-stat"><span class="stat-label">MRR liquido (seu)</span><span class="stat-value">R$${formatNum(mrrLiquido)}</span></div>
-      <div class="project-stat"><span class="stat-label">Meta clientes</span>
-        <span class="stat-value">
-          <div class="client-bar-container" style="width:120px;display:inline-block;vertical-align:middle;">
-            <div class="client-bar" style="width:${Math.min((p.clients_count / p.clients_goal) * 100, 100).toFixed(0)}%"></div>
-          </div>
-          ${((p.clients_count / p.clients_goal) * 100).toFixed(0)}%
-        </span>
+    const div = document.createElement('div');
+    div.className = 'project-block';
+    div.innerHTML = `
+      <div class="project-block-header">
+        <span class="project-block-name">${esc(p.name)}</span>
+        <span class="status-badge ${statusClass}">${p.status === 'active' ? 'Ativo' : 'Em dev'}</span>
       </div>
-    </section>`;
-  }).join('');
+      <div class="project-meta">
+        <span class="project-meta-item">Parceiro: <span class="project-meta-value">${esc(p.partner_name || '—')} (${p.partner_split}/${100 - p.partner_split})</span></span>
+        <span class="project-meta-item">Clientes: <span class="project-meta-value">${p.clients_count}/${p.clients_goal}</span></span>
+        <span class="project-meta-item">MRR: <span class="project-meta-value">R$${formatNum(mrrLiquido)} limpo</span></span>
+      </div>
+      <div class="project-block-body">
+        ${nextStep ? `
+          <div class="project-next-step">
+            <div class="project-next-label">Proximo passo</div>
+            <div class="project-next-title">${esc(nextStep.title)}</div>
+            ${nextStep.subtitle ? `<div class="task-subtitle">${esc(nextStep.subtitle)}</div>` : ''}
+          </div>
+        ` : `
+          <div class="project-next-step" style="border-color:var(--border);background:var(--bg);">
+            <div class="project-next-label" style="color:var(--text-muted);">Sem proximo passo</div>
+            <div class="project-next-title" style="color:var(--text-muted);">Adicione uma tarefa abaixo</div>
+          </div>
+        `}
+        <div class="project-tasks-header">
+          <span>Tarefas (${pending.length} pendente${pending.length !== 1 ? 's' : ''}${done.length > 0 ? `, ${done.length} feita${done.length !== 1 ? 's' : ''}` : ''})</span>
+        </div>
+        <ul class="task-list">
+          ${pending.map(t => `
+            <li class="task-item">
+              <input type="checkbox" class="task-check" data-id="${t.id}" ${t.done ? 'checked' : ''}>
+              <div class="task-content">
+                <div class="task-title">${esc(t.title)}</div>
+                ${t.subtitle ? `<div class="task-subtitle">${esc(t.subtitle)}</div>` : ''}
+              </div>
+              <button class="btn-icon danger" onclick="deleteTask(${t.id})" title="Remover"><i data-lucide="x" class="icon-sm"></i></button>
+            </li>
+          `).join('')}
+          ${done.map(t => `
+            <li class="task-item">
+              <input type="checkbox" class="task-check" data-id="${t.id}" checked>
+              <div class="task-content">
+                <div class="task-title done">${esc(t.title)}</div>
+              </div>
+            </li>
+          `).join('')}
+        </ul>
+        <form class="project-add-task" onsubmit="addProjectTask(event, ${p.id})">
+          <input type="text" placeholder="Proximo passo pro ${esc(p.name)}..." autocomplete="off">
+          <button type="submit">Adicionar</button>
+        </form>
+      </div>
+    `;
+    container.appendChild(div);
+  }
+
+  // Bind checkboxes
+  container.querySelectorAll('.task-check').forEach(cb => {
+    cb.addEventListener('change', async () => {
+      await toggleTask(cb.dataset.id, cb.checked);
+      renderFoguetesView();
+    });
+  });
+
+  lucide.createIcons();
+}
+
+async function addProjectTask(e, projectId) {
+  e.preventDefault();
+  const input = e.target.querySelector('input');
+  const title = input.value.trim();
+  if (!title) return;
+
+  const res = await fetch(`${API_URL}/projects/${projectId}/tasks`, {
+    method: 'POST', headers,
+    body: JSON.stringify({ title })
+  });
+
+  if (res.ok) {
+    input.value = '';
+    renderFoguetesView();
+  }
 }
 
 // ===== VIEW: Inbox =====
@@ -602,3 +674,4 @@ window.deleteTask = deleteTask;
 window.editClient = editClient;
 window.toggleAccordion = toggleAccordion;
 window.addClientTask = addClientTask;
+window.addProjectTask = addProjectTask;

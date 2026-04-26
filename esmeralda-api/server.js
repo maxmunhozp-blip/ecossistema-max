@@ -5,6 +5,7 @@ import taskRoutes from './routes/tasks.js';
 import clientRoutes from './routes/clients.js';
 import milestoneRoutes from './routes/milestones.js';
 import pendenciaRoutes from './routes/pendencias.js';
+import projectRoutes from './routes/projects.js';
 import chatRoutes from './routes/chat.js';
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/api', taskRoutes);
 app.use('/api', clientRoutes);
 app.use('/api', milestoneRoutes);
 app.use('/api', pendenciaRoutes);
+app.use('/api', projectRoutes);
 app.use('/api', chatRoutes);
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
