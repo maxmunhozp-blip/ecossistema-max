@@ -217,7 +217,7 @@ async function sendChat(message) {
       return;
     }
 
-    let html = esc(data.message);
+    let html = formatMd(data.message);
     if (data.actions && data.actions.length > 0) {
       html += '<div class="actions-list">';
       data.actions.forEach(a => {
@@ -578,6 +578,18 @@ function esc(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+function formatMd(str) {
+  if (!str) return '';
+  let html = esc(str);
+  // **bold**
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // *italic*
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  // Lines starting with - as list items
+  html = html.replace(/^- (.+)$/gm, '<span style="display:block;padding-left:12px;">&#8226; $1</span>');
+  return html;
 }
 
 function formatNum(n) {
