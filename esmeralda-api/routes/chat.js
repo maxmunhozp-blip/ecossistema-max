@@ -35,7 +35,7 @@ router.post('/chat', async (req, res) => {
       const response = await client.messages.create({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 512,
-        system: SYSTEM_PROMPT,
+        system: SYSTEM_PROMPT + `\n\n## Contexto atual\nHoje é ${new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}. Horário: ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' })}.`,
         tools: TOOLS,
         messages: currentMessages
       });
