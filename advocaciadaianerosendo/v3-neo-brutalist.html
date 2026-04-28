@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daiane Rosendo — Neo-Brutalist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --yellow: #ffff00;
+            --gray: #cccccc;
+        }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.4;
+            cursor: crosshair;
+        }
+
+        .header {
+            padding: 24px 32px;
+            background: var(--black);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 8px solid var(--yellow);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .nav {
+            display: flex;
+            gap: 40px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .nav a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--yellow);
+        }
+
+        .hero {
+            padding: 80px 32px;
+            background: var(--yellow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: 'DR';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 400px;
+            font-weight: 800;
+            color: rgba(0, 0, 0, 0.03);
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--black);
+            color: var(--yellow);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            border: 3px solid var(--black);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-title {
+            font-size: clamp(64px, 12vw, 180px);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-subtitle {
+            font-size: 28px;
+            font-weight: 600;
+            max-width: 600px;
+            line-height: 1.3;
+            margin-bottom: 48px;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 24px 48px;
+            background: var(--black);
+            color: var(--yellow);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: 4px solid var(--black);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .hero-cta:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .section {
+            padding: 120px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 80px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--yellow);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            border: 2px solid var(--black);
+        }
+
+        .section-title {
+            font-size: clamp(40px, 8vw, 80px);
+            font-weight: 800;
+            line-height: 1;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            margin-bottom: 32px;
+        }
+
+        .section-description {
+            font-size: 20px;
+            line-height: 1.5;
+            max-width: 700px;
+            font-weight: 600;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .service {
+            padding: 48px;
+            background: var(--white);
+            border: 4px solid var(--black);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .service:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0 rgba(0, 0, 0, 1);
+            background: var(--yellow);
+        }
+
+        .service-number {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 4px 12px;
+            background: var(--black);
+            color: var(--yellow);
+            border: 2px solid var(--black);
+        }
+
+        .service-title {
+            font-size: 32px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .service-description {
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 80px;
+        }
+
+        .stat {
+            padding: 40px;
+            background: var(--black);
+            color: var(--yellow);
+            text-align: center;
+            border: 4px solid var(--black);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 1024px) {
+            .services {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                padding: 20px 24px;
+            }
+
+            .nav {
+                gap: 24px;
+                font-size: 10px;
+            }
+
+            .hero, .section {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+
+            .service {
+                padding: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">DAIANE ROSENDO</div>
+        <nav class="nav">
+            <a href="#sobre">SOBRE</a>
+            <a href="#areas">ÁREAS</a>
+            <a href="#contato">CONTATO</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-tag">Advocacia de Família</div>
+            <h1 class="hero-title">Soluções<br>Jurídicas<br>Estratégicas</h1>
+            <p class="hero-subtitle">15+ anos de experiência em Direito de Família com foco em resultados concretos</p>
+            <a href="#contato" class="hero-cta">Agendar Consulta</a>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <div class="section-tag">Especialização</div>
+            <h2 class="section-title">Áreas de Atuação</h2>
+            <p class="section-description">Experiência consolidada em questões familiares com abordagem estratégica</p>
+        </div>
+
+        <div class="services">
+            <div class="service">
+                <div class="service-number">[01]</div>
+                <h3 class="service-title">Divórcio</h3>
+                <p class="service-description">Processos consensuais e litigiosos com foco em acordos equilibrados e proteção patrimonial</p>
+            </div>
+
+            <div class="service">
+                <div class="service-number">[02]</div>
+                <h3 class="service-title">Guarda</h3>
+                <p class="service-description">Defesa dos direitos da criança e do adolescente com soluções que priorizam o bem-estar familiar</p>
+            </div>
+
+            <div class="service">
+                <div class="service-number">[03]</div>
+                <h3 class="service-title">Pensão</h3>
+                <p class="service-description">Revisão, fixação e execução de alimentos com análise técnica da capacidade financeira</p>
+            </div>
+
+            <div class="service">
+                <div class="service-number">[04]</div>
+                <h3 class="service-title">Inventário</h3>
+                <p class="service-description">Partilha de bens judicial e extrajudicial com planejamento sucessório estratégico</p>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Anos</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Casos</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Sucesso</div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

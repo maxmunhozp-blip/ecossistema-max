@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daiane Rosendo — Luxury Minimalist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --obsidian: #0d0d0d;
+            --platinum: #e8e8e8;
+            --pearl: #fafafa;
+            --champagne: #d4c5b0;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--pearl);
+            color: var(--obsidian);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 32px 5vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(250, 250, 250, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 197, 176, 0.2);
+        }
+
+        .nav-logo {
+            font-family: 'Gilda Display', serif;
+            font-size: 22px;
+            color: var(--obsidian);
+            letter-spacing: 0.02em;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 48px;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .nav-menu a {
+            color: var(--obsidian);
+            text-decoration: none;
+            transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--champagne);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 5vw 80px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(212, 197, 176, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-monogram {
+            width: 1px;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent, var(--champagne), transparent);
+            margin: 0 auto 64px;
+            animation: fadeIn 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero-title {
+            font-family: 'Gilda Display', serif;
+            font-size: clamp(64px, 10vw, 120px);
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 48px;
+            letter-spacing: -0.02em;
+            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--champagne);
+            font-weight: 500;
+            margin-bottom: 64px;
+            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--obsidian);
+            opacity: 0.6;
+            max-width: 600px;
+            margin: 0 auto 64px;
+            font-weight: 300;
+            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.6s backwards;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 18px 56px;
+            background: var(--obsidian);
+            color: var(--pearl);
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.8s backwards;
+        }
+
+        .hero-cta:hover {
+            background: var(--champagne);
+            color: var(--obsidian);
+            transform: translateY(-2px);
+            box-shadow: 0 16px 48px rgba(212, 197, 176, 0.3);
+        }
+
+        .section {
+            padding: 160px 5vw;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 120px;
+        }
+
+        .section-number {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--champagne);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-family: 'Gilda Display', serif;
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 32px;
+            letter-spacing: -0.01em;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--obsidian);
+            opacity: 0.6;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: rgba(212, 197, 176, 0.2);
+        }
+
+        .service {
+            background: var(--pearl);
+            padding: 80px 64px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(to bottom, rgba(212, 197, 176, 0.05), transparent);
+            transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .service:hover::before {
+            height: 100%;
+        }
+
+        .service:hover {
+            transform: scale(1.02);
+            z-index: 1;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.08);
+        }
+
+        .service-number {
+            font-family: 'Gilda Display', serif;
+            font-size: 80px;
+            font-weight: 400;
+            color: var(--champagne);
+            opacity: 0.3;
+            line-height: 1;
+            margin-bottom: 32px;
+        }
+
+        .service-title {
+            font-family: 'Gilda Display', serif;
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+
+        .service-description {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--obsidian);
+            opacity: 0.6;
+            font-weight: 300;
+        }
+
+        .divider {
+            width: 1px;
+            height: 120px;
+            background: linear-gradient(to bottom, transparent, var(--champagne), transparent);
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+            .services {
+                grid-template-columns: 1fr;
+            }
+
+            .service {
+                padding: 64px 48px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav {
+                padding: 24px 6vw;
+            }
+
+            .nav-menu {
+                gap: 32px;
+                font-size: 11px;
+            }
+
+            .hero, .section {
+                padding-left: 6vw;
+                padding-right: 6vw;
+            }
+
+            .service {
+                padding: 48px 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-logo">Daiane Rosendo</div>
+        <div class="nav-menu">
+            <a href="#sobre">Sobre</a>
+            <a href="#areas">Áreas</a>
+            <a href="#contato">Contato</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-monogram"></div>
+            <h1 class="hero-title">Daiane Rosendo</h1>
+            <p class="hero-subtitle">Advocacia de Família</p>
+            <p class="hero-description">Soluções jurídicas com sensibilidade e estratégia. Mais de 15 anos de experiência em Direito de Família.</p>
+            <a href="#contato" class="hero-cta">Agendar Consulta</a>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="section">
+        <div class="section-header">
+            <div class="section-number">Especialização</div>
+            <h2 class="section-title">Áreas de Atuação</h2>
+            <p class="section-subtitle">Experiência consolidada em questões familiares com abordagem estratégica e humanizada</p>
+        </div>
+
+        <div class="services">
+            <div class="service">
+                <div class="service-number">01</div>
+                <h3 class="service-title">Divórcio</h3>
+                <p class="service-description">Processos consensuais e litigiosos com foco em acordos equilibrados e proteção patrimonial</p>
+            </div>
+
+            <div class="service">
+                <div class="service-number">02</div>
+                <h3 class="service-title">Guarda e Convivência</h3>
+                <p class="service-description">Defesa dos direitos da criança e do adolescente com soluções que priorizam o bem-estar familiar</p>
+            </div>
+
+            <div class="service">
+                <div class="service-number">03</div>
+                <h3 class="service-title">Pensão Alimentícia</h3>
+                <p class="service-description">Revisão, fixação e execução de alimentos com análise técnica da capacidade financeira</p>
+            </div>
+
+            <div class="service">
+                <div class="service-number">04</div>
+                <h3 class="service-title">Inventário</h3>
+                <p class="service-description">Partilha de bens judicial e extrajudicial com planejamento sucessório estratégico</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
