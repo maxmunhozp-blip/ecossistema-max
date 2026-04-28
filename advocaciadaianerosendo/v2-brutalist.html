@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daiane Rosendo — Brutalist Refined</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --concrete: #e8e8e8;
+            --steel: #2a2a2a;
+            --rust: #d4a574;
+            --shadow: rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--concrete);
+            color: var(--steel);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            padding: 80px 0;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: var(--steel);
+        }
+
+        .hero-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+
+        .hero-title {
+            font-size: clamp(56px, 10vw, 160px);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .hero-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 120px;
+            height: 4px;
+            background: var(--rust);
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            font-weight: 300;
+            max-width: 600px;
+            margin-top: 60px;
+            line-height: 1.6;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 80px;
+            margin-top: 80px;
+            padding: 40px;
+            background: var(--steel);
+            color: var(--concrete);
+            box-shadow: 8px 8px 0 var(--shadow);
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stat-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.7;
+        }
+
+        .section {
+            padding: 120px 0;
+        }
+
+        .section-header {
+            margin-bottom: 80px;
+        }
+
+        .section-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            background: var(--steel);
+            color: var(--concrete);
+            display: inline-block;
+            margin-bottom: 32px;
+            font-weight: 700;
+        }
+
+        .section-title {
+            font-size: clamp(36px, 6vw, 72px);
+            font-weight: 800;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .service {
+            background: white;
+            padding: 48px 40px;
+            box-shadow: 12px 12px 0 var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 3px solid var(--steel);
+        }
+
+        .service:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 16px 16px 0 var(--shadow);
+        }
+
+        .service-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--rust);
+            margin-bottom: 24px;
+        }
+
+        .service-title {
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .service-description {
+            font-size: 15px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .cta-block {
+            margin-top: 120px;
+            padding: 80px;
+            background: var(--steel);
+            color: var(--concrete);
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: 8px;
+            bottom: 8px;
+            border: 3px solid var(--rust);
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            letter-spacing: -0.02em;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 24px 64px;
+            background: var(--rust);
+            color: var(--steel);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .cta-button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .services {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-block {
+                padding: 60px 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="hero">
+            <div class="hero-label">Advocacia de Família</div>
+            <h1 class="hero-title">Daiane<br>Rosendo</h1>
+            <p class="hero-subtitle">Soluções jurídicas estratégicas com foco em resultados concretos e proteção dos seus direitos</p>
+
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Anos</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Casos</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Sucesso</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <div class="section-tag">Especialização</div>
+                <h2 class="section-title">Áreas de Atuação</h2>
+            </div>
+
+            <div class="services">
+                <div class="service">
+                    <div class="service-number">[01]</div>
+                    <h3 class="service-title">Divórcio</h3>
+                    <p class="service-description">Processos consensuais e litigiosos com foco em acordos equilibrados e proteção patrimonial</p>
+                </div>
+
+                <div class="service">
+                    <div class="service-number">[02]</div>
+                    <h3 class="service-title">Guarda</h3>
+                    <p class="service-description">Defesa dos direitos da criança e do adolescente com soluções que priorizam o bem-estar familiar</p>
+                </div>
+
+                <div class="service">
+                    <div class="service-number">[03]</div>
+                    <h3 class="service-title">Pensão</h3>
+                    <p class="service-description">Revisão, fixação e execução de alimentos com análise técnica da capacidade financeira</p>
+                </div>
+
+                <div class="service">
+                    <div class="service-number">[04]</div>
+                    <h3 class="service-title">Inventário</h3>
+                    <p class="service-description">Partilha de bens judicial e extrajudicial com planejamento sucessório estratégico</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="cta-block">
+            <h2 class="cta-title">Agende sua Consulta</h2>
+            <a href="#contato" class="cta-button">Contato</a>
+        </div>
+    </div>
+</body>
+</html>

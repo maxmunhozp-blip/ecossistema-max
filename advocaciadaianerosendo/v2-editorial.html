@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daiane Rosendo — Editorial Minimalist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Archivo:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #fefefe;
+            --accent: #c9a961;
+            --muted: #6b6b6b;
+        }
+
+        body {
+            font-family: 'Archivo', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 8vw;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 8vw;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--accent) 50%, transparent);
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 48px;
+            font-weight: 500;
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+        }
+
+        .hero-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(64px, 11vw, 140px);
+            font-weight: 300;
+            line-height: 0.95;
+            margin-bottom: 40px;
+            letter-spacing: -0.03em;
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(18px, 2.5vw, 28px);
+            font-weight: 300;
+            color: var(--muted);
+            margin-bottom: 64px;
+            max-width: 600px;
+            line-height: 1.6;
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
+        }
+
+        .cta-primary {
+            padding: 20px 48px;
+            background: var(--ink);
+            color: var(--paper);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cta-primary:hover::before {
+            left: 0;
+        }
+
+        .cta-primary span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 48px;
+            left: 8vw;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            writing-mode: vertical-rl;
+            animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section {
+            padding: 20vh 8vw;
+            position: relative;
+        }
+
+        .section-number {
+            position: absolute;
+            top: 20vh;
+            right: 8vw;
+            font-family: 'Fraunces', serif;
+            font-size: 120px;
+            font-weight: 300;
+            color: var(--accent);
+            opacity: 0.1;
+            line-height: 1;
+        }
+
+        .section-header {
+            max-width: 600px;
+            margin-bottom: 80px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 32px;
+        }
+
+        .section-description {
+            font-size: 18px;
+            color: var(--muted);
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        .expertise-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 80px 60px;
+            margin-top: 80px;
+        }
+
+        .expertise-item {
+            position: relative;
+            padding-top: 32px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .expertise-number {
+            position: absolute;
+            top: -12px;
+            left: 0;
+            font-family: 'Fraunces', serif;
+            font-size: 24px;
+            color: var(--accent);
+            font-weight: 300;
+        }
+
+        .expertise-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .expertise-description {
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        @media (max-width: 768px) {
+            .hero, .section {
+                padding-left: 6vw;
+                padding-right: 6vw;
+            }
+
+            .hero::before {
+                left: 6vw;
+            }
+
+            .scroll-indicator {
+                left: 6vw;
+            }
+
+            .section-number {
+                right: 6vw;
+                font-size: 80px;
+            }
+
+            .expertise-list {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="eyebrow">Advocacia de Família</div>
+            <h1 class="hero-title">Daiane<br>Rosendo</h1>
+            <p class="hero-subtitle">Soluções jurídicas estratégicas com foco em resultados concretos e proteção dos seus direitos</p>
+            <div class="cta-group">
+                <a href="#contato" class="cta-primary"><span>Agendar Consulta</span></a>
+            </div>
+        </div>
+        <div class="scroll-indicator">Scroll</div>
+    </section>
+
+    <section class="section">
+        <div class="section-number">01</div>
+        <div class="section-header">
+            <div class="section-label">Especialização</div>
+            <h2 class="section-title">Áreas de Atuação</h2>
+            <p class="section-description">Experiência consolidada em Direito de Família com abordagem personalizada para cada caso</p>
+        </div>
+
+        <div class="expertise-list">
+            <div class="expertise-item">
+                <div class="expertise-number">01</div>
+                <h3 class="expertise-title">Divórcio</h3>
+                <p class="expertise-description">Processos consensuais e litigiosos com foco em acordos equilibrados e proteção patrimonial</p>
+            </div>
+
+            <div class="expertise-item">
+                <div class="expertise-number">02</div>
+                <h3 class="expertise-title">Guarda e Convivência</h3>
+                <p class="expertise-description">Defesa dos direitos da criança e do adolescente com soluções que priorizam o bem-estar familiar</p>
+            </div>
+
+            <div class="expertise-item">
+                <div class="expertise-number">03</div>
+                <h3 class="expertise-title">Pensão Alimentícia</h3>
+                <p class="expertise-description">Revisão, fixação e execução de alimentos com análise técnica da capacidade financeira</p>
+            </div>
+
+            <div class="expertise-item">
+                <div class="expertise-number">04</div>
+                <h3 class="expertise-title">Inventário</h3>
+                <p class="expertise-description">Partilha de bens judicial e extrajudicial com planejamento sucessório estratégico</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

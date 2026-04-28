@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daiane Rosendo — Art Deco Luxury</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --midnight: #0a1628;
+            --gold: #d4af37;
+            --champagne: #f7e7ce;
+            --pearl: #faf8f3;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--midnight);
+            color: var(--pearl);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background:
+                linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.05) 100%),
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+            opacity: 0.3;
+        }
+
+        .geometric-frame {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 1200px;
+            height: 80%;
+            border: 2px solid var(--gold);
+            pointer-events: none;
+            opacity: 0.2;
+        }
+
+        .geometric-frame::before,
+        .geometric-frame::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--gold);
+        }
+
+        .geometric-frame::before {
+            top: -20px;
+            left: -20px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .geometric-frame::after {
+            bottom: -20px;
+            right: -20px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            padding: 0 32px;
+            animation: fadeInScale 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .monogram {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 48px;
+            border: 3px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-size: 36px;
+            font-weight: 600;
+            color: var(--gold);
+            position: relative;
+            animation: rotateIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
+        }
+
+        @keyframes rotateIn {
+            from {
+                opacity: 0;
+                transform: rotate(-180deg) scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: rotate(0) scale(1);
+            }
+        }
+
+        .monogram::before,
+        .monogram::after {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .monogram::before {
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .monogram::after {
+            animation: pulse 3s ease-in-out infinite 1.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 24px;
+            letter-spacing: 0.05em;
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-divider {
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            margin: 32px auto;
+            animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--champagne);
+            font-weight: 300;
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.7s backwards;
+        }
+
+        .section {
+            padding: 120px 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            opacity: 0.3;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 24px;
+            letter-spacing: 0.02em;
+        }
+
+        .section-description {
+            font-size: 16px;
+            color: var(--champagne);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 48px;
+        }
+
+        .service {
+            text-align: center;
+            padding: 48px 32px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .service::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(135deg, var(--gold) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+
+        .service:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold);
+        }
+
+        .service:hover::before {
+            opacity: 0.1;
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 32px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .service-title {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 16px;
+            letter-spacing: 0.05em;
+        }
+
+        .service-description {
+            font-size: 14px;
+            color: var(--champagne);
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 80px 48px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 20px 64px;
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gold);
+            transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: -1;
+        }
+
+        .cta-button:hover {
+            color: var(--midnight);
+        }
+
+        .cta-button:hover::before {
+            left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 80px 24px;
+            }
+
+            .services {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="geometric-frame"></div>
+        <div class="hero-content">
+            <div class="monogram">DR</div>
+            <h1 class="hero-title">Daiane Rosendo</h1>
+            <div class="hero-divider"></div>
+            <p class="hero-subtitle">Advocacia de Família</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <div class="section-label">Especialização</div>
+            <h2 class="section-title">Áreas de Atuação</h2>
+            <p class="section-description">Soluções jurídicas sofisticadas com atenção aos detalhes e compromisso com a excelência em cada caso</p>
+        </div>
+
+        <div class="services">
+            <div class="service">
+                <div class="service-icon">01</div>
+                <h3 class="service-title">Divórcio</h3>
+                <p class="service-description">Processos consensuais e litigiosos com foco em acordos equilibrados e proteção patrimonial</p>
+            </div>
+
+            <div class="service">
+                <div class="service-icon">02</div>
+                <h3 class="service-title">Guarda</h3>
+                <p class="service-description">Defesa dos direitos da criança e do adolescente com soluções que priorizam o bem-estar familiar</p>
+            </div>
+
+            <div class="service">
+                <div class="service-icon">03</div>
+                <h3 class="service-title">Pensão</h3>
+                <p class="service-description">Revisão, fixação e execução de alimentos com análise técnica da capacidade financeira</p>
+            </div>
+
+            <div class="service">
+                <div class="service-icon">04</div>
+                <h3 class="service-title">Inventário</h3>
+                <p class="service-description">Partilha de bens judicial e extrajudicial com planejamento sucessório estratégico</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="cta-section">
+        <a href="#contato" class="cta-button">Agendar Consulta</a>
+    </div>
+</body>
+</html>
