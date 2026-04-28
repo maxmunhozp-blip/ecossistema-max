@@ -103,5 +103,40 @@ export const TOOLS = [
       },
       required: ['path']
     }
+  },
+  {
+    name: 'append_obsidian',
+    description: 'Adiciona conteudo no FINAL de uma nota existente do Obsidian. Bom pra log de conversas com clientes, notas em ordem cronologica. Cria o arquivo se nao existir.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        path: { type: 'string', description: 'Caminho relativo do arquivo .md' },
+        content: { type: 'string', description: 'Conteudo a adicionar (sera precedido por uma quebra de linha)' }
+      },
+      required: ['path', 'content']
+    }
+  },
+  {
+    name: 'remove_inbox_line',
+    description: 'Remove uma linha especifica de um arquivo do Inbox/. Use quando o Max marcar um item como concluido/migrado. Match exato da linha (sem espacos extras).',
+    input_schema: {
+      type: 'object',
+      properties: {
+        path: { type: 'string', description: 'Caminho do arquivo no Inbox/' },
+        line: { type: 'string', description: 'Texto exato da linha a remover (sem o "- " inicial)' }
+      },
+      required: ['path', 'line']
+    }
+  },
+  {
+    name: 'write_journal',
+    description: 'Cria/atualiza o diario do dia em Diario/YYYY-MM-DD.md com resumo das tarefas feitas, pendentes, e conversas relevantes do chat. Use quando o Max disser "fecha o dia" ou "encerra o dia".',
+    input_schema: {
+      type: 'object',
+      properties: {
+        summary: { type: 'string', description: 'Texto markdown completo do diario (com sections: Feito, Pendente, Conversas/Notas)' }
+      },
+      required: ['summary']
+    }
   }
 ];

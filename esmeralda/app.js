@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupFocus();
     loadChatHistory();
   });
+  loadInboxBadge();
   setupChat();
   setupSidebar();
   setupModal();
@@ -38,6 +39,10 @@ function setupSidebar() {
       if (view === 'agencia') renderAgenciaView();
       if (view === 'foguetes') renderFoguetesView();
       if (view === 'pendencias') renderPendenciasView();
+      if (view === 'inbox') {
+        renderInboxView();
+        markInboxSeen();
+      }
     });
   });
 }
@@ -604,6 +609,118 @@ async function togglePendencia(id, done) {
   });
   await loadDashboard();
 }
+
+// ===== VIEW: Inbox (Obsidian) =====
+let inboxData = null;
+
+async function loadInboxBadge() {
+  try {
+    const res = await fetch(`${API_URL}/obsidian/inbox`, { headers });
+    if (!res.ok) return;
+    const data = await res.json();
+    inboxData = data;
+    const badge = document.getElementById('inbox-badge');
+    if (data.newCount > 0) {
+      badge.textContent = data.newCount > 99 ? '99+' : data.newCount;
+      badge.hidden = false;
+    } else {
+      badge.hidden = true;
+    }
+  } catch {}
+}
+
+async function renderInboxView() {
+  const container = document.getElementById('inbox-list');
+  container.innerHTML = '<div class="inbox-empty">Carregando...</div>';
+
+  try {
+    const res = await fetch(`${API_URL}/obsidian/inbox`, { headers });
+    if (!res.ok) throw new Error('falha ao carregar');
+    const data = await res.json();
+    inboxData = data;
+
+    document.getElementById('inbox-meta').textContent =
+      data.files.length === 0 ? 'vazio' : `${data.files.length} arquivo${data.files.length > 1 ? 's' : ''}`;
+
+    if (data.files.length === 0) {
+      container.innerHTML = '<div class="inbox-empty">Inbox vazio. Joga ideias no Obsidian que elas aparecem aqui.</div>';
+      return;
+    }
+
+    container.innerHTML = data.files.map(file => `
+      <div class="inbox-file">
+        <div class="inbox-file-header">
+          <span class="inbox-file-name">${esc(file.name)}</span>
+          <span class="inbox-file-count">${file.itemCount} item${file.itemCount !== 1 ? 's' : ''}</span>
+        </div>
+        ${file.items.length === 0 ? '' : `
+          <ul class="inbox-items">
+            ${file.items.map(item => `
+              <li class="inbox-item">
+                <span class="inbox-item-text ${item.done ? 'done' : ''}">${esc(item.text)}</span>
+                <div class="inbox-actions">
+                  <button class="inbox-action hoje" onclick="promoteInbox('${esc(file.path)}', ${JSON.stringify(item.text).replace(/'/g, '&apos;')}, 'hoje')">→ Hoje</button>
+                  <button class="inbox-action urgente" onclick="promoteInbox('${esc(file.path)}', ${JSON.stringify(item.text).replace(/'/g, '&apos;')}, 'urgente')">→ Urgente</button>
+                  <button class="inbox-action" onclick="promoteInbox('${esc(file.path)}', ${JSON.stringify(item.text).replace(/'/g, '&apos;')}, 'backlog')">→ Backlog</button>
+                  <button class="inbox-action dismiss" onclick="dismissInbox('${esc(file.path)}', ${JSON.stringify(item.text).replace(/'/g, '&apos;')})">Descartar</button>
+                </div>
+              </li>
+            `).join('')}
+          </ul>
+        `}
+      </div>
+    `).join('');
+
+    lucide.createIcons();
+  } catch (err) {
+    container.innerHTML = '<div class="inbox-empty">Erro ao carregar inbox.</div>';
+  }
+}
+
+async function markInboxSeen() {
+  try {
+    await fetch(`${API_URL}/obsidian/inbox/seen`, { method: 'POST', headers });
+    document.getElementById('inbox-badge').hidden = true;
+  } catch {}
+}
+
+async function promoteInbox(path, line, type) {
+  try {
+    const res = await fetch(`${API_URL}/obsidian/inbox/promote`, {
+      method: 'POST', headers,
+      body: JSON.stringify({ path, line, type, category: 'geral' })
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      alert(err.error || 'Erro ao promover');
+      return;
+    }
+    await loadDashboard();
+    refreshFocus();
+    await renderInboxView();
+  } catch {
+    alert('Erro ao conectar.');
+  }
+}
+window.promoteInbox = promoteInbox;
+
+async function dismissInbox(path, line) {
+  if (!confirm('Descartar essa linha do inbox?')) return;
+  try {
+    const res = await fetch(`${API_URL}/obsidian/inbox/dismiss`, {
+      method: 'POST', headers,
+      body: JSON.stringify({ path, line })
+    });
+    if (!res.ok) {
+      alert('Erro ao descartar');
+      return;
+    }
+    await renderInboxView();
+  } catch {
+    alert('Erro ao conectar.');
+  }
+}
+window.dismissInbox = dismissInbox;
 
 // ===== Helpers =====
 function esc(str) {

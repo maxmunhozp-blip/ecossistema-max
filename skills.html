@@ -72,14 +72,24 @@ main{max-width:900px;margin:0 auto;padding:40px 24px 80px}
 .kw-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:#a78bfa;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
 .kw-btn:hover{background:rgba(124,58,237,.2)}
 .avail-tag{font-size:10px;font-weight:700;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:var(--amber);padding:2px 7px;border-radius:4px}
-/* Switch */
+/* Switch — VPS (laranja) */
 .sw{position:relative;display:inline-block;width:38px;height:20px;flex-shrink:0}
 .sw input{opacity:0;width:0;height:0}
 .sw-t{position:absolute;inset:0;background:var(--surface-3);border:1px solid var(--border-bright);border-radius:20px;transition:.2s;cursor:pointer}
-.sw input:checked~.sw-t{background:var(--green);border-color:var(--green)}
+.sw input:checked~.sw-t{background:var(--orange);border-color:var(--orange)}
 .sw-th{position:absolute;top:3px;left:3px;width:12px;height:12px;background:#fff;border-radius:50%;transition:.2s;pointer-events:none}
 .sw input:checked~.sw-th{transform:translateX(18px)}
 .sw.busy{opacity:.5;pointer-events:none}
+/* Local indicator (verde) */
+.local-ind{position:relative;display:inline-block;width:38px;height:20px;flex-shrink:0;background:var(--surface-3);border:1px solid var(--border-bright);border-radius:20px;cursor:default}
+.local-ind::after{content:'';position:absolute;top:3px;left:3px;width:12px;height:12px;background:var(--border-bright);border-radius:50%;transition:.2s}
+.local-ind.on{background:rgba(0,212,160,.18);border-color:var(--green)}
+.local-ind.on::after{background:var(--green);transform:translateX(18px)}
+/* Labels */
+.sw-label{font-size:9px;font-weight:700;color:var(--text-dim);text-align:center;margin-top:2px;line-height:1}
+.ind-group{display:flex;flex-direction:column;align-items:center;gap:1px;flex-shrink:0}
+.ind-group .sw-label.loc{color:rgba(0,212,160,.6)}
+.ind-group .sw-label.vps{color:rgba(234,128,73,.6)}
 /* Install section */
 .install-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:20px}
 .ib-title{font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
@@ -121,8 +131,9 @@ main{max-width:900px;margin:0 auto;padding:40px 24px 80px}
   <div class="page-sub">Ative e desative suas skills no VPS com um clique</div>
   <div class="stats">
     <div class="stat"><div class="stat-num" id="sttotal">—</div><div class="stat-label">Skills disponíveis</div></div>
-    <div class="stat"><div class="stat-num green" id="ston">—</div><div class="stat-label">Habilitadas no VPS</div></div>
-    <div class="stat"><div class="stat-num purple">9</div><div class="stat-label">Grupos</div></div>
+    <div class="stat"><div class="stat-num green" id="stlocal">—</div><div class="stat-label">Instaladas LOCAL</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--orange)" id="ston">—</div><div class="stat-label">Habilitadas no VPS</div></div>
+    <div class="stat"><div class="stat-num purple">11</div><div class="stat-label">Grupos</div></div>
   </div>
   <div class="toolbar">
     <div class="search-wrap">
@@ -147,6 +158,32 @@ main{max-width:900px;margin:0 auto;padding:40px 24px 80px}
 <script>
 const API='https://terminal.tracktor.com.br/api/skills';
 let installed=new Set();
+
+// Skills instaladas no Mac LOCAL (atualizado em 2026-04-04)
+const localSkills=new Set([
+  'agente-criativo-tractorpro','skill-a11y-audit','skill-ad-creative','skill-ads',
+  'skill-ai-marketing','skill-animation-patterns','skill-apresentacao',
+  'skill-brand-identity','skill-canva-branded-presentation','skill-canva-connect',
+  'skill-canva-design-translation','skill-canva-implement-feedback',
+  'skill-canva-resize-for-social-media','skill-carrossel','skill-claude-md-builder',
+  'skill-color-expert','skill-color-palette-brand','skill-color-palette-ui',
+  'skill-content-strategy','skill-copywriting','skill-criativo-tractorpro',
+  'skill-css-architecture','skill-dash-ads','skill-ecosistema-max','skill-eixo',
+  'skill-email-sequence','skill-fala-humana','skill-gsap-scroll','skill-landing-page',
+  'skill-launch-strategy','skill-marca-viva-squad','skill-meta-ads-analyzer',
+  'skill-officina-carousel','skill-officina-design-system','skill-page-cro',
+  'skill-pagina-vendas','skill-paid-ads','skill-persona-meufluxo','skill-persona-orbitta',
+  'skill-persona-profunda','skill-persona-tractorpro','skill-photo-kit',
+  'skill-project-management-adhd','skill-remotion-ads','skill-responsive-design',
+  'skill-seo-performance','skill-sexy-canvas','skill-shadcn-ui','skill-social-content',
+  'skill-tailwind-design-system','skill-typography','skill-ui-component-patterns',
+  'skill-ui-design-system','skill-ux-dashboard','skill-ux-researcher-designer',
+  'skill-vercel-composition-patterns','skill-vercel-react-best-practices',
+  'skill-web-design-guidelines','xquads-advisory-board','xquads-brand-squad',
+  'xquads-c-level','xquads-copy-squad','xquads-cybersecurity','xquads-data-squad',
+  'xquads-design-squad','xquads-hormozi-squad','xquads-movement-squad',
+  'xquads-storytelling-squad','xquads-traffic-masters'
+]);
 
 const G=[
   {id:'brand',name:'Brand & Identidade',icon:'layers',c:'#ec4899',s:[
@@ -266,10 +303,17 @@ function render(){
         ${g.s.map(s=>`
         <div class="sr" id="r-${s.id}">
           <div class="sm" onclick="exp('${s.id}')">
-            <label class="sw" id="sw-${s.id}" onclick="event.stopPropagation()">
-              <input type="checkbox" id="chk-${s.id}" ${installed.has(s.id)?'checked':''} onchange="tog('${s.id}')"/>
-              <div class="sw-t"></div><div class="sw-th"></div>
-            </label>
+            <div class="ind-group" onclick="event.stopPropagation()" title="${localSkills.has(s.id)?'LOCAL: instalada':'LOCAL: não instalada'}">
+              <div class="local-ind ${localSkills.has(s.id)?'on':''}"></div>
+              <span class="sw-label loc">LOCAL</span>
+            </div>
+            <div class="ind-group" onclick="event.stopPropagation()" title="${installed.has(s.id)?'VPS: habilitada':'VPS: desabilitada'}">
+              <label class="sw" id="sw-${s.id}">
+                <input type="checkbox" id="chk-${s.id}" ${installed.has(s.id)?'checked':''} onchange="tog('${s.id}')"/>
+                <div class="sw-t"></div><div class="sw-th"></div>
+              </label>
+              <span class="sw-label vps">VPS</span>
+            </div>
             <div class="si">
               <div class="sn">${s.n}${s.av?` <span class="avail-tag">disponível</span>`:''}</div>
               <div class="sd">${s.d}</div>
@@ -390,7 +434,13 @@ function filter(q){
   lucide.createIcons();
 }
 
-function updStats(){document.getElementById('ston').textContent=installed.size;}
+function updStats(){
+  document.getElementById('ston').textContent=installed.size;
+  // contar apenas skills que estão no G (visíveis na página)
+  const allIds=new Set(G.flatMap(g=>g.s.map(s=>s.id)));
+  const localCount=[...localSkills].filter(id=>allIds.has(id)).length;
+  document.getElementById('stlocal').textContent=localCount;
+}
 function updBadges(){
   G.forEach(g=>{
     const n=g.s.filter(s=>installed.has(s.id)).length;

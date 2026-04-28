@@ -15,6 +15,10 @@
       <button class="sidebar-btn active" data-view="home" title="Home">
         <i data-lucide="message-circle"></i>
       </button>
+      <button class="sidebar-btn" data-view="inbox" title="Inbox">
+        <i data-lucide="inbox"></i>
+        <span class="sidebar-badge" id="inbox-badge" hidden></span>
+      </button>
       <button class="sidebar-btn" data-view="agencia" title="Agencia">
         <i data-lucide="users"></i>
       </button>
@@ -63,6 +67,16 @@
           <button type="submit"><i data-lucide="send"></i></button>
         </form>
       </div>
+    </div>
+
+    <!-- VIEW: Inbox (Obsidian) -->
+    <div class="view" id="view-inbox">
+      <div class="view-header">
+        <button class="btn-back" onclick="goHome()"><i data-lucide="arrow-left" class="icon-sm"></i> Voltar</button>
+        <h2>Inbox</h2>
+        <span class="view-header-meta" id="inbox-meta"></span>
+      </div>
+      <div class="single-column" id="inbox-list"></div>
     </div>
 
     <!-- VIEW: Agencia -->

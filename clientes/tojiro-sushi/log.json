@@ -2,6 +2,17 @@
   "slug": "tojiro-sushi",
   "entries": [
     {
+      "id": "2026-03-28-001",
+      "data": "2026-03-28T10:00:00",
+      "titulo": "Nova estrutura ativada — campanha original pausada",
+      "descricao": "Token renovado. Saldo confirmado: R$441. Campanha 'TOJIRO / 2026 / MAX - Estrutura Nova (MESSAGES)' ativada via API (R$60/dia, CBO, 2 ad sets: remarketing 365D + prospecção Advantage+). Campanha Original pausada. Conta agora roda com estrutura correta: objetivo MESSAGES, sem canibalização, com prospecção de público frio.",
+      "tag": "ativado",
+      "autor": "Alexandre Albino",
+      "plataforma": "Meta Ads",
+      "metricas": { "saldo": 441, "budget_novo": 60, "ctr_3d": 4.23, "custo_conversa_3d": 3.18 },
+      "ids": { "ativada": "120241543105920760", "pausada": "120234959881500760" }
+    },
+    {
       "id": "2026-03-25-004",
       "data": "2026-03-25T14:00:00",
       "titulo": "Nova estrutura de campanhas criada",

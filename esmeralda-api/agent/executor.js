@@ -1,8 +1,25 @@
 import db from '../db.js';
-import { readFileSync, readdirSync, statSync } from 'fs';
-import { join, relative } from 'path';
+import { readFileSync, readdirSync, statSync, writeFileSync, mkdirSync, existsSync, appendFileSync } from 'fs';
+import { join, relative, dirname } from 'path';
+import { execSync } from 'child_process';
 
 const VAULT_PATH = process.env.OBSIDIAN_VAULT || '/opt/esmeralda-vault';
+
+function safePath(input) {
+  const safe = input.replace(/\.\./g, '');
+  const full = join(VAULT_PATH, safe);
+  if (!full.startsWith(VAULT_PATH)) throw new Error('invalid path');
+  return full;
+}
+
+function gitCommitPush(message) {
+  try {
+    execSync(`cd ${VAULT_PATH} && git add -A && git diff --cached --quiet || (git commit -m "${message.replace(/"/g, '\\"')}" && git push origin main)`, { stdio: 'pipe' });
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+}
 
 function listVaultFiles(folder = '') {
   const base = folder ? join(VAULT_PATH, folder) : VAULT_PATH;
@@ -89,11 +106,54 @@ export function executeTool(name, input) {
     }
     case 'read_obsidian': {
       try {
-        const safePath = input.path.replace(/\.\./g, '');
-        const full = join(VAULT_PATH, safePath);
-        if (!full.startsWith(VAULT_PATH)) return { error: 'invalid path' };
+        const full = safePath(input.path);
         const content = readFileSync(full, 'utf-8');
-        return { path: safePath, content };
+        return { path: input.path, content };
+      } catch (err) {
+        return { error: err.message };
+      }
+    }
+    case 'append_obsidian': {
+      try {
+        const full = safePath(input.path);
+        const dir = dirname(full);
+        if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+        const prefix = existsSync(full) ? '\n' : '';
+        appendFileSync(full, prefix + input.content + '\n', 'utf-8');
+        const sync = gitCommitPush(`esmeralda: append ${input.path}`);
+        return { ok: true, path: input.path, sync };
+      } catch (err) {
+        return { error: err.message };
+      }
+    }
+    case 'remove_inbox_line': {
+      try {
+        const full = safePath(input.path);
+        if (!full.includes('/Inbox/')) return { error: 'so pode remover de Inbox/' };
+        const content = readFileSync(full, 'utf-8');
+        const target = input.line.trim();
+        const lines = content.split('\n').filter(l => {
+          const stripped = l.replace(/^\s*[-*]\s*\[.\]\s*/, '').replace(/^\s*[-*]\s*/, '').trim();
+          return stripped !== target;
+        });
+        writeFileSync(full, lines.join('\n'), 'utf-8');
+        const sync = gitCommitPush(`esmeralda: remove line from ${input.path}`);
+        return { ok: true, removed: target, sync };
+      } catch (err) {
+        return { error: err.message };
+      }
+    }
+    case 'write_journal': {
+      try {
+        const today = new Date().toISOString().slice(0, 10);
+        const path = `Diario/${today}.md`;
+        const full = safePath(path);
+        const dir = dirname(full);
+        if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+        const header = `# ${today}\n\n`;
+        writeFileSync(full, header + input.summary + '\n', 'utf-8');
+        const sync = gitCommitPush(`esmeralda: diario ${today}`);
+        return { ok: true, path, sync };
       } catch (err) {
         return { error: err.message };
       }

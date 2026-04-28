@@ -7,6 +7,7 @@ import milestoneRoutes from './routes/milestones.js';
 import pendenciaRoutes from './routes/pendencias.js';
 import projectRoutes from './routes/projects.js';
 import chatRoutes from './routes/chat.js';
+import obsidianRoutes from './routes/obsidian.js';
 
 const app = express();
 const PORT = process.env.PORT || 4100;
@@ -30,6 +31,7 @@ app.use('/api', milestoneRoutes);
 app.use('/api', pendenciaRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', chatRoutes);
+app.use('/api', obsidianRoutes);
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 

@@ -1,0 +1,103 @@
+name: Tojiro Sushi — Relatório 48h
+
+on:
+  schedule:
+    # Toda segunda e quarta às 9h (horário de Brasília = UTC-3 → 12h UTC)
+    - cron: '0 12 * * 1,3'
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: 'Período em dias (padrão: 2)'
+        required: false
+        default: '2'
+
+jobs:
+  relatorio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gerar e enviar relatório
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          META_TOKEN: ${{ secrets.TOJIRO_META_TOKEN }}
+        run: |
+          DIAS="${{ github.event.inputs.dias || '2' }}"
+          ACC="act_525713203332437"
+
+          # Se não tiver secret configurado, usa token fixo (atualizar via secret depois)
+          TOKEN="${META_TOKEN:-EAAXt2Glu2r0BRE5wybkx2atbsFQrRDNMm1tZBp4lFte6ofAhq1UCEvqSa4dHKIoGYhH5UksisgPOEU3k08WDpCFCuqXG8FS74SruTeQxTzeSRX9hP8UZBEyX3s55Que5u3eyBQmSrYkfxdgDryTq1SiHm8vKRmmS7qhCPEPo7JODc0MjZA9YcyEGqwD3y9XKzBT6849ZB8w4Kyq9PGx4oKMxG0xTivHC3lyxhimSytGy}"
+
+          # Período (last_2d ou last_7d)
+          PRESET="last_${DIAS}d"
+
+          # Dados da campanha nova
+          CAMP=$(curl -s "https://graph.facebook.com/v19.0/120241543105920760?fields=name,status,daily_budget&access_token=${TOKEN}")
+          CAMP_STATUS=$(echo $CAMP | python3 -c "import json,sys; d=json.load(sys.stdin); print('✅ Ativa' if d.get('status')=='ACTIVE' else '⏸ Pausada')")
+          CAMP_BUDGET=$(echo $CAMP | python3 -c "import json,sys; d=json.load(sys.stdin); print(int(d.get('daily_budget',0))//100)")
+
+          # Insights campanha
+          INSIGHTS=$(curl -s "https://graph.facebook.com/v19.0/120241543105920760/insights?fields=spend,impressions,reach,cpm,ctr,actions,cost_per_action_type&date_preset=${PRESET}&access_token=${TOKEN}")
+
+          SPEND=$(echo $INSIGHTS | python3 -c "import json,sys; d=json.load(sys.stdin); i=d.get('data',[{}])[0]; print(f\"R\${float(i.get('spend',0)):.2f}\")" 2>/dev/null || echo "R\$0")
+          IMPRESSIONS=$(echo $INSIGHTS | python3 -c "import json,sys; d=json.load(sys.stdin); i=d.get('data',[{}])[0]; print(i.get('impressions','0'))" 2>/dev/null || echo "0")
+          REACH=$(echo $INSIGHTS | python3 -c "import json,sys; d=json.load(sys.stdin); i=d.get('data',[{}])[0]; print(i.get('reach','0'))" 2>/dev/null || echo "0")
+          CTR=$(echo $INSIGHTS | python3 -c "import json,sys; d=json.load(sys.stdin); i=d.get('data',[{}])[0]; print(f\"{float(i.get('ctr',0)):.2f}%\")" 2>/dev/null || echo "0%")
+          CPM=$(echo $INSIGHTS | python3 -c "import json,sys; d=json.load(sys.stdin); i=d.get('data',[{}])[0]; print(f\"R\${float(i.get('cpm',0)):.2f}\")" 2>/dev/null || echo "0")
+
+          CONV=$(echo $INSIGHTS | python3 -c "
+          import json,sys
+          d=json.load(sys.stdin)
+          i=d.get('data',[{}])[0]
+          conv=next((int(a['value']) for a in i.get('actions',[]) if a['action_type']=='onsite_conversion.messaging_conversation_started_7d'),0)
+          print(conv)
+          " 2>/dev/null || echo "0")
+
+          CPP=$(echo $INSIGHTS | python3 -c "
+          import json,sys
+          d=json.load(sys.stdin)
+          i=d.get('data',[{}])[0]
+          cpp=next((float(a['value']) for a in i.get('cost_per_action_type',[]) if a['action_type']=='onsite_conversion.messaging_conversation_started_7d'),None)
+          print(f'R\${cpp:.2f}' if cpp else '—')
+          " 2>/dev/null || echo "—")
+
+          # Insights por ad set
+          RMK=$(curl -s "https://graph.facebook.com/v19.0/120241543177530760/insights?fields=spend,actions,cost_per_action_type&date_preset=${PRESET}&access_token=${TOKEN}")
+          PRO=$(curl -s "https://graph.facebook.com/v19.0/120241543186020760/insights?fields=spend,actions,cost_per_action_type&date_preset=${PRESET}&access_token=${TOKEN}")
+
+          RMK_SPEND=$(echo $RMK | python3 -c "import json,sys; d=json.load(sys.stdin); print(f\"R\${float(d.get('data',[{}])[0].get('spend',0)):.2f}\")" 2>/dev/null || echo "—")
+          PRO_SPEND=$(echo $PRO | python3 -c "import json,sys; d=json.load(sys.stdin); print(f\"R\${float(d.get('data',[{}])[0].get('spend',0)):.2f}\")" 2>/dev/null || echo "—")
+
+          RMK_CONV=$(echo $RMK | python3 -c "import json,sys; d=json.load(sys.stdin); i=d.get('data',[{}])[0]; print(next((int(a['value']) for a in i.get('actions',[]) if a['action_type']=='onsite_conversion.messaging_conversation_started_7d'),0))" 2>/dev/null || echo "0")
+          PRO_CONV=$(echo $PRO | python3 -c "import json,sys; d=json.load(sys.stdin); i=d.get('data',[{}])[0]; print(next((int(a['value']) for a in i.get('actions',[]) if a['action_type']=='onsite_conversion.messaging_conversation_started_7d'),0))" 2>/dev/null || echo "0")
+
+          RMK_CPP=$(echo $RMK | python3 -c "import json,sys; d=json.load(sys.stdin); i=d.get('data',[{}])[0]; cpp=next((float(a['value']) for a in i.get('cost_per_action_type',[]) if a['action_type']=='onsite_conversion.messaging_conversation_started_7d'),None); print(f'R\${cpp:.2f}' if cpp else '—')" 2>/dev/null || echo "—")
+          PRO_CPP=$(echo $PRO | python3 -c "import json,sys; d=json.load(sys.stdin); i=d.get('data',[{}])[0]; cpp=next((float(a['value']) for a in i.get('cost_per_action_type',[]) if a['action_type']=='onsite_conversion.messaging_conversation_started_7d'),None); print(f'R\${cpp:.2f}' if cpp else '—')" 2>/dev/null || echo "—")
+
+          # Data do relatório
+          DATA=$(TZ='America/Sao_Paulo' date '+%d/%m/%Y %H:%M')
+
+          # Monta mensagem
+          MSG="🍱 *Tojiro Sushi — Relatório ${DIAS}h*
+          📅 ${DATA}
+
+          *Campanha: Estrutura Nova (MESSAGES)*
+          Status: ${CAMP_STATUS} | Budget: R\$${CAMP_BUDGET}/dia
+
+          *Resultado geral (${DIAS}d):*
+          💸 Gasto: ${SPEND}
+          👁 Alcance: ${REACH} | Impressões: ${IMPRESSIONS}
+          📊 CTR: ${CTR} | CPM: ${CPM}
+          💬 Conversas: ${CONV} | Custo/conversa: ${CPP}
+
+          *Por ad set:*
+          📌 Remarketing — ${RMK_SPEND} | ${RMK_CONV} conv | ${RMK_CPP}
+          🎯 Prospecção — ${PRO_SPEND} | ${PRO_CONV} conv | ${PRO_CPP}
+
+          _Meta: conversas para reservas e agendamentos_"
+
+          # Envia pro Telegram
+          curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${CHAT_ID}" \
+            -d "text=${MSG}" \
+            -d "parse_mode=Markdown" \
+            -d "disable_notification=false" | python3 -c "import json,sys; d=json.load(sys.stdin); print('✅ Enviado' if d.get('ok') else f'❌ Erro: {d}')"
