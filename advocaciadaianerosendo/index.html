@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta Digital — Dra. Daiane Rosendo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0f172a;
+            --navy-light: #1e293b;
+            --muted: #64748b;
+            --muted-light: #94a3b8;
+            --border: #334155;
+            --cream: #fafaf9;
+            --gold: #b8860b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--cream);
+            color: var(--navy);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        header {
+            margin-bottom: 64px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--navy);
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .section {
+            margin-bottom: 56px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .feature-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 15px;
+            color: var(--navy);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li::before {
+            content: "→";
+            color: var(--muted);
+            margin-right: 12px;
+            font-weight: 500;
+        }
+
+        .investment-box {
+            background: var(--navy);
+            color: var(--cream);
+            border-radius: 12px;
+            padding: 40px 32px;
+            text-align: center;
+        }
+
+        .investment-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted-light);
+            margin-bottom: 12px;
+        }
+
+        .investment-value {
+            font-size: 48px;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .investment-note {
+            font-size: 14px;
+            color: var(--muted-light);
+        }
+
+        .cta {
+            background: var(--navy);
+            color: var(--cream);
+            border: none;
+            border-radius: 8px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 24px;
+            transition: opacity 0.2s;
+        }
+
+        .cta:hover {
+            opacity: 0.9;
+        }
+
+        footer {
+            margin-top: 80px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .card {
+                padding: 24px;
+            }
+
+            .investment-value {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">DR</div>
+            <h1>Proposta de Presença Digital</h1>
+            <p class="subtitle">Dra. Daiane Rosendo — Advocacia Especializada</p>
+        </header>
+
+        <div class="section">
+            <div class="section-title">Escopo do Projeto</div>
+            <div class="card">
+                <div class="card-title">Site Institucional Moderno</div>
+                <div class="card-description">
+                    Novo site profissional com design contemporâneo, otimizado para conversão de leads. Inclui formulários de contato, integração WhatsApp e estrutura SEO completa.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">AdvocaciaIA — Plataforma SaaS Jurídica</div>
+                <div class="card-description">
+                    Acesso completo à plataforma AdvocaciaIA com CRM jurídico, assistente LARA (IA especializada), geração de petições e monitoramento automático de intimações via Gmail.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Gestão de Tráfego Google Ads</div>
+                <div class="card-description">
+                    Campanhas estratégicas no Google Ads para captação de clientes qualificados. Inclui criação de anúncios, otimização de palavras-chave e relatórios mensais de performance.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Manutenção Mensal</div>
+                <div class="card-description">
+                    Suporte técnico contínuo, atualizações de conteúdo, monitoramento de uptime e ajustes de performance. Garantia de funcionamento 24/7.
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Entregas Incluídas</div>
+            <div class="card">
+                <ul class="feature-list">
+                    <li>Design responsivo (desktop, tablet, mobile)</li>
+                    <li>Hospedagem profissional com SSL</li>
+                    <li>Integração WhatsApp Business</li>
+                    <li>Formulários de captação de leads</li>
+                    <li>CRM jurídico completo (AdvocaciaIA)</li>
+                    <li>Assistente IA especializada em Direito</li>
+                    <li>Gerador de petições automatizado</li>
+                    <li>Monitor de intimações Gmail</li>
+                    <li>Campanhas Google Ads configuradas</li>
+                    <li>Relatórios mensais de tráfego</li>
+                    <li>Suporte técnico prioritário</li>
+                    <li>Atualizações de conteúdo ilimitadas</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Investimento</div>
+            <div class="investment-box">
+                <div class="investment-label">Valor Total do Projeto</div>
+                <div class="investment-value">[INVESTIMENTO]</div>
+                <div class="investment-note">Valor a ser definido conforme escopo final</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <button class="cta" onclick="window.open('https://wa.me/5511999999999?text=Olá! Gostaria de conversar sobre a proposta digital para meu escritório.', '_blank')">
+                Aprovar Proposta via WhatsApp
+            </button>
+        </div>
+
+        <footer>
+            <p>Proposta elaborada por Tracktor Digital</p>
+            <p style="margin-top: 8px;">tracktor.com.br</p>
+        </footer>
+    </div>
+</body>
+</html>
