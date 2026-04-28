@@ -1019,4 +1019,22 @@ body {
   .single-column { padding: 16px; }
   .agencia-summary { padding: 16px 16px 0; }
   .pendencias-grid { grid-template-columns: 1fr; }
+
+  /* Inbox mobile */
+  .inbox-file-header { padding: 12px 14px; }
+  .inbox-file-name { font-size: 13px; }
+  .inbox-item { padding: 10px 14px; flex-wrap: wrap; }
+  .inbox-item-text { font-size: 12px; }
+  .inbox-actions {
+    opacity: 1;
+    width: 100%;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .inbox-action {
+    font-size: 10px;
+    padding: 4px 8px;
+    flex: 1;
+    min-width: 70px;
+  }
 }
