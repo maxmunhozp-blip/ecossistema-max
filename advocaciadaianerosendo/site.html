@@ -128,32 +128,21 @@
             align-items: center;
             padding: 120px 6vw 80px;
             position: relative;
-            background: linear-gradient(135deg, #fdfcfa 0%, #f8f6f3 100%);
+            background:
+                linear-gradient(135deg, rgba(28, 28, 28, 0.85) 0%, rgba(28, 28, 28, 0.75) 100%),
+                url('https://advocaciadaianerosendo.com.br/wp-content/uploads/2026/02/Banner-Incial-Rosendo.png') center center / cover no-repeat;
             overflow: hidden;
         }
 
         .hero::before {
             content: '';
             position: absolute;
-            top: -10%;
-            right: -5%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(166, 124, 82, 0.15) 0%, transparent 50%);
             pointer-events: none;
-            border-radius: 50%;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -10%;
-            left: -5%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(166, 124, 82, 0.06) 0%, transparent 70%);
-            pointer-events: none;
-            border-radius: 50%;
         }
 
         .hero-container {
@@ -168,7 +157,6 @@
             max-width: 700px;
             opacity: 0;
             animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
-            margin-bottom: 60px;
         }
 
         @keyframes fadeInUp {
@@ -197,16 +185,18 @@
             font-weight: 600;
             line-height: 1.15;
             margin-bottom: 32px;
-            color: var(--ink);
+            color: var(--ivory);
             letter-spacing: 0.02em;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
 
         .hero-description {
             font-size: 18px;
             line-height: 1.8;
-            color: var(--stone);
+            color: rgba(253, 252, 250, 0.9);
             margin-bottom: 48px;
             font-weight: 400;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
         }
 
         .hero-cta {
@@ -214,8 +204,8 @@
             align-items: center;
             gap: 12px;
             padding: 18px 48px;
-            background: var(--ink);
-            color: var(--ivory);
+            background: var(--gold);
+            color: var(--ink);
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
@@ -224,6 +214,7 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
         }
 
         .hero-cta::before {
@@ -233,7 +224,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.6s;
         }
 
@@ -243,35 +234,13 @@
 
         .hero-cta:hover {
             background: var(--bronze);
+            color: var(--ivory);
             transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(166, 124, 82, 0.3);
+            box-shadow: 0 12px 32px rgba(166, 124, 82, 0.5);
         }
 
         .hero-photo {
-            position: relative;
-            opacity: 0;
-            animation: fadeInScale 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
-            margin-top: 40px;
-            border-radius: 2px;
-            overflow: hidden;
-            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.12);
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .hero-photo img {
-            width: 100%;
-            height: auto;
-            display: block;
+            display: none;
         }
 
         .section {
