@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daiane Rosendo — Advocacia Especializada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0f172a;
+            --gold: #b8860b;
+            --cream: #fafaf9;
+            --muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: var(--navy);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 24px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--navy);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .logo-text p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .header-cta {
+            padding: 12px 32px;
+            background: var(--navy);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .header-cta:hover {
+            opacity: 0.9;
+        }
+
+        .hero {
+            padding: 80px 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: var(--muted);
+            margin-bottom: 48px;
+            line-height: 1.7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            margin-top: 64px;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            padding: 32px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .section {
+            padding: 80px 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: var(--muted);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .service-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 32px;
+            transition: box-shadow 0.3s;
+        }
+
+        .service-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--navy);
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .service-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .service-description {
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .header, .hero, .section {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-area">
+            <div class="logo">DR</div>
+            <div class="logo-text">
+                <h1>Daiane Rosendo</h1>
+                <p>Advocacia Especializada</p>
+            </div>
+        </div>
+        <a href="#contato" class="header-cta">Agendar Consulta</a>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Advocacia de Família com Excelência e Estratégia</h2>
+            <p class="hero-description">Mais de 15 anos de experiência em Direito de Família, com foco em soluções personalizadas e resultados concretos para nossos clientes.</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Anos de Experiência</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Casos Resolvidos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Taxa de Sucesso</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h3 class="section-title">Áreas de Atuação</h3>
+            <p class="section-subtitle">Soluções jurídicas especializadas para questões familiares</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon"></div>
+                <h4 class="service-title">Divórcio</h4>
+                <p class="service-description">Processos consensuais e litigiosos com foco em acordos equilibrados e proteção patrimonial.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon"></div>
+                <h4 class="service-title">Guarda e Convivência</h4>
+                <p class="service-description">Defesa dos direitos da criança e do adolescente com soluções que priorizam o bem-estar familiar.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon"></div>
+                <h4 class="service-title">Pensão Alimentícia</h4>
+                <p class="service-description">Revisão, fixação e execução de alimentos com análise técnica da capacidade financeira.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon"></div>
+                <h4 class="service-title">Inventário</h4>
+                <p class="service-description">Partilha de bens judicial e extrajudicial com planejamento sucessório estratégico.</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

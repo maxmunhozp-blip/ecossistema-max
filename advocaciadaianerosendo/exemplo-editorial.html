@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daiane Rosendo — Advocacia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0f172a;
+            --gold: #b8860b;
+            --cream: #fafaf9;
+            --muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--navy);
+            line-height: 1.6;
+        }
+
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--navy) 0%, #1e293b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .hero-label {
+            font-size: 13px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 48px;
+            font-weight: 500;
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(64px, 12vw, 120px);
+            font-weight: 300;
+            color: var(--cream);
+            line-height: 1;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: #94a3b8;
+            margin-bottom: 64px;
+            font-weight: 400;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 18px 48px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .hero-cta:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        .section {
+            padding: 120px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 400;
+            color: var(--navy);
+            margin-bottom: 48px;
+            line-height: 1.2;
+        }
+
+        .expertise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 48px;
+            margin-top: 80px;
+        }
+
+        .expertise-item {
+            padding: 48px 0;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .expertise-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14px;
+            color: var(--gold);
+            margin-bottom: 24px;
+        }
+
+        .expertise-title {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+
+        .expertise-description {
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 80vh;
+            }
+
+            .section {
+                padding: 80px 24px;
+            }
+
+            .expertise-grid {
+                gap: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-label">Advocacia</div>
+            <h1 class="hero-title">Daiane<br>Rosendo</h1>
+            <p class="hero-subtitle">Direito de Família</p>
+            <a href="#contato" class="hero-cta">Agendar Consulta</a>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-label">Especialização</div>
+        <h2 class="section-title">Soluções estratégicas para questões familiares complexas</h2>
+
+        <div class="expertise-grid">
+            <div class="expertise-item">
+                <div class="expertise-number">01</div>
+                <h3 class="expertise-title">Divórcio</h3>
+                <p class="expertise-description">Processos consensuais e litigiosos com foco em acordos equilibrados e proteção patrimonial.</p>
+            </div>
+
+            <div class="expertise-item">
+                <div class="expertise-number">02</div>
+                <h3 class="expertise-title">Guarda e Convivência</h3>
+                <p class="expertise-description">Defesa dos direitos da criança e do adolescente com soluções que priorizam o bem-estar familiar.</p>
+            </div>
+
+            <div class="expertise-item">
+                <div class="expertise-number">03</div>
+                <h3 class="expertise-title">Pensão Alimentícia</h3>
+                <p class="expertise-description">Revisão, fixação e execução de alimentos com análise técnica da capacidade financeira.</p>
+            </div>
+
+            <div class="expertise-item">
+                <div class="expertise-number">04</div>
+                <h3 class="expertise-title">Inventário</h3>
+                <p class="expertise-description">Partilha de bens judicial e extrajudicial com planejamento sucessório estratégico.</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

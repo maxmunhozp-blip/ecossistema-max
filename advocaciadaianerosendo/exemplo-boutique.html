@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daiane Rosendo — Advocacia de Família</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0f172a;
+            --gold: #b8860b;
+            --cream: #fafaf9;
+            --muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--navy);
+            line-height: 1.6;
+        }
+
+        .hero {
+            min-height: 90vh;
+            background: linear-gradient(to bottom, var(--cream) 0%, #f5f5f4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+
+        .hero-content {
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .monogram {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 40px;
+            border: 2px solid var(--navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 400;
+            color: var(--navy);
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(42px, 8vw, 64px);
+            font-weight: 400;
+            color: var(--navy);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 48px;
+        }
+
+        .hero-divider {
+            width: 60px;
+            height: 1px;
+            background: var(--gold);
+            margin: 48px auto;
+        }
+
+        .hero-description {
+            font-size: 16px;
+            color: var(--muted);
+            line-height: 1.8;
+            max-width: 480px;
+            margin: 0 auto 48px;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 16px 40px;
+            background: var(--navy);
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 0.05em;
+            border-radius: 4px;
+            transition: opacity 0.3s;
+            font-weight: 500;
+        }
+
+        .hero-cta:hover {
+            opacity: 0.9;
+        }
+
+        .section {
+            padding: 100px 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 5vw, 42px);
+            font-weight: 400;
+            color: var(--navy);
+            margin-bottom: 24px;
+        }
+
+        .section-description {
+            font-size: 16px;
+            color: var(--muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 48px;
+        }
+
+        .service {
+            text-align: center;
+            padding: 40px 24px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .service:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+        }
+
+        .service-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--gold);
+            margin-bottom: 24px;
+        }
+
+        .service-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+
+        .service-description {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 80vh;
+            }
+
+            .section {
+                padding: 80px 24px;
+            }
+
+            .services {
+                gap: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="monogram">DR</div>
+            <h1 class="hero-title">Daiane Rosendo</h1>
+            <p class="hero-subtitle">Advocacia de Família</p>
+            <div class="hero-divider"></div>
+            <p class="hero-description">Atendimento personalizado com foco em soluções estratégicas para questões familiares complexas. Experiência, discrição e resultados.</p>
+            <a href="#contato" class="hero-cta">Agendar Consulta</a>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <div class="section-label">Especialização</div>
+            <h2 class="section-title">Áreas de Atuação</h2>
+            <p class="section-description">Soluções jurídicas personalizadas com foco em resultados concretos e proteção dos seus direitos</p>
+        </div>
+
+        <div class="services">
+            <div class="service">
+                <div class="service-number">01</div>
+                <h3 class="service-title">Divórcio</h3>
+                <p class="service-description">Processos consensuais e litigiosos com foco em acordos equilibrados e proteção patrimonial</p>
+            </div>
+
+            <div class="service">
+                <div class="service-number">02</div>
+                <h3 class="service-title">Guarda e Convivência</h3>
+                <p class="service-description">Defesa dos direitos da criança com soluções que priorizam o bem-estar familiar</p>
+            </div>
+
+            <div class="service">
+                <div class="service-number">03</div>
+                <h3 class="service-title">Pensão Alimentícia</h3>
+                <p class="service-description">Revisão, fixação e execução com análise técnica da capacidade financeira</p>
+            </div>
+
+            <div class="service">
+                <div class="service-number">04</div>
+                <h3 class="service-title">Inventário</h3>
+                <p class="service-description">Partilha de bens judicial e extrajudicial com planejamento sucessório</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
