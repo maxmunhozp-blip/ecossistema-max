@@ -1,4 +1,29 @@
 import db from '../db.js';
+import { readFileSync, readdirSync, statSync } from 'fs';
+import { join, relative } from 'path';
+
+const VAULT_PATH = process.env.OBSIDIAN_VAULT || '/opt/esmeralda-vault';
+
+function listVaultFiles(folder = '') {
+  const base = folder ? join(VAULT_PATH, folder) : VAULT_PATH;
+  try {
+    const items = readdirSync(base);
+    const result = [];
+    for (const item of items) {
+      if (item.startsWith('.')) continue;
+      const full = join(base, item);
+      const stat = statSync(full);
+      if (stat.isDirectory()) {
+        result.push({ type: 'folder', name: item, path: relative(VAULT_PATH, full) });
+      } else if (item.endsWith('.md')) {
+        result.push({ type: 'file', name: item, path: relative(VAULT_PATH, full), size: stat.size });
+      }
+    }
+    return result;
+  } catch (err) {
+    return { error: err.message };
+  }
+}
 
 export function executeTool(name, input) {
   switch (name) {
@@ -58,6 +83,20 @@ export function executeTool(name, input) {
     case 'toggle_milestone': {
       db.prepare('UPDATE milestones SET done = ? WHERE id = ?').run(input.done, input.id);
       return db.prepare('SELECT * FROM milestones WHERE id = ?').get(input.id);
+    }
+    case 'list_obsidian': {
+      return listVaultFiles(input.folder || '');
+    }
+    case 'read_obsidian': {
+      try {
+        const safePath = input.path.replace(/\.\./g, '');
+        const full = join(VAULT_PATH, safePath);
+        if (!full.startsWith(VAULT_PATH)) return { error: 'invalid path' };
+        const content = readFileSync(full, 'utf-8');
+        return { path: safePath, content };
+      } catch (err) {
+        return { error: err.message };
+      }
     }
     default:
       return { error: `Unknown tool: ${name}` };

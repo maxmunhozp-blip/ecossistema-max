@@ -81,5 +81,27 @@ export const TOOLS = [
       },
       required: ['id', 'done']
     }
+  },
+  {
+    name: 'list_obsidian',
+    description: 'Lista os arquivos .md do vault do Obsidian do Max. Estrutura: Inbox/, Agencia/ (clientes), Projetos/ (foguetes/SaaS). Use quando o Max perguntar sobre notas, inbox, ou referencias do Obsidian.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        folder: { type: 'string', description: 'Pasta opcional pra filtrar (ex: "Inbox", "Agencia", "Projetos"). Se omitido lista raiz.' }
+      },
+      required: []
+    }
+  },
+  {
+    name: 'read_obsidian',
+    description: 'Le o conteudo de uma nota .md do vault do Obsidian. Use o caminho relativo, ex: "Inbox/Inbox Pessoal.md" ou "Agencia/Tojiro Mooca.md".',
+    input_schema: {
+      type: 'object',
+      properties: {
+        path: { type: 'string', description: 'Caminho relativo do arquivo .md dentro do vault' }
+      },
+      required: ['path']
+    }
   }
 ];
