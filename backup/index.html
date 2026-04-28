@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Plano de Recuperacao — Max Munhoz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Plano de Recuperacao</h1>
+      <p class="subtitle">Voce ta aqui porque perdeu acesso a algo. Calma. Esta tudo salvo. Siga abaixo.</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="status">
+      <h2>Onde tudo esta</h2>
+      <div class="status-grid">
+        <div class="status-card">
+          <span class="status-label">VPS</span>
+          <strong>76.13.172.151</strong>
+          <p>API Esmeralda, vault clonado, banco SQLite, sites</p>
+        </div>
+        <div class="status-card">
+          <span class="status-label">GitHub (privado)</span>
+          <strong>maxmunhozp-blip</strong>
+          <p>3 repos: claude-backup, esmeralda-vault, ecossistema-max</p>
+        </div>
+        <div class="status-card">
+          <span class="status-label">Hostinger</span>
+          <strong>tracktor.com.br</strong>
+          <p>Frontends estaticos via FTP</p>
+        </div>
+        <div class="status-card">
+          <span class="status-label">Memoria do Claude</span>
+          <strong>Backup diario 22h</strong>
+          <p>Memoria + skills + settings + credenciais no GitHub</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="scenarios">
+      <h2>Escolha o cenario</h2>
+      <p class="hint">Clica no que mais se parece com a sua situacao agora.</p>
+
+      <div class="scenario-tabs">
+        <button class="scenario-tab active" data-scenario="A">A. Computador novo + Claude Code</button>
+        <button class="scenario-tab" data-scenario="B">B. Sem Claude (outra IA)</button>
+        <button class="scenario-tab" data-scenario="C">C. So checagem rapida</button>
+        <button class="scenario-tab" data-scenario="D">D. Algo na VPS quebrou</button>
+      </div>
+
+      <div class="scenario-panel active" id="panel-A">
+        <h3>Recuperacao completa em maquina nova</h3>
+        <p>Voce tem um computador novo (ou formatado) e quer rodar tudo do mesmo jeito de antes.</p>
+
+        <div class="step">
+          <span class="step-num">1</span>
+          <div class="step-body">
+            <h4>Instalar dependencias</h4>
+            <p>No novo Mac/Linux, instalar Node, Git, gh CLI, e Claude Code:</p>
+            <pre><code># Mac (com Homebrew)
+brew install node git gh
+# Claude Code
+curl -fsSL https://claude.ai/install.sh | sh</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">2</span>
+          <div class="step-body">
+            <h4>Login no GitHub</h4>
+            <pre><code>gh auth login</code></pre>
+            <p>Escolhe HTTPS, autentica com seu navegador.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">3</span>
+          <div class="step-body">
+            <h4>Clonar os 3 repos privados</h4>
+            <pre><code>cd ~
+git clone https://github.com/maxmunhozp-blip/claude-backup.git
+git clone https://github.com/maxmunhozp-blip/ecossistema-max.git
+mkdir -p ~/Documents
+git clone https://github.com/maxmunhozp-blip/esmeralda-vault.git ~/Documents/Obsidian\ Vault</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">4</span>
+          <div class="step-body">
+            <h4>Restaurar memoria + skills + settings do Claude</h4>
+            <p>Ajuste o nome do user (no exemplo "maxmunhoz") pro seu nome de usuario real:</p>
+            <pre><code>USER_DIR="-Users-$(whoami)"
+mkdir -p ~/.claude/projects/$USER_DIR
+cp -r ~/claude-backup/memory ~/.claude/projects/$USER_DIR/
+cp -r ~/claude-backup/skills/* ~/.claude/skills/ 2>/dev/null || mkdir -p ~/.claude/skills && cp -r ~/claude-backup/skills/* ~/.claude/skills/
+cp ~/claude-backup/settings.json ~/.claude/
+cp ~/claude-backup/settings.local.json ~/.claude/</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">5</span>
+          <div class="step-body">
+            <h4>Login no Claude</h4>
+            <pre><code>claude</code></pre>
+            <p>Ele vai pedir login. Faz com sua conta do Claude.ai (qualquer uma — Pro, Team, novo email — funciona). A memoria local ja vai estar la.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">6</span>
+          <div class="step-body">
+            <h4>Instalar Obsidian + plugin Git</h4>
+            <p>Baixa Obsidian em obsidian.md, abre o vault em <code>~/Documents/Obsidian Vault</code>, ativa community plugins, instala "Obsidian Git", configura com o token do CREDENCIAIS.md.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">7</span>
+          <div class="step-body">
+            <h4>Pronto</h4>
+            <p>Abre Claude no projeto: <code>cd ~/ecossistema-max && claude</code></p>
+            <p>A IA ja vai saber tudo sobre voce, seus clientes, projetos, sociedades. Pode continuar de onde parou.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="scenario-panel" id="panel-B">
+        <h3>Recuperacao com outra IA (ChatGPT, Gemini, etc)</h3>
+        <p>Se voce quer/precisa usar outra IA, o conhecimento do projeto ainda esta intacto. Voce so precisa "carregar" ele na nova ferramenta.</p>
+
+        <div class="step">
+          <span class="step-num">1</span>
+          <div class="step-body">
+            <h4>Acesse os 3 documentos-chave no GitHub</h4>
+            <ul>
+              <li><a href="https://github.com/maxmunhozp-blip/ecossistema-max/blob/main/CLAUDE.md" target="_blank">CLAUDE.md</a> — briefing completo do negocio (persona, produtos, infra)</li>
+              <li><a href="https://github.com/maxmunhozp-blip/claude-backup/blob/main/memory" target="_blank">memory/</a> — todas as memorias acumuladas</li>
+              <li><a href="https://github.com/maxmunhozp-blip/claude-backup/blob/main/CREDENCIAIS.md" target="_blank">CREDENCIAIS.md</a> — onde tudo esta hospedado</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">2</span>
+          <div class="step-body">
+            <h4>Cole o contexto na nova IA</h4>
+            <p>Na primeira mensagem, cola o conteudo do CLAUDE.md e diz:</p>
+            <blockquote>"Esse e o contexto do meu negocio. Memorize tudo. Vou te alimentar com mais coisas em seguida. Voce e meu copilot estrategico e tecnico."</blockquote>
+            <p>Depois cola tambem o conteudo dos arquivos de memoria que importam pro que voce ta fazendo agora.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">3</span>
+          <div class="step-body">
+            <h4>Sites e sistemas continuam rodando</h4>
+            <p>A VPS, Hostinger, Esmeralda, Obsidian Vault — nada disso depende do Claude. Continua tudo no ar. Voce so trocou a IA com quem conversa.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="scenario-panel" id="panel-C">
+        <h3>So preciso ver/acessar algo rapido</h3>
+        <p>Voce nao perdeu nada, so precisa de um link, credencial, ou acesso rapido.</p>
+
+        <div class="quick-grid">
+          <a class="quick-card" href="https://github.com/maxmunhozp-blip/claude-backup/blob/main/CREDENCIAIS.md" target="_blank">
+            <strong>Credenciais</strong>
+            <span>VPS, FTP, APIs, GitHub, tokens — tudo num lugar</span>
+          </a>
+          <a class="quick-card" href="https://tracktor.com.br/esmeralda" target="_blank">
+            <strong>Esmeralda</strong>
+            <span>Seu painel pessoal de tarefas</span>
+          </a>
+          <a class="quick-card" href="https://ecossistema.tracktor.com.br" target="_blank">
+            <strong>Ecossistema</strong>
+            <span>HQ digital com skills, criativos, persona</span>
+          </a>
+          <a class="quick-card" href="https://terminal.tracktor.com.br" target="_blank">
+            <strong>Terminal Web</strong>
+            <span>Claude Code rodando na VPS</span>
+          </a>
+          <a class="quick-card" href="https://github.com/maxmunhozp-blip" target="_blank">
+            <strong>GitHub</strong>
+            <span>3 repos privados</span>
+          </a>
+          <a class="quick-card" href="https://github.com/maxmunhozp-blip/claude-backup/tree/main/memory" target="_blank">
+            <strong>Memorias</strong>
+            <span>Tudo que o Claude aprendeu sobre voce</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="scenario-panel" id="panel-D">
+        <h3>Algo na VPS quebrou</h3>
+        <p>API fora, site fora, banco corrompido. Diagnostico rapido.</p>
+
+        <div class="step">
+          <span class="step-num">1</span>
+          <div class="step-body">
+            <h4>Acesse a VPS via terminal</h4>
+            <pre><code>ssh root@76.13.172.151
+# senha em CREDENCIAIS.md</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">2</span>
+          <div class="step-body">
+            <h4>Status dos servicos</h4>
+            <pre><code>npx pm2 status
+docker ps
+df -h</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">3</span>
+          <div class="step-body">
+            <h4>Reiniciar Esmeralda</h4>
+            <pre><code>cd /opt/esmeralda-api
+npx pm2 restart esmeralda-api
+npx pm2 logs esmeralda-api --lines 50</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">4</span>
+          <div class="step-body">
+            <h4>Restaurar banco da Esmeralda</h4>
+            <p>Backup diario em <code>/opt/backups/</code> (cron 3am).</p>
+            <pre><code>ls /opt/backups/
+# copia o mais recente pra /opt/esmeralda-api/esmeralda.db</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-num">5</span>
+          <div class="step-body">
+            <h4>VPS totalmente perdida?</h4>
+            <p>Provedor caiu, IP mudou, etc. Voce precisa: subir uma VPS nova, instalar Docker + Traefik + EasyPanel, clonar <code>ecossistema-max</code> e <code>esmeralda-vault</code>, restaurar o banco do backup mais recente. Isso e meio dia de trabalho com a IA te guiando.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="vital">
+      <h2>Coisas vitais pra lembrar</h2>
+      <ul class="vital-list">
+        <li>O conhecimento do negocio NAO esta no Claude. Esta em arquivos .md no GitHub. A IA so le esses arquivos.</li>
+        <li>Trocar de conta Claude (ou usar outra IA) NAO apaga nada. So muda quem ta digitando.</li>
+        <li>Backup da memoria roda todo dia 22h automatico no Mac (cron).</li>
+        <li>Backup do Obsidian roda a cada 10 min via plugin (quando voce escreve).</li>
+        <li>Backup do banco da Esmeralda roda 3am no VPS (cron).</li>
+        <li>Se perder o Mac mas tiver o GitHub: nada essencial foi perdido.</li>
+        <li>Se perder o GitHub mas tiver o Mac: tudo ainda esta local em <code>~/.claude/</code> e <code>~/Documents/</code>.</li>
+        <li>Se perder os dois: VPS ainda tem o codigo do ecossistema, banco da Esmeralda, vault clonado.</li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <p>Atualizado em ${date}. Se mudar arquitetura, atualiza essa pagina.</p>
+      <p><a href="https://github.com/maxmunhozp-blip/ecossistema-max/blob/main/backup/index.html" target="_blank">Editar esta pagina no GitHub</a></p>
+    </footer>
+
+  </main>
+
+  <script>
+    document.querySelectorAll('.scenario-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const scenario = tab.dataset.scenario;
+        document.querySelectorAll('.scenario-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.scenario-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + scenario).classList.add('active');
+      });
+    });
+
+    // Replace ${date} placeholder
+    document.body.innerHTML = document.body.innerHTML.replace('${date}', new Date().toLocaleDateString('pt-BR'));
+  </script>
+</body>
+</html>
