@@ -251,6 +251,10 @@
             position: relative;
             opacity: 0;
             animation: fadeInScale 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
+            background: linear-gradient(135deg, #f4f1ed 0%, #e8e3dc 100%);
+            border-radius: 2px;
+            padding: 40px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.08);
         }
 
         @keyframes fadeInScale {
@@ -268,7 +272,8 @@
             width: 100%;
             height: auto;
             border-radius: 2px;
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.12);
+            filter: brightness(1.05) contrast(1.1) saturate(1.1);
+            mix-blend-mode: multiply;
         }
 
         .section {
