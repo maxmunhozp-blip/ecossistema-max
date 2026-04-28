@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dra. Daiane Rosendo — Advocacia de Família</title>
+    <title>Daiane Rosendo — Advocacia de Família</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Raleway:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
@@ -70,56 +70,9 @@
             }
         }
 
-        .logo-mark {
-            width: 48px;
+        .logo-img {
             height: 48px;
-            border: 2px solid var(--bronze);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Cinzel', serif;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--bronze);
-            position: relative;
-        }
-
-        .logo-mark::before,
-        .logo-mark::after {
-            content: '';
-            position: absolute;
-            width: 56px;
-            height: 56px;
-            border: 1px solid var(--bronze);
-            border-radius: 50%;
-            opacity: 0.3;
-        }
-
-        .logo-mark::before {
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        .logo-mark::after {
-            animation: pulse 3s ease-in-out infinite 1.5s;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: scale(1.15);
-                opacity: 0;
-            }
-        }
-
-        .logo-text {
-            font-family: 'Lora', serif;
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--ink);
+            width: auto;
         }
 
         .header-nav {
@@ -205,7 +158,10 @@
         .hero-container {
             max-width: 1200px;
             margin: 0 auto;
-            text-align: center;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 80px;
+            align-items: center;
             position: relative;
             z-index: 1;
         }
@@ -237,7 +193,7 @@
 
         .hero-title {
             font-family: 'Cinzel', serif;
-            font-size: clamp(48px, 7vw, 72px);
+            font-size: clamp(40px, 6vw, 64px);
             font-weight: 600;
             line-height: 1.15;
             margin-bottom: 32px;
@@ -251,9 +207,6 @@
             color: var(--stone);
             margin-bottom: 48px;
             font-weight: 400;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .hero-cta {
@@ -292,6 +245,30 @@
             background: var(--bronze);
             transform: translateY(-2px);
             box-shadow: 0 12px 32px rgba(166, 124, 82, 0.3);
+        }
+
+        .hero-photo {
+            position: relative;
+            opacity: 0;
+            animation: fadeInScale 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .hero-photo img {
+            width: 100%;
+            height: auto;
+            border-radius: 2px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.12);
         }
 
         .section {
@@ -542,6 +519,7 @@
             cursor: pointer;
             transition: all 0.3s;
             z-index: 999;
+            text-decoration: none;
         }
 
         .whatsapp-float:hover {
@@ -556,6 +534,11 @@
         }
 
         @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+
             .services {
                 grid-template-columns: 1fr;
             }
@@ -597,8 +580,7 @@
 <body>
     <header class="header" id="header">
         <div class="logo-container">
-            <div class="logo-mark">DR</div>
-            <div class="logo-text">Daiane Rosendo</div>
+            <img src="https://advocaciadaianerosendo.com.br/wp-content/uploads/2026/02/Logo-Daiane-Rosendo-1-e1771441463733-1024x401.png" alt="Daiane Rosendo Advocacia" class="logo-img">
         </div>
         <nav class="header-nav">
             <a href="#sobre">Sobre</a>
@@ -611,9 +593,12 @@
         <div class="hero-container">
             <div class="hero-content">
                 <div class="hero-eyebrow">Advocacia de Família</div>
-                <h1 class="hero-title">Soluções jurídicas com sensibilidade e estratégia</h1>
-                <p class="hero-description">Mais de 15 anos de experiência em Direito de Família, com abordagem personalizada e foco em resultados que protegem seus direitos e interesses.</p>
-                <a href="#contato" class="hero-cta">Agendar Consulta</a>
+                <h1 class="hero-title">Organize Sua Situação Familiar Com Clareza E Segurança</h1>
+                <p class="hero-description">Atendimento em Direito de Família para mães e pais que precisam regularizar pensão, guarda ou divórcio. Entenda seus direitos e os próximos passos com orientação responsável.</p>
+                <a href="https://wa.me/5511984064701?text=Olá! Gostaria de agendar uma consulta." class="hero-cta" target="_blank">Agendar uma Conversa</a>
+            </div>
+            <div class="hero-photo">
+                <img src="https://advocaciadaianerosendo.com.br/wp-content/uploads/2026/02/Design-sem-nome-24.png" alt="Dra. Daiane Rosendo">
             </div>
         </div>
     </section>
@@ -621,29 +606,32 @@
     <section class="section about" id="sobre">
         <div class="section-header">
             <div class="section-label">Sobre</div>
-            <h2 class="section-title">Dra. Daiane Rosendo</h2>
+            <h2 class="section-title">Direito De Família Com Foco Em Clareza E Segurança</h2>
         </div>
 
         <div class="about-content">
             <p class="about-text">
-                Advogada especializada em Direito de Família, com mais de 15 anos de experiência em processos consensuais e litigiosos. Atua com abordagem humanizada e estratégica, priorizando acordos equilibrados e a proteção dos direitos de seus clientes.
+                Advogada com mais de 3 anos de atuação, dedicada a auxiliar mães e pais na resolução de conflitos familiares. A prática é direcionada a demandas como divórcio, pensão alimentícia, revisão de alimentos, guarda e regulamentação de convivência.
             </p>
             <p class="about-text">
-                Formada em Direito com pós-graduação em Direito de Família e Sucessões, atende casos de divórcio, guarda, pensão alimentícia, inventário e outras questões familiares com foco em soluções que preservam o bem-estar de todos os envolvidos.
+                O atendimento é 100% on-line, permitindo acompanhamento em todo o Brasil. Cada caso começa com uma análise cuidadosa da situação apresentada, identificação das possibilidades jurídicas e explicação objetiva dos caminhos viáveis.
+            </p>
+            <p class="about-text">
+                A orientação é estruturada para que você compreenda riscos, etapas e documentos necessários antes de qualquer decisão. Conflitos familiares costumam trazer insegurança e desgaste emocional. Ter clareza sobre seus direitos e deveres ajuda a reduzir a ansiedade e organizar os próximos passos com mais tranquilidade.
             </p>
 
             <div class="credentials">
                 <div class="credential">
-                    <div class="credential-number">15+</div>
+                    <div class="credential-number">3+</div>
                     <div class="credential-label">Anos de Experiência</div>
                 </div>
                 <div class="credential">
-                    <div class="credential-number">500+</div>
-                    <div class="credential-label">Casos Resolvidos</div>
+                    <div class="credential-number">100%</div>
+                    <div class="credential-label">Atendimento Online</div>
                 </div>
                 <div class="credential">
-                    <div class="credential-number">98%</div>
-                    <div class="credential-label">Taxa de Sucesso</div>
+                    <div class="credential-number">Brasil</div>
+                    <div class="credential-label">Todo o Território</div>
                 </div>
             </div>
         </div>
@@ -652,41 +640,57 @@
     <section class="section" id="areas">
         <div class="section-header">
             <div class="section-label">Especialização</div>
-            <h2 class="section-title">Áreas de Atuação</h2>
-            <p class="section-subtitle">Experiência consolidada em questões familiares com abordagem estratégica e humanizada</p>
+            <h2 class="section-title">Soluções Em Direito De Família</h2>
+            <p class="section-subtitle">Atendimento estruturado com foco em clareza e segurança jurídica</p>
         </div>
 
         <div class="services">
             <div class="service">
                 <div class="service-header">
                     <div class="service-number">01</div>
-                    <h3 class="service-title">Divórcio</h3>
+                    <h3 class="service-title">Divórcio Judicial ou Extrajudicial</h3>
                 </div>
-                <p class="service-description">Processos consensuais e litigiosos com foco em acordos equilibrados e proteção patrimonial</p>
+                <p class="service-description">Condução completa do processo de separação, com análise da situação do casal, orientação sobre direitos e formalização adequada do divórcio.</p>
             </div>
 
             <div class="service">
                 <div class="service-header">
                     <div class="service-number">02</div>
-                    <h3 class="service-title">Guarda e Convivência</h3>
+                    <h3 class="service-title">Fixação de Pensão Alimentícia</h3>
                 </div>
-                <p class="service-description">Defesa dos direitos da criança e do adolescente com soluções que priorizam o bem-estar familiar</p>
+                <p class="service-description">Atuação para definição judicial da pensão, considerando as necessidades dos filhos e a realidade financeira das partes.</p>
             </div>
 
             <div class="service">
                 <div class="service-header">
                     <div class="service-number">03</div>
-                    <h3 class="service-title">Pensão Alimentícia</h3>
+                    <h3 class="service-title">Revisão ou Ajuste de Pensão</h3>
                 </div>
-                <p class="service-description">Revisão, fixação e execução de alimentos com análise técnica da capacidade financeira</p>
+                <p class="service-description">Análise de mudanças na renda ou nas necessidades familiares para solicitar a adequação do valor fixado.</p>
             </div>
 
             <div class="service">
                 <div class="service-header">
                     <div class="service-number">04</div>
-                    <h3 class="service-title">Inventário</h3>
+                    <h3 class="service-title">Guarda e Regulamentação</h3>
                 </div>
-                <p class="service-description">Partilha de bens judicial e extrajudicial com planejamento sucessório estratégico</p>
+                <p class="service-description">Definição ou reorganização da guarda e das visitas, buscando previsibilidade e equilíbrio na rotina da criança.</p>
+            </div>
+
+            <div class="service">
+                <div class="service-header">
+                    <div class="service-number">05</div>
+                    <h3 class="service-title">Defesa em Ação de Alimentos</h3>
+                </div>
+                <p class="service-description">Orientação e atuação na defesa de quem foi acionado, com análise cuidadosa da situação financeira apresentada.</p>
+            </div>
+
+            <div class="service">
+                <div class="service-header">
+                    <div class="service-number">06</div>
+                    <h3 class="service-title">Atendimento Humanizado</h3>
+                </div>
+                <p class="service-description">Escuta atenta e orientação individualizada, com explicação clara das etapas do processo e possíveis caminhos.</p>
             </div>
         </div>
     </section>
@@ -723,7 +727,7 @@
         </form>
     </section>
 
-    <a href="https://wa.me/5511999999999?text=Olá! Gostaria de agendar uma consulta." class="whatsapp-float" target="_blank">
+    <a href="https://wa.me/5511984064701?text=Olá! Gostaria de agendar uma consulta." class="whatsapp-float" target="_blank">
         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 0C7.164 0 0 7.164 0 16c0 2.825.738 5.488 2.025 7.788L.05 31.95l8.338-2.188A15.937 15.937 0 0016 32c8.836 0 16-7.164 16-16S24.836 0 16 0zm0 29.333c-2.4 0-4.738-.638-6.788-1.85l-.488-.288-5.05 1.325 1.35-4.938-.313-.513A13.267 13.267 0 012.667 16c0-7.363 5.97-13.333 13.333-13.333S29.333 8.637 29.333 16 23.363 29.333 16 29.333zm7.313-9.988c-.4-.2-2.363-1.163-2.725-1.3-.363-.138-.625-.2-.888.2-.263.4-1.013 1.3-1.238 1.563-.225.263-.45.3-.85.1-.4-.2-1.688-.625-3.213-1.988-1.188-1.063-1.988-2.375-2.213-2.775-.225-.4-.025-.613.175-.813.175-.175.4-.45.6-.675.2-.225.263-.375.4-.625.138-.25.075-.475-.025-.675-.1-.2-.888-2.138-1.213-2.925-.325-.763-.65-.65-.888-.663-.225-.012-.488-.012-.75-.012s-.688.1-1.05.5c-.363.4-1.375 1.35-1.375 3.288s1.413 3.813 1.613 4.075c.2.263 2.825 4.313 6.838 6.05.95.413 1.7.663 2.275.85.963.3 1.838.263 2.525.163.775-.113 2.363-.963 2.7-1.9.338-.938.338-1.738.238-1.9-.1-.163-.363-.263-.763-.463z"/>
         </svg>
@@ -790,7 +794,7 @@
             const message = document.getElementById('message').value;
 
             const whatsappMessage = `Olá! Meu nome é ${name}.\n\nE-mail: ${email}\nTelefone: ${phone}\n\nMensagem: ${message}`;
-            const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(whatsappMessage)}`;
+            const whatsappUrl = `https://wa.me/5511984064701?text=${encodeURIComponent(whatsappMessage)}`;
 
             window.open(whatsappUrl, '_blank');
         });
